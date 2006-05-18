@@ -110,8 +110,8 @@ class Piece_Unity_Plugin_Common
     {
         $conf = &$this->_context->getConfiguration();
         $extension = $conf->getExtension(strtolower(get_class($this)),
-                                                  strtolower($extensionPoint)
-                                                  );
+                                         strtolower($extensionPoint)
+                                         );
         if (is_null($extension)) {
             $extension = $this->_extensionPoints[ strtolower($extensionPoint) ];
         }
