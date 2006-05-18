@@ -115,22 +115,17 @@ class Piece_Unity_Config
      * @param string $plugin
      * @param string $extensionPoint
      * @return string
-     * @throws PEAR_ErrorStack
      */
     function getExtension($plugin, $extensionPoint)
     {
         $plugin = strtolower($plugin);
         $extensionPoint = strtolower($extensionPoint);
         if (!array_key_exists($plugin, $this->_extensions)) {
-            $error = &Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
-                                                    "Plugin [ $plugin ] not found in the map of extension points.");
-            return $error;
+            return null;
         }
 
         if (!array_key_exists($extensionPoint, $this->_extensions[$plugin])) {
-            $error = &Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
-                                                    "Extension point [ $extensionPoint ] for plugin [ $plugin ] not found in the map of extension points.");
-            return $error;
+            return null;
         }
 
         return $this->_extensions[$plugin][$extensionPoint];
@@ -145,22 +140,17 @@ class Piece_Unity_Config
      * @param string $plugin
      * @param string $configurationPoint
      * @return string
-     * @throws PEAR_ErrorStack
      */
     function getConfiguration($plugin, $configurationPoint)
     {
         $plugin = strtolower($plugin);
         $configurationPoint = strtolower($configurationPoint);
         if (!array_key_exists($plugin, $this->_configurations)) {
-            $error = &Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
-                                                    "Plugin [ $plugin ] not found in the map of configuration points.");
-            return $error;
+            return null;
         }
 
         if (!array_key_exists($configurationPoint, $this->_configurations[$plugin])) {
-            $error = &Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
-                                                    "Configuration point [ $configurationPoint ] for plugin [ $plugin ] not found in the map of configuration points.");
-            return $error;
+            return null;
         }
 
         return $this->_configurations[$plugin][$configurationPoint];
