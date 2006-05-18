@@ -111,6 +111,27 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
                             );
     }
 
+    function testCreatingNewObjectWhenConfigurationDirectoryOrFileToBeSpecifiedIsInvalid()
+    {
+        PEAR_ErrorStack::staticPushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+
+        $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__) . '/../../../../tests',
+                                                       dirname(__FILE__)
+                                                       );
+        $this->assertTrue(is_a($config, 'Piece_Unity_Config'));
+
+        $config->getExtension(PIECE_UNITY_ROOT_PLUGIN, 'renderer');
+        $stack = &Piece_Unity_Error::getErrorStack();
+
+        $this->assertTrue($stack->hasErrors());
+
+        $error = $stack->pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
+
+        PEAR_ErrorStack::staticPopCallback();
+    }
+
     /**#@-*/
 
     /**#@+
