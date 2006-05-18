@@ -88,8 +88,7 @@ class Piece_Unity_Config
      */
     function setExtension($plugin, $extensionPoint, $extension)
     {
-        $this->_extensions[ strtolower($plugin) ][ strtolower($extensionPoint) ] =
-            $extension;
+        $this->_extensions[ strtolower($plugin) ][ strtolower($extensionPoint) ] = $extension;
     }
 
     // }}}
@@ -104,8 +103,7 @@ class Piece_Unity_Config
      */
     function setConfiguration($plugin, $configurationPoint, $configuration)
     {
-        $this->_configurations[ strtolower($plugin) ][ strtolower($configurationPoint) ] =
-            $configuration;
+        $this->_configurations[ strtolower($plugin) ][ strtolower($configurationPoint) ] = $configuration;
     }
 
     // }}}
@@ -166,6 +164,83 @@ class Piece_Unity_Config
         }
 
         return $this->_configurations[$plugin][$configurationPoint];
+    }
+
+    // }}}
+    // {{{ merge()
+
+    /**
+     * Merges the given configuretion into the existing configuration.
+     *
+     * @param Piece_Unity_Config $config
+     */
+    function merge(&$config)
+    {
+        $extensions = $config->getExtensions();
+        array_walk($extensions, array(__CLASS__, 'mergeExtensions'));
+
+        $configurations = $config->getConfigurations();
+        array_walk($configurations, array(__CLASS__, 'mergeConfigurations'));
+    }
+
+    // }}}
+    // {{{ mergeExtensions()
+
+    /**
+     * A callback that will be called by array_walk in merge method.
+     *
+     * @param string $value
+     * @param string $key
+     * @static
+     */
+    function mergeExtensions($value, $plugin)
+    {
+        foreach ($value as $extensionPoint => $extension) {
+            $this->_extensions[ strtolower($plugin) ][ strtolower($extensionPoint) ] = $extension;
+        }
+    }
+
+    // }}}
+    // {{{ mergeConfigurations()
+
+    /**
+     * A callback that will be called by array_walk in merge method.
+     *
+     * @param string $value
+     * @param string $key
+     * @static
+     */
+    function mergeConfigurations($value, $plugin)
+    {
+        foreach ($value as $configurationPoint => $configuration) {
+            $this->_configurations[ strtolower($plugin) ][ strtolower($configurationPoint) ] = $configuration;
+        }
+    }
+
+    // }}}
+    // {{{ getExtensions()
+
+    /**
+     * Gets the array of extensions.
+     *
+     * @return array
+     */
+    function getExtensions()
+    {
+        return $this->_extensions;
+    }
+
+    // }}}
+    // {{{ getConfigurations()
+
+    /**
+     * Gets the array of configurations.
+     *
+     * @return array
+     */
+    function getConfigurations()
+    {
+        return $this->_configurations;
     }
 
     /**#@-*/
