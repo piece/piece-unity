@@ -102,6 +102,15 @@ class Piece_Unity_Config_Factory
 
         $absolutePathOfConfigDirectory = realpath($configDirectory);
         $absolutePathOfConfigFile = "$absolutePathOfConfigDirectory/piece-unity-config.yaml";
+
+        if (!is_readable($absolutePathOfConfigFile)) {
+            Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
+                                          "File [ $absolutePathOfConfigFile ] not found or was not readable."
+                                          );
+            $config = &new Piece_Unity_Config();
+            return $config;
+        }
+
         if (is_null($cacheDirectory)) {
             $cacheDirectory = './cache';
         }
