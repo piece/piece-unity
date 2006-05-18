@@ -93,7 +93,7 @@ class Piece_Unity_Error
      */
     function &getErrorStack($package = 'Piece_Unity')
     {
-        return PEAR_ErrorStack::singleton($package);
+        return PEAR_ErrorStack::singleton(strtolower($package));
     }
 
     // }}}
