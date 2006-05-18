@@ -109,53 +109,23 @@ class Piece_Unity_ConfigTestCase extends PHPUnit_TestCase
 
     function testGettingExtensionWithInvalidPlugin()
     {
-        PEAR_ErrorStack::staticPushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
         $this->_config->setExtension('Foo', 'bar', 'Bar');
-        $this->_config->getExtension('Bar', 'bar');
 
-        $this->assertTrue(PEAR_ErrorStack::staticHasErrors());
-
-        $stack = &Piece_Unity_Error::getErrorStack();
-        $error = $stack->pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
-
-        PEAR_ErrorStack::staticPopCallback();
+        $this->assertNull($this->_config->getExtension('Bar', 'bar'));
     }
 
     function testGettingExtensionWithInvalidExtensionPoint()
     {
-        PEAR_ErrorStack::staticPushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
         $this->_config->setExtension('Foo', 'bar', 'Bar');
-        $this->_config->getExtension('Foo', 'baz');
 
-        $this->assertTrue(PEAR_ErrorStack::staticHasErrors());
-
-        $stack = &Piece_Unity_Error::getErrorStack();
-        $error = $stack->pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
-
-        PEAR_ErrorStack::staticPopCallback();
+        $this->assertNull($this->_config->getExtension('Foo', 'baz'));
     }
 
     function testGettingConfigurationWithInvalidConfigurationPoint()
     {
-        PEAR_ErrorStack::staticPushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
         $this->_config->setConfiguration('Foo', 'bar', 'Bar');
-        $this->_config->getConfiguration('Foo', 'baz');
 
-        $this->assertTrue(PEAR_ErrorStack::staticHasErrors());
-
-        $stack = &Piece_Unity_Error::getErrorStack();
-        $error = $stack->pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
-
-        PEAR_ErrorStack::staticPopCallback();
+        $this->assertNull($this->_config->getConfiguration('Foo', 'baz'));
     }
 
     /**#@-*/
