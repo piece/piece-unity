@@ -1,0 +1,5 @@
+# $Id$
+- plugin: Piece_Unity_Plugin_Root
+  point: renderer
+  pointType: extension
+  value: Piece_Unity_Plugin_SmartyRenderer

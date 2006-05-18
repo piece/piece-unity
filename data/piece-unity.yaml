@@ -1,0 +1,12 @@
+# $Id$
+name: config
+desc: the definition of Piece_Unity configuration file.
+type: seq
+sequence:
+  - type: map
+    required: yes
+    mapping:
+      "plugin": { type: str, required: yes }
+      "point": { type: str, required: yes }
+      "pointType": { type: str, required: yes, enum: [ extension, configuration ] }
+      "value": { type: any }
