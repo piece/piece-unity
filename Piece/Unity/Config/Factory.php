@@ -85,7 +85,8 @@ class Piece_Unity_Config_Factory
     // {{{ factory()
 
     /**
-     * Creates a new Piece_Unity_Config driver object from the given directory.
+     * Creates a Piece_Unity_Config object from a configuration file or a
+     * cache.
      *
      * @param string $configDirectory
      * @param string $cacheDirectory
@@ -101,11 +102,19 @@ class Piece_Unity_Config_Factory
         }
 
         $absolutePathOfConfigDirectory = realpath($configDirectory);
+        if (!$absolutePathOfConfigDirectory) {
+            Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
+                                          "Configuration directory [ $configDirectory ] not found."
+                                          );
+            $config = &new Piece_Unity_Config();
+            return $config;
+        }
+
         $absolutePathOfConfigFile = "$absolutePathOfConfigDirectory/piece-unity-config.yaml";
 
         if (!is_readable($absolutePathOfConfigFile)) {
-            Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
-                                          "File [ $absolutePathOfConfigFile ] not found or was not readable."
+            Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_READABLE,
+                                          "Configuration file [ $absolutePathOfConfigFile ] was not readable."
                                           );
             $config = &new Piece_Unity_Config();
             return $config;
@@ -116,29 +125,27 @@ class Piece_Unity_Config_Factory
         }
 
         $absolutePathOfCacheDirectory = realpath($cacheDirectory);
-        $cache = &new Cache_Lite_File(array('cacheDir' => "$cacheDirectory/",
-                                            'masterFile' => $absolutePathOfConfigFile,
-                                            'automaticSerialization' => true)
-                                      );
-        $config = $cache->get($absolutePathOfConfigDirectory);
-        if (!$config && is_readable($absolutePathOfConfigFile)) {
-            $config = &new Piece_Unity_Config();
-            $yaml = Spyc::YAMLLoad($absolutePathOfConfigFile);
-            for ($i = 0; $i < count($yaml); ++$i) {
-                if ($yaml[$i]['pointType'] == 'extension') {
-                    $config->setExtension($yaml[$i]['plugin'],
-                                          $yaml[$i]['point'],
-                                          $yaml[$i]['value']
+        if (!$absolutePathOfCacheDirectory) {
+            Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
+                                          "Cache directory [ $cacheDirectory ] not found."
                                           );
-                } elseif ($yaml[$i]['pointType'] == 'configuration') {
-                    $config->setConfiguration($yaml[$i]['plugin'],
-                                              $yaml[$i]['point'],
-                                              $yaml[$i]['value']
-                                              );
-                }
-            }
-            $cache->save($config);
+            $config = &Piece_Unity_Config_Factory::_parseFile($absolutePathOfConfigFile);
+            return $config;
         }
+
+        if (!is_readable($absolutePathOfCacheDirectory)
+            || !is_writable($absolutePathOfCacheDirectory)
+            ) {
+            Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_READABLE,
+                                          "Cache directory [ $absolutePathOfCacheDirectory ] was not readable or writable."
+                                          );
+            $config = &Piece_Unity_Config_Factory::_parseFile($absolutePathOfConfigFile);
+            return $config;
+        }
+
+        $config = &Piece_Unity_Config_Factory::_getConfiguration($absolutePathOfCacheDirectory,
+                                                                 $absolutePathOfConfigFile
+                                                                 );
 
         return $config;
     }
@@ -148,6 +155,63 @@ class Piece_Unity_Config_Factory
     /**#@+
      * @access private
      */
+
+    // }}}
+    // {{{ _getConfiguration()
+
+    /**
+     * Gets a Piece_Unity_Config object from a configuration file or a cache.
+     *
+     * @param string $cacheDirectory
+     * @param string $masterFile
+     * @return Piece_Unity_Config
+     * @static
+     */
+    function &_getConfiguration($cacheDirectory, $masterFile)
+    {
+        $cache = &new Cache_Lite_File(array('cacheDir' => "$cacheDirectory/",
+                                            'masterFile' => $masterFile,
+                                            'automaticSerialization' => true)
+                                      );
+        $config = $cache->get($masterFile);
+        if (!$config) {
+            $config = &Piece_Unity_Config_Factory::_parseFile($masterFile);
+            $cache->save($config);
+        }
+
+        return $config;
+    }
+
+    // }}}
+    // {{{ _parseFile()
+
+    /**
+     * Parses the given file and returns a Piece_Unity_Config object.
+     *
+     * @param string $file
+     * @return Piece_Unity_Config
+     * @static
+     */
+    function &_parseFile($file)
+    {
+        $config = &new Piece_Unity_Config();
+        $yaml = Spyc::YAMLLoad($file);
+        for ($i = 0; $i < count($yaml); ++$i) {
+            if ($yaml[$i]['pointType'] == 'extension') {
+                $config->setExtension($yaml[$i]['plugin'],
+                                      $yaml[$i]['point'],
+                                      $yaml[$i]['value']
+                                      );
+            } elseif ($yaml[$i]['pointType'] == 'configuration') {
+                $config->setConfiguration($yaml[$i]['plugin'],
+                                          $yaml[$i]['point'],
+                                          $yaml[$i]['value']
+                                          );
+            }
+        }
+
+        return $config;
+    }
 
     /**#@-*/
 
