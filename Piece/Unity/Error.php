@@ -44,7 +44,8 @@ require_once 'PEAR/ErrorStack.php';
 /*
  * Error codes
  */
-define('PIECE_UNITY_ERROR_NOT_FOUND', -1);
+define('PIECE_UNITY_ERROR_NOT_FOUND',    -1);
+define('PIECE_UNITY_ERROR_NOT_READABLE', -2);
 
 // }}}
 // {{{ Piece_Unity_Error
