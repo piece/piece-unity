@@ -106,6 +106,19 @@ class Piece_Unity_Context
     }
 
     // }}}
+    // {{{ setView()
+
+    /**
+     * Sets the view string to the current context.
+     *
+     * @param string $view
+     */
+    function setView($view)
+    {
+        $this->_view = $view;
+    }
+
+    // }}}
     // {{{ getConfiguration()
 
     /**
