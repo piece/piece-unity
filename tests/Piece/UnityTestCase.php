@@ -77,6 +77,15 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
      * @access public
      */
 
+    function tearDown()
+    {
+        $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
+                                            'masterFile' => dirname(__FILE__) . '/../../../data/piece-unity-config.yaml',
+                                            'automaticSerialization' => true)
+                                      );
+        $cache->clean();
+    }
+
     function testConfiguration()
     {
         $dynamicConfig = &new Piece_Unity_Config();
@@ -89,7 +98,7 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
                                      'Baz'
                                      );
         Piece_Unity::configure(dirname(__FILE__) . '/../../data',
-                               null,
+                               dirname(__FILE__),
                                $dynamicConfig
                                );
         $context = &Piece_Unity_Context::singleton();
@@ -101,6 +110,46 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
         $this->assertEquals('Baz',
                             $config->getConfiguration(PIECE_UNITY_ROOT_PLUGIN, 'Bar')
                             );
+    }
+
+    function testConfigurationWithCacheDirectory()
+    {
+        $dynamicConfig = &new Piece_Unity_Config();
+        $dynamicConfig->setExtension(PIECE_UNITY_ROOT_PLUGIN,
+                                     'renderer',
+                                     'Foo'
+                                     );
+        $dynamicConfig->setConfiguration(PIECE_UNITY_ROOT_PLUGIN,
+                                     'Bar',
+                                     'Baz'
+                                     );
+        Piece_Unity::configure(dirname(__FILE__) . '/../../data',
+                               dirname(__FILE__),
+                               $dynamicConfig
+                               );
+        $context = &Piece_Unity_Context::singleton();
+        $config = &$context->getConfiguration();
+
+        $masterFile = realpath(dirname(__FILE__) . '/../../data') . '/piece-unity-config.yaml';
+        $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
+                                            'masterFile' => $masterFile,
+                                            'automaticSerialization' => true)
+                                      );
+        $config = $cache->get($masterFile);
+
+        $this->assertTrue(is_a($config, 'Piece_Unity_Config'));
+    }
+
+    function testConfigurationWithoutDynamicConfiguration()
+    {
+        Piece_Unity::configure(dirname(__FILE__) . '/../../data',
+                               dirname(__FILE__),
+                               null
+                               );
+        $context = &Piece_Unity_Context::singleton();
+        $config = &$context->getConfiguration();
+
+        $this->assertTrue(is_a($config, 'Piece_Unity_Config'));
     }
 
     /**#@-*/
