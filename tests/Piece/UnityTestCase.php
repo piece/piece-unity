@@ -89,7 +89,7 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
                                      'Baz'
                                      );
         Piece_Unity::configure(dirname(__FILE__) . '/../../data',
-                               dirname(__FILE__),
+                               null,
                                $dynamicConfig
                                );
         $context = &Piece_Unity_Context::singleton();
