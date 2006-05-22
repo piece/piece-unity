@@ -112,8 +112,11 @@ class Piece_Unity
                        $dynamicConfig = null
                        )
     {
-        $config = &Piece_Unity_Config_Factory::factory($configDirectory);
-        $config->merge($dynamicConfig);
+        $config = &Piece_Unity_Config_Factory::factory($configDirectory, $cacheDirectory);
+        if (is_a($dynamicConfig, 'Piece_Unity_Config')) {
+            $config->merge($dynamicConfig);
+        }
+
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
     }
