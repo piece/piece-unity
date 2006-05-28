@@ -40,9 +40,7 @@
 
 require_once 'Piece/Unity/Context.php';
 
-require_once 'PHPUnit.php';
-// require_once 'PEAR/ErrorStack.php';
-// require_once 'Piece/Unity/Error.php';
+require_once 'Piece/Unity/Request.php';
 
 // {{{ Piece_Unity_ContextTestCase
 
@@ -73,23 +71,11 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
      * @access private
      */
 
-    var $_config;
-
     /**#@-*/
 
     /**#@+
      * @access public
      */
-
-    function setUp()
-    {
-        PEAR_ErrorStack::staticPushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
-    }
-
-    function tearDown()
-    {
-        PEAR_ErrorStack::staticPopCallback();
-    }
 
     function testSettingView()
     {
@@ -97,6 +83,18 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $context->setView('foo');
 
         $this->assertEquals('foo', $context->getView());
+    }
+
+    function testSettingRequest()
+    {
+        $requestA = &new Piece_Unity_Request();
+        $context = &Piece_Unity_Context::singleton();
+        $context->setRequest($requestA);
+        $requestA->setParameter('foo', 'bar');
+        $requestB = &$context->getRequest();
+
+        $this->assertTrue($requestB->hasParameter('foo'));
+        $this->assertEquals($requestA->getParameter('foo'), $requestB->getParameter('foo'));
     }
 
     /**#@-*/
