@@ -40,9 +40,7 @@
 
 require_once 'Piece/Unity/Config.php';
 
-require_once 'PHPUnit.php';
 require_once 'PEAR/ErrorStack.php';
-require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_ConfigTestCase
 
@@ -126,6 +124,22 @@ class Piece_Unity_ConfigTestCase extends PHPUnit_TestCase
         $this->_config->setConfiguration('Foo', 'bar', 'Bar');
 
         $this->assertNull($this->_config->getConfiguration('Foo', 'baz'));
+    }
+
+    function testSettingConfigurationDirectory()
+    {
+        $this->_config->setConfigurationDirectory('/path/to/config');
+
+        $this->assertEquals('/path/to/config',
+                            $this->_config->getConfigurationDirectory()
+                            );
+    }
+
+    function testSettingError()
+    {
+        $this->_config->setError(array());
+
+        $this->assertTrue(is_array($this->_config->getError()));
     }
 
     /**#@-*/
