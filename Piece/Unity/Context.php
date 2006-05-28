@@ -45,6 +45,8 @@ $GLOBALS['PIECE_UNITY_Context_Instance'] = null;
 // {{{ Piece_Unity_Context
 
 /**
+ * The context holder for a Piece_Unity application.
+ *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
  * @copyright  2006 KUBO Atsuhiro <iteman2002@yahoo.co.jp>
@@ -70,6 +72,7 @@ class Piece_Unity_Context
 
     var $_config;
     var $_view;
+    var $_request;
 
     /**#@-*/
 
@@ -96,9 +99,9 @@ class Piece_Unity_Context
     // {{{ setConfiguration()
 
     /**
-     * Sets the Piece_Unity_Config object to the context.
+     * Sets the Piece_Unity_Config object for this context.
      *
-     * @param Piece_Unity_Config
+     * @param Piece_Unity_Config &$config
      */
     function setConfiguration(&$config)
     {
@@ -109,7 +112,8 @@ class Piece_Unity_Context
     // {{{ setView()
 
     /**
-     * Sets the view string to the current context.
+     * Sets the view string for this context. It will be dispatched to an
+     * appropriate renderer.
      *
      * @param string $view
      */
@@ -119,10 +123,23 @@ class Piece_Unity_Context
     }
 
     // }}}
+    // {{{ setRequest()
+
+    /**
+     * Sets the Piece_Unity_Request object for this context.
+     *
+     * @param Piece_Unity_Request &$request
+     */
+    function setRequest(&$request)
+    {
+        $this->_request = $request;
+    }
+
+    // }}}
     // {{{ getConfiguration()
 
     /**
-     * Gets the Piece_Unity_Config object.
+     * Gets the Piece_Unity_Config object for this context.
      *
      * @return Piece_Unity_Config
      */
@@ -135,13 +152,26 @@ class Piece_Unity_Context
     // {{{ getView()
 
     /**
-     * Gets the view string corresponding to the current context.
+     * Gets the view string for this context.
      *
      * @return string
      */
     function getView()
     {
         return $this->_view;
+    }
+
+    // }}}
+    // {{{ getRequest()
+
+    /**
+     * Gets the Piece_Unity_Request object for this context.
+     *
+     * @return Piece_Unity_Request
+     */
+    function &getRequest()
+    {
+        return $this->_request;
     }
 
     /**#@-*/
