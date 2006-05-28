@@ -42,7 +42,7 @@ require_once 'Piece/Unity/Error.php';
 // {{{ Piece_Unity_Config
 
 /**
- * Configuration container for a Piece_Unity application.
+ * The configuration container for a Piece_Unity application.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
@@ -69,6 +69,8 @@ class Piece_Unity_Config
 
     var $_extensions = array();
     var $_configurations = array();
+    var $_configurationDirectory;
+    var $_error;
 
     /**#@-*/
 
@@ -104,6 +106,46 @@ class Piece_Unity_Config
     function setConfiguration($plugin, $configurationPoint, $configuration)
     {
         $this->_configurations[ strtolower($plugin) ][ strtolower($configurationPoint) ] = $configuration;
+    }
+
+    // }}}
+    // {{{ setConfigurationDirectory()
+
+    /**
+     * Sets the configuration directory.
+     *
+     * @param string $configDirectory
+     */
+    function setConfigurationDirectory($configDirectory)
+    {
+        $this->_configurationDirectory = $configDirectory;
+    }
+
+    // }}}
+    // {{{ setError()
+
+    /**
+     * Sets an error on loading a configuration file.
+     *
+     * An error is represented by an associative array which came from
+     * PEAR_ErrorStack, which consists of following elements:
+     * o code
+     * o params
+     * o package
+     * o level
+     * o time
+     * o context
+     * o message
+     * o repackage
+     *
+     * See PEAR_ErrorStack documentation for more details.
+     *
+     * @param array $error
+     * @link http://pear.php.net/manual/en/core.pear.pear-errorstack.push.php
+     */
+    function setError($error)
+    {
+        $this->_error = $error;
     }
 
     // }}}
@@ -231,6 +273,33 @@ class Piece_Unity_Config
     function getConfigurations()
     {
         return $this->_configurations;
+    }
+
+    // }}}
+    // {{{ getConfigurationDirectory()
+
+    /**
+     * Gets the configuration directory.
+     *
+     * @return string
+     */
+    function getConfigurationDirectory()
+    {
+        return $this->_configurationDirectory;
+    }
+
+    // }}}
+    // {{{ getError()
+
+    /**
+     * Gets an error on loading a configuration file.
+     *
+     * @return array
+     * @see Piece_Unity_Config::setError()
+     */
+    function getError()
+    {
+        return $this->_error;
     }
 
     /**#@-*/
