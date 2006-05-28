@@ -40,8 +40,6 @@
 
 require_once 'Piece/Unity.php';
 
-require_once 'PHPUnit.php';
-
 // {{{ Piece_UnityTestCase
 
 /**
