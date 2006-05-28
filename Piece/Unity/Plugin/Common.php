@@ -116,7 +116,7 @@ class Piece_Unity_Plugin_Common
             $extension = $this->_extensionPoints[ strtolower($extensionPoint) ];
         }
 
-        if (is_null($extension)) {
+        if (is_null($extension) || !is_string($extension)) {
             return $extension;
         }
 
