@@ -106,7 +106,7 @@ class Piece_Unity_Plugin_Factory
      */
     function &_loadPlugin($plugin)
     {
-        $file = str_replace('_', DIRECTORY_SEPARATOR, $plugin) . '.php';
+        $file = str_replace('_', '/', $plugin) . '.php';
         if (!@include_once $file) {
             $error = &Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
                                                    "File [ $file ] not found or was not readable."
