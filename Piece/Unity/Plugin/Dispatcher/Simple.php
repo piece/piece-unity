@@ -104,7 +104,14 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
         $file = realpath("$actionPath/" . str_replace('_', '/', $class) . '.php');
         if ($file && is_readable($file)) {
             @include_once $file;
-            if (class_exists($class, false)) {
+
+            if (version_compare(phpversion(), '5.0.0', '<')) {
+                $result = class_exists($class);
+            } else {
+                $result = class_exists($class, false);
+            }
+
+            if ($result) {
                 $action = &new $class();
                 $action->invoke();
             }
