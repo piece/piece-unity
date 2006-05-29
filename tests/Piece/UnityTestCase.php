@@ -92,9 +92,9 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
                                      'Foo'
                                      );
         $dynamicConfig->setConfiguration(PIECE_UNITY_ROOT_PLUGIN,
-                                     'Bar',
-                                     'Baz'
-                                     );
+                                         'Bar',
+                                         'Baz'
+                                         );
         Piece_Unity::configure(dirname(__FILE__) . '/../../data',
                                dirname(__FILE__),
                                $dynamicConfig
