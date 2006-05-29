@@ -209,10 +209,10 @@ class Piece_Unity_Config
     function merge(&$config)
     {
         $extensions = $config->getExtensions();
-        array_walk($extensions, array(__CLASS__, 'mergeExtensions'));
+        array_walk($extensions, array(&$this, 'mergeExtensions'));
 
         $configurations = $config->getConfigurations();
-        array_walk($configurations, array(__CLASS__, 'mergeConfigurations'));
+        array_walk($configurations, array(&$this, 'mergeConfigurations'));
     }
 
     // }}}
@@ -223,7 +223,6 @@ class Piece_Unity_Config
      *
      * @param string $value
      * @param string $key
-     * @static
      */
     function mergeExtensions($value, $plugin)
     {
@@ -240,7 +239,6 @@ class Piece_Unity_Config
      *
      * @param string $value
      * @param string $key
-     * @static
      */
     function mergeConfigurations($value, $plugin)
     {
