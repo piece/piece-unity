@@ -132,7 +132,7 @@ class Piece_Unity_Context
      */
     function setRequest(&$request)
     {
-        $this->_request = $request;
+        $this->_request = &$request;
     }
 
     // }}}
