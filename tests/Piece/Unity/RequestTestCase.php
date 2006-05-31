@@ -75,21 +75,37 @@ class Piece_Unity_RequestTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function testSettingParameter()
+    function testSettingParameters()
     {
         $request = &new Piece_Unity_Request();
-        $request->setParameter('foo:bar', 'baz');
+        $request->setParameter('foo', 'bar');
+        $request->setParameter('bar', 'baz');
 
-        $this->assertEquals('baz', $request->getParameter('foo:bar'));
+        $this->assertEquals('bar', $request->getParameter('foo'));
+        $this->assertEquals('baz', $request->getParameter('bar'));
     }
 
-    function testCheckingParameter()
+    function testCheckingParameters()
     {
         $request = &new Piece_Unity_Request();
-        $request->setParameter('foo:bar', 'baz');
+        $request->setParameter('foo', 'bar');
+        $request->setParameter('bar', 'baz');
 
-        $this->assertTrue($request->hasParameter('foo:bar'));
-        $this->assertFalse($request->hasParameter('bar:baz'));
+        $this->assertTrue($request->hasParameter('foo'));
+        $this->assertTrue($request->hasParameter('bar'));
+        $this->assertFalse($request->hasParameter('baz'));
+    }
+
+    function testImportingParameters()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_GET['foo'] = 'bar';
+        $_GET['bar'] = 'baz';
+
+        $request = &new Piece_Unity_Request();
+
+        $this->assertEquals('bar', $request->getParameter('foo'));
+        $this->assertEquals('baz', $request->getParameter('bar'));
     }
 
     /**#@-*/
