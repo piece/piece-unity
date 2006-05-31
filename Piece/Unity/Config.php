@@ -71,6 +71,8 @@ class Piece_Unity_Config
     var $_configurations = array();
     var $_configurationDirectory;
     var $_cacheDirectory;
+    var $_mergedExtensions = array();
+    var $_mergedConfigurations = array();
     var $_error;
 
     /**#@-*/
@@ -242,6 +244,7 @@ class Piece_Unity_Config
     {
         foreach ($value as $extensionPoint => $extension) {
             $this->_extensions[ strtolower($plugin) ][ strtolower($extensionPoint) ] = $extension;
+            $this->_mergedExtensions[ strtolower($plugin) ][ strtolower($extensionPoint) ] = $extension;
         }
     }
 
@@ -258,6 +261,7 @@ class Piece_Unity_Config
     {
         foreach ($value as $configurationPoint => $configuration) {
             $this->_configurations[ strtolower($plugin) ][ strtolower($configurationPoint) ] = $configuration;
+            $this->_mergedConfigurations[ strtolower($plugin) ][ strtolower($configurationPoint) ] = $configuration;
         }
     }
 
@@ -325,6 +329,48 @@ class Piece_Unity_Config
     function getError()
     {
         return $this->_error;
+    }
+
+    // }}}
+    // {{{ isMergedExtensionPoint()
+
+    /**
+     * Returns whether the given extension point is merged with a dynamic configration.
+     *
+     * @param string $plugin
+     * @param string $extensionPoint
+     * @return boolean
+     */
+    function isMergedExtensionPoint($plugin, $extensionPoint)
+    {
+        if (array_key_exists(strtolower($plugin), $this->_mergedExtensions)
+            && array_key_exists(strtolower($extensionPoint), $this->_mergedExtensions[ strtolower($plugin) ])
+            ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // }}}
+    // {{{ isMergedConfigurationPoint()
+
+    /**
+     * Returns whether the given configuration point is merged with a dynamic configration.
+     *
+     * @param string $plugin
+     * @param string $configurationPoint
+     * @return boolean
+     */
+    function isMergedConfigurationPoint($plugin, $configurationPoint)
+    {
+        if (array_key_exists(strtolower($plugin), $this->_mergedConfigurations)
+            && array_key_exists(strtolower($configurationPoint), $this->_mergedConfigurations[ strtolower($plugin) ])
+            ) {
+            return true;
+        }
+
+        return false;
     }
 
     /**#@-*/
