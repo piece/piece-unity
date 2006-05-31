@@ -77,6 +77,12 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
      * @access public
      */
 
+    function tearDown()
+    {
+        $context = &Piece_Unity_Context::singleton();
+        $context->clear();
+    }
+
     function testSettingView()
     {
         $context = &Piece_Unity_Context::singleton();
@@ -95,6 +101,19 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
 
         $this->assertTrue($requestB->hasParameter('foo'));
         $this->assertEquals($requestA->getParameter('foo'), $requestB->getParameter('foo'));
+    }
+
+    function testClearingProperties()
+    {
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration(new stdClass());
+        $context->setRequest(new stdClass());
+        $context->setView('foo');
+        $context->clear();
+
+        $this->assertNull($context->getConfiguration());
+        $this->assertNull($context->getView());
+        $this->assertNull($context->getRequest());
     }
 
     /**#@-*/
