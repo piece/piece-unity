@@ -87,7 +87,7 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
     function testRendering()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET['event'] = 'example';
+        $_GET['event'] = 'Example';
 
         $request = &new Piece_Unity_Request();
         $context = &Piece_Unity_Context::singleton();
