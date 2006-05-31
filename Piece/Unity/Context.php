@@ -174,6 +174,19 @@ class Piece_Unity_Context
         return $this->_request;
     }
 
+    // }}}
+    // {{{ clear()
+
+    /**
+     * Clears all properties.
+     */
+    function clear()
+    {
+        $this->_config = null;
+        $this->_view = null;
+        $this->_request = null;
+    }
+
     /**#@-*/
 
     /**#@+
