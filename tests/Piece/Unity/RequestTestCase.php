@@ -75,7 +75,7 @@ class Piece_Unity_RequestTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function testSettingParameters()
+    function testSettingParameter()
     {
         $request = &new Piece_Unity_Request();
         $request->setParameter('foo', 'bar');
@@ -85,7 +85,7 @@ class Piece_Unity_RequestTestCase extends PHPUnit_TestCase
         $this->assertEquals('baz', $request->getParameter('bar'));
     }
 
-    function testCheckingParameters()
+    function testCheckingParameter()
     {
         $request = &new Piece_Unity_Request();
         $request->setParameter('foo', 'bar');
