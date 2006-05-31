@@ -82,6 +82,8 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
                                             'automaticSerialization' => true)
                                       );
         $cache->clean();
+        $context = &Piece_Unity_Context::singleton();
+        $context->clear();
     }
 
     function testConfiguration()
@@ -95,10 +97,10 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
                                          'Bar',
                                          'Baz'
                                          );
-        Piece_Unity::configure(dirname(__FILE__) . '/../../data',
-                               dirname(__FILE__),
-                               $dynamicConfig
-                               );
+        $unity = &new Piece_Unity(dirname(__FILE__) . '/../../data',
+                                  dirname(__FILE__),
+                                  $dynamicConfig
+                                  );
         $context = &Piece_Unity_Context::singleton();
         $config = &$context->getConfiguration();
 
@@ -121,10 +123,10 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
                                      'Bar',
                                      'Baz'
                                      );
-        Piece_Unity::configure(dirname(__FILE__) . '/../../data',
-                               dirname(__FILE__),
-                               $dynamicConfig
-                               );
+        $unity = &new Piece_Unity(dirname(__FILE__) . '/../../data',
+                                  dirname(__FILE__),
+                                  $dynamicConfig
+                                  );
         $context = &Piece_Unity_Context::singleton();
         $config = &$context->getConfiguration();
 
@@ -140,14 +142,26 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
 
     function testConfigurationWithoutDynamicConfiguration()
     {
-        Piece_Unity::configure(dirname(__FILE__) . '/../../data',
-                               dirname(__FILE__),
-                               null
-                               );
+        $unity = &new Piece_Unity(dirname(__FILE__) . '/../../data',
+                                  dirname(__FILE__),
+                                  null
+                                  );
         $context = &Piece_Unity_Context::singleton();
         $config = &$context->getConfiguration();
 
         $this->assertTrue(is_a($config, 'Piece_Unity_Config'));
+    }
+
+    function testDispatch()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_GET['event'] = 'foo';
+
+        $unity = &new Piece_Unity();
+        $unity->dispatch();
+        $context = &Piece_Unity_Context::singleton();
+
+        $this->assertTrue('foo', $context->getView());
     }
 
     /**#@-*/
