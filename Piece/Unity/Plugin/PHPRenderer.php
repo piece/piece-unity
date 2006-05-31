@@ -90,13 +90,17 @@ class Piece_Unity_Plugin_PHPRenderer extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $template = $this->_context->getView() . $this->getConfiguration('templateSuffix');
+        $view = str_replace('.', '', $this->_context->getView());
         $templatePath = $this->getConfiguration('templatePath');
-        if (!is_null($templatePath)) {
-            $template = "$templatePath/$template";
+        if (is_null($templatePath)) {
+            return;
         }
 
-        include_once $template;
+        $file = realpath("$templatePath/" . str_replace('_', '/', $view) . '.php');
+
+        if ($file && is_readable($file)) {
+            @include_once $file;
+        }
     }
 
     /**#@-*/
