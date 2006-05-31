@@ -78,6 +78,12 @@ class Piece_Unity_Plugin_DispatcherTestCase extends PHPUnit_TestCase
      * @access public
      */
 
+    function tearDown()
+    {
+        $context = &Piece_Unity_Context::singleton();
+        $context->clear();
+    }
+
     function testDispatchingWithOneDispatcher()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
