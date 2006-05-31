@@ -72,10 +72,6 @@ class Piece_Unity
      * @access private
      */
 
-    var $_configDirectory;
-    var $_cacheDirectory;
-    var $_dynamicConfig;
-
     /**#@-*/
 
     /**#@+
@@ -97,10 +93,7 @@ class Piece_Unity
                          $dynamicConfig = null
                          )
     {
-        $this->_configDirectory = $configDirectory;
-        $this->_cacheDirectory = $cacheDirectory;
-        $this->_dynamicConfig = $dynamicConfig;
-        $this->_configure();
+        $this->_configure($configDirectory, $cacheDirectory, $dynamicConfig);
     }
 
     // }}}
@@ -136,24 +129,32 @@ class Piece_Unity
      * Second this method merges the given configuretion into the loaded
      * configuration.
      * Finally this method sets the configuration to the current context.
+     *
+     * @param string             $configDirectory
+     * @param string             $cacheDirectory
+     * @param Piece_Unity_Config $dynamicConfig
      */
-    function _configure()
+    function _configure($configDirectory = null,
+                        $cacheDirectory = null,
+                        $dynamicConfig = null
+                        )
     {
         PEAR_ErrorStack::staticPushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
 
-        $config = &Piece_Unity_Config_Factory::factory($this->_configDirectory, $this->_cacheDirectory);
+        $config = &Piece_Unity_Config_Factory::factory($configDirectory, $cacheDirectory);
 
         PEAR_ErrorStack::staticPopCallback();
 
-        $config->setConfigurationDirectory($this->_configDirectory);
+        $config->setConfigurationDirectory($configDirectory);
+        $config->setCacheDirectory($cacheDirectory);
 
         if (PEAR_ErrorStack::staticHasErrors()) {
             $stack = &Piece_Unity_Error::getErrorStack();
             $config->setError($stack->pop());
         }
 
-        if (is_a($this->_dynamicConfig, 'Piece_Unity_Config')) {
-            $config->merge($this->_dynamicConfig);
+        if (is_a($dynamicConfig, 'Piece_Unity_Config')) {
+            $config->merge($dynamicConfig);
         }
 
         $context = &Piece_Unity_Context::singleton();
