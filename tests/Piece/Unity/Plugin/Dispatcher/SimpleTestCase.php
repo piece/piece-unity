@@ -124,7 +124,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
     function testRelativePathVulnerability()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET['event'] = '../External';
+        $_GET['event'] = '../RelativePathVulnerability';
         $GLOBALS['actionCalled'] = false;
         $GLOBALS['ExternalActionLoaded'] = false;
 
@@ -137,7 +137,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
         $view = $dispatcher->invoke();
 
-        $this->assertEquals('../External', $view);
+        $this->assertEquals('../RelativePathVulnerability', $view);
         $this->assertFalse($GLOBALS['actionCalled']);
         $this->assertFalse($GLOBALS['ExternalActionLoaded']);
 
