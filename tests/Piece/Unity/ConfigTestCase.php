@@ -151,6 +151,21 @@ class Piece_Unity_ConfigTestCase extends PHPUnit_TestCase
                             );
     }
 
+    function testMergingConfiguration()
+    {
+        $this->_config->setExtension('Foo', 'bar', 'Bar');
+        $this->_config->setConfiguration('Bar', 'baz', 'Baz');
+        $config = &new Piece_Unity_Config();
+        $config->setExtension('Foo', 'bar', 'Baz');
+        $config->setConfiguration('Bar', 'baz', 'Qux');
+        $this->_config->merge($config);
+
+        $this->assertEquals('Baz', $this->_config->getExtension('Foo', 'bar'));
+        $this->assertEquals('Qux', $this->_config->getConfiguration('Bar', 'baz'));
+        $this->assertTrue($this->_config->isMergedExtensionPoint('Foo', 'bar'));
+        $this->assertTrue($this->_config->isMergedConfigurationPoint('Bar', 'baz'));
+    }
+
     /**#@-*/
 
     /**#@+
