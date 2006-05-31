@@ -40,8 +40,8 @@
 
 require_once 'Piece/Unity/Plugin/Dispatcher.php';
 
-// require_once 'Piece/Unity/Request.php';
-// require_once 'Piece/Unity/Config.php';
+require_once 'Piece/Unity/Request.php';
+require_once 'Piece/Unity/Config.php';
 
 // {{{ Piece_Unity_Plugin_DispatcherTestCase
 
@@ -80,8 +80,10 @@ class Piece_Unity_Plugin_DispatcherTestCase extends PHPUnit_TestCase
 
     function testDispatchingWithOneDispatcher()
     {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_GET['event'] = 'foo';
+
         $request = &new Piece_Unity_Request();
-        $request->setParameter('event', 'foo');
         $context = &Piece_Unity_Context::singleton();
         $context->setRequest($request);
         $config = &new Piece_Unity_Config();
