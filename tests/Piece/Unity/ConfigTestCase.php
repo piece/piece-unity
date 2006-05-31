@@ -142,6 +142,15 @@ class Piece_Unity_ConfigTestCase extends PHPUnit_TestCase
         $this->assertTrue(is_array($this->_config->getError()));
     }
 
+    function testSettingCacheDirectory()
+    {
+        $this->_config->setCacheDirectory('/path/to/cache');
+
+        $this->assertEquals('/path/to/cache',
+                            $this->_config->getCacheDirectory()
+                            );
+    }
+
     /**#@-*/
 
     /**#@+
