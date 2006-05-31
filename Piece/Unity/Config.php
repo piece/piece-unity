@@ -70,6 +70,7 @@ class Piece_Unity_Config
     var $_extensions = array();
     var $_configurations = array();
     var $_configurationDirectory;
+    var $_cacheDirectory;
     var $_error;
 
     /**#@-*/
@@ -119,6 +120,19 @@ class Piece_Unity_Config
     function setConfigurationDirectory($configDirectory)
     {
         $this->_configurationDirectory = $configDirectory;
+    }
+
+    // }}}
+    // {{{ setCacheDirectory()
+
+    /**
+     * Sets the cache directory.
+     *
+     * @param string $cacheDirectory
+     */
+    function setCacheDirectory($cacheDirectory)
+    {
+        $this->_cacheDirectory = $cacheDirectory;
     }
 
     // }}}
@@ -284,6 +298,19 @@ class Piece_Unity_Config
     function getConfigurationDirectory()
     {
         return $this->_configurationDirectory;
+    }
+
+    // }}}
+    // {{{ getCacheDirectory()
+
+    /**
+     * Gets the cache directory.
+     *
+     * @return string
+     */
+    function getCacheDirectory()
+    {
+        return $this->_cacheDirectory;
     }
 
     // }}}
