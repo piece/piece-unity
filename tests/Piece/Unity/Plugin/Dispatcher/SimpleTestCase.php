@@ -78,15 +78,21 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
      * @access public
      */
 
+    function setUp()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+    }
+
     function tearDown()
     {
         $context = &Piece_Unity_Context::singleton();
         $context->clear();
+        unset($_GET['event']);
+        unset($_SERVER['REQUEST_METHOD']);
     }
 
     function testDispatchingWithoutAction()
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['event'] = 'foo';
 
         $request = &new Piece_Unity_Request();
@@ -102,20 +108,10 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
 
     function testDispatchingWithAction()
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['event'] = 'Example';
         $GLOBALS['actionCalled'] = false;
 
-        $request = &new Piece_Unity_Request();
-        $context = &Piece_Unity_Context::singleton();
-        $context->setRequest($request);
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Piece_Unity_Plugin_Dispatcher_Simple', 'actionPath', dirname(__FILE__));
-        $context->setConfiguration($config);
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
-        $view = $dispatcher->invoke();
-
-        $this->assertEquals('Example', $view);
+        $this->assertEquals('Example', $this->_dispatch());
         $this->assertTrue($GLOBALS['actionCalled']);
 
         unset($GLOBALS['actionCalled']);
@@ -123,26 +119,16 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
 
     function testRelativePathVulnerability()
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['event'] = '../RelativePathVulnerability';
         $GLOBALS['actionCalled'] = false;
-        $GLOBALS['ExternalActionLoaded'] = false;
+        $GLOBALS['RelativePathVulnerabilityActionLoaded'] = false;
 
-        $request = &new Piece_Unity_Request();
-        $context = &Piece_Unity_Context::singleton();
-        $context->setRequest($request);
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Piece_Unity_Plugin_Dispatcher_Simple', 'actionPath', dirname(__FILE__));
-        $context->setConfiguration($config);
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
-        $view = $dispatcher->invoke();
-
-        $this->assertEquals('../RelativePathVulnerability', $view);
+        $this->assertEquals('../RelativePathVulnerability', $this->_dispatch());
         $this->assertFalse($GLOBALS['actionCalled']);
-        $this->assertFalse($GLOBALS['ExternalActionLoaded']);
+        $this->assertFalse($GLOBALS['RelativePathVulnerabilityActionLoaded']);
 
         unset($GLOBALS['actionCalled']);
-        unset($GLOBALS['ExternalActionLoaded']);
+        unset($GLOBALS['RelativePathVulnerabilityActionLoaded']);
     }
 
     /**#@-*/
@@ -150,6 +136,19 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
     /**#@+
      * @access private
      */
+
+    function _dispatch()
+    {
+        $request = &new Piece_Unity_Request();
+        $context = &Piece_Unity_Context::singleton();
+        $context->setRequest($request);
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Piece_Unity_Plugin_Dispatcher_Simple', 'actionPath', dirname(__FILE__));
+        $context->setConfiguration($config);
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
+
+        return $dispatcher->invoke();
+    }
 
     /**#@-*/
 

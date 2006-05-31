@@ -78,10 +78,17 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
      * @access public
      */
 
+    function setUp()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+    }
+
     function tearDown()
     {
         $context = &Piece_Unity_Context::singleton();
         $context->clear();
+        unset($_GET['event']);
+        unset($_SERVER['REQUEST_METHOD']);
     }
 
     function testRendering()
@@ -106,7 +113,6 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
 
     function _render()
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
         $request = &new Piece_Unity_Request();
         $context = &Piece_Unity_Context::singleton();
         $context->setRequest($request);
