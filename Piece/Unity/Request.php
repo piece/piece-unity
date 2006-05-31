@@ -74,6 +74,21 @@ class Piece_Unity_Request
      */
 
     // }}}
+    // {{{ constructor
+
+    /**
+     * Imports client request data correspoinding to the request method.
+     */
+    function Piece_Unity_Request()
+    {
+        if (@$_SERVER['REQUEST_METHOD'] == 'GET') {
+            $this->_parameters = $_GET;
+        } elseif (@$_SERVER['REQUEST_METHOD'] == 'POST') {
+            $this->_parameters = $_POST;
+        }
+    }
+
+    // }}}
     // {{{ setParameter()
 
     /**
