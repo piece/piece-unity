@@ -86,50 +86,16 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
 
     function testRendering()
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['event'] = 'Example';
 
-        $request = &new Piece_Unity_Request();
-        $context = &Piece_Unity_Context::singleton();
-        $context->setRequest($request);
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Piece_Unity_Plugin_Dispatcher_Simple', 'actionPath', dirname(__FILE__));
-        $config->setConfiguration('Piece_Unity_Plugin_PHPRenderer', 'templatePath', dirname(__FILE__));
-        $context->setConfiguration($config);
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
-        $context->setView($dispatcher->invoke());
-        $renderer = &new Piece_Unity_Plugin_PHPRenderer();
-
-        ob_start();
-        $renderer->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
-
-        $this->assertEquals("This is a test.\n", $buffer);
+        $this->assertEquals("This is a test.\n", $this->_render());
     }
 
     function testRelativePathVulnerability()
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['event'] = '../RelativePathVulnerability';
 
-        $request = &new Piece_Unity_Request();
-        $context = &Piece_Unity_Context::singleton();
-        $context->setRequest($request);
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Piece_Unity_Plugin_Dispatcher_Simple', 'actionPath', dirname(__FILE__));
-        $config->setConfiguration('Piece_Unity_Plugin_PHPRenderer', 'templatePath', dirname(__FILE__));
-        $context->setConfiguration($config);
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
-        $context->setView($dispatcher->invoke());
-        $renderer = &new Piece_Unity_Plugin_PHPRenderer();
-
-        ob_start();
-        $renderer->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
-
-        $this->assertEquals('', $buffer);
+        $this->assertEquals('', $this->_render());
     }
 
     /**#@-*/
@@ -137,6 +103,28 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
     /**#@+
      * @access private
      */
+
+    function _render()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $request = &new Piece_Unity_Request();
+        $context = &Piece_Unity_Context::singleton();
+        $context->setRequest($request);
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Piece_Unity_Plugin_Dispatcher_Simple', 'actionPath', dirname(__FILE__));
+        $config->setConfiguration('Piece_Unity_Plugin_PHPRenderer', 'templatePath', dirname(__FILE__));
+        $context->setConfiguration($config);
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
+        $context->setView($dispatcher->invoke());
+        $renderer = &new Piece_Unity_Plugin_PHPRenderer();
+
+        ob_start();
+        $renderer->invoke();
+        $buffer = ob_get_contents();
+        ob_end_clean();
+
+        return $buffer;
+    }
 
     /**#@-*/
 
