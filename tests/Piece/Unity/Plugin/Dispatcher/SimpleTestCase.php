@@ -78,10 +78,18 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
      * @access public
      */
 
+    function tearDown()
+    {
+        $context = &Piece_Unity_Context::singleton();
+        $context->clear();
+    }
+
     function testDispatchingWithoutAction()
     {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_GET['event'] = 'foo';
+
         $request = &new Piece_Unity_Request();
-        $request->setParameter('event', 'foo');
         $context = &Piece_Unity_Context::singleton();
         $context->setRequest($request);
         $config = &new Piece_Unity_Config();
@@ -94,10 +102,11 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
 
     function testDispatchingWithAction()
     {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_GET['event'] = 'Example';
         $GLOBALS['actionCalled'] = false;
 
         $request = &new Piece_Unity_Request();
-        $request->setParameter('event', 'Example');
         $context = &Piece_Unity_Context::singleton();
         $context->setRequest($request);
         $config = &new Piece_Unity_Config();
@@ -114,11 +123,12 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
 
     function testRelativePathVulnerability()
     {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_GET['event'] = '../External';
         $GLOBALS['actionCalled'] = false;
         $GLOBALS['ExternalActionLoaded'] = false;
 
         $request = &new Piece_Unity_Request();
-        $request->setParameter('event', '../External');
         $context = &Piece_Unity_Context::singleton();
         $context->setRequest($request);
         $config = &new Piece_Unity_Config();
