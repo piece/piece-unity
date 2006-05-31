@@ -40,6 +40,7 @@
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Plugin.php';
 require_once 'Piece/Unity/Config/Factory.php';
+require_once 'Piece/Unity/Request.php';
 
 // {{{ constants
 
@@ -71,12 +72,36 @@ class Piece_Unity
      * @access private
      */
 
+    var $_configDirectory;
+    var $_cacheDirectory;
+    var $_dynamicConfig;
+
     /**#@-*/
 
     /**#@+
      * @access public
-     * @static
      */
+
+    // }}}
+    // {{{ constructor
+
+    /**
+     * Configures the application.
+     *
+     * @param string             $configDirectory
+     * @param string             $cacheDirectory
+     * @param Piece_Unity_Config $dynamicConfig
+     */
+    function Piece_Unity($configDirectory = null,
+                         $cacheDirectory = null,
+                         $dynamicConfig = null
+                         )
+    {
+        $this->_configDirectory = $configDirectory;
+        $this->_cacheDirectory = $cacheDirectory;
+        $this->_dynamicConfig = $dynamicConfig;
+        $this->_configure();
+    }
 
     // }}}
     // {{{ dispatch()
@@ -86,11 +111,20 @@ class Piece_Unity
      */
     function dispatch()
     {
+        $request = &new Piece_Unity_Request();
+        $context = &Piece_Unity_Context::singleton();
+        $context->setRequest($request);
         Piece_Unity_Plugin::invoke(PIECE_UNITY_ROOT_PLUGIN);
     }
 
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
+
     // }}}
-    // {{{ configure()
+    // {{{ _configure()
 
     /**
      * Configures the application.
@@ -102,42 +136,29 @@ class Piece_Unity
      * Second this method merges the given configuretion into the loaded
      * configuration.
      * Finally this method sets the configuration to the current context.
-     *
-     * @param string             $configDirectory
-     * @param string             $cacheDirectory
-     * @param Piece_Unity_Config $dynamicConfig
      */
-    function configure($configDirectory = null,
-                       $cacheDirectory = null,
-                       $dynamicConfig = null
-                       )
+    function _configure()
     {
         PEAR_ErrorStack::staticPushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
 
-        $config = &Piece_Unity_Config_Factory::factory($configDirectory, $cacheDirectory);
+        $config = &Piece_Unity_Config_Factory::factory($this->_configDirectory, $this->_cacheDirectory);
 
         PEAR_ErrorStack::staticPopCallback();
 
-        $config->setConfigurationDirectory($configDirectory);
+        $config->setConfigurationDirectory($this->_configDirectory);
 
         if (PEAR_ErrorStack::staticHasErrors()) {
             $stack = &Piece_Unity_Error::getErrorStack();
             $config->setError($stack->pop());
         }
 
-        if (is_a($dynamicConfig, 'Piece_Unity_Config')) {
-            $config->merge($dynamicConfig);
+        if (is_a($this->_dynamicConfig, 'Piece_Unity_Config')) {
+            $config->merge($this->_dynamicConfig);
         }
 
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
     }
-
-    /**#@-*/
-
-    /**#@+
-     * @access private
-     */
 
     /**#@-*/
 
