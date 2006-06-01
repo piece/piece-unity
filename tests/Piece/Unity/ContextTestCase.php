@@ -41,6 +41,7 @@
 require_once 'Piece/Unity/Context.php';
 
 require_once 'Piece/Unity/Request.php';
+require_once 'Piece/Unity/ViewElement.php';
 
 // {{{ Piece_Unity_ContextTestCase
 
@@ -93,14 +94,11 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
 
     function testSettingRequest()
     {
-        $requestA = &new Piece_Unity_Request();
+        $request = &new Piece_Unity_Request();
         $context = &Piece_Unity_Context::singleton();
-        $context->setRequest($requestA);
-        $requestA->setParameter('foo', 'bar');
-        $requestB = &$context->getRequest();
+        $context->setRequest($request);
 
-        $this->assertTrue($requestB->hasParameter('foo'));
-        $this->assertEquals($requestA->getParameter('foo'), $requestB->getParameter('foo'));
+        $this->assertTrue(is_a($context->getRequest(), 'Piece_Unity_Request'));
     }
 
     function testClearingProperties()
@@ -114,6 +112,16 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $this->assertNull($context->getConfiguration());
         $this->assertNull($context->getView());
         $this->assertNull($context->getRequest());
+        $this->assertNull($context->getViewElement());
+    }
+
+    function testSettingViewElement()
+    {
+        $viewElement = &new Piece_Unity_ViewElement();
+        $context = &Piece_Unity_Context::singleton();
+        $context->setViewElement($viewElement);
+
+        $this->assertTrue(is_a($context->getViewElement(), 'Piece_Unity_ViewElement'));
     }
 
     /**#@-*/
