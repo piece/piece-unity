@@ -106,6 +106,10 @@ class Piece_Unity_RequestTestCase extends PHPUnit_TestCase
 
         $this->assertEquals('bar', $request->getParameter('foo'));
         $this->assertEquals('baz', $request->getParameter('bar'));
+
+        unset($_SERVER['REQUEST_METHOD']);
+        unset($_GET['foo']);
+        unset($_GET['bar']);
     }
 
     /**#@-*/
