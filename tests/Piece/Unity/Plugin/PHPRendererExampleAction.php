@@ -34,11 +34,11 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://iteman.typepad.jp/piece/
- * @see        Piece_Unity_Plugin_Dispatcher_Simple
+ * @see        Piece_Unity_Plugin_PHPRenderer
  * @since      File available since Release 0.1.0
  */
 
-// {{{ ExampleAction
+// {{{ PHPRendererExampleAction
 
 /**
  * Action class for the event 'Example'.
@@ -49,10 +49,10 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://iteman.typepad.jp/piece/
- * @see        Piece_Unity_Plugin_Dispatcher_Simple
+ * @see        Piece_Unity_Plugin_PHPRenderer
  * @since      Class available since Release 0.1.0
  */
-class ExampleAction
+class PHPRendererExampleAction
 {
 
     // {{{ properties
