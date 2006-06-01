@@ -38,10 +38,10 @@
  * @since      File available since Release 0.1.0
  */
 
-// {{{ ExampleAction
+// {{{ SimpleExampleAction
 
 /**
- * Action class for the event 'Example'.
+ * Action class for the event 'SimpleExample'.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
@@ -52,7 +52,7 @@
  * @see        Piece_Unity_Plugin_Dispatcher_Simple
  * @since      Class available since Release 0.1.0
  */
-class ExampleAction
+class SimpleExampleAction
 {
 
     // {{{ properties
