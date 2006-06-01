@@ -98,6 +98,11 @@ class Piece_Unity_PluginTestCase extends PHPUnit_TestCase
         $this->assertEquals(1, $GLOBALS['barinvokeCalled']);
         $this->assertEquals(1, $GLOBALS['bazinvokeCalled']);
         $this->assertEquals(1, $GLOBALS['quxinvokeCalled']);
+
+        unset($GLOBALS['fooinvokeCalled']);
+        unset($GLOBALS['barinvokeCalled']);
+        unset($GLOBALS['bazinvokeCalled']);
+        unset($GLOBALS['quxinvokeCalled']);
     }
 
     /**#@-*/
