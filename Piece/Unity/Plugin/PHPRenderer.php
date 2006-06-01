@@ -99,6 +99,9 @@ class Piece_Unity_Plugin_PHPRenderer extends Piece_Unity_Plugin_Common
         $file = realpath("$templatePath/" . str_replace('_', '/', $view) . '.php');
 
         if ($file && is_readable($file)) {
+            $viewElement = &$this->_context->getViewElement();
+            extract($viewElement->getElements());
+
             @include_once $file;
         }
     }
