@@ -41,7 +41,7 @@
 // {{{ ExampleAction
 
 /**
- * Action class for the event 'example'.
+ * Action class for the event 'Example'.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
@@ -73,7 +73,7 @@ class ExampleAction
      * @access public
      */
 
-    function invoke()
+    function invoke(&$context)
     {
         $GLOBALS['actionCalled'] = true;
     }
