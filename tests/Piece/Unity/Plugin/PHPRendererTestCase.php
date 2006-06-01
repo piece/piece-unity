@@ -42,6 +42,7 @@ require_once 'Piece/Unity/Plugin/PHPRenderer.php';
 
 require_once 'Piece/Unity/Request.php';
 require_once 'Piece/Unity/Config.php';
+require_once 'Piece/Unity/ViewElement.php';
 
 // {{{ Piece_Unity_Plugin_PHPRendererTestCase
 
@@ -93,9 +94,9 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
 
     function testRendering()
     {
-        $_GET['event'] = 'Example';
+        $_GET['event'] = 'PHPRendererExample';
 
-        $this->assertEquals("This is a test.\n", $this->_render());
+        $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $this->_render());
     }
 
     function testRelativePathVulnerability()
@@ -113,13 +114,19 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
 
     function _render()
     {
-        $request = &new Piece_Unity_Request();
         $context = &Piece_Unity_Context::singleton();
+
+        $request = &new Piece_Unity_Request();
         $context->setRequest($request);
+
+        $viewElement = &new Piece_Unity_ViewElement();
+        $context->setViewElement($viewElement);
+
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Piece_Unity_Plugin_Dispatcher_Simple', 'actionPath', dirname(__FILE__));
         $config->setConfiguration('Piece_Unity_Plugin_PHPRenderer', 'templatePath', dirname(__FILE__));
         $context->setConfiguration($config);
+
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
         $context->setView($dispatcher->invoke());
         $renderer = &new Piece_Unity_Plugin_PHPRenderer();
