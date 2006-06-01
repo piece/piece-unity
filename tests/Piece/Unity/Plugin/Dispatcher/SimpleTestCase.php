@@ -139,12 +139,15 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
 
     function _dispatch()
     {
-        $request = &new Piece_Unity_Request();
         $context = &Piece_Unity_Context::singleton();
+
+        $request = &new Piece_Unity_Request();
         $context->setRequest($request);
+
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Piece_Unity_Plugin_Dispatcher_Simple', 'actionPath', dirname(__FILE__));
         $context->setConfiguration($config);
+
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
 
         return $dispatcher->invoke();
