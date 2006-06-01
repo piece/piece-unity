@@ -73,6 +73,7 @@ class Piece_Unity_Context
     var $_config;
     var $_view;
     var $_request;
+    var $_viewElement;
 
     /**#@-*/
 
@@ -136,6 +137,19 @@ class Piece_Unity_Context
     }
 
     // }}}
+    // {{{ setViewElement()
+
+    /**
+     * Sets the Piece_Unity_ViewElement object.
+     *
+     * @param Piece_Unity_ViewElement &$viewElement
+     */
+    function setViewElement(&$viewElement)
+    {
+        $this->_viewElement = &$viewElement;
+    }
+
+    // }}}
     // {{{ getConfiguration()
 
     /**
@@ -175,6 +189,19 @@ class Piece_Unity_Context
     }
 
     // }}}
+    // {{{ getViewElement()
+
+    /**
+     * Sets the Piece_Unity_ViewElement object.
+     *
+     * @return Piece_Unity_ViewElement
+     */
+    function &getViewElement()
+    {
+        return $this->_viewElement;
+    }
+
+    // }}}
     // {{{ clear()
 
     /**
@@ -185,6 +212,7 @@ class Piece_Unity_Context
         $this->_config = null;
         $this->_view = null;
         $this->_request = null;
+        $this->_viewElement = null;
     }
 
     /**#@-*/
