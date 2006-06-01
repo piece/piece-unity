@@ -98,6 +98,9 @@ class Piece_Unity_Plugin_DispatcherTestCase extends PHPUnit_TestCase
         $dispatcher->invoke();
 
         $this->assertEquals('foo', $context->getView());
+
+        unset($_SERVER['REQUEST_METHOD']);
+        unset($_GET['event']);
     }
 
     /**#@-*/
