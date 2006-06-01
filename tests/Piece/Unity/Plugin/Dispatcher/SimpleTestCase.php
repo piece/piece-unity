@@ -108,10 +108,10 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
 
     function testDispatchingWithAction()
     {
-        $_GET['event'] = 'Example';
+        $_GET['event'] = 'SimpleExample';
         $GLOBALS['actionCalled'] = false;
 
-        $this->assertEquals('Example', $this->_dispatch());
+        $this->assertEquals('SimpleExample', $this->_dispatch());
         $this->assertTrue($GLOBALS['actionCalled']);
 
         unset($GLOBALS['actionCalled']);
