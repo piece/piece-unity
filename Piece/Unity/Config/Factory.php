@@ -40,6 +40,7 @@
 require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'Cache/Lite/File.php';
+require_once 'PEAR.php';
 
 if (version_compare(phpversion(), '5.0.0', '<')) {
     require_once 'spyc.php';
@@ -104,7 +105,7 @@ class Piece_Unity_Config_Factory
         $absolutePathOfConfigDirectory = realpath($configDirectory);
         if (!$absolutePathOfConfigDirectory) {
             Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
-                                          "Configuration directory [ $configDirectory ] not found."
+                                          "The configuration directory [ $configDirectory ] not found."
                                           );
             $config = &new Piece_Unity_Config();
             return $config;
@@ -114,7 +115,7 @@ class Piece_Unity_Config_Factory
 
         if (!is_readable($absolutePathOfConfigFile)) {
             Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_READABLE,
-                                          "Configuration file [ $absolutePathOfConfigFile ] was not readable."
+                                          "The configuration file [ $absolutePathOfConfigFile ] was not readable."
                                           );
             $config = &new Piece_Unity_Config();
             return $config;
@@ -127,7 +128,7 @@ class Piece_Unity_Config_Factory
         $absolutePathOfCacheDirectory = realpath($cacheDirectory);
         if (!$absolutePathOfCacheDirectory) {
             Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
-                                          "Cache directory [ $cacheDirectory ] not found."
+                                          "The cache directory [ $cacheDirectory ] not found."
                                           );
             $config = &Piece_Unity_Config_Factory::_parseFile($absolutePathOfConfigFile);
             return $config;
@@ -137,7 +138,7 @@ class Piece_Unity_Config_Factory
             || !is_writable($absolutePathOfCacheDirectory)
             ) {
             Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_READABLE,
-                                          "Cache directory [ $absolutePathOfCacheDirectory ] was not readable or writable."
+                                          "The cache directory [ $absolutePathOfCacheDirectory ] was not readable or writable."
                                           );
             $config = &Piece_Unity_Config_Factory::_parseFile($absolutePathOfConfigFile);
             return $config;
@@ -171,12 +172,33 @@ class Piece_Unity_Config_Factory
     {
         $cache = &new Cache_Lite_File(array('cacheDir' => "$cacheDirectory/",
                                             'masterFile' => $masterFile,
-                                            'automaticSerialization' => true)
+                                            'automaticSerialization' => true,
+                                            'errorHandlingAPIBreak' => true)
                                       );
+
+        /*
+         * The Cache_Lite class always specifies PEAR_ERROR_RETURN when
+         * calling PEAR::raiseError in default.
+         */
         $config = $cache->get($masterFile);
+        if (PEAR::isError($config)) {
+            Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_CANNOT_READ,
+                                          "Cannot read the cache file in the directory [ $cacheDirectory ]."
+                                          );
+            $config = &Piece_Unity_Config_Factory::_parseFile($masterFile);
+            return $config;
+        }
+
         if (!$config) {
             $config = &Piece_Unity_Config_Factory::_parseFile($masterFile);
-            $cache->save($config);
+            $result = $cache->save($config);
+            if (PEAR::isError($result)) {
+                Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_CANNOT_WRITE,
+                                              "Cannot write the Piece_Unity_Config object to the cache file in the directory [ $cacheDirectory ]."
+                                              );
+                $config = &Piece_Unity_Config_Factory::_parseFile($masterFile);
+                return $config;
+            }
         }
 
         return $config;
