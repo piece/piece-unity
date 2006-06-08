@@ -80,7 +80,7 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
     function Piece_Unity_Plugin_Root()
     {
         parent::Piece_Unity_Plugin_Common();
-        $this->_addExtensionPoint('dispatcher', 'Dispatcher');
+        $this->_addExtensionPoint('dispatcher', 'DispatcherQueue');
         $this->_addExtensionPoint('renderer', 'PHPRenderer');
     }
 
