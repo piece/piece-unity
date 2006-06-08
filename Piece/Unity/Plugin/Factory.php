@@ -39,6 +39,12 @@
 
 require_once 'Piece/Unity/Error.php';
 
+// {{{ GLOBALS
+
+$GLOBALS['PIECE_UNITY_Plugin_Instances'] = array();
+$GLOBALS['PIECE_UNITY_Plugin_Paths'] = array(dirname(__FILE__) . '/../../..');
+
+// }}}
 // {{{ Piece_Unity_Plugin_Factory
 
 /**
@@ -79,22 +85,64 @@ class Piece_Unity_Plugin_Factory
     /**
      * Creates a plugin object from a configuration file or a cache.
      *
-     * @param string $pluginName
+     * @param string $plugin
      * @return mixed
      * @throws PEAR_ErrorStack
      * @static
      */
-    function &factory($pluginName)
+    function &factory($plugin)
     {
-        if (!class_exists($pluginName)) {
-            $result = &Piece_Unity_Plugin_Factory::_loadPlugin($pluginName);
-            if (Piece_Unity_Error::isError($result)) {
-                return $result;
+        $plugin = "Piece_Unity_Plugin_$plugin";
+        if (!array_key_exists($plugin, $GLOBALS['PIECE_UNITY_Plugin_Instances'])) {
+            PEAR_ErrorStack::staticPushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            foreach ($GLOBALS['PIECE_UNITY_Plugin_Paths'] as $pluginPath) {
+                Piece_Unity_Plugin_Factory::_load($plugin, $pluginPath);
+
+                if (version_compare(phpversion(), '5.0.0', '<')) {
+                    $found = class_exists($plugin);
+                } else {
+                    $found = class_exists($plugin, false);
+                }
+
+                if ($found) {
+                    break;
+                }
             }
+            PEAR_ErrorStack::staticPopCallback();
+
+            if (!$found) {
+                $error = &Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
+                                                        "The plugin [ $plugin ] not found in the directories.\n" .
+                                                        implode("\n", $GLOBALS['PIECE_UNITY_Plugin_Paths'])
+                                                        );
+                return $error;
+            }
+
+            $instance = &new $plugin();
+            if (!is_a($instance, 'Piece_Unity_Plugin_Common')) {
+                $error = &Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_INVALID_PLUGIN,
+                                                        "The plugin [ $plugin ] was invalid."
+                                                        );
+                return $error;
+            }
+
+            $GLOBALS['PIECE_UNITY_Plugin_Instances'][$plugin] = &$instance;
         }
 
-        $plugin = &new $pluginName();
-        return $plugin;
+        return $GLOBALS['PIECE_UNITY_Plugin_Instances'][$plugin];
+    }
+
+    // }}}
+    // {{{ addPluginPath()
+
+    /**
+     * Adds a plugin path.
+     *
+     * @param string $pluginPath
+     */
+    function addPluginPath($pluginPath)
+    {
+        array_unshift($GLOBALS['PIECE_UNITY_Plugin_Paths'], $pluginPath);
     }
 
     /**#@-*/
@@ -104,28 +152,39 @@ class Piece_Unity_Plugin_Factory
      */
 
     // }}}
-    // {{{ _loadPlugin()
+    // {{{ _load()
 
     /**
-     * Loads the file corresponding to the given class.
+     * Loads a plugin corresponding to the given plugin name.
      *
      * @param string $plugin
-     * @return string
+     * @param string $pluginPath
+     * @throws PEAR_ErrorStack
+     * @static
      */
-    function &_loadPlugin($plugin)
+    function &_load($plugin, $pluginPath)
     {
-        $file = str_replace('_', '/', $plugin) . '.php';
-        if (!@include_once $file) {
+        $file = realpath("$pluginPath/" . str_replace('_', '/', $plugin) . '.php');
+
+        if (!$file) {
             $error = &Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
-                                                   "File [ $file ] not found or was not readable."
+                                                   "The plugin file for the class [ $plugin ] not found."
                                                    );
             return $error;
         }
 
-        if (!class_exists($plugin)) {
-            $error = &Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_INVALID_PLUGIN,
-                                                    "Plugin [ $plugin ] not defined in file [ $file ]."
-                                                    );
+        if (!is_readable($file)) {
+            $error = &Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_READABLE,
+                                                   "The plugin file [ $file ] was not readable."
+                                                   );
+            return $error;
+        }
+
+//         if (!@include_once $file) {
+        if (!include_once $file) {
+            $error = &Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
+                                                   "The plugin file [ $file ] not found or was not readable."
+                                                   );
             return $error;
         }
 
