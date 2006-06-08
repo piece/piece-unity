@@ -34,19 +34,19 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://iteman.typepad.jp/piece/
- * @see        Piece_Unity_Plugin_Dispatcher
+ * @see        Piece_Unity_Plugin_DispatcherQueue
  * @since      File available since Release 0.1.0
  */
 
-require_once 'Piece/Unity/Plugin/Dispatcher.php';
+require_once 'Piece/Unity/Plugin/DispatcherQueue.php';
 
 require_once 'Piece/Unity/Request.php';
 require_once 'Piece/Unity/Config.php';
 
-// {{{ Piece_Unity_Plugin_DispatcherTestCase
+// {{{ Piece_Unity_Plugin_DispatcherQueueTestCase
 
 /**
- * TestCase for Piece_Unity_Plugin_Dispatcher
+ * TestCase for Piece_Unity_Plugin_DispatcherQueue
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
@@ -54,10 +54,10 @@ require_once 'Piece/Unity/Config.php';
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://iteman.typepad.jp/piece/
- * @see        Piece_Unity_Plugin_Dispatcher
+ * @see        Piece_Unity_Plugin_DispatcherQueue
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Plugin_DispatcherTestCase extends PHPUnit_TestCase
+class Piece_Unity_Plugin_DispatcherQueueTestCase extends PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -102,8 +102,8 @@ class Piece_Unity_Plugin_DispatcherTestCase extends PHPUnit_TestCase
         $context->setRequest($request);
         $config = &new Piece_Unity_Config();
         $context->setConfiguration($config);
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher();
-        $dispatcher->invoke();
+        $queue = &new Piece_Unity_Plugin_DispatcherQueue();
+        $queue->invoke();
 
         $this->assertEquals('foo', $context->getView());
 

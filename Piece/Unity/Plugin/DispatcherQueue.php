@@ -39,7 +39,7 @@
 
 require_once 'Piece/Unity/Plugin/Common.php';
 
-// {{{ Piece_Unity_Plugin_Dispatcher
+// {{{ Piece_Unity_Plugin_DispatcherQueue
 
 /**
  * @package    Piece_Unity
@@ -50,7 +50,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @link       http://iteman.typepad.jp/piece/
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Plugin_Dispatcher extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_DispatcherQueue extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
@@ -77,7 +77,7 @@ class Piece_Unity_Plugin_Dispatcher extends Piece_Unity_Plugin_Common
     /**
      * Defines extension points and configuration points for the plugin.
      */
-    function Piece_Unity_Plugin_Dispatcher()
+    function Piece_Unity_Plugin_DispatcherQueue()
     {
         parent::Piece_Unity_Plugin_Common();
         $this->_addExtensionPoint('dispatchers', array('Dispatcher_Simple'));
