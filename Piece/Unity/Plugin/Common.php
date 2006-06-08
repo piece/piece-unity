@@ -105,11 +105,12 @@ class Piece_Unity_Plugin_Common
      *
      * @param string $extensionPoint
      * @return string
+     * @throws PEAR_ErrorStack
      */
     function &getExtension($extensionPoint)
     {
         $conf = &$this->_context->getConfiguration();
-        $extension = $conf->getExtension(strtolower(get_class($this)),
+        $extension = $conf->getExtension(str_replace('piece_unity_plugin_', '', strtolower(get_class($this))),
                                          strtolower($extensionPoint)
                                          );
         if (is_null($extension)) {
@@ -136,7 +137,7 @@ class Piece_Unity_Plugin_Common
     function &getConfiguration($configurationPoint)
     {
         $conf = &$this->_context->getConfiguration();
-        $configuration = $conf->getConfiguration(strtolower(get_class($this)),
+        $configuration = $conf->getConfiguration(str_replace('piece_unity_plugin_', '', strtolower(get_class($this))),
                                                  strtolower($configurationPoint)
                                                  );
         if (is_null($configuration)) {

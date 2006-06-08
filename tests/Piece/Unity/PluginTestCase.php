@@ -74,18 +74,36 @@ class Piece_Unity_PluginInvokerTestCase extends PHPUnit_TestCase
      * @access private
      */
 
+    var $_pluginPaths;
+
     /**#@-*/
 
     /**#@+
      * @access public
      */
 
+    function setUp()
+    {
+        PEAR_ErrorStack::staticPushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+        $this->_pluginPaths = $GLOBALS['PIECE_UNITY_Plugin_Paths'];
+        Piece_Unity_Plugin_Factory::addPluginPath(dirname(__FILE__) . '/../..');
+    }
+
+    function tearDown()
+    {
+        $GLOBALS['PIECE_UNITY_Plugin_Instances'] = array();
+        $GLOBALS['PIECE_UNITY_Plugin_Paths'] = $this->_pluginPaths;
+        $stack = &Piece_Unity_Error::getErrorStack();
+        $stack->getErrors(true);
+        PEAR_ErrorStack::staticPopCallback();
+    }
+
     function testInvocation()
     {
-        $GLOBALS['fooinvokeCalled'] = 0;
-        $GLOBALS['barinvokeCalled'] = 0;
-        $GLOBALS['bazinvokeCalled'] = 0;
-        $GLOBALS['quxinvokeCalled'] = 0;
+        $GLOBALS['piece_unity_plugin_fooinvokeCalled'] = 0;
+        $GLOBALS['piece_unity_plugin_barinvokeCalled'] = 0;
+        $GLOBALS['piece_unity_plugin_bazinvokeCalled'] = 0;
+        $GLOBALS['piece_unity_plugin_quxinvokeCalled'] = 0;
         $config = &new Piece_Unity_Config();
         $config->setExtension('Foo', 'bar', 'Bar');
         $config->setExtension('Bar', 'baz', 'Baz');
@@ -94,15 +112,15 @@ class Piece_Unity_PluginInvokerTestCase extends PHPUnit_TestCase
         $context->setConfiguration($config);
         Piece_Unity_PluginInvoker::invoke('Foo');
 
-        $this->assertEquals(1, $GLOBALS['fooinvokeCalled']);
-        $this->assertEquals(1, $GLOBALS['barinvokeCalled']);
-        $this->assertEquals(1, $GLOBALS['bazinvokeCalled']);
-        $this->assertEquals(1, $GLOBALS['quxinvokeCalled']);
+        $this->assertEquals(1, $GLOBALS['piece_unity_plugin_fooinvokeCalled']);
+        $this->assertEquals(1, $GLOBALS['piece_unity_plugin_barinvokeCalled']);
+        $this->assertEquals(1, $GLOBALS['piece_unity_plugin_bazinvokeCalled']);
+        $this->assertEquals(1, $GLOBALS['piece_unity_plugin_quxinvokeCalled']);
 
-        unset($GLOBALS['fooinvokeCalled']);
-        unset($GLOBALS['barinvokeCalled']);
-        unset($GLOBALS['bazinvokeCalled']);
-        unset($GLOBALS['quxinvokeCalled']);
+        unset($GLOBALS['piece_unity_plugin_fooinvokeCalled']);
+        unset($GLOBALS['piece_unity_plugin_barinvokeCalled']);
+        unset($GLOBALS['piece_unity_plugin_bazinvokeCalled']);
+        unset($GLOBALS['piece_unity_plugin_quxinvokeCalled']);
     }
 
     /**#@-*/
@@ -117,57 +135,6 @@ class Piece_Unity_PluginInvokerTestCase extends PHPUnit_TestCase
 }
 
 // }}}
-
-class Foo extends Piece_Unity_Plugin_Common
-{
-    function Foo()
-    {
-        parent::Piece_Unity_Plugin_Common();
-        $this->_addExtensionPoint('bar');
-    }
-
-    function invoke()
-    {
-        ++$GLOBALS[strtolower(__CLASS__) . strtolower(__FUNCTION__) . 'Called'];
-        $bar = &$this->getExtension('bar');
-        $bar->invoke();
-    }
-}
-
-class Bar extends Piece_Unity_Plugin_Common
-{
-    function Bar()
-    {
-        parent::Piece_Unity_Plugin_Common();
-        $this->_addExtensionPoint('bar');
-        $this->_addExtensionPoint('baz');
-    }
-
-    function invoke()
-    {
-        ++$GLOBALS[strtolower(__CLASS__) . strtolower(__FUNCTION__) . 'Called'];
-        $bar = &$this->getExtension('bar');
-        $bar->invoke();
-        $baz = &$this->getExtension('baz');
-        $baz->invoke();
-    }
-}
-
-class Baz extends Piece_Unity_Plugin_Common
-{
-    function invoke()
-    {
-        ++$GLOBALS[strtolower(__CLASS__) . strtolower(__FUNCTION__) . 'Called'];
-    }
-}
-
-class Qux extends Piece_Unity_Plugin_Common
-{
-    function invoke()
-    {
-        ++$GLOBALS[strtolower(__CLASS__) . strtolower(__FUNCTION__) . 'Called'];
-    }
-}
 
 /*
  * Local Variables:

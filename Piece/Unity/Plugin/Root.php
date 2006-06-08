@@ -80,8 +80,8 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
     function Piece_Unity_Plugin_Root()
     {
         parent::Piece_Unity_Plugin_Common();
-        $this->_addExtensionPoint('dispatcher', 'Piece_Unity_Plugin_Dispatcher');
-        $this->_addExtensionPoint('renderer', 'Piece_Unity_Plugin_PHPRenderer');
+        $this->_addExtensionPoint('dispatcher', 'Dispatcher');
+        $this->_addExtensionPoint('renderer', 'PHPRenderer');
     }
 
     // }}}

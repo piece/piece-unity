@@ -145,7 +145,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
         $context->setRequest($request);
 
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Piece_Unity_Plugin_Dispatcher_Simple', 'actionPath', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Simple', 'actionPath', dirname(__FILE__));
         $context->setConfiguration($config);
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();

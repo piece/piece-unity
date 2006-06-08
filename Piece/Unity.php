@@ -45,7 +45,7 @@ require_once 'Piece/Unity/ViewElement.php';
 
 // {{{ constants
 
-define('PIECE_UNITY_ROOT_PLUGIN', 'Piece_Unity_Plugin_Root');
+define('PIECE_UNITY_ROOT_PLUGIN', 'Root');
 
 // }}}
 // {{{ Piece_Unity

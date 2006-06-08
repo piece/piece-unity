@@ -80,7 +80,7 @@ class Piece_Unity_Plugin_Dispatcher extends Piece_Unity_Plugin_Common
     function Piece_Unity_Plugin_Dispatcher()
     {
         parent::Piece_Unity_Plugin_Common();
-        $this->_addExtensionPoint('dispatchers', array('Piece_Unity_Plugin_Dispatcher_Simple'));
+        $this->_addExtensionPoint('dispatchers', array('Dispatcher_Simple'));
     }
 
     // }}}

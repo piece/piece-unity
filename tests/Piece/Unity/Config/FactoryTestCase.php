@@ -40,7 +40,6 @@
 
 require_once 'Piece/Unity/Config/Factory.php';
 
-require_once 'PHPUnit.php';
 require_once 'Piece/Unity.php';
 
 // {{{ Piece_Unity_Config_FactoryTestCase
@@ -72,6 +71,8 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
      * @access private
      */
 
+    var $_pluginPaths;
+
     /**#@-*/
 
     /**#@+
@@ -81,15 +82,22 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
     function setUp()
     {
         PEAR_ErrorStack::staticPushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+        $this->_pluginPaths = $GLOBALS['PIECE_UNITY_Plugin_Paths'];
+        Piece_Unity_Plugin_Factory::addPluginPath(dirname(__FILE__) . '/../../..');
     }
 
     function tearDown()
     {
+        $GLOBALS['PIECE_UNITY_Plugin_Instances'] = array();
+        $GLOBALS['PIECE_UNITY_Plugin_Paths'] = $this->_pluginPaths;
         $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
-                                            'masterFile' => dirname(__FILE__) . '/../../../../data/piece-unity-config.yaml',
-                                            'automaticSerialization' => true)
+                                            'masterFile' => '',
+                                            'automaticSerialization' => true,
+                                            'errorHandlingAPIBreak' => true)
                                       );
         $cache->clean();
+        $stack = &Piece_Unity_Error::getErrorStack();
+        $stack->getErrors(true);
         PEAR_ErrorStack::staticPopCallback();
     }
 
@@ -106,7 +114,7 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
                                                        dirname(__FILE__)
                                                        );
         $this->assertTrue(is_a($config, 'Piece_Unity_Config'));
-        $this->assertEquals('Piece_Unity_Plugin_SmartyRenderer',
+        $this->assertEquals('SmartyRenderer',
                             $config->getExtension(PIECE_UNITY_ROOT_PLUGIN, 'renderer')
                             );
     }
