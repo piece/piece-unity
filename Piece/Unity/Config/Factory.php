@@ -51,7 +51,7 @@ if (version_compare(phpversion(), '5.0.0', '<')) {
 // {{{ Piece_Unity_Config_Factory
 
 /**
- * An factory class for creating an appropriate Piece_Unity_Config object.
+ * A factory class for creating Piece_Unity_Config objects.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>

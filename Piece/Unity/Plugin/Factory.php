@@ -42,6 +42,8 @@ require_once 'Piece/Unity/Error.php';
 // {{{ Piece_Unity_Plugin_Factory
 
 /**
+ * A factory class for creating plugin objects.
+ *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
  * @copyright  2006 KUBO Atsuhiro <iteman2002@yahoo.co.jp>
@@ -75,6 +77,12 @@ class Piece_Unity_Plugin_Factory
     // {{{ factory()
 
     /**
+     * Creates a plugin object from a configuration file or a cache.
+     *
+     * @param string $pluginName
+     * @return mixed
+     * @throws PEAR_ErrorStack
+     * @static
      */
     function &factory($pluginName)
     {
