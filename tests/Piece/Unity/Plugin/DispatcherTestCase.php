@@ -78,11 +78,19 @@ class Piece_Unity_Plugin_DispatcherTestCase extends PHPUnit_TestCase
      * @access public
      */
 
+    function setUp()
+    {
+        PEAR_ErrorStack::staticPushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+    }
+
     function tearDown()
     {
         $context = &Piece_Unity_Context::singleton();
         $context->clear();
-    }
+        $stack = &Piece_Unity_Error::getErrorStack();
+        $stack->getErrors(true);
+        PEAR_ErrorStack::staticPopCallback();
+     }
 
     function testDispatchingWithOneDispatcher()
     {
