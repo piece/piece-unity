@@ -40,7 +40,7 @@
 
 require_once 'Piece/Unity/Config.php';
 
-require_once 'PEAR/ErrorStack.php';
+require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_ConfigTestCase
 
@@ -88,6 +88,8 @@ class Piece_Unity_ConfigTestCase extends PHPUnit_TestCase
     function tearDown()
     {
         $this->_config = null;
+        $stack = &Piece_Unity_Error::getErrorStack();
+        $stack->getErrors(true);
         PEAR_ErrorStack::staticPopCallback();
     }
 
