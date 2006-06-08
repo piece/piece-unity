@@ -80,10 +80,15 @@ class Piece_Unity_PluginInvoker
      * Invokes the plugin specific code.
      *
      * @param string $pluginName
+     * @throws PEAR_ErrorStack
      */
     function invoke($pluginName)
     {
         $plugin = &Piece_Unity_Plugin_Factory::factory($pluginName);
+        if (Piece_Unity_Error::isError($plugin)) {
+            return $plugin;
+        }
+
         $plugin->invoke();
     }
 
