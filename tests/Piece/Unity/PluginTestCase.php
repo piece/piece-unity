@@ -38,14 +38,14 @@
  * @since      File available since Release 0.1.0
  */
 
-require_once 'Piece/Unity/Plugin.php';
+require_once 'Piece/Unity/PluginInvoker.php';
 
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Common.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Config.php';
 
-// {{{ Piece_Unity_PluginTestCase
+// {{{ Piece_Unity_PluginInvokerTestCase
 
 /**
  * TestCase for Piece_Unity_Plugin
@@ -59,7 +59,7 @@ require_once 'Piece/Unity/Config.php';
  * @see        Piece_Unity
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_PluginTestCase extends PHPUnit_TestCase
+class Piece_Unity_PluginInvokerTestCase extends PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -92,7 +92,7 @@ class Piece_Unity_PluginTestCase extends PHPUnit_TestCase
         $config->setExtension('Bar', 'bar', 'Qux');
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
-        Piece_Unity_Plugin::invoke('Foo');
+        Piece_Unity_PluginInvoker::invoke('Foo');
 
         $this->assertEquals(1, $GLOBALS['fooinvokeCalled']);
         $this->assertEquals(1, $GLOBALS['barinvokeCalled']);

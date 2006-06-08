@@ -78,8 +78,9 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
     function tearDown()
     {
         $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
-                                            'masterFile' => dirname(__FILE__) . '/../../../data/piece-unity-config.yaml',
-                                            'automaticSerialization' => true)
+                                            'masterFile' => '',
+                                            'automaticSerialization' => true,
+                                            'errorHandlingAPIBreak' => true)
                                       );
         $cache->clean();
         $context = &Piece_Unity_Context::singleton();

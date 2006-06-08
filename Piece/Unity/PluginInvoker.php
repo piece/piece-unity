@@ -39,9 +39,11 @@
 
 require_once 'Piece/Unity/Plugin/Factory.php';
 
-// {{{ Piece_Unity_Plugin
+// {{{ Piece_Unity_PluginInvoker
 
 /**
+ * The plugin invoker.
+ *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
  * @copyright  2006 KUBO Atsuhiro <iteman2002@yahoo.co.jp>
@@ -50,7 +52,7 @@ require_once 'Piece/Unity/Plugin/Factory.php';
  * @link       http://iteman.typepad.jp/piece/
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Plugin
+class Piece_Unity_PluginInvoker
 {
 
     // {{{ properties

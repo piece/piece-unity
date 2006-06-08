@@ -38,7 +38,7 @@
  */
 
 require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/Plugin.php';
+require_once 'Piece/Unity/PluginInvoker.php';
 require_once 'Piece/Unity/Config/Factory.php';
 require_once 'Piece/Unity/Request.php';
 require_once 'Piece/Unity/ViewElement.php';
@@ -111,7 +111,7 @@ class Piece_Unity
         $viewElement = &new Piece_Unity_ViewElement();
         $context = &Piece_Unity_Context::singleton();
         $context->setViewElement($viewElement);
-        Piece_Unity_Plugin::invoke(PIECE_UNITY_ROOT_PLUGIN);
+        Piece_Unity_PluginInvoker::invoke(PIECE_UNITY_ROOT_PLUGIN);
     }
 
     /**#@-*/
