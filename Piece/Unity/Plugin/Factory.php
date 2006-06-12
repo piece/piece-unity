@@ -180,7 +180,6 @@ class Piece_Unity_Plugin_Factory
             return $error;
         }
 
-//         if (!@include_once $file) {
         if (!include_once $file) {
             $error = &Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
                                                    "The plugin file [ $file ] not found or was not readable."
