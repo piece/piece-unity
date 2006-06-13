@@ -94,7 +94,7 @@ class Piece_Unity_Plugin_Factory
     {
         $plugin = "Piece_Unity_Plugin_$plugin";
         if (!array_key_exists($plugin, $GLOBALS['PIECE_UNITY_Plugin_Instances'])) {
-            PEAR_ErrorStack::staticPushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             foreach ($GLOBALS['PIECE_UNITY_Plugin_Paths'] as $pluginPath) {
                 Piece_Unity_Plugin_Factory::_load($plugin, $pluginPath);
 
@@ -108,7 +108,7 @@ class Piece_Unity_Plugin_Factory
                     break;
                 }
             }
-            PEAR_ErrorStack::staticPopCallback();
+            Piece_Unity_Error::popCallback();
 
             if (!$found) {
                 $error = &Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,

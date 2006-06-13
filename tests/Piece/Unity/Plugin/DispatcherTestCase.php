@@ -80,7 +80,7 @@ class Piece_Unity_Plugin_DispatcherQueueTestCase extends PHPUnit_TestCase
 
     function setUp()
     {
-        PEAR_ErrorStack::staticPushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
     }
 
     function tearDown()
@@ -89,7 +89,7 @@ class Piece_Unity_Plugin_DispatcherQueueTestCase extends PHPUnit_TestCase
         $context->clear();
         $stack = &Piece_Unity_Error::getErrorStack();
         $stack->getErrors(true);
-        PEAR_ErrorStack::staticPopCallback();
+        Piece_Unity_Error::popCallback();
      }
 
     function testDispatchingWithOneDispatcher()

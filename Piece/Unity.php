@@ -143,16 +143,16 @@ class Piece_Unity
                         $dynamicConfig = null
                         )
     {
-        PEAR_ErrorStack::staticPushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
 
         $config = &Piece_Unity_Config_Factory::factory($configDirectory, $cacheDirectory);
 
-        PEAR_ErrorStack::staticPopCallback();
+        Piece_Unity_Error::popCallback();
 
         $config->setConfigurationDirectory($configDirectory);
         $config->setCacheDirectory($cacheDirectory);
 
-        if (PEAR_ErrorStack::staticHasErrors()) {
+        if (Piece_Unity_Error::hasErrors()) {
             $stack = &Piece_Unity_Error::getErrorStack();
             $config->setError($stack->pop());
         }

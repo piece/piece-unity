@@ -84,7 +84,7 @@ class Piece_Unity_PluginInvokerTestCase extends PHPUnit_TestCase
 
     function setUp()
     {
-        PEAR_ErrorStack::staticPushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $this->_pluginPaths = $GLOBALS['PIECE_UNITY_Plugin_Paths'];
         Piece_Unity_Plugin_Factory::addPluginPath(dirname(__FILE__) . '/../..');
     }
@@ -95,7 +95,7 @@ class Piece_Unity_PluginInvokerTestCase extends PHPUnit_TestCase
         $GLOBALS['PIECE_UNITY_Plugin_Paths'] = $this->_pluginPaths;
         $stack = &Piece_Unity_Error::getErrorStack();
         $stack->getErrors(true);
-        PEAR_ErrorStack::staticPopCallback();
+        Piece_Unity_Error::popCallback();
     }
 
     function testInvocation()

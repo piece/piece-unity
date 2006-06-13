@@ -81,7 +81,7 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
 
     function setUp()
     {
-        PEAR_ErrorStack::staticPushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $this->_pluginPaths = $GLOBALS['PIECE_UNITY_Plugin_Paths'];
         Piece_Unity_Plugin_Factory::addPluginPath(dirname(__FILE__) . '/../../..');
     }
@@ -98,7 +98,7 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
         $cache->clean();
         $stack = &Piece_Unity_Error::getErrorStack();
         $stack->getErrors(true);
-        PEAR_ErrorStack::staticPopCallback();
+        Piece_Unity_Error::popCallback();
     }
 
     function testCreating()
@@ -121,7 +121,7 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
 
     function testCreatingIfConfigurationDirectoryNotFound()
     {
-        PEAR_ErrorStack::staticPushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
 
         $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__) . '/foo',
                                                        dirname(__FILE__)
@@ -137,12 +137,12 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
 
         $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
 
-        PEAR_ErrorStack::staticPopCallback();
+        Piece_Unity_Error::popCallback();
     }
 
     function testCreatingIfConfigurationFileWasNotReadable()
     {
-        PEAR_ErrorStack::staticPushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
 
         $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__) . '/../../../../tests',
                                                        dirname(__FILE__)
@@ -158,12 +158,12 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
 
         $this->assertEquals(PIECE_UNITY_ERROR_NOT_READABLE, $error['code']);
 
-        PEAR_ErrorStack::staticPopCallback();
+        Piece_Unity_Error::popCallback();
     }
 
     function testNoCachingIfCacheDirectoryNotFound()
     {
-        PEAR_ErrorStack::staticPushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
 
         $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__) . '/../../../../data');
 
@@ -178,7 +178,7 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
 
         $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
 
-        PEAR_ErrorStack::staticPopCallback();
+        Piece_Unity_Error::popCallback();
     }
 
     /**#@-*/

@@ -81,7 +81,7 @@ class Piece_Unity_ConfigTestCase extends PHPUnit_TestCase
 
     function setUp()
     {
-        PEAR_ErrorStack::staticPushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $this->_config = &new Piece_Unity_Config();
     }
 
@@ -90,7 +90,7 @@ class Piece_Unity_ConfigTestCase extends PHPUnit_TestCase
         $this->_config = null;
         $stack = &Piece_Unity_Error::getErrorStack();
         $stack->getErrors(true);
-        PEAR_ErrorStack::staticPopCallback();
+        Piece_Unity_Error::popCallback();
     }
 
     function testSettingExtension()

@@ -77,7 +77,7 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
 
     function setUp()
     {
-        PEAR_ErrorStack::staticPushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $this->_pluginPaths = $GLOBALS['PIECE_UNITY_Plugin_Paths'];
         Piece_Unity_Plugin_Factory::addPluginPath(dirname(__FILE__) . '/../../..');
     }
@@ -88,16 +88,16 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
         $GLOBALS['PIECE_UNITY_Plugin_Paths'] = $this->_pluginPaths;
         $stack = &Piece_Unity_Error::getErrorStack();
         $stack->getErrors(true);
-        PEAR_ErrorStack::staticPopCallback();
+        Piece_Unity_Error::popCallback();
     }
 
     function testFailureToCreateByNonExistingFile()
     {
-        PEAR_ErrorStack::staticPushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
 
         Piece_Unity_Plugin_Factory::factory('NonExisting');
 
-        $this->assertTrue(PEAR_ErrorStack::staticHasErrors());
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
 
         $stack = &Piece_Unity_Error::getErrorStack();
 
@@ -107,16 +107,16 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
 
         $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
 
-        PEAR_ErrorStack::staticPopCallback();
+        Piece_Unity_Error::popCallback();
     }
 
     function testFailureToCreateByInvalidPlugin()
     {
-        PEAR_ErrorStack::staticPushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
 
         Piece_Unity_Plugin_Factory::factory('Invalid');
 
-        $this->assertTrue(PEAR_ErrorStack::staticHasErrors());
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
 
         $stack = &Piece_Unity_Error::getErrorStack();
 
@@ -126,7 +126,7 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
 
         $this->assertEquals(PIECE_UNITY_ERROR_INVALID_PLUGIN, $error['code']);
 
-        PEAR_ErrorStack::staticPopCallback();
+        Piece_Unity_Error::popCallback();
     }
 
     function testFactory()
