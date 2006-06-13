@@ -92,7 +92,7 @@ class Piece_Unity_Request
     // {{{ setParameter()
 
     /**
-     * Sets the parameter for this request.
+     * Sets a parameter for this request.
      *
      * @param string $name
      * @param mixed  $value
@@ -120,7 +120,7 @@ class Piece_Unity_Request
     // {{{ getParameter()
 
     /**
-     * Gets the parameter for this request.
+     * Gets a parameter for this request.
      *
      * @param string $name
      * @return mixed
