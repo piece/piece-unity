@@ -98,8 +98,11 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
         $request = &new Piece_Unity_Request();
         $context = &Piece_Unity_Context::singleton();
         $context->setRequest($request);
+        $context->setEvent($request->getParameter('event'));
+
         $config = &new Piece_Unity_Config();
         $context->setConfiguration($config);
+
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
         $view = $dispatcher->invoke();
 
@@ -143,6 +146,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
 
         $request = &new Piece_Unity_Request();
         $context->setRequest($request);
+        $context->setEvent($request->getParameter('event'));
 
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Simple', 'actionPath', dirname(__FILE__));

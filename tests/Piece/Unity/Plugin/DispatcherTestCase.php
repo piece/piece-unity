@@ -100,6 +100,7 @@ class Piece_Unity_Plugin_DispatcherQueueTestCase extends PHPUnit_TestCase
         $request = &new Piece_Unity_Request();
         $context = &Piece_Unity_Context::singleton();
         $context->setRequest($request);
+        $context->setEvent($request->getParameter('event'));
         $config = &new Piece_Unity_Config();
         $context->setConfiguration($config);
         $queue = &new Piece_Unity_Plugin_DispatcherQueue();

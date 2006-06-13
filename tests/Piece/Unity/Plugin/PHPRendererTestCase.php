@@ -118,6 +118,7 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
 
         $request = &new Piece_Unity_Request();
         $context->setRequest($request);
+        $context->setEvent($request->getParameter('event'));
 
         $viewElement = &new Piece_Unity_ViewElement();
         $context->setViewElement($viewElement);
