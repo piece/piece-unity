@@ -124,6 +124,14 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $this->assertTrue(is_a($context->getViewElement(), 'Piece_Unity_ViewElement'));
     }
 
+    function testSettingEvent()
+    {
+        $context = &Piece_Unity_Context::singleton();
+        $context->setEvent('foo');
+
+        $this->assertEquals('foo', $context->getEvent());
+    }
+
     /**#@-*/
 
     /**#@+
