@@ -38,7 +38,11 @@
  * @since      File available since Release 0.1.0
  */
 
+require_once 'PHPUnit.php';
 require_once 'Piece/Unity.php';
+require_once 'Piece/Unity/Context.php';
+require_once 'Cache/Lite/File.php';
+require_once 'Piece/Unity/Config.php';
 
 // {{{ Piece_UnityTestCase
 

@@ -38,6 +38,7 @@
  */
 
 require_once 'Piece/Unity/Plugin/Factory.php';
+require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_PluginInvoker
 

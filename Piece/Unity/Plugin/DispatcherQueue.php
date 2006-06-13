@@ -38,6 +38,7 @@
  */
 
 require_once 'Piece/Unity/Plugin/Common.php';
+require_once 'Piece/Unity/Plugin/Factory.php';
 
 // {{{ Piece_Unity_Plugin_DispatcherQueue
 

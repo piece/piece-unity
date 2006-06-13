@@ -37,7 +37,9 @@
  * @see        Piece_Unity_Plugin_Factory
  */
 
+require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
+require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_Plugin_FactoryTestCase
 

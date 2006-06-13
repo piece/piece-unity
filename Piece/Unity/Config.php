@@ -37,8 +37,6 @@
  * @since      File available since Release 0.1.0
  */
 
-require_once 'Piece/Unity/Error.php';
-
 // {{{ Piece_Unity_Config
 
 /**

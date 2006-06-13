@@ -38,6 +38,7 @@
  * @since      File available since Release 0.1.0
  */
 
+require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Request.php';
 
 // {{{ Piece_Unity_RequestTestCase

@@ -39,6 +39,7 @@
 
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/PluginInvoker.php';
+require_once 'Piece/Unity/Error.php';
 require_once 'Piece/Unity/Config/Factory.php';
 require_once 'Piece/Unity/Request.php';
 require_once 'Piece/Unity/ViewElement.php';
