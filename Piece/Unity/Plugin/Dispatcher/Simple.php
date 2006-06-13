@@ -78,7 +78,6 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
      * Defines extension points and configuration points for the plugin.
      */
     function Piece_Unity_Plugin_Dispatcher_Simple()
-
     {
         parent::Piece_Unity_Plugin_Common();
         $this->_addConfigurationPoint('actionPath', null);
@@ -92,8 +91,7 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $request = &$this->_context->getRequest();
-        $event = $request->getParameter('event');
+        $event = $this->_context->getEvent();
         $class = str_replace('.', '', "{$event}Action");
 
         $actionPath = $this->getConfiguration('actionPath');
