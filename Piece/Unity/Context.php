@@ -45,7 +45,7 @@ $GLOBALS['PIECE_UNITY_Context_Instance'] = null;
 // {{{ Piece_Unity_Context
 
 /**
- * The context holder for a Piece_Unity application.
+ * The context holder for Piece_Unity applications.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
@@ -74,6 +74,7 @@ class Piece_Unity_Context
     var $_view;
     var $_request;
     var $_viewElement;
+    var $_event;
 
     /**#@-*/
 
@@ -85,7 +86,12 @@ class Piece_Unity_Context
     // {{{ singleton()
 
     /**
+     * Returns the Piece_Unity_Context instance if exists. If not exists, a
+     * new instance of the Piece_Unity_Context class will be created and
+     * returned.
+     *
      * @return Piece_Unity_Context
+     * @static
      */
     function &singleton()
     {
@@ -100,7 +106,7 @@ class Piece_Unity_Context
     // {{{ setConfiguration()
 
     /**
-     * Sets the Piece_Unity_Config object for this context.
+     * Sets a Piece_Unity_Config object.
      *
      * @param Piece_Unity_Config &$config
      */
@@ -113,8 +119,7 @@ class Piece_Unity_Context
     // {{{ setView()
 
     /**
-     * Sets the view string for this context. It will be dispatched to an
-     * appropriate renderer.
+     * Sets a view string. It will be dispatched to an appropriate renderer.
      *
      * @param string $view
      */
@@ -127,7 +132,7 @@ class Piece_Unity_Context
     // {{{ setRequest()
 
     /**
-     * Sets the Piece_Unity_Request object for this context.
+     * Sets a Piece_Unity_Request object.
      *
      * @param Piece_Unity_Request &$request
      */
@@ -140,7 +145,7 @@ class Piece_Unity_Context
     // {{{ setViewElement()
 
     /**
-     * Sets the Piece_Unity_ViewElement object.
+     * Sets a Piece_Unity_ViewElement object.
      *
      * @param Piece_Unity_ViewElement &$viewElement
      */
@@ -150,10 +155,23 @@ class Piece_Unity_Context
     }
 
     // }}}
+    // {{{ setEvent()
+
+    /**
+     * Sets an event name.
+     *
+     * @param string $event
+     */
+    function setEvent($event)
+    {
+        $this->_event = $event;
+    }
+
+    // }}}
     // {{{ getConfiguration()
 
     /**
-     * Gets the Piece_Unity_Config object for this context.
+     * Gets the Piece_Unity_Config object.
      *
      * @return Piece_Unity_Config
      */
@@ -166,7 +184,7 @@ class Piece_Unity_Context
     // {{{ getView()
 
     /**
-     * Gets the view string for this context.
+     * Gets the view string.
      *
      * @return string
      */
@@ -179,7 +197,7 @@ class Piece_Unity_Context
     // {{{ getRequest()
 
     /**
-     * Gets the Piece_Unity_Request object for this context.
+     * Gets the Piece_Unity_Request object.
      *
      * @return Piece_Unity_Request
      */
@@ -192,13 +210,26 @@ class Piece_Unity_Context
     // {{{ getViewElement()
 
     /**
-     * Sets the Piece_Unity_ViewElement object.
+     * Gets the Piece_Unity_ViewElement object.
      *
      * @return Piece_Unity_ViewElement
      */
     function &getViewElement()
     {
         return $this->_viewElement;
+    }
+
+    // }}}
+    // {{{ getEvent()
+
+    /**
+     * Gets the event name.
+     *
+     * @return string
+     */
+    function getEvent()
+    {
+        return $this->_event;
     }
 
     // }}}
@@ -213,6 +244,7 @@ class Piece_Unity_Context
         $this->_view = null;
         $this->_request = null;
         $this->_viewElement = null;
+        $this->_event = null;
     }
 
     /**#@-*/
