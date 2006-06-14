@@ -37,6 +37,8 @@
  * @since      File available since Release 0.1.0
  */
 
+require_once 'Piece/Unity/Request.php';
+
 // {{{ GLOBALS
 
 $GLOBALS['PIECE_UNITY_Context_Instance'] = null;
@@ -129,19 +131,6 @@ class Piece_Unity_Context
     }
 
     // }}}
-    // {{{ setRequest()
-
-    /**
-     * Sets a Piece_Unity_Request object.
-     *
-     * @param Piece_Unity_Request &$request
-     */
-    function setRequest(&$request)
-    {
-        $this->_request = &$request;
-    }
-
-    // }}}
     // {{{ setViewElement()
 
     /**
@@ -152,19 +141,6 @@ class Piece_Unity_Context
     function setViewElement(&$viewElement)
     {
         $this->_viewElement = &$viewElement;
-    }
-
-    // }}}
-    // {{{ setEvent()
-
-    /**
-     * Sets an event name.
-     *
-     * @param string $event
-     */
-    function setEvent($event)
-    {
-        $this->_event = $event;
     }
 
     // }}}
@@ -240,11 +216,7 @@ class Piece_Unity_Context
      */
     function clear()
     {
-        $this->_config = null;
-        $this->_view = null;
-        $this->_request = null;
-        $this->_viewElement = null;
-        $this->_event = null;
+        $GLOBALS['PIECE_UNITY_Context_Instance'] = null;
     }
 
     /**#@-*/
@@ -252,6 +224,18 @@ class Piece_Unity_Context
     /**#@+
      * @access private
      */
+
+    // }}}
+    // {{{ constructor
+
+    /**
+     * Creates a Piece_Unity_Request object and sets an event to the context.
+     */
+    function Piece_Unity_Context()
+    {
+        $this->_request = &new Piece_Unity_Request();
+        $this->_event = $this->_request->getParameter('event');
+    }
 
     /**#@-*/
 
