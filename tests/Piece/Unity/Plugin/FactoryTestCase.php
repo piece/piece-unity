@@ -40,6 +40,7 @@
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
 require_once 'Piece/Unity/Error.php';
+require_once 'Piece/Unity/Context.php';
 
 // {{{ Piece_Unity_Plugin_FactoryTestCase
 

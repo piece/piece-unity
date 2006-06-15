@@ -38,8 +38,8 @@
  * @since      File available since Release 0.1.0
  */
 
+require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Dispatcher/Simple.php';
-
 require_once 'Piece/Unity/Config.php';
 
 // {{{ Piece_Unity_Plugin_Dispatcher_SimpleTestCase
