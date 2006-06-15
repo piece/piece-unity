@@ -41,7 +41,6 @@
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/PHPRenderer.php';
 require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/Request.php';
 require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/ViewElement.php';
 require_once 'Piece/Unity/Plugin/Dispatcher/Simple.php';
@@ -118,10 +117,6 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
     {
         $context = &Piece_Unity_Context::singleton();
 
-        $request = &new Piece_Unity_Request();
-        $context->setRequest($request);
-        $context->setEvent($request->getParameter('event'));
-
         $viewElement = &new Piece_Unity_ViewElement();
         $context->setViewElement($viewElement);
 
@@ -131,6 +126,7 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
         $context->setConfiguration($config);
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
+        $view = $dispatcher->invoke();
         $context->setView($dispatcher->invoke());
         $renderer = &new Piece_Unity_Plugin_PHPRenderer();
 

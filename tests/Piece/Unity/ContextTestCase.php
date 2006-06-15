@@ -40,7 +40,6 @@
 
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/Request.php';
 require_once 'Piece/Unity/ViewElement.php';
 
 // {{{ Piece_Unity_ContextTestCase
@@ -92,29 +91,6 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $this->assertEquals('foo', $context->getView());
     }
 
-    function testSettingRequest()
-    {
-        $request = &new Piece_Unity_Request();
-        $context = &Piece_Unity_Context::singleton();
-        $context->setRequest($request);
-
-        $this->assertTrue(is_a($context->getRequest(), 'Piece_Unity_Request'));
-    }
-
-    function testClearingProperties()
-    {
-        $context = &Piece_Unity_Context::singleton();
-        $context->setConfiguration(new stdClass());
-        $context->setRequest(new stdClass());
-        $context->setView('foo');
-        $context->clear();
-
-        $this->assertNull($context->getConfiguration());
-        $this->assertNull($context->getView());
-        $this->assertNull($context->getRequest());
-        $this->assertNull($context->getViewElement());
-    }
-
     function testSettingViewElement()
     {
         $viewElement = &new Piece_Unity_ViewElement();
@@ -122,14 +98,6 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $context->setViewElement($viewElement);
 
         $this->assertTrue(is_a($context->getViewElement(), 'Piece_Unity_ViewElement'));
-    }
-
-    function testSettingEvent()
-    {
-        $context = &Piece_Unity_Context::singleton();
-        $context->setEvent('foo');
-
-        $this->assertEquals('foo', $context->getEvent());
     }
 
     /**#@-*/

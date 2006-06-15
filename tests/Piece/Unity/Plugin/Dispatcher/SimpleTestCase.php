@@ -40,7 +40,6 @@
 
 require_once 'Piece/Unity/Plugin/Dispatcher/Simple.php';
 
-require_once 'Piece/Unity/Request.php';
 require_once 'Piece/Unity/Config.php';
 
 // {{{ Piece_Unity_Plugin_Dispatcher_SimpleTestCase
@@ -95,10 +94,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
     {
         $_GET['event'] = 'foo';
 
-        $request = &new Piece_Unity_Request();
         $context = &Piece_Unity_Context::singleton();
-        $context->setRequest($request);
-        $context->setEvent($request->getParameter('event'));
 
         $config = &new Piece_Unity_Config();
         $context->setConfiguration($config);
@@ -143,10 +139,6 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
     function _dispatch()
     {
         $context = &Piece_Unity_Context::singleton();
-
-        $request = &new Piece_Unity_Request();
-        $context->setRequest($request);
-        $context->setEvent($request->getParameter('event'));
 
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Simple', 'actionPath', dirname(__FILE__));
