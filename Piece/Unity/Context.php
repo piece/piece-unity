@@ -38,6 +38,7 @@
  */
 
 require_once 'Piece/Unity/Request.php';
+require_once 'Piece/Unity/ViewElement.php';
 
 // {{{ GLOBALS
 
@@ -128,19 +129,6 @@ class Piece_Unity_Context
     function setView($view)
     {
         $this->_view = $view;
-    }
-
-    // }}}
-    // {{{ setViewElement()
-
-    /**
-     * Sets a Piece_Unity_ViewElement object.
-     *
-     * @param Piece_Unity_ViewElement &$viewElement
-     */
-    function setViewElement(&$viewElement)
-    {
-        $this->_viewElement = &$viewElement;
     }
 
     // }}}
@@ -235,6 +223,7 @@ class Piece_Unity_Context
     {
         $this->_request = &new Piece_Unity_Request();
         $this->_event = $this->_request->getParameter('event');
+        $this->_viewElement = &new Piece_Unity_ViewElement();
     }
 
     /**#@-*/
