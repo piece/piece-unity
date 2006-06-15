@@ -40,7 +40,6 @@
 
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/ViewElement.php';
 
 // {{{ Piece_Unity_ContextTestCase
 
@@ -89,15 +88,6 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $context->setView('foo');
 
         $this->assertEquals('foo', $context->getView());
-    }
-
-    function testSettingViewElement()
-    {
-        $viewElement = &new Piece_Unity_ViewElement();
-        $context = &Piece_Unity_Context::singleton();
-        $context->setViewElement($viewElement);
-
-        $this->assertTrue(is_a($context->getViewElement(), 'Piece_Unity_ViewElement'));
     }
 
     /**#@-*/

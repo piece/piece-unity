@@ -42,7 +42,6 @@ require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/PHPRenderer.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/ViewElement.php';
 require_once 'Piece/Unity/Plugin/Dispatcher/Simple.php';
 
 // {{{ Piece_Unity_Plugin_PHPRendererTestCase
@@ -116,9 +115,6 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
     function _render()
     {
         $context = &Piece_Unity_Context::singleton();
-
-        $viewElement = &new Piece_Unity_ViewElement();
-        $context->setViewElement($viewElement);
 
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Simple', 'actionPath', dirname(__FILE__));
