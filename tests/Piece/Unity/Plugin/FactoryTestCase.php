@@ -86,6 +86,8 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
 
     function tearDown()
     {
+        $context = &Piece_Unity_Context::singleton();
+        $context->clear();
         $GLOBALS['PIECE_UNITY_Plugin_Instances'] = array();
         $GLOBALS['PIECE_UNITY_Plugin_Paths'] = $this->_pluginPaths;
         $stack = &Piece_Unity_Error::getErrorStack();
