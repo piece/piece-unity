@@ -222,7 +222,7 @@ class Piece_Unity_Context
     function Piece_Unity_Context()
     {
         $this->_request = &new Piece_Unity_Request();
-        $this->_event = $this->_request->getParameter('event');
+        $this->_event = $this->_request->hasParameter('event') ? $this->_request->getParameter('event') : null;
         $this->_viewElement = &new Piece_Unity_ViewElement();
     }
 
