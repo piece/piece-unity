@@ -73,6 +73,17 @@ class Piece_Unity_Session_PHP extends Piece_Unity_Session_Common
      * @access public
      */
 
+    // }}}
+    // {{{ constructor
+
+    /**
+     * Binds the attribute holder to the $_SESSION superglobal array.
+     */
+    function Piece_Unity_Session_PHP()
+    {
+        $this->_attributes = &$_SESSION;
+    }
+
     /**#@-*/
 
     /**#@+
