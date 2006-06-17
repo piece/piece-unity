@@ -82,6 +82,22 @@ class Piece_Unity_Session_PHPTestCase extends Piece_Unity_Session_CompatibilityT
         parent::setUp();
     }
 
+    function testAttributesAreBindedToSuperGlobalArray()
+    {
+        $_SESSION['foo'] = 'bar';
+        $_SESSION['bar'] = &new stdClass();
+        $_SESSION['bar']->baz = 'qux';
+
+        $this->assertTrue($this->_session->hasAttribute('foo'));
+        $this->assertEquals('bar', $this->_session->getAttribute('foo'));
+        $this->assertTrue($this->_session->hasAttribute('bar'));
+
+        $bar = &$this->_session->getAttribute('bar');
+
+        $this->assertTrue(array_key_exists('baz', $bar));
+        $this->assertEquals('qux', $bar->baz);
+    }
+
     /**#@-*/
 
     /**#@+
