@@ -218,7 +218,7 @@ class Piece_Unity_Config
     /**
      * Merges the given configuretion into the existing configuration.
      *
-     * @param Piece_Unity_Config $config
+     * @param Piece_Unity_Config &$config
      */
     function merge(&$config)
     {
