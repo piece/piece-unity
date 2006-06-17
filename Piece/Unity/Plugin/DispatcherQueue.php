@@ -95,9 +95,14 @@ class Piece_Unity_Plugin_DispatcherQueue extends Piece_Unity_Plugin_Common
         $dispatchers = &$this->getExtension('dispatchers');
         foreach ($dispatchers as $extension) {
             $dispatcher = &Piece_Unity_Plugin_Factory::factory($extension);
-            $view = $dispatcher->invoke();
-            if ($view) {
-                $this->_context->setView($view);
+
+            /*
+             * Forwards the request to the next dispatcher until a dispatcher
+             * returns true.
+             *
+             * @return boolean
+             */
+            if ($dispatcher->invoke()) {
                 break;
             }
         }
