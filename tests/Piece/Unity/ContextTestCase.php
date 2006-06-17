@@ -90,6 +90,20 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $this->assertEquals('foo', $context->getView());
     }
 
+    function testInitializingProperties()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_GET['event'] = 'foo';
+        $context = &Piece_Unity_Context::singleton();
+
+        $this->assertTrue(is_a($context->getRequest(), 'Piece_Unity_Request'));
+        $this->assertEquals('foo', $context->getEvent());
+        $this->assertTrue(is_a($context->getViewElement(), 'Piece_Unity_ViewElement'));
+
+        unset($_SERVER['REQUEST_METHOD']);
+        unset($_GET['event']);
+    }
+
     /**#@-*/
 
     /**#@+
