@@ -39,6 +39,7 @@
 
 require_once 'Piece/Unity/Request.php';
 require_once 'Piece/Unity/ViewElement.php';
+require_once 'Piece/Unity/Session/Factory.php';
 
 // {{{ GLOBALS
 
@@ -78,6 +79,7 @@ class Piece_Unity_Context
     var $_request;
     var $_viewElement;
     var $_event;
+    var $_session;
 
     /**#@-*/
 
@@ -207,6 +209,19 @@ class Piece_Unity_Context
         $GLOBALS['PIECE_UNITY_Context_Instance'] = null;
     }
 
+    // }}}
+    // {{{ getSession()
+
+    /**
+     * Gets the session state object.
+     *
+     * @return mixed
+     */
+    function &getSession()
+    {
+        return $this->_session;
+    }
+
     /**#@-*/
 
     /**#@+
@@ -224,6 +239,7 @@ class Piece_Unity_Context
         $this->_request = &new Piece_Unity_Request();
         $this->_event = $this->_request->hasParameter('event') ? $this->_request->getParameter('event') : null;
         $this->_viewElement = &new Piece_Unity_ViewElement();
+        $this->_session = &Piece_Unity_Session_Factory::factory();
     }
 
     /**#@-*/
