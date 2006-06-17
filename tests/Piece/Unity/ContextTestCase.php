@@ -99,6 +99,7 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $this->assertTrue(is_a($context->getRequest(), 'Piece_Unity_Request'));
         $this->assertEquals('foo', $context->getEvent());
         $this->assertTrue(is_a($context->getViewElement(), 'Piece_Unity_ViewElement'));
+        $this->assertTrue(is_a($context->getSession(), 'Piece_Unity_Session_Common'));
 
         unset($_SERVER['REQUEST_METHOD']);
         unset($_GET['event']);
