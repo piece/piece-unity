@@ -127,7 +127,7 @@ class Piece_Unity_Request
      */
     function getParameter($name)
     {
-        return @$this->_parameters[$name];
+        return $this->_parameters[$name];
     }
 
     /**#@-*/
