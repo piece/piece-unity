@@ -100,9 +100,9 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
         $context->setConfiguration($config);
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
-        $view = $dispatcher->invoke();
+        $dispatcher->invoke();
 
-        $this->assertEquals('foo', $view);
+        $this->assertEquals('foo', $context->getView());
     }
 
     function testDispatchingWithAction()
@@ -146,7 +146,9 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
 
-        return $dispatcher->invoke();
+        $dispatcher->invoke();
+
+        return $context->getView();
     }
 
     /**#@-*/
