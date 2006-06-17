@@ -65,11 +65,71 @@ class Piece_Unity_Session_Common
      * @access private
      */
 
+    var $_attributes = array();
+
     /**#@-*/
 
     /**#@+
      * @access public
      */
+
+    // }}}
+    // {{{ setAttribute()
+
+    /**
+     * Sets an attribute for the current session state.
+     *
+     * @param string $name
+     * @param mixed  $value
+     */
+    function setAttribute($name, $value)
+    {
+        $this->_attributes[$name] = $value;
+    }
+
+    // }}}
+    // {{{ setAttributeByRef()
+
+    /**
+     * Sets an attribute by reference for the current session state.
+     *
+     * @param string $name
+     * @param mixed  &$value
+     */
+    function setAttributeByRef($name, &$value)
+    {
+        $this->_attributes[$name] = &$value;
+    }
+
+    // }}}
+    // {{{ hasAttribute()
+
+    /**
+     * Returns whether the current session state has an attribute with a
+     * given name.
+     *
+     * @param string $name
+     * @return boolean
+     */
+    function hasAttribute($name)
+    {
+        return array_key_exists($name, $this->_attributes);
+    }
+
+    // }}}
+    // {{{ getAttribute()
+
+    /**
+     * Gets an attribute for the current session state.
+     *
+     * @param string $name
+     * @return mixed
+     */
+    function &getAttribute($name)
+    {
+        $attribute = &$this->_attributes[$name];
+        return $attribute;
+    }
 
     /**#@-*/
 
