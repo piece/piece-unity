@@ -91,7 +91,7 @@ class Piece_Unity_Config_Factory
      *
      * @param string $configDirectory
      * @param string $cacheDirectory
-     * @return mixed
+     * @return Piece_Unity_Config
      * @throws PEAR_ErrorStack
      * @static
      */
