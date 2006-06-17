@@ -92,7 +92,7 @@ class Piece_Unity_Error
     /**
      * Returns a single error stack for the package.
      *
-     * @param string  $package
+     * @param string $package
      * @return PEAR_ErrorStack
      */
     function &getErrorStack($package = 'Piece_Unity')
@@ -114,12 +114,12 @@ class Piece_Unity_Error
      * @param array   $backtrace
      * @return PEAR_ErrorStack
      */
-    function &raiseError($code,
-                         $message = false,
-                         $params = array(),
-                         $package = 'Piece_Unity',
-                         $backtrace = false
-                         )
+    function raiseError($code,
+                        $message = false,
+                        $params = array(),
+                        $package = 'Piece_Unity',
+                        $backtrace = false
+                        )
     {
         if (!$backtrace) {
             $backtrace = debug_backtrace();
