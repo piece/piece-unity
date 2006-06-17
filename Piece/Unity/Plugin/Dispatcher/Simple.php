@@ -96,7 +96,8 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
 
         $actionPath = $this->getConfiguration('actionPath');
         if (is_null($actionPath)) {
-            return $event;
+            $this->_context->setView($event);
+            return true;
         }
 
         $file = realpath("$actionPath/" . str_replace('_', '/', $class) . '.php');
@@ -115,7 +116,9 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
             }
         }
 
-        return $event;
+        $this->_context->setView($event);
+
+        return true;
     }
 
     /**#@-*/
