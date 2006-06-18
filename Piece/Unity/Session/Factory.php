@@ -84,7 +84,8 @@ class Piece_Unity_Session_Factory
      * Creates a Piece_Unity_Session object with an appropriate strategy.
      *
      * @return mixed
-     * @throws PEAR_ErrorStack
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_INVALID_DRIVER
      */
     function &factory()
     {
@@ -92,16 +93,19 @@ class Piece_Unity_Session_Factory
         if (!class_exists($class)) {
             $file = str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
             if (!@include_once $file) {
-                return Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
-                                                     "The mode file [ $file ] not found or was not readable."
-                                                     );
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                        "The mode file [ $file ] not found or was not readable."
+                                        );
+                $return = null;
+                return $return;
             }
 
             if (!class_exists($class)) {
-                $error = &Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_INVALID_DRIVER,
-                                                        "The mode [ $class ] not defined in the file [ $file ]."
-                                                       );
-                return $error;
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_DRIVER,
+                                        "The mode [ $class ] not defined in the file [ $file ]."
+                                        );
+                $return = null;
+                return $return;
             }
         }
 
