@@ -80,7 +80,7 @@ class Piece_Unity_Plugin_Common
     // {{{ constructor
 
     /**
-     *
+     * Sets a single instance of Piece_Unity_Context class to a plugin.
      */
     function Piece_Unity_Plugin_Common()
     {
@@ -104,8 +104,9 @@ class Piece_Unity_Plugin_Common
      * Gets the extension of the given extension point.
      *
      * @param string $extensionPoint
-     * @return string
-     * @throws PEAR_ErrorStack
+     * @return mixed
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
      */
     function &getExtension($extensionPoint)
     {
@@ -117,7 +118,15 @@ class Piece_Unity_Plugin_Common
             $extension = $this->_extensionPoints[ strtolower($extensionPoint) ];
         }
 
-        if (is_null($extension) || !is_string($extension)) {
+        if (is_null($extension)) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                    "Any extensions are not defined for the extension point [ $extensionPoint ]."
+                                    );
+            $return = null;
+            return $return;
+        }
+
+        if (is_array($extension)) {
             return $extension;
         }
 
