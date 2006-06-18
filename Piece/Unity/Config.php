@@ -40,7 +40,7 @@
 // {{{ Piece_Unity_Config
 
 /**
- * The configuration container for a Piece_Unity application.
+ * The configuration container for Piece_Unity applications.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
@@ -71,7 +71,6 @@ class Piece_Unity_Config
     var $_cacheDirectory;
     var $_mergedExtensions = array();
     var $_mergedConfigurations = array();
-    var $_error;
 
     /**#@-*/
 
@@ -133,33 +132,6 @@ class Piece_Unity_Config
     function setCacheDirectory($cacheDirectory)
     {
         $this->_cacheDirectory = $cacheDirectory;
-    }
-
-    // }}}
-    // {{{ setError()
-
-    /**
-     * Sets an error on loading a configuration file.
-     *
-     * An error is represented by an associative array which came from
-     * PEAR_ErrorStack, which consists of following elements:
-     * o code
-     * o params
-     * o package
-     * o level
-     * o time
-     * o context
-     * o message
-     * o repackage
-     *
-     * See PEAR_ErrorStack documentation for more details.
-     *
-     * @param array $error
-     * @link http://pear.php.net/manual/en/core.pear.pear-errorstack.push.php
-     */
-    function setError($error)
-    {
-        $this->_error = $error;
     }
 
     // }}}
