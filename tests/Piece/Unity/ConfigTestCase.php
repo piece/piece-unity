@@ -88,8 +88,7 @@ class Piece_Unity_ConfigTestCase extends PHPUnit_TestCase
     function tearDown()
     {
         $this->_config = null;
-        $stack = &Piece_Unity_Error::getErrorStack();
-        $stack->getErrors(true);
+        Piece_Unity_Error::clearErrors();
         Piece_Unity_Error::popCallback();
     }
 
@@ -135,13 +134,6 @@ class Piece_Unity_ConfigTestCase extends PHPUnit_TestCase
         $this->assertEquals('/path/to/config',
                             $this->_config->getConfigurationDirectory()
                             );
-    }
-
-    function testSettingError()
-    {
-        $this->_config->setError(array());
-
-        $this->assertTrue(is_array($this->_config->getError()));
     }
 
     function testSettingCacheDirectory()
