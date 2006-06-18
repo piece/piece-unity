@@ -50,6 +50,8 @@ define('PIECE_UNITY_ROOT_PLUGIN', 'Root');
 // {{{ Piece_Unity
 
 /**
+ * A single entry point for Piece_Unity applications.
+ *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
  * @copyright  2006 KUBO Atsuhiro <iteman2002@yahoo.co.jp>
@@ -101,10 +103,13 @@ class Piece_Unity
 
     /**
      * Dispatches a request.
+     *
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
      */
     function dispatch()
     {
-        Piece_Unity_PluginInvoker::invoke(PIECE_UNITY_ROOT_PLUGIN);
+        return Piece_Unity_PluginInvoker::invoke(PIECE_UNITY_ROOT_PLUGIN);
     }
 
     /**#@-*/
@@ -136,19 +141,9 @@ class Piece_Unity
                         $dynamicConfig = null
                         )
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
         $config = &Piece_Unity_Config_Factory::factory($configDirectory, $cacheDirectory);
-
-        Piece_Unity_Error::popCallback();
-
         $config->setConfigurationDirectory($configDirectory);
         $config->setCacheDirectory($cacheDirectory);
-
-        if (Piece_Unity_Error::hasErrors()) {
-            $stack = &Piece_Unity_Error::getErrorStack();
-            $config->setError($stack->pop());
-        }
 
         if (is_a($dynamicConfig, 'Piece_Unity_Config')) {
             $config->merge($dynamicConfig);
