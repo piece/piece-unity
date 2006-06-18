@@ -95,8 +95,7 @@ class Piece_Unity_PluginInvokerTestCase extends PHPUnit_TestCase
         $GLOBALS['PIECE_UNITY_Plugin_Paths'] = $this->_pluginPaths;
         $context = &Piece_Unity_Context::singleton();
         $context->clear();
-        $stack = &Piece_Unity_Error::getErrorStack();
-        $stack->getErrors(true);
+        Piece_Unity_Error::clearErrors();
         Piece_Unity_Error::popCallback();
     }
 
