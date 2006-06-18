@@ -92,7 +92,6 @@ class Piece_Unity_Config_Factory
      * @param string $configDirectory
      * @param string $cacheDirectory
      * @return Piece_Unity_Config
-     * @throws PEAR_ErrorStack
      * @static
      */
     function &factory($configDirectory = null, $cacheDirectory = null)
@@ -104,9 +103,12 @@ class Piece_Unity_Config_Factory
 
         $absolutePathOfConfigDirectory = realpath($configDirectory);
         if (!$absolutePathOfConfigDirectory) {
-            Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
-                                          "The configuration directory [ $configDirectory ] not found."
-                                          );
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                    "The configuration directory [ $configDirectory ] not found.",
+                                    'warning'
+                                    );
+            Piece_Unity_Error::popCallback();
             $config = &new Piece_Unity_Config();
             return $config;
         }
@@ -114,9 +116,12 @@ class Piece_Unity_Config_Factory
         $absolutePathOfConfigFile = "$absolutePathOfConfigDirectory/piece-unity-config.yaml";
 
         if (!is_readable($absolutePathOfConfigFile)) {
-            Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_READABLE,
-                                          "The configuration file [ $absolutePathOfConfigFile ] was not readable."
-                                          );
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_READABLE,
+                                    "The configuration file [ $absolutePathOfConfigFile ] was not readable.",
+                                    'warning'
+                                    );
+            Piece_Unity_Error::popCallback();
             $config = &new Piece_Unity_Config();
             return $config;
         }
@@ -127,9 +132,12 @@ class Piece_Unity_Config_Factory
 
         $absolutePathOfCacheDirectory = realpath($cacheDirectory);
         if (!$absolutePathOfCacheDirectory) {
-            Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
-                                          "The cache directory [ $cacheDirectory ] not found."
-                                          );
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                    "The cache directory [ $cacheDirectory ] not found.",
+                                    'warning'
+                                    );
+            Piece_Unity_Error::popCallback();
             $config = &Piece_Unity_Config_Factory::_parseFile($absolutePathOfConfigFile);
             return $config;
         }
@@ -137,9 +145,12 @@ class Piece_Unity_Config_Factory
         if (!is_readable($absolutePathOfCacheDirectory)
             || !is_writable($absolutePathOfCacheDirectory)
             ) {
-            Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_READABLE,
-                                          "The cache directory [ $absolutePathOfCacheDirectory ] was not readable or writable."
-                                          );
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_READABLE,
+                                    "The cache directory [ $absolutePathOfCacheDirectory ] was not readable or writable.",
+                                    'warning'
+                                    );
+            Piece_Unity_Error::popCallback();
             $config = &Piece_Unity_Config_Factory::_parseFile($absolutePathOfConfigFile);
             return $config;
         }
@@ -182,9 +193,12 @@ class Piece_Unity_Config_Factory
          */
         $config = $cache->get($masterFile);
         if (PEAR::isError($config)) {
-            Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_CANNOT_READ,
-                                          "Cannot read the cache file in the directory [ $cacheDirectory ]."
-                                          );
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_CANNOT_READ,
+                                    "Cannot read the cache file in the directory [ $cacheDirectory ].",
+                                    'warning'
+                                    );
+            Piece_Unity_Error::popCallback();
             $config = &Piece_Unity_Config_Factory::_parseFile($masterFile);
             return $config;
         }
@@ -193,11 +207,12 @@ class Piece_Unity_Config_Factory
             $config = &Piece_Unity_Config_Factory::_parseFile($masterFile);
             $result = $cache->save($config);
             if (PEAR::isError($result)) {
-                Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_CANNOT_WRITE,
-                                              "Cannot write the Piece_Unity_Config object to the cache file in the directory [ $cacheDirectory ]."
-                                              );
-                $config = &Piece_Unity_Config_Factory::_parseFile($masterFile);
-                return $config;
+                Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_CANNOT_WRITE,
+                                        "Cannot write the Piece_Unity_Config object to the cache file in the directory [ $cacheDirectory ].",
+                                        'warning'
+                                        );
+                Piece_Unity_Error::popCallback();
             }
         }
 
