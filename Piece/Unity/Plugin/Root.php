@@ -89,13 +89,20 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
 
     /**
      * Invokes the plugin specific code.
+     *
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
      */
     function invoke()
     {
         $dispatcher = &$this->getExtension('dispatcher');
         $dispatcher->invoke();
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
+
         $renderer = &$this->getExtension('renderer');
-        $renderer->invoke();
+        return $renderer->invoke();
     }
 
     /**#@-*/
