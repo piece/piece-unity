@@ -87,14 +87,14 @@ class Piece_Unity_Plugin_Factory
      *
      * @param string $plugin
      * @return mixed
-     * @throws PEAR_ErrorStack
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
      * @static
      */
     function &factory($plugin)
     {
         $plugin = "Piece_Unity_Plugin_$plugin";
         if (!array_key_exists($plugin, $GLOBALS['PIECE_UNITY_Plugin_Instances'])) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             foreach ($GLOBALS['PIECE_UNITY_Plugin_Paths'] as $pluginPath) {
                 Piece_Unity_Plugin_Factory::_load($plugin, $pluginPath);
 
@@ -108,22 +108,23 @@ class Piece_Unity_Plugin_Factory
                     break;
                 }
             }
-            Piece_Unity_Error::popCallback();
 
             if (!$found) {
-                $error = Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
-                                                       "The plugin [ $plugin ] not found in the directories.\n" .
-                                                       implode("\n", $GLOBALS['PIECE_UNITY_Plugin_Paths'])
-                                                       );
-                return $error;
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                        "The plugin [ $plugin ] not found in the directories.\n" .
+                                        implode("\n", $GLOBALS['PIECE_UNITY_Plugin_Paths'])
+                                        );
+                $return = null;
+                return $return;
             }
 
             $instance = &new $plugin();
             if (!is_a($instance, 'Piece_Unity_Plugin_Common')) {
-                $error = Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_INVALID_PLUGIN,
-                                                       "The plugin [ $plugin ] was invalid."
-                                                       );
-                return $error;
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_PLUGIN,
+                                        "The plugin [ $plugin ] is invalid."
+                                        );
+                $return = null;
+                return $return;
             }
 
             $GLOBALS['PIECE_UNITY_Plugin_Instances'][$plugin] = &$instance;
@@ -159,7 +160,6 @@ class Piece_Unity_Plugin_Factory
      *
      * @param string $plugin
      * @param string $pluginPath
-     * @throws PEAR_ErrorStack
      * @static
      */
     function _load($plugin, $pluginPath)
@@ -167,21 +167,33 @@ class Piece_Unity_Plugin_Factory
         $file = realpath("$pluginPath/" . str_replace('_', '/', $plugin) . '.php');
 
         if (!$file) {
-            return Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
-                                                 "The plugin file for the class [ $plugin ] not found."
-                                                 );
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                    "The plugin file for the class [ $plugin ] not found.",
+                                    'warning'
+                                    );
+            Piece_Unity_Error::popCallback();
+            return;
         }
 
         if (!is_readable($file)) {
-            return Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_READABLE,
-                                                 "The plugin file [ $file ] was not readable."
-                                                 );
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_READABLE,
+                                    "The plugin file [ $file ] was not readable.",
+                                    'warning'
+                                    );
+            Piece_Unity_Error::popCallback();
+            return;
         }
 
         if (!include_once $file) {
-            return Piece_Unity_Error::raiseError(PIECE_UNITY_ERROR_NOT_FOUND,
-                                                 "The plugin file [ $file ] not found or was not readable."
-                                                 );
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                    "The plugin file [ $file ] not found or was not readable.",
+                                    'warning'
+                                    );
+            Piece_Unity_Error::popCallback();
+            return;
         }
     }
 
