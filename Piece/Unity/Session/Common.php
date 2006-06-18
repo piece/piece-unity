@@ -40,7 +40,7 @@
 // {{{ Piece_Unity_Session_Common
 
 /**
- * The session state storage for the Piece_Unity package.
+ * The session state storage for Piece_Unity package.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
