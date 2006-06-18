@@ -91,8 +91,7 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
         $context->clear();
         $GLOBALS['PIECE_UNITY_Plugin_Instances'] = array();
         $GLOBALS['PIECE_UNITY_Plugin_Paths'] = $this->_pluginPaths;
-        $stack = &Piece_Unity_Error::getErrorStack();
-        $stack->getErrors(true);
+        Piece_Unity_Error::clearErrors();
         Piece_Unity_Error::popCallback();
     }
 
@@ -102,13 +101,9 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
 
         Piece_Unity_Plugin_Factory::factory('NonExisting');
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors());
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
 
-        $stack = &Piece_Unity_Error::getErrorStack();
-
-        $this->assertTrue($stack->hasErrors());
-
-        $error = $stack->pop();
+        $error = Piece_Unity_Error::pop();
 
         $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
 
@@ -121,13 +116,9 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
 
         Piece_Unity_Plugin_Factory::factory('Invalid');
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors());
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
 
-        $stack = &Piece_Unity_Error::getErrorStack();
-
-        $this->assertTrue($stack->hasErrors());
-
-        $error = $stack->pop();
+        $error = Piece_Unity_Error::pop();
 
         $this->assertEquals(PIECE_UNITY_ERROR_INVALID_PLUGIN, $error['code']);
 
