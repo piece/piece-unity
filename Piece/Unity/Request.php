@@ -130,6 +130,19 @@ class Piece_Unity_Request
         return $this->_parameters[$name];
     }
 
+    // }}}
+    // {{{ getParameters()
+
+    /**
+     * Gets all parameters for this request.
+     *
+     * @return array
+     */
+    function getParameters()
+    {
+        return $this->_parameters;
+    }
+
     /**#@-*/
 
     /**#@+
