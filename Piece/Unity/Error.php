@@ -44,11 +44,13 @@ require_once 'PEAR/ErrorStack.php';
 /*
  * Error codes
  */
-define('PIECE_UNITY_ERROR_NOT_FOUND',      -1);
-define('PIECE_UNITY_ERROR_NOT_READABLE',   -2);
-define('PIECE_UNITY_ERROR_CANNOT_READ',    -3);
-define('PIECE_UNITY_ERROR_CANNOT_WRITE',   -4);
-define('PIECE_UNITY_ERROR_INVALID_PLUGIN', -5);
+define('PIECE_UNITY_ERROR_NOT_FOUND',             -1);
+define('PIECE_UNITY_ERROR_NOT_READABLE',          -2);
+define('PIECE_UNITY_ERROR_CANNOT_READ',           -3);
+define('PIECE_UNITY_ERROR_CANNOT_WRITE',          -4);
+define('PIECE_UNITY_ERROR_INVALID_PLUGIN',        -5);
+define('PIECE_UNITY_ERROR_INVALID_CONFIGURATION', -6);
+define('PIECE_UNITY_ERROR_INVOCATION_FAILED',     -7);
 
 // }}}
 // {{{ Piece_Unity_Error
