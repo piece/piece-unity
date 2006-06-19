@@ -93,8 +93,8 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->_addConfigurationPoint('cacheDirectory', null);
         $this->_addConfigurationPoint('flowDefinitions', array());
         $this->_addConfigurationPoint('sessionKey', strtolower(__CLASS__));
-        $this->_addConfigurationPoint('flowExecutionTicketKey', 'flowExecutionTicket');
-        $this->_addConfigurationPoint('flowNameKey', 'flow');
+        $this->_addConfigurationPoint('flowExecutionTicketKey', '_flowExecutionTicket');
+        $this->_addConfigurationPoint('flowNameKey', '_flow');
     }
 
     // }}}
