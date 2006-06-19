@@ -42,7 +42,7 @@ require_once 'Piece/Unity/Error.php';
 // {{{ GLOBALS
 
 $GLOBALS['PIECE_UNITY_Plugin_Instances'] = array();
-$GLOBALS['PIECE_UNITY_Plugin_Paths'] = array(dirname(__FILE__) . '/../../..');
+$GLOBALS['PIECE_UNITY_Plugin_Directories'] = array(dirname(__FILE__) . '/../../..');
 
 // }}}
 // {{{ Piece_Unity_Plugin_Factory
@@ -95,8 +95,8 @@ class Piece_Unity_Plugin_Factory
     {
         $plugin = "Piece_Unity_Plugin_$plugin";
         if (!array_key_exists($plugin, $GLOBALS['PIECE_UNITY_Plugin_Instances'])) {
-            foreach ($GLOBALS['PIECE_UNITY_Plugin_Paths'] as $pluginPath) {
-                Piece_Unity_Plugin_Factory::_load($plugin, $pluginPath);
+            foreach ($GLOBALS['PIECE_UNITY_Plugin_Directories'] as $pluginDirectory) {
+                Piece_Unity_Plugin_Factory::_load($plugin, $pluginDirectory);
 
                 if (version_compare(phpversion(), '5.0.0', '<')) {
                     $found = class_exists($plugin);
@@ -112,7 +112,7 @@ class Piece_Unity_Plugin_Factory
             if (!$found) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                         "The plugin [ $plugin ] not found in the directories.\n" .
-                                        implode("\n", $GLOBALS['PIECE_UNITY_Plugin_Paths'])
+                                        implode("\n", $GLOBALS['PIECE_UNITY_Plugin_Directories'])
                                         );
                 $return = null;
                 return $return;
@@ -134,16 +134,16 @@ class Piece_Unity_Plugin_Factory
     }
 
     // }}}
-    // {{{ addPluginPath()
+    // {{{ addPluginDirectory()
 
     /**
-     * Adds a plugin path.
+     * Adds a plugin directory.
      *
-     * @param string $pluginPath
+     * @param string $pluginDirectory
      */
-    function addPluginPath($pluginPath)
+    function addPluginDirectory($pluginDirectory)
     {
-        array_unshift($GLOBALS['PIECE_UNITY_Plugin_Paths'], $pluginPath);
+        array_unshift($GLOBALS['PIECE_UNITY_Plugin_Directories'], $pluginDirectory);
     }
 
     /**#@-*/
@@ -159,12 +159,12 @@ class Piece_Unity_Plugin_Factory
      * Loads a plugin corresponding to the given plugin name.
      *
      * @param string $plugin
-     * @param string $pluginPath
+     * @param string $pluginDirectory
      * @static
      */
-    function _load($plugin, $pluginPath)
+    function _load($plugin, $pluginDirectory)
     {
-        $file = realpath("$pluginPath/" . str_replace('_', '/', $plugin) . '.php');
+        $file = realpath("$pluginDirectory/" . str_replace('_', '/', $plugin) . '.php');
 
         if (!$file) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));

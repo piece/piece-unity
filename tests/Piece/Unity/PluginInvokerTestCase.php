@@ -74,7 +74,7 @@ class Piece_Unity_PluginInvokerTestCase extends PHPUnit_TestCase
      * @access private
      */
 
-    var $_pluginPaths;
+    var $_pluginDirectories;
 
     /**#@-*/
 
@@ -85,14 +85,14 @@ class Piece_Unity_PluginInvokerTestCase extends PHPUnit_TestCase
     function setUp()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
-        $this->_pluginPaths = $GLOBALS['PIECE_UNITY_Plugin_Paths'];
-        Piece_Unity_Plugin_Factory::addPluginPath(dirname(__FILE__) . '/../..');
+        $this->_pluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
+        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/../..');
     }
 
     function tearDown()
     {
         $GLOBALS['PIECE_UNITY_Plugin_Instances'] = array();
-        $GLOBALS['PIECE_UNITY_Plugin_Paths'] = $this->_pluginPaths;
+        $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $this->_pluginDirectories;
         $context = &Piece_Unity_Context::singleton();
         $context->clear();
         Piece_Unity_Error::clearErrors();
