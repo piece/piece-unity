@@ -88,6 +88,12 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
 
     /**
      * Invokes the plugin specific code.
+     *
+     * Invokes the action corresponding to an event if it exists.
+     * This method always returns ture.
+     *
+     * @return boolean
+     * @see Piece_Unity_Plugin_DispatcherQueue::invoke()
      */
     function invoke()
     {
