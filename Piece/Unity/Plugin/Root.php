@@ -80,6 +80,7 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
     function Piece_Unity_Plugin_Root()
     {
         parent::Piece_Unity_Plugin_Common();
+        $this->_addExtensionPoint('configurator', 'KernelConfigurator');
         $this->_addExtensionPoint('dispatcher', 'DispatcherQueue');
         $this->_addExtensionPoint('renderer', 'PHPRenderer');
     }
@@ -97,14 +98,32 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
+        $configurator = &$this->getExtension('configurator');
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
+
+        $configurator->invoke();
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
+
         $dispatcher = &$this->getExtension('dispatcher');
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
+
         $dispatcher->invoke();
         if (Piece_Unity_Error::hasErrors('exception')) {
             return;
         }
 
         $renderer = &$this->getExtension('renderer');
-        return $renderer->invoke();
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
+
+        $renderer->invoke();
     }
 
     /**#@-*/
