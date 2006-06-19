@@ -86,13 +86,13 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
     {
         $context = &Piece_Unity_Context::singleton();
         $context->clear();
-        unset($_GET['event']);
+        unset($_GET['_event']);
         unset($_SERVER['REQUEST_METHOD']);
     }
 
     function testDispatchingWithoutAction()
     {
-        $_GET['event'] = 'foo';
+        $_GET['_event'] = 'foo';
 
         $context = &Piece_Unity_Context::singleton();
 
@@ -107,7 +107,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
 
     function testDispatchingWithAction()
     {
-        $_GET['event'] = 'SimpleExample';
+        $_GET['_event'] = 'SimpleExample';
         $GLOBALS['actionCalled'] = false;
 
         $this->assertEquals('SimpleExample', $this->_dispatch());
@@ -118,7 +118,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
 
     function testRelativePathVulnerability()
     {
-        $_GET['event'] = '../RelativePathVulnerability';
+        $_GET['_event'] = '../RelativePathVulnerability';
         $GLOBALS['actionCalled'] = false;
         $GLOBALS['RelativePathVulnerabilityActionLoaded'] = false;
 

@@ -93,7 +93,7 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
     function testInitializingProperties()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET['event'] = 'foo';
+        $_GET['_event'] = 'foo';
         $context = &Piece_Unity_Context::singleton();
 
         $this->assertTrue(is_a($context->getRequest(), 'Piece_Unity_Request'));
@@ -102,21 +102,21 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $this->assertTrue(is_a($context->getSession(), 'Piece_Unity_Session_Common'));
 
         unset($_SERVER['REQUEST_METHOD']);
-        unset($_GET['event']);
+        unset($_GET['_event']);
     }
 
     function testImportingEventNameFromRequestParameters()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET['event'] = 'foo';
-        $_GET['event_bar'] = null;
+        $_GET['_event'] = 'foo';
+        $_GET['_event_bar'] = null;
 
         $context = &Piece_Unity_Context::singleton();
 
         $this->assertEquals('bar', $context->getEvent());
 
-        unset($_GET['event_bar']);
-        unset($_GET['event']);
+        unset($_GET['_event_bar']);
+        unset($_GET['_event']);
         unset($_SERVER['REQUEST_METHOD']);
     }
 

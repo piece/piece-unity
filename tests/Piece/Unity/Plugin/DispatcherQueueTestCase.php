@@ -95,7 +95,7 @@ class Piece_Unity_Plugin_DispatcherQueueTestCase extends PHPUnit_TestCase
     function testDispatchingWithOneDispatcher()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET['event'] = 'foo';
+        $_GET['_event'] = 'foo';
 
         $context = &Piece_Unity_Context::singleton();
         $config = &new Piece_Unity_Config();
@@ -106,7 +106,7 @@ class Piece_Unity_Plugin_DispatcherQueueTestCase extends PHPUnit_TestCase
         $this->assertEquals('foo', $context->getView());
 
         unset($_SERVER['REQUEST_METHOD']);
-        unset($_GET['event']);
+        unset($_GET['_event']);
     }
 
     /**#@-*/

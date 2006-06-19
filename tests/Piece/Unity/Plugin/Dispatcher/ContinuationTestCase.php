@@ -125,7 +125,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals(0, $continuation->getAttribute('counter'));
 
         $context->clear();
-        $_GET['event'] = 'increase';
+        $_GET['_event'] = 'increase';
         $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
         unset($_GET['_flow']);
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
@@ -146,7 +146,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals(3, $continuation->getAttribute('counter'));
         $this->assertEquals('Finish', $context->getView());
 
-        unset($_GET['event']);
+        unset($_GET['_event']);
         unset($_GET['_flowExecutionTicket']);
     }
 
@@ -168,7 +168,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $dispatcher->invoke();
-        unset($_GET['event']);
+        unset($_GET['_event']);
 
         $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
 
@@ -203,7 +203,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $continuation = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_Session_Key']);
         $flowExecutionTicket = $continuation->getCurrentFlowExecutionTicket();
         $context->clear();
-        $_GET['event'] = 'increase';
+        $_GET['_event'] = 'increase';
         $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
         unset($_GET['_flow']);
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
@@ -222,7 +222,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
         $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
 
-        unset($_GET['event']);
+        unset($_GET['_event']);
         unset($_GET['_flowExecutionTicket']);
 
         Piece_Unity_Error::popCallback();

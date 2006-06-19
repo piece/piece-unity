@@ -167,7 +167,7 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
     function testDispatch()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET['event'] = 'foo';
+        $_GET['_event'] = 'foo';
 
         $unity = &new Piece_Unity();
         $unity->dispatch();

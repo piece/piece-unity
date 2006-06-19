@@ -88,20 +88,20 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
     {
         $context = &Piece_Unity_Context::singleton();
         $context->clear();
-        unset($_GET['event']);
+        unset($_GET['_event']);
         unset($_SERVER['REQUEST_METHOD']);
     }
 
     function testRendering()
     {
-        $_GET['event'] = 'PHPRendererExample';
+        $_GET['_event'] = 'PHPRendererExample';
 
         $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $this->_render());
     }
 
     function testRelativePathVulnerability()
     {
-        $_GET['event'] = '../RelativePathVulnerability';
+        $_GET['_event'] = '../RelativePathVulnerability';
 
         $this->assertEquals('', $this->_render());
     }
