@@ -44,7 +44,6 @@ require_once 'Piece/Unity/Session/Factory.php';
 // {{{ GLOBALS
 
 $GLOBALS['PIECE_UNITY_Context_Instance'] = null;
-$GLOBALS['PIECE_UNITY_Context_Event_Imported'] = false;
 
 // }}}
 // {{{ Piece_Unity_Context
@@ -81,6 +80,8 @@ class Piece_Unity_Context
     var $_viewElement;
     var $_event;
     var $_session;
+    var $_eventImported = false;
+    var $_eventNameKey = 'event';
 
     /**#@-*/
 
@@ -196,14 +197,14 @@ class Piece_Unity_Context
      */
     function getEvent()
     {
-        if (!$GLOBALS['PIECE_UNITY_Context_Event_Imported']) {
+        if (!$this->_eventImported) {
             foreach ($this->_request->getParameters() as $key => $value) {
-                if (preg_match('/^event_([a-zA-Z_]+)$/', $key, $matches)) {
+                if (preg_match("/^{$this->_eventNameKey}_([a-zA-Z_]+)$/", $key, $matches)) {
                     $this->_event = $matches[1];
                 }
             }
             if (is_null($this->_event)) {
-                $this->_event = $this->_request->hasParameter('event') ? $this->_request->getParameter('event') : null;
+                $this->_event = $this->_request->hasParameter($this->_eventNameKey) ? $this->_request->getParameter($this->_eventNameKey) : null;
             }
         }
 
@@ -220,7 +221,6 @@ class Piece_Unity_Context
     {
         unset($GLOBALS['PIECE_UNITY_Context_Instance']);
         $GLOBALS['PIECE_UNITY_Context_Instance'] = null;
-        $GLOBALS['PIECE_UNITY_Context_Event_Imported'] = false;
     }
 
     // }}}
