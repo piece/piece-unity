@@ -81,7 +81,7 @@ class Piece_Unity_Plugin_DispatcherQueue extends Piece_Unity_Plugin_Common
     function Piece_Unity_Plugin_DispatcherQueue()
     {
         parent::Piece_Unity_Plugin_Common();
-        $this->_addExtensionPoint('dispatchers', array('Dispatcher_Simple'));
+        $this->_addExtensionPoint('dispatchers', array('Dispatcher_Continuation', 'Dispatcher_Simple'));
     }
 
     // }}}
@@ -89,12 +89,20 @@ class Piece_Unity_Plugin_DispatcherQueue extends Piece_Unity_Plugin_Common
 
     /**
      * Invokes the plugin specific code.
+     *
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
     function invoke()
     {
         $dispatchers = &$this->getExtension('dispatchers');
         foreach ($dispatchers as $extension) {
             $dispatcher = &Piece_Unity_Plugin_Factory::factory($extension);
+            if (Piece_Unity_Error::hasErrors('exception')) {
+                return;
+            }
 
             /*
              * Forwards the request to the next dispatcher until a dispatcher
@@ -102,7 +110,12 @@ class Piece_Unity_Plugin_DispatcherQueue extends Piece_Unity_Plugin_Common
              *
              * @return boolean
              */
-            if ($dispatcher->invoke()) {
+            $result = $dispatcher->invoke();
+            if (Piece_Unity_Error::hasErrors('exception')) {
+                return;
+            }
+
+            if ($result) {
                 break;
             }
         }
