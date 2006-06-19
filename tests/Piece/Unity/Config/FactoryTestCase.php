@@ -116,9 +116,19 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
                                                        dirname(__FILE__)
                                                        );
         $this->assertTrue(is_a($config, 'Piece_Unity_Config'));
-        $this->assertEquals('SmartyRenderer',
-                            $config->getExtension(PIECE_UNITY_ROOT_PLUGIN, 'renderer')
-                            );
+        $this->assertEquals('PHPRenderer', $config->getExtension(PIECE_UNITY_ROOT_PLUGIN, 'renderer'));
+        $this->assertEquals(array('Dispatcher_Continuation', 'Dispatcher_Simple'), $config->getExtension('DispatcherQueue', 'dispatchers'));
+        $this->assertEquals('../webapp/actions', $config->getConfiguration('Dispatcher_Continuation', 'actionDirectory'));
+        $this->assertTrue($config->getConfiguration('Dispatcher_Continuation', 'enableSingleFlowMode'));
+        $this->assertEquals('../webapp/cache', $config->getConfiguration('Dispatcher_Continuation', 'cacheDirectory'));
+
+        $flowDefinitions = $config->getConfiguration('Dispatcher_Continuation', 'flowDefinitions');
+
+        $this->assertEquals('Registration', $flowDefinitions[0]['name']);
+        $this->assertEquals('../webapp/config/Registration.yaml', $flowDefinitions[0]['file']);
+        $this->assertFalse($flowDefinitions[0]['isExclusive']);
+        $this->assertEquals('../webapp/actions', $config->getConfiguration('Dispatcher_Simple', 'actionDirectory'));
+        $this->assertEquals('../webapp/templates', $config->getConfiguration('PHPRenderer', 'templateDirectory'));
     }
 
     function testCreatingIfConfigurationDirectoryNotFound()
