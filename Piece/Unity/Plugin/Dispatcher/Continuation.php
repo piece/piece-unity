@@ -98,14 +98,17 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
 
     /**
      * Invokes the plugin specific code.
+     *
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
     function invoke()
     {
         $session = &$this->_context->getSession();
         $GLOBALS['PIECE_UNITY_Continuation_Session_Key'] = $this->getConfiguration('sessionKey');
         $continuation = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_Session_Key']);
+
         if (is_null($continuation)) {
-            print "### Starting a new flow ###\n";
             Piece_Flow_Continuation::setActionDirectory($this->getConfiguration('actionDirectory'));
             $continuation = &new Piece_Flow_Continuation($this->getConfiguration('enableSingleFlowMode'));
             $continuation->setCacheDirectory($this->getConfiguration('cacheDirectory'));
@@ -114,16 +117,44 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             $continuation->setFlowNameCallback(array(__CLASS__, 'getFlowName'));
 
             foreach ($this->getConfiguration('flowDefinitions') as $flowDefinition) {
-                $continuation->addFlow($flowDefinition['name'],
-                                       $flowDefinition['file'],
-                                       $flowDefinition['isExclusive']
-                                       );
+                Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+                $result = $continuation->addFlow($flowDefinition['name'],
+                                                 $flowDefinition['file'],
+                                                 $flowDefinition['isExclusive']
+                                                 );
+                Piece_Unity_Error::popCallback();
+                if (Piece_Flow_Error::hasErrors('exception')) {
+                    Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                            'Failed to configure the plugin [ ' . __CLASS__ . ' ].',
+                                            'exception',
+                                            array('plugin' => __CLASS__),
+                                            Piece_Flow_Error::pop()
+                                            );
+                    return;
+                }
             }
 
             $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_Session_Key'], $continuation);
         }
 
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $continuation->invoke($this->_context);
+        Piece_Unity_Error::popCallback();
+        if (Piece_Flow_Error::hasErrors('exception')) {
+            $error = Piece_Flow_Error::pop();
+            if ($error['code'] == PIECE_FLOW_ERROR_NOT_GIVEN) {
+                return false;
+            }
+
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                    'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
+                                    'exception',
+                                    array('plugin' => __CLASS__),
+                                    $error
+                                    );
+            return;
+        }
+
         $this->_context->setView($continuation->getView());
 
         return true;
