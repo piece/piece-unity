@@ -102,7 +102,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
     function testContinuation()
     {
-        $_GET['flow'] = 'Counter';
+        $_GET['_flow'] = 'Counter';
 
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
@@ -126,8 +126,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
         $context->clear();
         $_GET['event'] = 'increase';
-        $_GET['flowExecutionTicket'] = $flowExecutionTicket;
-        unset($_GET['flow']);
+        $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
+        unset($_GET['_flow']);
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $context = &Piece_Unity_Context::singleton();
         $session = &$context->getSession();
@@ -147,13 +147,13 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals('Finish', $context->getView());
 
         unset($_GET['event']);
-        unset($_GET['flowExecutionTicket']);
+        unset($_GET['_flowExecutionTicket']);
     }
 
     function testInvalidConfiguration()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-        $_GET['flow'] = 'Counter';
+        $_GET['_flow'] = 'Counter';
 
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
@@ -182,7 +182,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     function testFailreToInvoke()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-        $_GET['flow'] = 'Counter';
+        $_GET['_flow'] = 'Counter';
 
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
@@ -204,8 +204,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $flowExecutionTicket = $continuation->getCurrentFlowExecutionTicket();
         $context->clear();
         $_GET['event'] = 'increase';
-        $_GET['flowExecutionTicket'] = $flowExecutionTicket;
-        unset($_GET['flow']);
+        $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
+        unset($_GET['_flow']);
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $context = &Piece_Unity_Context::singleton();
         $session = &$context->getSession();
@@ -223,7 +223,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
 
         unset($_GET['event']);
-        unset($_GET['flowExecutionTicket']);
+        unset($_GET['_flowExecutionTicket']);
 
         Piece_Unity_Error::popCallback();
     }
