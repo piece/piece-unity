@@ -41,6 +41,7 @@
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Dispatcher/Continuation.php';
 require_once 'Piece/Unity/Context.php';
+require_once 'Cache/Lite/File.php';
 
 // {{{ Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
 
@@ -94,8 +95,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $cache->clean();
         $context = &Piece_Unity_Context::singleton();
         $context->clear();
-        $stack = &Piece_Unity_Error::getErrorStack();
-        $stack->getErrors(true);
+        Piece_Unity_Error::clearErrors();
         unset($_SERVER['REQUEST_METHOD']);
         Piece_Unity_Error::popCallback();
      }
@@ -103,12 +103,12 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     function testContinuation()
     {
         $_GET['flow'] = 'Counter';
-        $context = &Piece_Unity_Context::singleton();
 
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
         $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__));
         $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'Counter', 'file' => dirname(__FILE__) . '/Counter.yaml', 'isExclusive' => true)));
+        $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
@@ -124,7 +124,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertTrue($continuation->hasAttribute('counter'));
         $this->assertEquals(0, $continuation->getAttribute('counter'));
 
-        $context = &Piece_Unity_Context::singleton();
         $context->clear();
         $_GET['event'] = 'increase';
         $_GET['flowExecutionTicket'] = $flowExecutionTicket;
@@ -146,6 +145,87 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
         $this->assertEquals(3, $continuation->getAttribute('counter'));
         $this->assertEquals('Finish', $context->getView());
+
+        unset($_GET['event']);
+        unset($_GET['flowExecutionTicket']);
+    }
+
+    function testInvalidConfiguration()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        $_GET['flow'] = 'Counter';
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Continuation', 'enableSingleFlowMode', true);
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions',
+                                  array(array('name' => 'Counter', 'file' => dirname(__FILE__) . '/Counter.yaml', 'isExclusive' => true),
+                                        array('name' => 'SeconfCounter', 'file' => dirname(__FILE__) . '/Counter.yaml', 'isExclusive' => true))
+                                  );
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+        $dispatcher->invoke();
+        unset($_GET['event']);
+
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_INVALID_CONFIGURATION, $error['code']);
+
+        Piece_Unity_Error::popCallback();
+    }
+
+    function testFailreToInvoke()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        $_GET['flow'] = 'Counter';
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Continuation', 'enableSingleFlowMode', true);
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions',
+                                  array(array('name' => 'Counter', 'file' => dirname(__FILE__) . '/Counter.yaml', 'isExclusive' => false))
+                                  );
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+        $dispatcher->invoke();
+
+        $this->assertEquals('Counter', $context->getView());
+
+        $session = &$context->getSession();
+        $continuation = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_Session_Key']);
+        $flowExecutionTicket = $continuation->getCurrentFlowExecutionTicket();
+        $context->clear();
+        $_GET['event'] = 'increase';
+        $_GET['flowExecutionTicket'] = $flowExecutionTicket;
+        unset($_GET['flow']);
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+        $context = &Piece_Unity_Context::singleton();
+        $session = &$context->getSession();
+        $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_Session_Key'], $continuation);
+        $context->setConfiguration($config);
+        $dispatcher->invoke();
+        $dispatcher->invoke();
+        $dispatcher->invoke();
+        $dispatcher->invoke();
+
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
+
+        unset($_GET['event']);
+        unset($_GET['flowExecutionTicket']);
+
+        Piece_Unity_Error::popCallback();
     }
 
     /**#@-*/
