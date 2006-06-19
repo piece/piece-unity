@@ -92,6 +92,8 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
      *
      * @throws PIECE_UNITY_ERROR_NOT_FOUND
      * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
     function invoke()
     {
