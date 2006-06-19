@@ -118,7 +118,7 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
 
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', dirname(__FILE__));
-        $config->setConfiguration('PHPRenderer', 'templatePath', dirname(__FILE__));
+        $config->setConfiguration('PHPRenderer', 'templateDirectory', dirname(__FILE__));
         $context->setConfiguration($config);
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();

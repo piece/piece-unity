@@ -80,7 +80,7 @@ class Piece_Unity_Plugin_PHPRenderer extends Piece_Unity_Plugin_Common
     function Piece_Unity_Plugin_PHPRenderer()
     {
         parent::Piece_Unity_Plugin_Common();
-        $this->_addConfigurationPoint('templatePath', null);
+        $this->_addConfigurationPoint('templateDirectory', null);
         $this->_addConfigurationPoint('templateSuffix', '.php');
     }
 
@@ -93,12 +93,12 @@ class Piece_Unity_Plugin_PHPRenderer extends Piece_Unity_Plugin_Common
     function invoke()
     {
         $view = str_replace('.', '', $this->_context->getView());
-        $templatePath = $this->getConfiguration('templatePath');
-        if (is_null($templatePath)) {
+        $templateDirectory = $this->getConfiguration('templateDirectory');
+        if (is_null($templateDirectory)) {
             return;
         }
 
-        $file = realpath("$templatePath/" . str_replace('_', '/', $view) . '.php');
+        $file = realpath("$templateDirectory/" . str_replace('_', '/', $view) . '.php');
 
         if ($file && is_readable($file)) {
             $viewElement = &$this->_context->getViewElement();
