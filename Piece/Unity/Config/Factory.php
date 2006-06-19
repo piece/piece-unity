@@ -233,17 +233,19 @@ class Piece_Unity_Config_Factory
     {
         $config = &new Piece_Unity_Config();
         $yaml = Spyc::YAMLLoad($file);
-        for ($i = 0; $i < count($yaml); ++$i) {
-            if ($yaml[$i]['pointType'] == 'extension') {
-                $config->setExtension($yaml[$i]['plugin'],
-                                      $yaml[$i]['point'],
-                                      $yaml[$i]['value']
-                                      );
-            } elseif ($yaml[$i]['pointType'] == 'configuration') {
-                $config->setConfiguration($yaml[$i]['plugin'],
-                                          $yaml[$i]['point'],
-                                          $yaml[$i]['value']
+        foreach ($yaml as $plugin) {
+            foreach ($plugin['point'] as $point) {
+                if ($point['type'] == 'extension') {
+                    $config->setExtension($plugin['name'],
+                                          $point['name'],
+                                          $point['value']
                                           );
+                } elseif ($point['type'] == 'configuration') {
+                    $config->setConfiguration($plugin['name'],
+                                              $point['name'],
+                                              $point['value']
+                                              );
+                }
             }
         }
 
