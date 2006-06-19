@@ -79,6 +79,11 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
      * @access public
      */
 
+    function setUp()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+    }
+
     function tearDown()
     {
         $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
@@ -89,6 +94,8 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
         $cache->clean();
         $context = &Piece_Unity_Context::singleton();
         $context->clear();
+        Piece_Unity_Error::clearErrors();
+        Piece_Unity_Error::popCallback();
     }
 
     function testConfiguration()
