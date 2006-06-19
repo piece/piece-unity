@@ -80,7 +80,7 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
     function Piece_Unity_Plugin_Dispatcher_Simple()
     {
         parent::Piece_Unity_Plugin_Common();
-        $this->_addConfigurationPoint('actionPath', null);
+        $this->_addConfigurationPoint('actionDirectory', null);
     }
 
     // }}}
@@ -94,13 +94,13 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
         $event = $this->_context->getEvent();
         $class = str_replace('.', '', "{$event}Action");
 
-        $actionPath = $this->getConfiguration('actionPath');
-        if (is_null($actionPath)) {
+        $actionDirectory = $this->getConfiguration('actionDirectory');
+        if (is_null($actionDirectory)) {
             $this->_context->setView($event);
             return true;
         }
 
-        $file = realpath("$actionPath/" . str_replace('_', '/', $class) . '.php');
+        $file = realpath("$actionDirectory/" . str_replace('_', '/', $class) . '.php');
         if ($file && is_readable($file)) {
             @include_once $file;
 
