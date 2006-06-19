@@ -43,6 +43,8 @@ require_once 'Piece/Flow/Continuation.php';
 // {{{ GLOBALS
 
 $GLOBALS['PIECE_UNITY_Continuation_Session_Key'] = null;
+$GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key'] = null;
+$GLOBALS['PIECE_UNITY_Continuation_FlowName_Key'] = null;
 
 // }}}
 // {{{ Piece_Unity_Plugin_Dispatcher_Continuation
@@ -91,6 +93,8 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->_addConfigurationPoint('cacheDirectory', null);
         $this->_addConfigurationPoint('flowDefinitions', array());
         $this->_addConfigurationPoint('sessionKey', strtolower(__CLASS__));
+        $this->_addConfigurationPoint('flowExecutionTicketKey', 'flowExecutionTicket');
+        $this->_addConfigurationPoint('flowNameKey', 'flow');
     }
 
     // }}}
@@ -112,6 +116,8 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     {
         $session = &$this->_context->getSession();
         $GLOBALS['PIECE_UNITY_Continuation_Session_Key'] = $this->getConfiguration('sessionKey');
+        $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key'] = $this->getConfiguration('flowExecutionTicketKey');
+        $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key'] = $this->getConfiguration('flowNameKey');
         $continuation = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_Session_Key']);
         Piece_Flow_Continuation::setActionDirectory($this->getConfiguration('actionDirectory'));
 
@@ -208,7 +214,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     {
         $context = &Piece_Unity_Context::singleton();
         $request = &$context->getRequest();
-        return $request->hasParameter('flowExecutionTicket') ? $request->getParameter('flowExecutionTicket') : null;
+        return $request->hasParameter($GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key']) ? $request->getParameter($GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key']) : null;
     }
 
     // }}}
@@ -224,7 +230,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     {
         $context = &Piece_Unity_Context::singleton();
         $request = &$context->getRequest();
-        return $request->hasParameter('flow') ? $request->getParameter('flow') : null;
+        return $request->hasParameter($GLOBALS['PIECE_UNITY_Continuation_FlowName_Key']) ? $request->getParameter($GLOBALS['PIECE_UNITY_Continuation_FlowName_Key']) : null;
     }
 
     /**#@-*/
