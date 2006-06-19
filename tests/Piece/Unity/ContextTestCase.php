@@ -130,6 +130,22 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $this->assertEquals('bar', $context->getEvent());
     }
 
+    function testImportingEventNameFromRequestParametersWithSpecifiedEventNameKey()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_GET['_foo'] = 'bar';
+        $_GET['_foo_baz'] = null;
+
+        $context = &Piece_Unity_Context::singleton();
+        $context->setEventNameKey('_foo');
+
+        $this->assertEquals('baz', $context->getEvent());
+
+        unset($_GET['_foo_baz']);
+        unset($_GET['_foo']);
+        unset($_SERVER['REQUEST_METHOD']);
+    }
+
     /**#@-*/
 
     /**#@+
