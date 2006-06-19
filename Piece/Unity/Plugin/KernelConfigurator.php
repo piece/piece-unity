@@ -80,7 +80,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
     function Piece_Unity_Plugin_KernelConfigurator()
     {
         parent::Piece_Unity_Plugin_Common();
-        $this->_addConfigurationPoint('eventNameKey', 'event');
+        $this->_addConfigurationPoint('eventNameKey', '_event');
     }
 
     // }}}
