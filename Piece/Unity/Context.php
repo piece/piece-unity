@@ -238,7 +238,16 @@ class Piece_Unity_Context
     function Piece_Unity_Context()
     {
         $this->_request = &new Piece_Unity_Request();
-        $this->_event = $this->_request->hasParameter('event') ? $this->_request->getParameter('event') : null;
+
+        foreach ($this->_request->getParameters() as $key => $value) {
+            if (preg_match('/^event_([a-zA-Z_]+)$/', $key, $matches)) {
+                $this->_event = $matches[1];
+            }
+        }
+        if (is_null($this->_event)) {
+            $this->_event = $this->_request->hasParameter('event') ? $this->_request->getParameter('event') : null;
+        }
+
         $this->_viewElement = &new Piece_Unity_ViewElement();
         $this->_session = &Piece_Unity_Session_Factory::factory();
     }
