@@ -81,7 +81,7 @@ class Piece_Unity_Context
     var $_event;
     var $_session;
     var $_eventImported = false;
-    var $_eventNameKey = 'event';
+    var $_eventNameKey = '_event';
 
     /**#@-*/
 
