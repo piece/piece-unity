@@ -236,6 +236,19 @@ class Piece_Unity_Context
         return $this->_session;
     }
 
+    // }}}
+    // {{{ setEventNameKey()
+
+    /**
+     * Sets a key which represents the event name parameter.
+     *
+     * @param string $eventNameKey
+     */
+    function setEventNameKey($eventNameKey)
+    {
+        $this->_eventNameKey = $eventNameKey;
+    }
+
     /**#@-*/
 
     /**#@+
