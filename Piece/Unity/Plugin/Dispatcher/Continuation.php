@@ -99,17 +99,23 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     /**
      * Invokes the plugin specific code.
      *
+     * Starts a new continuation or continues with the current continuation.
+     * If an event has no concern with continuations, this method returns
+     * false, and the event will be dispatched to the next dispatcher.
+     *
      * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     * @return boolean
+     * @see Piece_Unity_Plugin_DispatcherQueue::invoke()
      */
     function invoke()
     {
         $session = &$this->_context->getSession();
         $GLOBALS['PIECE_UNITY_Continuation_Session_Key'] = $this->getConfiguration('sessionKey');
         $continuation = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_Session_Key']);
+        Piece_Flow_Continuation::setActionDirectory($this->getConfiguration('actionDirectory'));
 
         if (is_null($continuation)) {
-            Piece_Flow_Continuation::setActionDirectory($this->getConfiguration('actionDirectory'));
             $continuation = &new Piece_Flow_Continuation($this->getConfiguration('enableSingleFlowMode'));
             $continuation->setCacheDirectory($this->getConfiguration('cacheDirectory'));
             $continuation->setEventNameCallback(array(__CLASS__, 'getEventName'));
@@ -142,7 +148,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         Piece_Unity_Error::popCallback();
         if (Piece_Flow_Error::hasErrors('exception')) {
             $error = Piece_Flow_Error::pop();
-            if ($error['code'] == PIECE_FLOW_ERROR_NOT_GIVEN) {
+            if ($error['code'] == PIECE_FLOW_ERROR_FLOW_NAME_NOT_GIVEN) {
                 return false;
             }
 
@@ -155,7 +161,21 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             return;
         }
 
-        $this->_context->setView($continuation->getView());
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        $view = $continuation->getView();
+        Piece_Unity_Error::popCallback();
+        if (Piece_Flow_Error::hasErrors('exception')) {
+            $error = Piece_Flow_Error::pop();
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                    'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
+                                    'exception',
+                                    array('plugin' => __CLASS__),
+                                    $error
+                                    );
+            return;
+        }
+
+        $this->_context->setView($view);
 
         return true;
     }
