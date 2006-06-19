@@ -160,6 +160,9 @@ class Piece_Unity_Error
         return PEAR_ErrorStack::staticHasErrors('Piece_Unity', $level);
     }
 
+    // }}}
+    // {{{ pop()
+
     /**
      * Pops an error off of the error stack for the package. This method is a
      * wrapper for PEAR_ErrorStack::pop() method.
@@ -172,6 +175,9 @@ class Piece_Unity_Error
         $stack = &PEAR_ErrorStack::singleton('Piece_Unity');
         return $stack->pop();
     }
+
+    // }}}
+    // {{{ clearErrors()
 
     /**
      * Clears the error stack for the package.
