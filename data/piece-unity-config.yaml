@@ -1,5 +1,40 @@
 # $Id$
-- plugin: Root
-  point: renderer
-  pointType: extension
-  value: SmartyRenderer
+- name: Root
+  point:
+    - name: renderer
+      type: extension
+      value: PHPRenderer
+- name: DispatcherQueue
+  point:
+    - name: dispatchers
+      type: extension
+      value:
+        - Dispatcher_Continuation
+        - Dispatcher_Simple
+- name: Dispatcher_Continuation
+  point:
+    - name: actionDirectory
+      type: configuration
+      value: ../webapp/actions
+    - name: enableSingleFlowMode
+      type: configuration
+      value: true
+    - name: cacheDirectory
+      type: configuration
+      value: ../webapp/cache
+    - name: flowDefinitions
+      type: configuration
+      value:
+        - name: Registration
+          file: ../webapp/config/Registration.yaml
+          isExclusive: false
+- name: Dispatcher_Simple
+  point:
+    - name: actionDirectory
+      type: configuration
+      value: ../webapp/actions
+- name: PHPRenderer
+  point:
+    - name: templateDirectory
+      type: configuration
+      value: ../webapp/templates

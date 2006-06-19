@@ -6,7 +6,14 @@ sequence:
   - type: map
     required: yes
     mapping:
-      "plugin": { type: str, required: yes }
-      "point": { type: str, required: yes }
-      "pointType": { type: str, required: yes, enum: [ extension, configuration ] }
-      "value": { type: any }
+      "name": { type: str, required: yes }
+      "point":
+         type: seq
+         required: no
+         sequence:
+           - type: map
+             required: yes
+             mapping:
+               "name": { type: str, required: yes }
+               "type": { type: str, required: yes, enum: [ extension, configuration ] }
+               "value": { type: any }
