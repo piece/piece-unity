@@ -186,7 +186,9 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->_context->setView($view);
 
         /*
-         * Sets the Piece_Flow_Continuation object as a built-in view element.
+         * Sets the Piece_Flow_Continuation object, the flow execution ticket
+         * key, the flow name key, and the current flow execution ticket as a
+         * built-in view elements.
          */
         $viewElement = &$this->_context->getViewElement();
         $viewElement->setElementByRef('__continuation', $continuation);
