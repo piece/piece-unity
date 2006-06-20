@@ -39,7 +39,7 @@
 
 require_once 'Piece/Unity/Plugin/Common.php';
 
-// {{{ Piece_Unity_Plugin_Root
+// {{{ Piece_Unity_Plugin_View
 
 /**
  * @package    Piece_Unity
@@ -50,7 +50,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @link       http://iteman.typepad.jp/piece/
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
@@ -77,12 +77,10 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
     /**
      * Defines extension points and configuration points for the plugin.
      */
-    function Piece_Unity_Plugin_Root()
+    function Piece_Unity_Plugin_View()
     {
         parent::Piece_Unity_Plugin_Common();
-        $this->_addExtensionPoint('configurator', 'KernelConfigurator');
-        $this->_addExtensionPoint('dispatcher', 'DispatcherQueue');
-        $this->_addExtensionPoint('view', 'View');
+        $this->_addExtensionPoint('renderer', 'Renderer_PHP');
     }
 
     // }}}
@@ -90,40 +88,28 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
 
     /**
      * Invokes the plugin specific code.
-     *
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
-     * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
-     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
-     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
     function invoke()
     {
-        $configurator = &$this->getExtension('configurator');
+
+        /*
+         * Sets the Piece_Unity_Request object and the
+         * Piece_Unity_Session object as built-in view elements.
+         */
+        $request = &$this->_context->getRequest();
+        $viewElement->setElementByRef('__request', $request);
+        $session = &$this->_context->getSession();
+        $viewElement->setElementByRef('__session', $session);
+
+        $renderer = &$this->getExtension('renderer');
         if (Piece_Unity_Error::hasErrors('exception')) {
             return;
         }
 
-        $configurator->invoke();
+        $renderer->invoke();
         if (Piece_Unity_Error::hasErrors('exception')) {
             return;
         }
-
-        $dispatcher = &$this->getExtension('dispatcher');
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            return;
-        }
-
-        $dispatcher->invoke();
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            return;
-        }
-
-        $view = &$this->getExtension('view');
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            return;
-        }
-
-        $view->invoke();
     }
 
     /**#@-*/
