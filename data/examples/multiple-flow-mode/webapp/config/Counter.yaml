@@ -1,0 +1,19 @@
+# $Id$
+name: Counter
+firstState: Displaying
+lastState: { name: Finishing, view: Counter_Finish }
+viewState:
+  - name: Displaying
+    view: Counter_Counter
+    activity:
+      class: CounterAction
+      method: increase
+    transition:
+      - event: next
+        nextState: Finishing
+        guard:
+          class: CounterAction
+          method: reached
+initial:
+  class: CounterAction
+  method: initialize

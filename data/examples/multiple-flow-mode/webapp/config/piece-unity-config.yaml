@@ -1,0 +1,31 @@
+# $Id$
+- name: Dispatcher_Continuation
+  point:
+    - name: actionDirectory
+      type: configuration
+      value: ../webapp/actions
+    - name: enableSingleFlowMode
+      type: configuration
+      value: false
+    - name: cacheDirectory
+      type: configuration
+      value: ../webapp/cache
+    - name: flowDefinitions
+      type: configuration
+      value:
+        - name: Registration
+          file: ../webapp/config/Registration.yaml
+          isExclusive: false
+        - name: Counter
+          file: ../webapp/config/Counter.yaml
+          isExclusive: true
+- name: Dispatcher_Simple
+  point:
+    - name: actionDirectory
+      type: configuration
+      value: ../webapp/actions
+- name: Renderer_PHP
+  point:
+    - name: templateDirectory
+      type: configuration
+      value: ../webapp/templates
