@@ -97,6 +97,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context = &Piece_Unity_Context::singleton();
         $context->clear();
         Piece_Unity_Error::clearErrors();
+        unset($_GET['_flowExecutionTicket']);
+        unset($_GET['_event']);
+        unset($_GET['_flow']);
         unset($_SERVER['REQUEST_METHOD']);
         Piece_Unity_Error::popCallback();
      }
@@ -146,9 +149,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
         $this->assertEquals(3, $continuation->getAttribute('counter'));
         $this->assertEquals('Finish', $context->getView());
-
-        unset($_GET['_event']);
-        unset($_GET['_flowExecutionTicket']);
     }
 
     function testInvalidConfiguration()
@@ -169,7 +169,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $dispatcher->invoke();
-        unset($_GET['_event']);
 
         $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
 
@@ -223,20 +222,19 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
         $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
 
-        unset($_GET['_event']);
-        unset($_GET['_flowExecutionTicket']);
-
         Piece_Unity_Error::popCallback();
     }
 
     function testSettingContinuationObjectAsViewElement()
     {
-        $_GET['_flow'] = 'Counter';
+        $_GET['_bar'] = 'Counter';
 
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
         $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__));
         $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'Counter', 'file' => dirname(__FILE__) . '/Counter.yaml', 'isExclusive' => true)));
+        $config->setConfiguration('Dispatcher_Continuation', 'flowExecutionTicketKey', '_foo');
+        $config->setConfiguration('Dispatcher_Continuation', 'flowNameKey', '_bar');
         $config->setConfiguration('Renderer_PHP', 'templateDirectory', dirname(__FILE__));
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
@@ -251,8 +249,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         ob_end_clean();
 
         $this->assertEquals('OK', $buffer);
-
-        unset($_GET['_event']);
     }
 
     /**#@-*/

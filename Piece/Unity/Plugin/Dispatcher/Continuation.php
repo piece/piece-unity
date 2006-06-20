@@ -117,10 +117,10 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     function invoke()
     {
         $session = &$this->_context->getSession();
+        $continuation = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_Session_Key']);
         $GLOBALS['PIECE_UNITY_Continuation_Session_Key'] = $this->getConfiguration('sessionKey');
         $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key'] = $this->getConfiguration('flowExecutionTicketKey');
         $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key'] = $this->getConfiguration('flowNameKey');
-        $continuation = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_Session_Key']);
         Piece_Flow_Continuation::setActionDirectory($this->getConfiguration('actionDirectory'));
 
         if (is_null($continuation)) {
@@ -190,6 +190,9 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
          */
         $viewElement = &$this->_context->getViewElement();
         $viewElement->setElementByRef('__continuation', $continuation);
+        $viewElement->setElement('__flowExecutionTicketKey', $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key']);
+        $viewElement->setElement('__flowNameKey', $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key']);
+        $viewElement->setElement('__flowExecutionTicket', $continuation->getCurrentFlowExecutionTicket());
 
         return true;
     }
