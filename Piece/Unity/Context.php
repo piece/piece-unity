@@ -249,6 +249,19 @@ class Piece_Unity_Context
         $this->_eventNameKey = $eventNameKey;
     }
 
+    // }}}
+    // {{{ getEventNameKey()
+
+    /**
+     * Gets the key which represents the event name parameter.
+     *
+     * @return string
+     */
+    function getEventNameKey()
+    {
+        return $this->_eventNameKey;
+    }
+
     /**#@-*/
 
     /**#@+
