@@ -102,6 +102,16 @@ class Piece_Unity_Plugin_PHPRenderer extends Piece_Unity_Plugin_Common
 
         if ($file && is_readable($file)) {
             $viewElement = &$this->_context->getViewElement();
+
+            /*
+             * Sets the Piece_Unity_Request object and the
+             * Piece_Unity_Session object as built-in view elements.
+             */
+            $request = &$this->_context->getRequest();
+            $viewElement->setElementByRef('__request', $request);
+            $session = &$this->_context->getSession();
+            $viewElement->setElementByRef('__session', $session);
+
             extract($viewElement->getElements(), EXTR_OVERWRITE | EXTR_REFS);
 
             @include_once $file;
