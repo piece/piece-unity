@@ -74,24 +74,38 @@ class Piece_Unity_ViewElement
      */
 
     // }}}
-    // {{{ addElement()
+    // {{{ setElement()
 
     /**
-     * Adds the element.
+     * Sets an element.
      *
      * @param string $name
      * @param mixed  $value
      */
-    function addElement($name, $value)
+    function setElement($name, $value)
     {
         $this->_elements[$name] = $value;
+    }
+
+    // }}}
+    // {{{ setElementByRef()
+
+    /**
+     * Sets an element by reference.
+     *
+     * @param string $name
+     * @param mixed  &$value
+     */
+    function setElementByRef($name, &$value)
+    {
+        $this->_elements[$name] = &$value;
     }
 
     // }}}
     // {{{ getElements()
 
     /**
-     * Gets the elements.
+     * Gets all elements.
      *
      * @return array
      */
