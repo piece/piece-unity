@@ -146,6 +146,14 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         unset($_SERVER['REQUEST_METHOD']);
     }
 
+    function testGettingEventNameKey()
+    {
+        $context = &Piece_Unity_Context::singleton();
+        $context->setEventNameKey('_foo');
+
+        $this->assertEquals('_foo', $context->getEventNameKey());
+    }
+
     /**#@-*/
 
     /**#@+
