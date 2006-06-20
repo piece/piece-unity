@@ -34,20 +34,21 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://iteman.typepad.jp/piece/
- * @see        Piece_Unity_Plugin_PHPRenderer
+ * @see        Piece_Unity_Plugin_Renderer_PHP
  * @since      File available since Release 0.1.0
  */
 
 require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Plugin/PHPRenderer.php';
+require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/Plugin/Dispatcher/Simple.php';
+require_once 'Piece/Unity/Plugin/View.php';
 
-// {{{ Piece_Unity_Plugin_PHPRendererTestCase
+// {{{ Piece_Unity_Plugin_Renderer_PHPTestCase
 
 /**
- * TestCase for Piece_Unity_Plugin_PHPRenderer
+ * TestCase for Piece_Unity_Plugin_Renderer_PHP
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
@@ -55,10 +56,10 @@ require_once 'Piece/Unity/Plugin/Dispatcher/Simple.php';
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://iteman.typepad.jp/piece/
- * @see        Piece_Unity_Plugin_PHPRenderer
+ * @see        Piece_Unity_Plugin_Renderer_PHP
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
+class Piece_Unity_Plugin_Renderer_PHPTestCase extends PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -94,7 +95,7 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
 
     function testRendering()
     {
-        $_GET['_event'] = 'PHPRendererExample';
+        $_GET['_event'] = 'PHPExample';
 
         $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $this->_render());
     }
@@ -111,15 +112,15 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
         $context = &Piece_Unity_Context::singleton();
 
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('PHPRenderer', 'templateDirectory', dirname(__FILE__));
+        $config->setConfiguration('Renderer_PHP', 'templateDirectory', dirname(__FILE__));
         $context->setConfiguration($config);
 
         $foo = &new stdClass();
         $viewElement = &$context->getViewElement();
         $viewElement->setElementByRef('foo', $foo);
-        $context->setView('PHPRendererKeepingReference');
+        $context->setView('PHPKeepingReference');
 
-        $renderer = &new Piece_Unity_Plugin_PHPRenderer();
+        $renderer = &new Piece_Unity_Plugin_Renderer_PHP();
         ob_start();
         $renderer->invoke();
         ob_end_clean();
@@ -133,17 +134,18 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
         $context = &Piece_Unity_Context::singleton();
 
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('PHPRenderer', 'templateDirectory', dirname(__FILE__));
+        $config->setConfiguration('Renderer_PHP', 'templateDirectory', dirname(__FILE__));
+        $config->setExtension('View', 'renderer', 'Renderer_PHP');
         $context->setConfiguration($config);
 
         $foo = &new stdClass();
         $viewElement = &$context->getViewElement();
         $viewElement->setElementByRef('foo', $foo);
-        $context->setView('PHPRendererBuiltinElements');
+        $context->setView('PHPBuiltinElements');
 
-        $renderer = &new Piece_Unity_Plugin_PHPRenderer();
+        $view = &new Piece_Unity_Plugin_View();
         ob_start();
-        $renderer->invoke();
+        $view->invoke();
         $buffer = ob_get_contents();
         ob_end_clean();
 
@@ -162,12 +164,12 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
 
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', dirname(__FILE__));
-        $config->setConfiguration('PHPRenderer', 'templateDirectory', dirname(__FILE__));
+        $config->setConfiguration('Renderer_PHP', 'templateDirectory', dirname(__FILE__));
         $context->setConfiguration($config);
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
         $dispatcher->invoke();
-        $renderer = &new Piece_Unity_Plugin_PHPRenderer();
+        $renderer = &new Piece_Unity_Plugin_Renderer_PHP();
 
         ob_start();
         $renderer->invoke();

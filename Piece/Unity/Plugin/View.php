@@ -96,6 +96,7 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
          * Sets the Piece_Unity_Request object and the
          * Piece_Unity_Session object as built-in view elements.
          */
+        $viewElement = &$this->_context->getViewElement();
         $request = &$this->_context->getRequest();
         $viewElement->setElementByRef('__request', $request);
         $session = &$this->_context->getSession();

@@ -39,7 +39,7 @@
 
 require_once 'Piece/Unity/Plugin/Common.php';
 
-// {{{ Piece_Unity_Plugin_PHPRenderer
+// {{{ Piece_Unity_Plugin_Renderer_PHP
 
 /**
  * @package    Piece_Unity
@@ -50,7 +50,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @link       http://iteman.typepad.jp/piece/
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Plugin_PHPRenderer extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
@@ -77,7 +77,7 @@ class Piece_Unity_Plugin_PHPRenderer extends Piece_Unity_Plugin_Common
     /**
      * Defines extension points and configuration points for the plugin.
      */
-    function Piece_Unity_Plugin_PHPRenderer()
+    function Piece_Unity_Plugin_Renderer_PHP()
     {
         parent::Piece_Unity_Plugin_Common();
         $this->_addConfigurationPoint('templateDirectory', null);
@@ -102,16 +102,6 @@ class Piece_Unity_Plugin_PHPRenderer extends Piece_Unity_Plugin_Common
 
         if ($file && is_readable($file)) {
             $viewElement = &$this->_context->getViewElement();
-
-            /*
-             * Sets the Piece_Unity_Request object and the
-             * Piece_Unity_Session object as built-in view elements.
-             */
-            $request = &$this->_context->getRequest();
-            $viewElement->setElementByRef('__request', $request);
-            $session = &$this->_context->getSession();
-            $viewElement->setElementByRef('__session', $session);
-
             extract($viewElement->getElements(), EXTR_OVERWRITE | EXTR_REFS);
 
             @include_once $file;

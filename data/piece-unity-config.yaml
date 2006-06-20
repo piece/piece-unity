@@ -1,9 +1,9 @@
 # $Id$
 - name: Root
   point:
-    - name: renderer
+    - name: view
       type: extension
-      value: PHPRenderer
+      value: View
 - name: DispatcherQueue
   point:
     - name: dispatchers
@@ -33,7 +33,12 @@
     - name: actionDirectory
       type: configuration
       value: ../webapp/actions
-- name: PHPRenderer
+- name: View
+  point:
+    - name: renderer
+      type: extension
+      value: Renderer_PHP
+- name: Renderer_PHP
   point:
     - name: templateDirectory
       type: configuration

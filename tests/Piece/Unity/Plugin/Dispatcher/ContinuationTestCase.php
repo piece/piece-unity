@@ -42,6 +42,7 @@ require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Dispatcher/Continuation.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Cache/Lite/File.php';
+require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
 
 // {{{ Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
 
@@ -236,14 +237,14 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
         $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__));
         $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'Counter', 'file' => dirname(__FILE__) . '/Counter.yaml', 'isExclusive' => true)));
-        $config->setConfiguration('PHPRenderer', 'templateDirectory', dirname(__FILE__));
+        $config->setConfiguration('Renderer_PHP', 'templateDirectory', dirname(__FILE__));
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $dispatcher->invoke();
 
-        $renderer = &new Piece_Unity_Plugin_PHPRenderer();
+        $renderer = &new Piece_Unity_Plugin_Renderer_PHP();
         ob_start();
         $renderer->invoke();
         $buffer = ob_get_contents();

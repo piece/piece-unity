@@ -34,14 +34,14 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://iteman.typepad.jp/piece/
- * @see        Piece_Unity_Plugin_PHPRenderer
+ * @see        Piece_Unity_Plugin_Renderer_PHP
  * @since      File available since Release 0.1.0
  */
 
-// {{{ PHPRendererExampleAction
+// {{{ PHPExampleAction
 
 /**
- * Action class for the event 'Example'.
+ * Action class for the event 'PHPExample'.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
@@ -49,10 +49,10 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://iteman.typepad.jp/piece/
- * @see        Piece_Unity_Plugin_PHPRenderer
+ * @see        Piece_Unity_Plugin_Renderer_PHP
  * @since      Class available since Release 0.1.0
  */
-class PHPRendererExampleAction
+class PHPExampleAction
 {
 
     // {{{ properties
