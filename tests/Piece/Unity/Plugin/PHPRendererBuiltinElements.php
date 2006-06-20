@@ -6,3 +6,4 @@ if (isset($__request) && is_a($__request, 'Piece_Unity_Request')
 } else {
     print 'NG';
 }
+?>
