@@ -50,6 +50,8 @@ $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key'] = null;
 // {{{ Piece_Unity_Plugin_Dispatcher_Continuation
 
 /**
+ * A continuation server based on Piece_Flow.
+ *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
  * @copyright  2006 KUBO Atsuhiro <iteman2002@yahoo.co.jp>
