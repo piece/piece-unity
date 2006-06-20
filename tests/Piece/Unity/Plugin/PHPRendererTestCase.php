@@ -128,6 +128,28 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
         $this->assertEquals('baz', $foo->bar);
     }
 
+    function testBuiltinElements()
+    {
+        $context = &Piece_Unity_Context::singleton();
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('PHPRenderer', 'templateDirectory', dirname(__FILE__));
+        $context->setConfiguration($config);
+
+        $foo = &new stdClass();
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElementByRef('foo', $foo);
+        $context->setView('PHPRendererBuiltinElements');
+
+        $renderer = &new Piece_Unity_Plugin_PHPRenderer();
+        ob_start();
+        $renderer->invoke();
+        $buffer = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals('OK', $buffer);
+    }
+
     /**#@-*/
 
     /**#@+
