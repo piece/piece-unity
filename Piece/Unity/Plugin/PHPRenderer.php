@@ -102,7 +102,7 @@ class Piece_Unity_Plugin_PHPRenderer extends Piece_Unity_Plugin_Common
 
         if ($file && is_readable($file)) {
             $viewElement = &$this->_context->getViewElement();
-            extract($viewElement->getElements());
+            extract($viewElement->getElements(), EXTR_OVERWRITE | EXTR_REFS);
 
             @include_once $file;
         }
