@@ -106,6 +106,28 @@ class Piece_Unity_Plugin_PHPRendererTestCase extends PHPUnit_TestCase
         $this->assertEquals('', $this->_render());
     }
 
+    function testKeepingReference()
+    {
+        $context = &Piece_Unity_Context::singleton();
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('PHPRenderer', 'templateDirectory', dirname(__FILE__));
+        $context->setConfiguration($config);
+
+        $foo = &new stdClass();
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElementByRef('foo', $foo);
+        $context->setView('PHPRendererKeepingReference');
+
+        $renderer = &new Piece_Unity_Plugin_PHPRenderer();
+        ob_start();
+        $renderer->invoke();
+        ob_end_clean();
+
+        $this->assertTrue(array_key_exists('bar', $foo));
+        $this->assertEquals('baz', $foo->bar);
+    }
+
     /**#@-*/
 
     /**#@+
