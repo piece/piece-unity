@@ -228,6 +228,32 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         Piece_Unity_Error::popCallback();
     }
 
+    function testSettingContinuationObjectAsViewElement()
+    {
+        $_GET['_flow'] = 'Counter';
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'Counter', 'file' => dirname(__FILE__) . '/Counter.yaml', 'isExclusive' => true)));
+        $config->setConfiguration('PHPRenderer', 'templateDirectory', dirname(__FILE__));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+        $dispatcher->invoke();
+
+        $renderer = &new Piece_Unity_Plugin_PHPRenderer();
+        ob_start();
+        $renderer->invoke();
+        $buffer = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals('OK', $buffer);
+
+        unset($_GET['_event']);
+    }
+
     /**#@-*/
 
     /**#@+
