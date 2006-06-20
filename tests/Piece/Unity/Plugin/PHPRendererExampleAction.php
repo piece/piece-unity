@@ -76,7 +76,7 @@ class PHPRendererExampleAction
     function invoke(&$context)
     {
         $viewElement = &$context->getViewElement();
-        $viewElement->addElement('content', 'This is a dynamic content.');
+        $viewElement->setElement('content', 'This is a dynamic content.');
     }
 
     /**#@-*/
