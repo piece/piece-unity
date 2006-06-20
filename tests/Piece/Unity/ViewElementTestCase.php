@@ -76,15 +76,30 @@ class Piece_Unity_ViewElementTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function testAddingElement()
+    function testSettingElement()
     {
         $viewElement = &new Piece_Unity_ViewElement();
-        $viewElement->addElement('foo', 'bar');
-        $viewElement->addElement('bar', 'baz');
+        $viewElement->setElement('foo', 'bar');
+        $viewElement->setElement('bar', 'baz');
 
         $elements = $viewElement->getElements();
+
         $this->assertEquals('bar', $elements['foo']);
         $this->assertEquals('baz', $elements['bar']);
+    }
+
+    function testSettingElementByReference()
+    {
+        $foo = &new stdClass();
+        $viewElement = &new Piece_Unity_ViewElement();
+        $viewElement->setElementByRef('foo', $foo);
+        $foo->bar = 'baz';
+
+        $elements = $viewElement->getElements();
+
+        $this->assertTrue(array_key_exists('foo', $elements));
+        $this->assertTrue(array_key_exists('bar', $elements['foo']));
+        $this->assertEquals('baz', $elements['foo']->bar);
     }
 
     /**#@-*/
