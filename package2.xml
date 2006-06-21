@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.4.9" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+    http://pear.php.net/dtd/tasks-1.0.xsd
+    http://pear.php.net/dtd/package-2.0
+    http://pear.php.net/dtd/package-2.0.xsd">
+ <name>Piece_Unity</name>
+ <channel>pear.hatotech.org</channel>
+ <summary>A stateful and secure MVC framework for PHP</summary>
+ <description>Piece_Unity is a stateful and secure MVC framework for PHP. Piece_Unity has two major features. The first one is a technology known as the continuation server - It based on Piece_Flow web flow engine, flow control using it, and storing/restoring states. The second one is an Eclipse like plug-in system using extension points and configuration points.</description>
+ <lead>
+  <name>KUBO Atsuhiro</name>
+  <user>iteman</user>
+  <email>iteman2002@yahoo.co.jp</email>
+  <active>yes</active>
+ </lead>
+ <date>2006-06-21</date>
+ <time>09:44:06</time>
+ <version>
+  <release>0.1.0</release>
+  <api>0.1.0</api>
+ </version>
+ <stability>
+  <release>alpha</release>
+  <api>alpha</api>
+ </stability>
+ <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+ <notes>The first alpha release of Piece_Unity.</notes>
+ <contents>
+  <dir baseinstalldir="/" name="/">
+   <dir name="data">
+    <dir name="examples">
+     <dir name="multiple-flow-mode">
+      <dir name="htdocs">
+       <file name="index.php" role="data">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+      </dir> <!-- /data/examples/multiple-flow-mode/htdocs -->
+      <dir name="webapp">
+       <dir name="actions">
+        <file name="CounterAction.php" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="RegistrationAction.php" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+       </dir> <!-- /data/examples/multiple-flow-mode/webapp/actions -->
+       <dir name="config">
+        <file name="Counter.yaml" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="piece-unity-config.yaml" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="Registration.yaml" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+       </dir> <!-- /data/examples/multiple-flow-mode/webapp/config -->
+       <dir name="templates">
+        <dir name="Counter">
+         <file name="Counter.php" role="data">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+         <file name="Finish.php" role="data">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+        </dir> <!-- /data/examples/multiple-flow-mode/webapp/templates/Counter -->
+        <dir name="Registration">
+         <file name="Confirmation.php" role="data">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+         <file name="Finish.php" role="data">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+         <file name="Input.php" role="data">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+        </dir> <!-- /data/examples/multiple-flow-mode/webapp/templates/Registration -->
+       </dir> <!-- /data/examples/multiple-flow-mode/webapp/templates -->
+      </dir> <!-- /data/examples/multiple-flow-mode/webapp -->
+     </dir> <!-- /data/examples/multiple-flow-mode -->
+     <dir name="single-flow-mode">
+      <dir name="htdocs">
+       <file name="index.php" role="data">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+      </dir> <!-- /data/examples/single-flow-mode/htdocs -->
+      <dir name="webapp">
+       <dir name="actions">
+        <file name="RegistrationAction.php" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+       </dir> <!-- /data/examples/single-flow-mode/webapp/actions -->
+       <dir name="config">
+        <file name="piece-unity-config.yaml" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="Registration.yaml" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+       </dir> <!-- /data/examples/single-flow-mode/webapp/config -->
+       <dir name="templates">
+        <file name="Confirmation.php" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="Finish.php" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="Input.php" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+       </dir> <!-- /data/examples/single-flow-mode/webapp/templates -->
+      </dir> <!-- /data/examples/single-flow-mode/webapp -->
+     </dir> <!-- /data/examples/single-flow-mode -->
+     <file name="index.html" role="data">
+      <tasks:replace from="@package_version@" to="version" type="package-info" />
+     </file>
+    </dir> <!-- /data/examples -->
+    <file name="piece-unity-config.yaml" role="data">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+    <file name="piece-unity.yaml" role="data">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+   </dir> <!-- /data -->
+   <dir name="docs">
+    <file name="LICENSE" role="doc">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+    <file name="README.sdoc" role="doc">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+   </dir> <!-- /docs -->
+   <dir name="Piece">
+    <dir name="Unity">
+     <dir name="Config">
+      <file name="Factory.php" role="php">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+     </dir> <!-- /Piece/Unity/Config -->
+     <dir name="Plugin">
+      <dir name="Dispatcher">
+       <file name="Continuation.php" role="php">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="Simple.php" role="php">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+      </dir> <!-- /Piece/Unity/Plugin/Dispatcher -->
+      <dir name="Renderer">
+       <file name="PHP.php" role="php">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+      </dir> <!-- /Piece/Unity/Plugin/Renderer -->
+      <file name="Common.php" role="php">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file name="DispatcherQueue.php" role="php">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file name="Factory.php" role="php">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file name="KernelConfigurator.php" role="php">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file name="Root.php" role="php">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file name="View.php" role="php">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+     </dir> <!-- /Piece/Unity/Plugin -->
+     <dir name="Session">
+      <file name="Common.php" role="php">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file name="Factory.php" role="php">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file name="Mock.php" role="php">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file name="PHP.php" role="php">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+     </dir> <!-- /Piece/Unity/Session -->
+     <file name="Config.php" role="php">
+      <tasks:replace from="@package_version@" to="version" type="package-info" />
+     </file>
+     <file name="Context.php" role="php">
+      <tasks:replace from="@package_version@" to="version" type="package-info" />
+     </file>
+     <file name="Error.php" role="php">
+      <tasks:replace from="@package_version@" to="version" type="package-info" />
+     </file>
+     <file name="PluginInvoker.php" role="php">
+      <tasks:replace from="@package_version@" to="version" type="package-info" />
+     </file>
+     <file name="Request.php" role="php">
+      <tasks:replace from="@package_version@" to="version" type="package-info" />
+     </file>
+     <file name="ViewElement.php" role="php">
+      <tasks:replace from="@package_version@" to="version" type="package-info" />
+     </file>
+    </dir> <!-- /Piece/Unity -->
+    <file name="Unity.php" role="php">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+   </dir> <!-- /Piece -->
+   <dir name="tests">
+    <dir name="Piece">
+     <dir name="Unity">
+      <dir name="Config">
+       <file name="FactoryTestCase.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="TestRunner.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+      </dir> <!-- /tests/Piece/Unity/Config -->
+      <dir name="Plugin">
+       <dir name="Dispatcher">
+        <file name="ContinuationTestCase.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="Counter.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="Counter.yaml" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="CounterAction.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="SimpleExampleAction.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="SimpleTestCase.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="TestRunner.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+       </dir> <!-- /tests/Piece/Unity/Plugin/Dispatcher -->
+       <dir name="Renderer">
+        <file name="PHPBuiltinElements.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="PHPExample.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="PHPExampleAction.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="PHPKeepingReference.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="PHPTestCase.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="TestRunner.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+       </dir> <!-- /tests/Piece/Unity/Plugin/Renderer -->
+       <file name="Bar.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="Baz.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="DispatcherQueueTestCase.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="FactoryTestCase.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="Foo.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="Invalid.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="KernelConfiguratorTestCase.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="Qux.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="RelativePathVulnerability.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="RelativePathVulnerabilityAction.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="TestRunner.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+      </dir> <!-- /tests/Piece/Unity/Plugin -->
+      <dir name="Session">
+       <file name="CompatibilityTest.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="FactoryTestCase.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="MockTestCase.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="PHPTestCase.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="TestRunner.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+      </dir> <!-- /tests/Piece/Unity/Session -->
+      <file name="ConfigTestCase.php" role="test">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file name="ContextTestCase.php" role="test">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file name="PluginInvokerTestCase.php" role="test">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file name="RequestTestCase.php" role="test">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file name="TestRunner.php" role="test">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file name="ViewElementTestCase.php" role="test">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+     </dir> <!-- /tests/Piece/Unity -->
+     <file name="TestRunner.php" role="test">
+      <tasks:replace from="@package_version@" to="version" type="package-info" />
+     </file>
+     <file name="UnityTestCase.php" role="test">
+      <tasks:replace from="@package_version@" to="version" type="package-info" />
+     </file>
+    </dir> <!-- /tests/Piece -->
+    <file name="AllTestRunner.php" role="test">
+     <tasks:replace from="@package_version@" to="version" type="package-info" />
+    </file>
+   </dir> <!-- /tests -->
+  </dir> <!-- / -->
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>4.3.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.3</min>
+   </pearinstaller>
+   <package>
+    <name>Piece_Flow</name>
+    <channel>pear.hatotech.org</channel>
+    <min>1.0.0</min>
+   </package>
+   <package>
+    <name>Cache_Lite</name>
+    <channel>pear.php.net</channel>
+    <min>1.7.0</min>
+   </package>
+  </required>
+  <optional>
+   <package>
+    <name>Stagehand_TestRunner</name>
+    <channel>pear.hatotech.org</channel>
+    <min>0.3.0</min>
+   </package>
+  </optional>
+ </dependencies>
+ <phprelease>
+  <filelist>
+   <install as="examples/multiple-flow-mode/htdocs/index.php" name="data/examples/multiple-flow-mode/htdocs/index.php" />
+   <install as="examples/multiple-flow-mode/webapp/actions/CounterAction.php" name="data/examples/multiple-flow-mode/webapp/actions/CounterAction.php" />
+   <install as="examples/multiple-flow-mode/webapp/actions/RegistrationAction.php" name="data/examples/multiple-flow-mode/webapp/actions/RegistrationAction.php" />
+   <install as="examples/multiple-flow-mode/webapp/config/Counter.yaml" name="data/examples/multiple-flow-mode/webapp/config/Counter.yaml" />
+   <install as="examples/multiple-flow-mode/webapp/config/piece-unity-config.yaml" name="data/examples/multiple-flow-mode/webapp/config/piece-unity-config.yaml" />
+   <install as="examples/multiple-flow-mode/webapp/config/Registration.yaml" name="data/examples/multiple-flow-mode/webapp/config/Registration.yaml" />
+   <install as="examples/multiple-flow-mode/webapp/templates/Counter/Counter.php" name="data/examples/multiple-flow-mode/webapp/templates/Counter/Counter.php" />
+   <install as="examples/multiple-flow-mode/webapp/templates/Counter/Finish.php" name="data/examples/multiple-flow-mode/webapp/templates/Counter/Finish.php" />
+   <install as="examples/multiple-flow-mode/webapp/templates/Registration/Confirmation.php" name="data/examples/multiple-flow-mode/webapp/templates/Registration/Confirmation.php" />
+   <install as="examples/multiple-flow-mode/webapp/templates/Registration/Finish.php" name="data/examples/multiple-flow-mode/webapp/templates/Registration/Finish.php" />
+   <install as="examples/multiple-flow-mode/webapp/templates/Registration/Input.php" name="data/examples/multiple-flow-mode/webapp/templates/Registration/Input.php" />
+   <install as="examples/single-flow-mode/htdocs/index.php" name="data/examples/single-flow-mode/htdocs/index.php" />
+   <install as="examples/single-flow-mode/webapp/actions/RegistrationAction.php" name="data/examples/single-flow-mode/webapp/actions/RegistrationAction.php" />
+   <install as="examples/single-flow-mode/webapp/config/piece-unity-config.yaml" name="data/examples/single-flow-mode/webapp/config/piece-unity-config.yaml" />
+   <install as="examples/single-flow-mode/webapp/config/Registration.yaml" name="data/examples/single-flow-mode/webapp/config/Registration.yaml" />
+   <install as="examples/single-flow-mode/webapp/templates/Confirmation.php" name="data/examples/single-flow-mode/webapp/templates/Confirmation.php" />
+   <install as="examples/single-flow-mode/webapp/templates/Finish.php" name="data/examples/single-flow-mode/webapp/templates/Finish.php" />
+   <install as="examples/single-flow-mode/webapp/templates/Input.php" name="data/examples/single-flow-mode/webapp/templates/Input.php" />
+   <install as="examples/index.html" name="data/examples/index.html" />
+   <install as="piece-unity-config.yaml" name="data/piece-unity-config.yaml" />
+   <install as="piece-unity.yaml" name="data/piece-unity.yaml" />
+   <install as="LICENSE" name="docs/LICENSE" />
+   <install as="README.sdoc" name="docs/README.sdoc" />
+   <install as="Piece/Unity/Config/FactoryTestCase.php" name="tests/Piece/Unity/Config/FactoryTestCase.php" />
+   <install as="Piece/Unity/Config/TestRunner.php" name="tests/Piece/Unity/Config/TestRunner.php" />
+   <install as="Piece/Unity/Plugin/Dispatcher/ContinuationTestCase.php" name="tests/Piece/Unity/Plugin/Dispatcher/ContinuationTestCase.php" />
+   <install as="Piece/Unity/Plugin/Dispatcher/Counter.php" name="tests/Piece/Unity/Plugin/Dispatcher/Counter.php" />
+   <install as="Piece/Unity/Plugin/Dispatcher/Counter.yaml" name="tests/Piece/Unity/Plugin/Dispatcher/Counter.yaml" />
+   <install as="Piece/Unity/Plugin/Dispatcher/CounterAction.php" name="tests/Piece/Unity/Plugin/Dispatcher/CounterAction.php" />
+   <install as="Piece/Unity/Plugin/Dispatcher/SimpleExampleAction.php" name="tests/Piece/Unity/Plugin/Dispatcher/SimpleExampleAction.php" />
+   <install as="Piece/Unity/Plugin/Dispatcher/SimpleTestCase.php" name="tests/Piece/Unity/Plugin/Dispatcher/SimpleTestCase.php" />
+   <install as="Piece/Unity/Plugin/Dispatcher/TestRunner.php" name="tests/Piece/Unity/Plugin/Dispatcher/TestRunner.php" />
+   <install as="Piece/Unity/Plugin/Renderer/PHPBuiltinElements.php" name="tests/Piece/Unity/Plugin/Renderer/PHPBuiltinElements.php" />
+   <install as="Piece/Unity/Plugin/Renderer/PHPExample.php" name="tests/Piece/Unity/Plugin/Renderer/PHPExample.php" />
+   <install as="Piece/Unity/Plugin/Renderer/PHPExampleAction.php" name="tests/Piece/Unity/Plugin/Renderer/PHPExampleAction.php" />
+   <install as="Piece/Unity/Plugin/Renderer/PHPKeepingReference.php" name="tests/Piece/Unity/Plugin/Renderer/PHPKeepingReference.php" />
+   <install as="Piece/Unity/Plugin/Renderer/PHPTestCase.php" name="tests/Piece/Unity/Plugin/Renderer/PHPTestCase.php" />
+   <install as="Piece/Unity/Plugin/Renderer/TestRunner.php" name="tests/Piece/Unity/Plugin/Renderer/TestRunner.php" />
+   <install as="Piece/Unity/Plugin/Bar.php" name="tests/Piece/Unity/Plugin/Bar.php" />
+   <install as="Piece/Unity/Plugin/Baz.php" name="tests/Piece/Unity/Plugin/Baz.php" />
+   <install as="Piece/Unity/Plugin/DispatcherQueueTestCase.php" name="tests/Piece/Unity/Plugin/DispatcherQueueTestCase.php" />
+   <install as="Piece/Unity/Plugin/FactoryTestCase.php" name="tests/Piece/Unity/Plugin/FactoryTestCase.php" />
+   <install as="Piece/Unity/Plugin/Foo.php" name="tests/Piece/Unity/Plugin/Foo.php" />
+   <install as="Piece/Unity/Plugin/Invalid.php" name="tests/Piece/Unity/Plugin/Invalid.php" />
+   <install as="Piece/Unity/Plugin/KernelConfiguratorTestCase.php" name="tests/Piece/Unity/Plugin/KernelConfiguratorTestCase.php" />
+   <install as="Piece/Unity/Plugin/Qux.php" name="tests/Piece/Unity/Plugin/Qux.php" />
+   <install as="Piece/Unity/Plugin/RelativePathVulnerability.php" name="tests/Piece/Unity/Plugin/RelativePathVulnerability.php" />
+   <install as="Piece/Unity/Plugin/RelativePathVulnerabilityAction.php" name="tests/Piece/Unity/Plugin/RelativePathVulnerabilityAction.php" />
+   <install as="Piece/Unity/Plugin/TestRunner.php" name="tests/Piece/Unity/Plugin/TestRunner.php" />
+   <install as="Piece/Unity/Session/CompatibilityTest.php" name="tests/Piece/Unity/Session/CompatibilityTest.php" />
+   <install as="Piece/Unity/Session/FactoryTestCase.php" name="tests/Piece/Unity/Session/FactoryTestCase.php" />
+   <install as="Piece/Unity/Session/MockTestCase.php" name="tests/Piece/Unity/Session/MockTestCase.php" />
+   <install as="Piece/Unity/Session/PHPTestCase.php" name="tests/Piece/Unity/Session/PHPTestCase.php" />
+   <install as="Piece/Unity/Session/TestRunner.php" name="tests/Piece/Unity/Session/TestRunner.php" />
+   <install as="Piece/Unity/ConfigTestCase.php" name="tests/Piece/Unity/ConfigTestCase.php" />
+   <install as="Piece/Unity/ContextTestCase.php" name="tests/Piece/Unity/ContextTestCase.php" />
+   <install as="Piece/Unity/PluginInvokerTestCase.php" name="tests/Piece/Unity/PluginInvokerTestCase.php" />
+   <install as="Piece/Unity/RequestTestCase.php" name="tests/Piece/Unity/RequestTestCase.php" />
+   <install as="Piece/Unity/TestRunner.php" name="tests/Piece/Unity/TestRunner.php" />
+   <install as="Piece/Unity/ViewElementTestCase.php" name="tests/Piece/Unity/ViewElementTestCase.php" />
+   <install as="Piece/TestRunner.php" name="tests/Piece/TestRunner.php" />
+   <install as="Piece/UnityTestCase.php" name="tests/Piece/UnityTestCase.php" />
+   <install as="AllTestRunner.php" name="tests/AllTestRunner.php" />
+  </filelist>
+ </phprelease>
+ <changelog>
+  <release>
+   <version>
+    <release>0.1.0</release>
+    <api>0.1.0</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2006-06-21</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+   <notes>The first alpha release of Piece_Unity.</notes>
+  </release>
+ </changelog>
+</package>
