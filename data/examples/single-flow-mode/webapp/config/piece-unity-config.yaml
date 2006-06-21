@@ -7,9 +7,6 @@
     - name: enableSingleFlowMode
       type: configuration
       value: true
-    - name: cacheDirectory
-      type: configuration
-      value: ../webapp/cache
     - name: flowDefinitions
       type: configuration
       value:

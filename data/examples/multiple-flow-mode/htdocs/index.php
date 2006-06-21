@@ -28,19 +28,19 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package    Piece_Prep
+ * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
  * @copyright  2006 KUBO Atsuhiro <iteman2002@yahoo.co.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://iteman.typepad.jp/piece/
- * @see        Stagehand_TestRunner_PHPUnitTestRunner::runAll()
  * @since      File available since Release 0.1.0
  */
 
 error_reporting(E_ALL);
+
 ini_set('include_path',
-        dirname(__FILE__) . '/../../../piece-unity' . PATH_SEPARATOR .
+        dirname(__FILE__) . '/../../../..' . PATH_SEPARATOR .
         ini_get('include_path')
         );
 
@@ -51,12 +51,19 @@ require_once 'Piece/Flow/Continuation.php';
 Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
 
 $base = dirname(__FILE__) . '/../webapp';
+
 ini_set('session.cookie_path', dirname($_SERVER['SCRIPT_NAME']));
-session_save_path("$base/sessions");
+
+/*
+ * A directory for session files which must be redable and writable by Web
+ * Server.
+ */
+session_save_path($_ENV['TMP']);
+
 session_name('MultipleFlowMode');
 session_start();
 
-$unity = &new Piece_Unity("$base/config", "$base/cache");
+$unity = &new Piece_Unity("$base/config");
 $unity->dispatch();
 
 /*
