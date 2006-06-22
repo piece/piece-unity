@@ -50,7 +50,8 @@ $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key'] = null;
 // {{{ Piece_Unity_Plugin_Dispatcher_Continuation
 
 /**
- * A continuation server based on Piece_Flow.
+ * A dispatcher which dispatches requests to the continuation server based on
+ * Piece_Flow.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
@@ -105,14 +106,12 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     /**
      * Invokes the plugin specific code.
      *
-     * Starts a new continuation or continues with the current continuation.
-     * If an event has no concern with continuations, this method returns
-     * false, and the event will be dispatched to the next dispatcher.
+     * Starts a new continuation or continues with the current continuation,
+     * and returns a view string.
      *
      * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
-     * @return boolean
-     * @see Piece_Unity_Plugin_DispatcherQueue::invoke()
+     * @return string
      */
     function invoke()
     {
@@ -183,8 +182,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             return;
         }
 
-        $this->_context->setView($view);
-
         /*
          * Sets the Piece_Flow_Continuation object, the flow execution ticket
          * key, the flow name key, and the current flow execution ticket as a
@@ -196,7 +193,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $viewElement->setElement('__flowNameKey', $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key']);
         $viewElement->setElement('__flowExecutionTicket', $continuation->getCurrentFlowExecutionTicket());
 
-        return true;
+        return $view;
     }
 
     // }}}
