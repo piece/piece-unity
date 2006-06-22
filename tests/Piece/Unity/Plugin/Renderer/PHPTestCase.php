@@ -168,7 +168,7 @@ class Piece_Unity_Plugin_Renderer_PHPTestCase extends PHPUnit_TestCase
         $context->setConfiguration($config);
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
-        $dispatcher->invoke();
+        $context->setView($dispatcher->invoke());
         $renderer = &new Piece_Unity_Plugin_Renderer_PHP();
 
         ob_start();
