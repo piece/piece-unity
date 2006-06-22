@@ -101,11 +101,11 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
     function testConfiguration()
     {
         $dynamicConfig = &new Piece_Unity_Config();
-        $dynamicConfig->setExtension(PIECE_UNITY_ROOT_PLUGIN,
+        $dynamicConfig->setExtension($GLOBALS['PIECE_UNITY_Root_Plugin'],
                                      'renderer',
                                      'Foo'
                                      );
-        $dynamicConfig->setConfiguration(PIECE_UNITY_ROOT_PLUGIN,
+        $dynamicConfig->setConfiguration($GLOBALS['PIECE_UNITY_Root_Plugin'],
                                          'Bar',
                                          'Baz'
                                          );
@@ -117,21 +117,21 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
         $config = &$context->getConfiguration();
 
         $this->assertEquals('Foo',
-                            $config->getExtension(PIECE_UNITY_ROOT_PLUGIN, 'renderer')
+                            $config->getExtension($GLOBALS['PIECE_UNITY_Root_Plugin'], 'renderer')
                             );
         $this->assertEquals('Baz',
-                            $config->getConfiguration(PIECE_UNITY_ROOT_PLUGIN, 'Bar')
+                            $config->getConfiguration($GLOBALS['PIECE_UNITY_Root_Plugin'], 'Bar')
                             );
     }
 
     function testConfigurationWithCacheDirectory()
     {
         $dynamicConfig = &new Piece_Unity_Config();
-        $dynamicConfig->setExtension(PIECE_UNITY_ROOT_PLUGIN,
+        $dynamicConfig->setExtension($GLOBALS['PIECE_UNITY_Root_Plugin'],
                                      'renderer',
                                      'Foo'
                                      );
-        $dynamicConfig->setConfiguration(PIECE_UNITY_ROOT_PLUGIN,
+        $dynamicConfig->setConfiguration($GLOBALS['PIECE_UNITY_Root_Plugin'],
                                      'Bar',
                                      'Baz'
                                      );
@@ -170,7 +170,7 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
         $_GET['_event'] = 'foo';
 
         $config = &new Piece_Unity_Config();
-        $config->setExtension(PIECE_UNITY_ROOT_PLUGIN,
+        $config->setExtension($GLOBALS['PIECE_UNITY_Root_Plugin'],
                               'dispatcher',
                               'Dispatcher_Simple'
                               );
