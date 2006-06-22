@@ -1,16 +1,12 @@
 # $Id$
 - name: Root
   point:
+    - name: dispatcher
+      type: extension
+      value: Dispatcher_Simple
     - name: view
       type: extension
       value: View
-- name: DispatcherQueue
-  point:
-    - name: dispatchers
-      type: extension
-      value:
-        - Dispatcher_Continuation
-        - Dispatcher_Simple
 - name: Dispatcher_Continuation
   point:
     - name: actionDirectory
