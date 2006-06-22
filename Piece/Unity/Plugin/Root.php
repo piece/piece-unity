@@ -81,7 +81,7 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
     {
         parent::Piece_Unity_Plugin_Common();
         $this->_addExtensionPoint('configurator', 'KernelConfigurator');
-        $this->_addExtensionPoint('dispatcher', 'DispatcherQueue');
+        $this->_addExtensionPoint('dispatcher', 'Dispatcher_Continuation');
         $this->_addExtensionPoint('view', 'View');
     }
 
@@ -113,10 +113,12 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
             return;
         }
 
-        $dispatcher->invoke();
+        $viewString = $dispatcher->invoke();
         if (Piece_Unity_Error::hasErrors('exception')) {
             return;
         }
+
+        $this->_context->setView($viewString);
 
         $view = &$this->getExtension('view');
         if (Piece_Unity_Error::hasErrors('exception')) {
