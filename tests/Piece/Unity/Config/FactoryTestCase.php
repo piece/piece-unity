@@ -117,7 +117,7 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
                                                        );
         $this->assertTrue(is_a($config, 'Piece_Unity_Config'));
         $this->assertEquals('View', $config->getExtension(PIECE_UNITY_ROOT_PLUGIN, 'view'));
-        $this->assertEquals(array('Dispatcher_Continuation', 'Dispatcher_Simple'), $config->getExtension('DispatcherQueue', 'dispatchers'));
+        $this->assertEquals('Dispatcher_Simple', $config->getExtension(PIECE_UNITY_ROOT_PLUGIN, 'dispatcher'));
         $this->assertEquals('../webapp/actions', $config->getConfiguration('Dispatcher_Continuation', 'actionDirectory'));
         $this->assertTrue($config->getConfiguration('Dispatcher_Continuation', 'enableSingleFlowMode'));
         $this->assertEquals('../webapp/cache', $config->getConfiguration('Dispatcher_Continuation', 'cacheDirectory'));
