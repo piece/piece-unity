@@ -169,11 +169,19 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_event'] = 'foo';
 
-        $unity = &new Piece_Unity();
+        $config = &new Piece_Unity_Config();
+        $config->setExtension(PIECE_UNITY_ROOT_PLUGIN,
+                              'dispatcher',
+                              'Dispatcher_Simple'
+                              );
+        $unity = &new Piece_Unity(dirname(__FILE__) . '/../../data',
+                                  dirname(__FILE__),
+                                  $config
+                                  );
         $unity->dispatch();
         $context = &Piece_Unity_Context::singleton();
 
-        $this->assertTrue('foo', $context->getView());
+        $this->assertEquals('foo', $context->getView());
     }
 
     /**#@-*/
