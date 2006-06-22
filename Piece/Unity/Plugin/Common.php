@@ -110,11 +110,14 @@ class Piece_Unity_Plugin_Common
      */
     function &getExtension($extensionPoint)
     {
-        $conf = &$this->_context->getConfiguration();
-        $extension = $conf->getExtension(str_replace('piece_unity_plugin_', '', strtolower(get_class($this))),
-                                         strtolower($extensionPoint)
-                                         );
-        if (is_null($extension)) {
+        $config = &$this->_context->getConfiguration();
+        if (!is_null($config)) {
+            $extension = $config->getExtension(str_replace('piece_unity_plugin_', '', strtolower(get_class($this))),
+                                               strtolower($extensionPoint)
+                                               );
+        }
+
+        if (is_null($config) || is_null($extension)) {
             $extension = $this->_extensionPoints[ strtolower($extensionPoint) ];
         }
 
@@ -145,11 +148,14 @@ class Piece_Unity_Plugin_Common
      */
     function &getConfiguration($configurationPoint)
     {
-        $conf = &$this->_context->getConfiguration();
-        $configuration = $conf->getConfiguration(str_replace('piece_unity_plugin_', '', strtolower(get_class($this))),
-                                                 strtolower($configurationPoint)
-                                                 );
-        if (is_null($configuration)) {
+        $config = &$this->_context->getConfiguration();
+        if (!is_null($config)) {
+            $configuration = $config->getConfiguration(str_replace('piece_unity_plugin_', '', strtolower(get_class($this))),
+                                                       strtolower($configurationPoint)
+                                                       );
+        }
+
+        if (is_null($config) || is_null($configuration)) {
             $configuration = $this->_configurationPoints[ strtolower($configurationPoint) ];
         }
 
