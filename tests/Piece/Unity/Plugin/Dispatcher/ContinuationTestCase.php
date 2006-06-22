@@ -116,9 +116,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context->setConfiguration($config);
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
-        $dispatcher->invoke();
 
-        $this->assertEquals('Counter', $context->getView());
+        $this->assertEquals('Counter', $dispatcher->invoke());
 
         $session = &$context->getSession();
         $continuation = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_Session_Key']);
@@ -144,11 +143,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $dispatcher->invoke();
 
         $this->assertEquals(2, $continuation->getAttribute('counter'));
-
-        $dispatcher->invoke();
-
+        $this->assertEquals('Finish', $dispatcher->invoke());
         $this->assertEquals(3, $continuation->getAttribute('counter'));
-        $this->assertEquals('Finish', $context->getView());
     }
 
     function testInvalidConfiguration()
@@ -195,9 +191,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context->setConfiguration($config);
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
-        $dispatcher->invoke();
 
-        $this->assertEquals('Counter', $context->getView());
+        $this->assertEquals('Counter', $dispatcher->invoke());
 
         $session = &$context->getSession();
         $continuation = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_Session_Key']);
@@ -240,7 +235,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context->setConfiguration($config);
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
-        $dispatcher->invoke();
+        $context->setView($dispatcher->invoke());
 
         $renderer = &new Piece_Unity_Plugin_Renderer_PHP();
         ob_start();
