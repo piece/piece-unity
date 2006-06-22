@@ -93,16 +93,9 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
     function testDispatchingWithoutAction()
     {
         $_GET['_event'] = 'foo';
-
-        $context = &Piece_Unity_Context::singleton();
-
-        $config = &new Piece_Unity_Config();
-        $context->setConfiguration($config);
-
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
-        $dispatcher->invoke();
 
-        $this->assertEquals('foo', $context->getView());
+        $this->assertEquals('foo', $dispatcher->invoke());
     }
 
     function testDispatchingWithAction()
@@ -138,17 +131,12 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
 
     function _dispatch()
     {
-        $context = &Piece_Unity_Context::singleton();
-
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', dirname(__FILE__));
+        $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
-
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
-
-        $dispatcher->invoke();
-
-        return $context->getView();
+        return $dispatcher->invoke();
     }
 
     /**#@-*/
