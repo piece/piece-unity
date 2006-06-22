@@ -42,6 +42,8 @@ require_once 'Piece/Unity/Plugin/Common.php';
 // {{{ Piece_Unity_Plugin_Dispatcher_Simple
 
 /**
+ * A dispatcher which dispatches requests to appropriate objects.
+ *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
  * @copyright  2006 KUBO Atsuhiro <iteman2002@yahoo.co.jp>
@@ -89,11 +91,10 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
     /**
      * Invokes the plugin specific code.
      *
-     * Invokes the action corresponding to an event if it exists.
-     * This method always returns ture.
+     * Invokes the action corresponding to an event if it exists, and returns
+     * an event name as a view string.
      *
-     * @return boolean
-     * @see Piece_Unity_Plugin_DispatcherQueue::invoke()
+     * @return string
      */
     function invoke()
     {
@@ -102,8 +103,7 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
 
         $actionDirectory = $this->getConfiguration('actionDirectory');
         if (is_null($actionDirectory)) {
-            $this->_context->setView($event);
-            return true;
+            return $event;
         }
 
         $file = realpath("$actionDirectory/" . str_replace('_', '/', $class) . '.php');
@@ -122,9 +122,7 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
             }
         }
 
-        $this->_context->setView($event);
-
-        return true;
+        return $event;
     }
 
     /**#@-*/
