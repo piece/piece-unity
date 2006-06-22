@@ -155,10 +155,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         Piece_Unity_Error::popCallback();
         if (Piece_Flow_Error::hasErrors('exception')) {
             $error = Piece_Flow_Error::pop();
-            if ($error['code'] == PIECE_FLOW_ERROR_FLOW_NAME_NOT_GIVEN) {
-                return false;
-            }
-
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
                                     'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
                                     'exception',
