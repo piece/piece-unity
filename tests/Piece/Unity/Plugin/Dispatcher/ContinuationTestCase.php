@@ -246,6 +246,26 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals('OK', $buffer);
     }
 
+    function testMappingURLsToFlows()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'Counter', 'file' => dirname(__FILE__) . '/Counter.yaml', 'isExclusive' => true)));
+        $config->setConfiguration('Dispatcher_Continuation', 'flowName', 'Counter');
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+
+        $this->assertEquals('Counter', $dispatcher->invoke());
+        $this->assertFalse(Piece_Unity_Error::hasErrors('exception'));
+
+        Piece_Unity_Error::popCallback();
+    }
+
     /**#@-*/
 
     /**#@+
