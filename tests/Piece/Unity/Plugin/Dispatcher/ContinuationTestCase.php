@@ -250,6 +250,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
 
+        $_GET['_flow'] = 'Foo';
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
         $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__));
