@@ -45,6 +45,7 @@ require_once 'Piece/Flow/Continuation.php';
 $GLOBALS['PIECE_UNITY_Continuation_Session_Key'] = null;
 $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key'] = null;
 $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key'] = null;
+$GLOBALS['PIECE_UNITY_Continuation_FlowName'] = null;
 
 // }}}
 // {{{ Piece_Unity_Plugin_Dispatcher_Continuation
@@ -98,6 +99,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->_addConfigurationPoint('sessionKey', strtolower(__CLASS__));
         $this->_addConfigurationPoint('flowExecutionTicketKey', '_flowExecutionTicket');
         $this->_addConfigurationPoint('flowNameKey', '_flow');
+        $this->_addConfigurationPoint('flowName', null);
     }
 
     // }}}
@@ -118,6 +120,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $GLOBALS['PIECE_UNITY_Continuation_Session_Key'] = $this->getConfiguration('sessionKey');
         $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key'] = $this->getConfiguration('flowExecutionTicketKey');
         $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key'] = $this->getConfiguration('flowNameKey');
+        $GLOBALS['PIECE_UNITY_Continuation_FlowName'] = $this->getConfiguration('flowName');
         Piece_Flow_Continuation::setActionDirectory($this->getConfiguration('actionDirectory'));
 
         $session = &$this->_context->getSession();
@@ -234,6 +237,10 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      */
     function getFlowName()
     {
+        if (!is_null($GLOBALS['PIECE_UNITY_Continuation_FlowName'])) {
+            return $GLOBALS['PIECE_UNITY_Continuation_FlowName'];
+        }
+
         $context = &Piece_Unity_Context::singleton();
         $request = &$context->getRequest();
         return $request->hasParameter($GLOBALS['PIECE_UNITY_Continuation_FlowName_Key']) ? $request->getParameter($GLOBALS['PIECE_UNITY_Continuation_FlowName_Key']) : null;
