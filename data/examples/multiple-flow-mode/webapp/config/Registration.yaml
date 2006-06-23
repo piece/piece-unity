@@ -1,10 +1,10 @@
 # $Id$
 name: Registration
 firstState: Displaying
-lastState: { name: Finishing, view: Registration_Finish }
+lastState: { name: Finishing, view: Finish }
 viewState:
   - name: Displaying
-    view: Registration_Input
+    view: Input
     transition:
       - event: next
         nextState: Validated
@@ -12,7 +12,7 @@ viewState:
           class: RegistrationAction
           method: validate
   - name: Confirming
-    view: Registration_Confirmation
+    view: Confirmation
     transition:
       - event: register
         nextState: Registered

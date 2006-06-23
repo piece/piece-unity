@@ -21,8 +21,3 @@
     - name: actionDirectory
       type: configuration
       value: ../webapp/actions
-- name: Renderer_PHP
-  point:
-    - name: templateDirectory
-      type: configuration
-      value: ../webapp/templates

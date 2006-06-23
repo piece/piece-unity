@@ -46,6 +46,7 @@ ini_set('include_path',
 
 require_once 'Piece/Unity.php';
 require_once 'Piece/Unity/Error.php';
+require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Flow/Continuation.php';
 
 Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
@@ -63,7 +64,11 @@ session_save_path($_ENV['TMP']);
 session_name('MultipleFlowMode');
 session_start();
 
-$unity = &new Piece_Unity("$base/config");
+$flowName = 'Counter';
+$config = &new Piece_Unity_Config();
+$config->setConfiguration('Dispatcher_Continuation', 'flowName', $flowName);
+$config->setConfiguration('Renderer_PHP', 'templateDirectory', "$base/templates/$flowName");
+$unity = &new Piece_Unity("$base/config", null, $config);
 $unity->dispatch();
 
 /*
