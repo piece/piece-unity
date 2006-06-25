@@ -38,6 +38,7 @@
  */
 
 require_once 'Piece/Unity/Plugin/Common.php';
+require_once 'Piece/Unity/Session.php';
 
 // {{{ Piece_Unity_Plugin_KernelConfigurator
 
@@ -81,6 +82,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
     {
         parent::Piece_Unity_Plugin_Common();
         $this->_addConfigurationPoint('eventNameKey', '_event');
+        $this->_addConfigurationPoint('autoloadClasses', array());
     }
 
     // }}}
@@ -92,6 +94,12 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
     function invoke()
     {
         $this->_context->setEventNameKey($this->getConfiguration('eventNameKey'));
+
+        $autoloadClasses = $this->getConfiguration('autoloadClasses');
+        array_push($autoloadClasses, 'Piece_Flow_Continuation');
+        foreach ($autoloadClasses as $class) {
+            Piece_Unity_Session::addAutoloadClass($class);
+        }
     }
 
     /**#@-*/
