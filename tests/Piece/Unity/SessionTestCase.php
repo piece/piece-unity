@@ -128,6 +128,7 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
                 );
         Piece_Unity_Session::addAutoloadClass($class);
         $session = &new Piece_Unity_Session();
+        $session->start();
 
         if (version_compare(phpversion(), '5.0.0', '<')) {
             $found = class_exists($class);
