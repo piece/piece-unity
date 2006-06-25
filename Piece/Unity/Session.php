@@ -34,8 +34,12 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://iteman.typepad.jp/piece/
- * @since      File available since Release 0.1.0
+ * @since      File available since Release 0.2.0
  */
+
+// {{{ GLOBALS
+
+$GLOBALS['PIECE_UNITY_Session_Autoload_Classes'] = array();
 
 // {{{ Piece_Unity_Session
 
@@ -48,7 +52,7 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://iteman.typepad.jp/piece/
- * @since      Class available since Release 0.1.0
+ * @since      Class available since Release 0.2.0
  */
 class Piece_Unity_Session
 {
@@ -82,6 +86,18 @@ class Piece_Unity_Session
     function Piece_Unity_Session()
     {
         if (!isset($_SESSION)) {
+            foreach ($GLOBALS['PIECE_UNITY_Session_Autoload_Classes'] as $class) {
+                $file = str_replace('_', '/', $class) . '.php';
+                if (!@include_once($file)) {
+                    Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+                    Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                            "The class file [ $file ] not found or was not readable.",
+                                            'warning'
+                                            );
+                    Piece_Unity_Error::popCallback();
+                }
+            }
+
             ob_start();
             session_start();
             ob_end_clean();
@@ -146,6 +162,19 @@ class Piece_Unity_Session
     {
         $attribute = &$this->_attributes[$name];
         return $attribute;
+    }
+
+    // }}}
+    // {{{ addAutoloadClass()
+
+    /**
+     * Adds a autoload class for restoring sessions safely.
+     *
+     * @param string $class
+     */
+    function addAutoloadClass($class)
+    {
+        array_push($GLOBALS['PIECE_UNITY_Session_Autoload_Classes'], $class);
     }
 
     /**#@-*/
