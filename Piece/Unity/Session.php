@@ -37,7 +37,7 @@
  * @since      File available since Release 0.1.0
  */
 
-// {{{ Piece_Unity_Session_Common
+// {{{ Piece_Unity_Session
 
 /**
  * The session state storage for Piece_Unity package.
@@ -50,7 +50,7 @@
  * @link       http://iteman.typepad.jp/piece/
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Session_Common
+class Piece_Unity_Session
 {
 
     // {{{ properties
@@ -79,7 +79,7 @@ class Piece_Unity_Session_Common
     /**
      * Binds the attribute holder to the $_SESSION superglobal array.
      */
-    function Piece_Unity_Session_Common()
+    function Piece_Unity_Session()
     {
         if (!isset($_SESSION)) {
             ob_start();
