@@ -82,7 +82,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     function setUp()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
-        Piece_Unity_Session_Factory::setMode('Mock');
         $_SERVER['REQUEST_METHOD'] = 'GET';
         unset($_SESSION);
     }

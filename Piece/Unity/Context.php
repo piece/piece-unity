@@ -39,7 +39,7 @@
 
 require_once 'Piece/Unity/Request.php';
 require_once 'Piece/Unity/ViewElement.php';
-require_once 'Piece/Unity/Session/Factory.php';
+require_once 'Piece/Unity/Session.php';
 
 // {{{ GLOBALS
 
@@ -278,7 +278,7 @@ class Piece_Unity_Context
     {
         $this->_request = &new Piece_Unity_Request();
         $this->_viewElement = &new Piece_Unity_ViewElement();
-        $this->_session = &Piece_Unity_Session_Factory::factory();
+        $this->_session = &new Piece_Unity_Session();
     }
 
     /**#@-*/

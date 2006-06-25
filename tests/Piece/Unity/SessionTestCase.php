@@ -34,16 +34,17 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://iteman.typepad.jp/piece/
- * @see        Piece_Unity_Session_Common
+ * @see        Piece_Unity_Session
  * @since      File available since Release 0.1.0
  */
 
 require_once 'PHPUnit.php';
+require_once 'Piece/Unity/Session.php';
 
-// {{{ Piece_Unity_Session_CompatibilityTest
+// {{{ Piece_Unity_SessionTestCase
 
 /**
- * Base class for compatibility test of Piece_Unity_Config drivers.
+ * TestCase for Piece_Unity_Session
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
@@ -51,10 +52,10 @@ require_once 'PHPUnit.php';
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://iteman.typepad.jp/piece/
- * @see        Piece_Unity_Session_Common
+ * @see        Piece_Unity_Session
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Session_CompatibilityTest extends PHPUnit_TestCase
+class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -79,7 +80,7 @@ class Piece_Unity_Session_CompatibilityTest extends PHPUnit_TestCase
 
     function setUp()
     {
-        $this->_session = &Piece_Unity_Session_Factory::factory();
+        $this->_session = &new Piece_Unity_Session();
     }
 
     function tearDown()

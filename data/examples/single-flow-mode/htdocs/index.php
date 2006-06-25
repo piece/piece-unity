@@ -61,7 +61,6 @@ ini_set('session.cookie_path', dirname($_SERVER['SCRIPT_NAME']));
 session_save_path($_ENV['TMP']);
 
 session_name('SingleFlowMode');
-session_start();
 
 $unity = &new Piece_Unity("$base/config");
 $unity->dispatch();
