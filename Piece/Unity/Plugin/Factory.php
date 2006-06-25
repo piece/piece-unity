@@ -77,6 +77,7 @@ class Piece_Unity_Plugin_Factory
 
     /**#@+
      * @access public
+     * @static
      */
 
     // }}}
@@ -89,7 +90,6 @@ class Piece_Unity_Plugin_Factory
      * @return mixed
      * @throws PIECE_UNITY_ERROR_NOT_FOUND
      * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
-     * @static
      */
     function &factory($plugin)
     {
@@ -186,7 +186,7 @@ class Piece_Unity_Plugin_Factory
             return;
         }
 
-        if (!include_once $file) {
+        if (!@include_once $file) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                     "The plugin file [ $file ] not found or was not readable.",
