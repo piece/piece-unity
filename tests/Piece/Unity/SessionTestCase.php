@@ -35,7 +35,7 @@
  * @version    SVN: $Id$
  * @link       http://iteman.typepad.jp/piece/
  * @see        Piece_Unity_Session
- * @since      File available since Release 0.1.0
+ * @since      File available since Release 0.2.0
  */
 
 require_once 'PHPUnit.php';
@@ -53,7 +53,7 @@ require_once 'Piece/Unity/Session.php';
  * @version    Release: @package_version@
  * @link       http://iteman.typepad.jp/piece/
  * @see        Piece_Unity_Session
- * @since      Class available since Release 0.1.0
+ * @since      Class available since Release 0.2.0
  */
 class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
 {
@@ -80,6 +80,7 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
 
     function setUp()
     {
+        unset($_SESSION);
         $this->_session = &new Piece_Unity_Session();
     }
 
@@ -115,6 +116,28 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
 
         $this->assertTrue(array_key_exists('bar', $foo2));
         $this->assertEquals('baz', $foo2->bar);
+    }
+
+    function testAutoloaingClass()
+    {
+        $class = 'Piece_Unity_AutoloadClass';
+        $includePath = ini_get('include_path');
+        ini_set('include_path',
+                dirname(__FILE__) . '/../..' . PATH_SEPARATOR .
+                $includePath
+                );
+        Piece_Unity_Session::addAutoloadClass($class);
+        $session = &new Piece_Unity_Session();
+
+        if (version_compare(phpversion(), '5.0.0', '<')) {
+            $found = class_exists($class);
+        } else {
+            $found = class_exists($class, false);
+        }
+
+        $this->assertTrue($found);
+
+        ini_set('include_path', $includePath);
     }
 
     /**#@-*/
