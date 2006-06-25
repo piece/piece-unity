@@ -82,6 +82,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
     function setUp()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
+        unset($_SESSION);
     }
 
     function tearDown()
@@ -105,6 +106,35 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $this->assertEquals('bar', $context->getEvent());
 
         unset($_GET['_foo']);
+    }
+
+    function testSettingAutoloadClasses()
+    {
+        $class = 'Piece_Unity_Plugin_AutoloadClass';
+        $includePath = ini_get('include_path');
+        ini_set('include_path',
+                dirname(__FILE__) . '/../../..' . PATH_SEPARATOR .
+                $includePath
+                );
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('KernelConfigurator', 'autoloadClasses', array($class));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $configurator = &new Piece_Unity_Plugin_KernelConfigurator();
+        $configurator->invoke();
+        $session = &$context->getSession();
+        $session->start();
+
+        if (version_compare(phpversion(), '5.0.0', '<')) {
+            $found = class_exists($class);
+        } else {
+            $found = class_exists($class, false);
+        }
+
+        $this->assertTrue($found);
+
+        ini_set('include_path', $includePath);
     }
 
     /**#@-*/
