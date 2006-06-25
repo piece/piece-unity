@@ -47,20 +47,12 @@ ini_set('include_path',
 require_once 'Piece/Unity.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Flow/Continuation.php';
 
 Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
 
 $base = dirname(__FILE__) . '/../webapp';
 
 ini_set('session.cookie_path', dirname($_SERVER['SCRIPT_NAME']));
-
-/*
- * A directory for session files which must be redable and writable by Web
- * Server.
- */
-session_save_path($_ENV['TMP']);
-
 session_name('MultipleFlowMode');
 
 $flowName = 'Counter';
