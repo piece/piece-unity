@@ -92,13 +92,12 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $view = str_replace('.', '', $this->_context->getView());
         $templateDirectory = $this->getConfiguration('templateDirectory');
         if (is_null($templateDirectory)) {
             return;
         }
 
-        $file = realpath("$templateDirectory/" . str_replace('_', '/', $view) . '.php');
+        $file = realpath("$templateDirectory/" . str_replace('_', '/', str_replace('.', '', $this->_context->getView())) . $this->getConfiguration('templateSuffix'));
 
         if ($file && is_readable($file)) {
             $viewElement = &$this->_context->getViewElement();
