@@ -102,7 +102,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         unset($_GET['_flow']);
         unset($_SERVER['REQUEST_METHOD']);
         Piece_Unity_Error::popCallback();
-     }
+    }
 
     function testContinuation()
     {
