@@ -171,9 +171,7 @@ class Piece_Unity_Session
                 }
             }
 
-            ob_start();
-            session_start();
-            ob_end_clean();
+            @session_start();
         }
 
         $this->_attributes = &$_SESSION;
