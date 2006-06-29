@@ -40,10 +40,7 @@
 
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
-require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/Plugin/Dispatcher/Simple.php';
-require_once 'Piece/Unity/Plugin/View.php';
+require_once dirname(__FILE__) . '/CompatibilityTest.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_PHPTestCase
 
@@ -59,7 +56,7 @@ require_once 'Piece/Unity/Plugin/View.php';
  * @see        Piece_Unity_Plugin_Renderer_PHP
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Plugin_Renderer_PHPTestCase extends PHPUnit_TestCase
+class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Renderer_CompatibilityTest
 {
 
     // {{{ properties
@@ -74,83 +71,13 @@ class Piece_Unity_Plugin_Renderer_PHPTestCase extends PHPUnit_TestCase
      * @access private
      */
 
+    var $_target = 'PHP';
+
     /**#@-*/
 
     /**#@+
      * @access public
      */
-
-    function setUp()
-    {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-    }
-
-    function tearDown()
-    {
-        $context = &Piece_Unity_Context::singleton();
-        $context->clear();
-        unset($_GET['_event']);
-        unset($_SERVER['REQUEST_METHOD']);
-    }
-
-    function testRendering()
-    {
-        $_GET['_event'] = 'PHPExample';
-
-        $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $this->_render());
-    }
-
-    function testRelativePathVulnerability()
-    {
-        $_GET['_event'] = '../RelativePathVulnerability';
-
-        $this->assertEquals('', $this->_render());
-    }
-
-    function testKeepingReference()
-    {
-        $context = &Piece_Unity_Context::singleton();
-
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Renderer_PHP', 'templateDirectory', dirname(__FILE__));
-        $context->setConfiguration($config);
-
-        $foo = &new stdClass();
-        $viewElement = &$context->getViewElement();
-        $viewElement->setElementByRef('foo', $foo);
-        $context->setView('PHPKeepingReference');
-
-        $renderer = &new Piece_Unity_Plugin_Renderer_PHP();
-        ob_start();
-        $renderer->invoke();
-        ob_end_clean();
-
-        $this->assertTrue(array_key_exists('bar', $foo));
-        $this->assertEquals('baz', $foo->bar);
-    }
-
-    function testBuiltinElements()
-    {
-        $context = &Piece_Unity_Context::singleton();
-
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Renderer_PHP', 'templateDirectory', dirname(__FILE__));
-        $config->setExtension('View', 'renderer', 'Renderer_PHP');
-        $context->setConfiguration($config);
-
-        $foo = &new stdClass();
-        $viewElement = &$context->getViewElement();
-        $viewElement->setElementByRef('foo', $foo);
-        $context->setView('PHPBuiltinElements');
-
-        $view = &new Piece_Unity_Plugin_View();
-        ob_start();
-        $view->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
-
-        $this->assertEquals('OK', $buffer);
-    }
 
     /**#@-*/
 
@@ -158,25 +85,14 @@ class Piece_Unity_Plugin_Renderer_PHPTestCase extends PHPUnit_TestCase
      * @access private
      */
 
-    function _render()
+    function &_getConfig()
     {
-        $context = &Piece_Unity_Context::singleton();
-
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', dirname(__FILE__));
         $config->setConfiguration('Renderer_PHP', 'templateDirectory', dirname(__FILE__));
-        $context->setConfiguration($config);
+        $config->setExtension('View', 'renderer', 'Renderer_PHP');
 
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
-        $context->setView($dispatcher->invoke());
-        $renderer = &new Piece_Unity_Plugin_Renderer_PHP();
-
-        ob_start();
-        $renderer->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
-
-        return $buffer;
+        return $config;
     }
 
     /**#@-*/

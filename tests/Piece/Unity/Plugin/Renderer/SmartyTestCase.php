@@ -38,12 +38,8 @@
  * @since      File available since Release 0.2.0
  */
 
-require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Renderer/Smarty.php';
-require_once 'Piece/Unity/Context.php';
-// require_once 'Piece/Unity/Config.php';
-// require_once 'Piece/Unity/Plugin/Dispatcher/Simple.php';
-// require_once 'Piece/Unity/Plugin/View.php';
+require_once dirname(__FILE__) . '/CompatibilityTest.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_SmartyTestCase
 
@@ -59,7 +55,7 @@ require_once 'Piece/Unity/Context.php';
  * @see        Piece_Unity_Plugin_Renderer_Smarty
  * @since      Class available since Release 0.2.0
  */
-class Piece_Unity_Plugin_Renderer_SmartyTestCase extends PHPUnit_TestCase
+class Piece_Unity_Plugin_Renderer_SmartyTestCase extends Piece_Unity_Plugin_Renderer_CompatibilityTest
 {
 
     // {{{ properties
@@ -74,104 +70,13 @@ class Piece_Unity_Plugin_Renderer_SmartyTestCase extends PHPUnit_TestCase
      * @access private
      */
 
+    var $_target = 'Smarty';
+
     /**#@-*/
 
     /**#@+
      * @access public
      */
-
-    function setUp()
-    {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-    }
-
-    function tearDown()
-    {
-        $context = &Piece_Unity_Context::singleton();
-        $context->clear();
-        Piece_Unity_Error::clearErrors();
-        unset($_GET['_event']);
-        unset($_SERVER['REQUEST_METHOD']);
-        Piece_Unity_Error::popCallback();
-    }
-
-    function testRendering()
-    {
-        $viewString = 'SmartyExample';
-        $_GET['_event'] = $viewString;
-
-        $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $this->_render());
-
-        $smarty = &new Smarty();
-        $smarty->compile_dir = dirname(__FILE__) . '/';
-        $smarty->clear_compiled_tpl("$viewString.tpl");
-    }
-
-    function testRelativePathVulnerability()
-    {
-        $_GET['_event'] = '../RelativePathVulnerability';
-
-        $this->assertEquals('', $this->_render());
-    }
-
-    function testKeepingReference()
-    {
-        $viewString = 'SmartyKeepingReference';
-        $context = &Piece_Unity_Context::singleton();
-
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Renderer_Smarty', 'templateDirectory', dirname(__FILE__));
-        $config->setConfiguration('Renderer_Smarty', 'compileDirectory', dirname(__FILE__));
-        $context->setConfiguration($config);
-
-        $foo = &new stdClass();
-        $viewElement = &$context->getViewElement();
-        $viewElement->setElementByRef('foo', $foo);
-        $context->setView($viewString);
-
-        $renderer = &new Piece_Unity_Plugin_Renderer_Smarty();
-        ob_start();
-        $renderer->invoke();
-        ob_end_clean();
-
-        $this->assertTrue(array_key_exists('bar', $foo));
-        $this->assertEquals('baz', $foo->bar);
-
-        $smarty = &new Smarty();
-        $smarty->compile_dir = dirname(__FILE__) . '/';
-        $smarty->clear_compiled_tpl("$viewString.tpl");
-    }
-
-    function testBuiltinElements()
-    {
-        $viewString = 'SmartyBuiltinElements';
-        $context = &Piece_Unity_Context::singleton();
-
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Renderer_Smarty', 'templateDirectory', dirname(__FILE__));
-        $config->setConfiguration('Renderer_Smarty', 'compileDirectory', dirname(__FILE__));
-        $config->setExtension('View', 'renderer', 'Renderer_Smarty');
-        $context->setConfiguration($config);
-        $context->setConfiguration($config);
-
-        $foo = &new stdClass();
-        $viewElement = &$context->getViewElement();
-        $viewElement->setElementByRef('foo', $foo);
-        $context->setView($viewString);
-
-        $view = &new Piece_Unity_Plugin_View();
-        ob_start();
-        $view->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
-
-        $this->assertEquals('OK', $buffer);
-
-        $smarty = &new Smarty();
-        $smarty->compile_dir = dirname(__FILE__) . '/';
-        $smarty->clear_compiled_tpl("$viewString.tpl");
-    }
 
     /**#@-*/
 
@@ -179,26 +84,22 @@ class Piece_Unity_Plugin_Renderer_SmartyTestCase extends PHPUnit_TestCase
      * @access private
      */
 
-    function _render()
+    function _clear($view)
     {
-        $context = &Piece_Unity_Context::singleton();
+        $smarty = &new Smarty();
+        $smarty->compile_dir = dirname(__FILE__) . '/';
+        $smarty->clear_compiled_tpl("$view.tpl");
+    }
 
+    function &_getConfig()
+    {
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', dirname(__FILE__));
         $config->setConfiguration('Renderer_Smarty', 'templateDirectory', dirname(__FILE__));
         $config->setConfiguration('Renderer_Smarty', 'compileDirectory', dirname(__FILE__));
-        $context->setConfiguration($config);
+        $config->setExtension('View', 'renderer', 'Renderer_Smarty');
 
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
-        $context->setView($dispatcher->invoke());
-        $renderer = &new Piece_Unity_Plugin_Renderer_Smarty();
-
-        ob_start();
-        $renderer->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
-
-        return $buffer;
+        return $config;
     }
 
     /**#@-*/
