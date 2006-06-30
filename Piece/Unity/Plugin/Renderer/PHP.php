@@ -81,7 +81,7 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Common
     {
         parent::Piece_Unity_Plugin_Common();
         $this->_addConfigurationPoint('templateDirectory', null);
-        $this->_addConfigurationPoint('templateSuffix', '.php');
+        $this->_addConfigurationPoint('templateExtension', '.php');
     }
 
     // }}}
@@ -97,7 +97,7 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Common
             return;
         }
 
-        $file = realpath("$templateDirectory/" . str_replace('_', '/', str_replace('.', '', $this->_context->getView())) . $this->getConfiguration('templateSuffix'));
+        $file = realpath("$templateDirectory/" . str_replace('_', '/', str_replace('.', '', $this->_context->getView())) . $this->getConfiguration('templateExtension'));
 
         if ($file && is_readable($file)) {
             $viewElement = &$this->_context->getViewElement();
