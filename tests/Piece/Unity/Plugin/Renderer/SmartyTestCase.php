@@ -95,8 +95,8 @@ class Piece_Unity_Plugin_Renderer_SmartyTestCase extends Piece_Unity_Plugin_Rend
     {
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', dirname(__FILE__));
-        $config->setConfiguration('Renderer_Smarty', 'templateDirectory', dirname(__FILE__));
-        $config->setConfiguration('Renderer_Smarty', 'compileDirectory', dirname(__FILE__));
+        $config->setConfiguration('Renderer_Smarty', 'template_dir', dirname(__FILE__));
+        $config->setConfiguration('Renderer_Smarty', 'compile_dir', dirname(__FILE__));
         $config->setExtension('View', 'renderer', 'Renderer_Smarty');
 
         return $config;
