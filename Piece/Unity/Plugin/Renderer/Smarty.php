@@ -101,7 +101,7 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
         if (!defined('SMARTY_DIR')) {
             $smartyDirectory = $this->getConfiguration('smartyDirectory');
             if (!is_null($smartyDirectory)) {
-                define('SMARTY_DIR', $smartyDirectory);
+                define('SMARTY_DIR', Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($smartyDirectory));
             }
         }
 
@@ -124,22 +124,22 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
 
         $templateDirectory = $this->getConfiguration('templateDirectory');
         if (!is_null($templateDirectory)) {
-            $smarty->template_dir = $templateDirectory;
+            $smarty->template_dir = Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($templateDirectory);
         }
 
         $compileDirectory = $this->getConfiguration('compileDirectory');
         if (!is_null($compileDirectory)) {
-            $smarty->compile_dir = $compileDirectory;
+            $smarty->compile_dir = Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($compileDirectory);
         }
 
         $configDirectory = $this->getConfiguration('configDirectory');
         if (!is_null($configDirectory)) {
-            $smarty->config_dir = $configDirectory;
+            $smarty->config_dir = Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($configDirectory);
         }
 
         $cacheDirectory = $this->getConfiguration('cacheDirectory');
         if (!is_null($cacheDirectory)) {
-            $smarty->cache_dir = $cacheDirectory;
+            $smarty->cache_dir = Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($cacheDirectory);
         }
 
         $viewElement = &$this->_context->getViewElement();
@@ -156,6 +156,25 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
     /**#@+
      * @access private
      */
+
+    // }}}
+    // {{{ _adjustEndingSlash()
+
+    /**
+     * Added an ending slash to the directory if it is required.
+     *
+     * @param string $directory
+     * @return string
+     * @static
+     */
+    function _adjustEndingSlash($directory)
+    {
+        if (substr($directory, -1, 1) != '/' && substr($directory, -1, 1) != '\\') {
+            $directory .= '/';
+        }
+
+        return $directory;
+    }
  
     /**#@-*/
 
