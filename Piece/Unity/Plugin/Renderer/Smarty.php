@@ -80,12 +80,12 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
     function Piece_Unity_Plugin_Renderer_Smarty()
     {
         parent::Piece_Unity_Plugin_Common();
-        $this->_addConfigurationPoint('templateDirectory', null);
-        $this->_addConfigurationPoint('templateSuffix', '.tpl');
-        $this->_addConfigurationPoint('smartyDirectory', null);
-        $this->_addConfigurationPoint('compileDirectory', null);
-        $this->_addConfigurationPoint('configDirectory', null);
-        $this->_addConfigurationPoint('cacheDirectory', null);
+        $this->_addConfigurationPoint('templateExtension', '.tpl');
+        $this->_addConfigurationPoint('SMARTY_DIR', null);
+        $this->_addConfigurationPoint('template_dir', null);
+        $this->_addConfigurationPoint('compile_dir', null);
+        $this->_addConfigurationPoint('config_dir', null);
+        $this->_addConfigurationPoint('cache_dir', null);
     }
 
     // }}}
@@ -99,9 +99,9 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
     function invoke()
     {
         if (!defined('SMARTY_DIR')) {
-            $smartyDirectory = $this->getConfiguration('smartyDirectory');
-            if (!is_null($smartyDirectory)) {
-                define('SMARTY_DIR', Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($smartyDirectory));
+            $SMARTY_DIR = $this->getConfiguration('SMARTY_DIR');
+            if (!is_null($SMARTY_DIR)) {
+                define('SMARTY_DIR', Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($SMARTY_DIR));
             }
         }
 
@@ -122,24 +122,24 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
 
         $smarty = &new Smarty();
 
-        $templateDirectory = $this->getConfiguration('templateDirectory');
-        if (!is_null($templateDirectory)) {
-            $smarty->template_dir = Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($templateDirectory);
+        $template_dir = $this->getConfiguration('template_dir');
+        if (!is_null($template_dir)) {
+            $smarty->template_dir = Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($template_dir);
         }
 
-        $compileDirectory = $this->getConfiguration('compileDirectory');
-        if (!is_null($compileDirectory)) {
-            $smarty->compile_dir = Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($compileDirectory);
+        $compile_dir = $this->getConfiguration('compile_dir');
+        if (!is_null($compile_dir)) {
+            $smarty->compile_dir = Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($compile_dir);
         }
 
-        $configDirectory = $this->getConfiguration('configDirectory');
-        if (!is_null($configDirectory)) {
-            $smarty->config_dir = Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($configDirectory);
+        $config_dir = $this->getConfiguration('config_dir');
+        if (!is_null($config_dir)) {
+            $smarty->config_dir = Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($config_dir);
         }
 
-        $cacheDirectory = $this->getConfiguration('cacheDirectory');
-        if (!is_null($cacheDirectory)) {
-            $smarty->cache_dir = Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($cacheDirectory);
+        $cache_dir = $this->getConfiguration('cache_dir');
+        if (!is_null($cache_dir)) {
+            $smarty->cache_dir = Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($cache_dir);
         }
 
         $viewElement = &$this->_context->getViewElement();
@@ -148,7 +148,7 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
             $smarty->assign_by_ref($name, $value);
         }
 
-        @$smarty->display(str_replace('_', '/', str_replace('.', '', $this->_context->getView())) . $this->getConfiguration('templateSuffix'));
+        @$smarty->display(str_replace('_', '/', str_replace('.', '', $this->_context->getView())) . $this->getConfiguration('templateExtension'));
     }
 
     /**#@-*/
