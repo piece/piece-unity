@@ -85,6 +85,21 @@ class RegistrationAction
         return 'succeed';
     }
 
+    function setupForm(&$flow, $event, &$context)
+    {
+        $elements = array();
+        $elements['input']['_attributes']['action'] = $_SERVER['SCRIPT_NAME'];
+        $elements['firstName']['_value'] = $flow->getAttribute('firstName');
+        $elements['lastName']['_value'] = $flow->getAttribute('lastName');
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('_elements', $elements);
+    }
+
+    function clear(&$flow, $event, &$context)
+    {
+        $flow->clearAttributes();
+    }
+
     /**#@-*/
 
     /**#@+
