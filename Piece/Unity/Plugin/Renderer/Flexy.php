@@ -109,20 +109,7 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $options = array('fatalError'      => HTML_TEMPLATE_FLEXY_ERROR_RETURN,
-                         'privates'        => true,
-                         'globals'         => true,
-                         'globalfunctions' => true
-                         );
-
-        foreach ($this->_configurationOptions as $point) {
-            $$point = $this->getConfiguration($point);
-            if (!is_null($$point)) {
-                $options[$point] = $$point;
-            }
-        }
-
-        $flexy = &new HTML_Template_Flexy($options);
+        $flexy = &new HTML_Template_Flexy($this->_getOptions());
         $resultOfCompile = $flexy->compile(str_replace('_', '/', str_replace('.', '', $this->_context->getView())) . $this->getConfiguration('templateExtension'));
         if (PEAR::isError($resultOfCompile)) {
             return;
@@ -191,6 +178,33 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
         }
 
         return $formElements;
+    }
+
+    // }}}
+    // {{{ _getOptions()
+
+    /**
+     * Gets an array which contains configuration options for
+     * HTML_Template_Flexy class.
+     *
+     * @return array
+     */
+    function _getOptions()
+    {
+        $options = array('fatalError'      => HTML_TEMPLATE_FLEXY_ERROR_RETURN,
+                         'privates'        => true,
+                         'globals'         => true,
+                         'globalfunctions' => true
+                         );
+
+        foreach ($this->_configurationOptions as $point) {
+            $$point = $this->getConfiguration($point);
+            if (!is_null($$point)) {
+                $options[$point] = $$point;
+            }
+        }
+
+        return $options;
     }
 
     /**#@-*/
