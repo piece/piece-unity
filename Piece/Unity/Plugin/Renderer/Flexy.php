@@ -92,6 +92,10 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
     {
         parent::Piece_Unity_Plugin_Common();
         $this->_addConfigurationPoint('templateExtension', '.html');
+        $this->_addConfigurationPoint('formElementsKey', '_elements');
+        $this->_addConfigurationPoint('formElementValueKey', '_value');
+        $this->_addConfigurationPoint('formElementOptionsKey', '_options');
+        $this->_addConfigurationPoint('formElementAttributesKey', '_attributes');
         foreach ($this->_configurationOptions as $point) {
             $this->_addConfigurationPoint($point, null);
         }
@@ -126,28 +130,40 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
 
         $viewElement = &$this->_context->getViewElement();
         $viewElements = $viewElement->getElements();
-        $controller = (object)$viewElements;
 
         $automaticFormElements = array();
-        if (array_key_exists('_elements', $viewElements)) {
-            foreach ($viewElements['_elements'] as $name => $type) {
+        $formElementsKey = $this->getConfiguration('formElementsKey');
+        if (array_key_exists($formElementsKey, $viewElements)) {
+            $formElementValueKey      = $this->getConfiguration('formElementValueKey');
+            $formElementOptionsKey    = $this->getConfiguration('formElementOptionsKey');
+            $formElementAttributesKey = $this->getConfiguration('formElementAttributesKey');
+            foreach ($viewElements[$formElementsKey] as $name => $type) {
                 $automaticFormElements[$name] = &new HTML_Template_Flexy_Element();
-                if (is_array($type)) {
-                    if (array_key_exists('_attributes', $type) && is_array($type['_attributes'])) {
-                        $automaticFormElements[$name]->setAttributes($type['_attributes']);
-                    }
+                if (!is_array($type)) {
+                    continue;
+                }
 
-                    if (array_key_exists('_value', $type)) {
-                        $automaticFormElements[$name]->setValue($type['_value']);
-                    }
+                if (array_key_exists($formElementValueKey, $type)) {
+                    $automaticFormElements[$name]->setValue($type[$formElementValueKey]);
+                }
 
-                    if (array_key_exists('_options', $type) && is_array($type['_options'])) {
-                        $automaticFormElements[$name]->setOptions($type['_options']);
-                    }
+                if (array_key_exists($formElementOptionsKey, $type)
+                    && is_array($type[$formElementOptionsKey])
+                    ) {
+                    $automaticFormElements[$name]->setOptions($type[$formElementOptionsKey]);
+                }
+
+                if (array_key_exists($formElementAttributesKey, $type)
+                    && is_array($type[$formElementAttributesKey])
+                    ) {
+                    $automaticFormElements[$name]->setAttributes($type[$formElementAttributesKey]);
                 }
             }
+
+            unset($viewElements[$formElementsKey]);
         }
 
+        $controller = (object)$viewElements;
         $resultOfOutputObject = $flexy->outputObject($controller, $automaticFormElements);
         if (PEAR::isError($resultOfOutputObject)) {
             return;
