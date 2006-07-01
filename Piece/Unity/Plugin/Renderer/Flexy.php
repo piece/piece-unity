@@ -131,40 +131,15 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
         $viewElement = &$this->_context->getViewElement();
         $viewElements = $viewElement->getElements();
 
-        $automaticFormElements = array();
+        $formElements = array();
         $formElementsKey = $this->getConfiguration('formElementsKey');
         if (array_key_exists($formElementsKey, $viewElements)) {
-            $formElementValueKey      = $this->getConfiguration('formElementValueKey');
-            $formElementOptionsKey    = $this->getConfiguration('formElementOptionsKey');
-            $formElementAttributesKey = $this->getConfiguration('formElementAttributesKey');
-            foreach ($viewElements[$formElementsKey] as $name => $type) {
-                $automaticFormElements[$name] = &new HTML_Template_Flexy_Element();
-                if (!is_array($type)) {
-                    continue;
-                }
-
-                if (array_key_exists($formElementValueKey, $type)) {
-                    $automaticFormElements[$name]->setValue($type[$formElementValueKey]);
-                }
-
-                if (array_key_exists($formElementOptionsKey, $type)
-                    && is_array($type[$formElementOptionsKey])
-                    ) {
-                    $automaticFormElements[$name]->setOptions($type[$formElementOptionsKey]);
-                }
-
-                if (array_key_exists($formElementAttributesKey, $type)
-                    && is_array($type[$formElementAttributesKey])
-                    ) {
-                    $automaticFormElements[$name]->setAttributes($type[$formElementAttributesKey]);
-                }
-            }
-
+            $formElements = $this->_createFormElements($viewElements[$formElementsKey]);
             unset($viewElements[$formElementsKey]);
         }
 
         $controller = (object)$viewElements;
-        $resultOfOutputObject = $flexy->outputObject($controller, $automaticFormElements);
+        $resultOfOutputObject = $flexy->outputObject($controller, $formElements);
         if (PEAR::isError($resultOfOutputObject)) {
             return;
         }
@@ -175,6 +150,48 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
     /**#@+
      * @access private
      */
+
+    // }}}
+    // {{{ _createFormElements()
+
+    /**
+     * Creates form elements which are passed to
+     * HTML_Template_Flexy::outputObject() method from the view elements.
+     *
+     * @param array $elements
+     * @return array
+     */
+    function _createFormElements($elements)
+    {
+        $formElements = array();
+        $formElementValueKey      = $this->getConfiguration('formElementValueKey');
+        $formElementOptionsKey    = $this->getConfiguration('formElementOptionsKey');
+        $formElementAttributesKey = $this->getConfiguration('formElementAttributesKey');
+        foreach ($elements as $name => $type) {
+            $formElements[$name] = &new HTML_Template_Flexy_Element();
+            if (!is_array($type)) {
+                continue;
+            }
+
+            if (array_key_exists($formElementValueKey, $type)) {
+                $formElements[$name]->setValue($type[$formElementValueKey]);
+            }
+
+            if (array_key_exists($formElementOptionsKey, $type)
+                && is_array($type[$formElementOptionsKey])
+                ) {
+                $formElements[$name]->setOptions($type[$formElementOptionsKey]);
+            }
+
+            if (array_key_exists($formElementAttributesKey, $type)
+                && is_array($type[$formElementAttributesKey])
+                ) {
+                $formElements[$name]->setAttributes($type[$formElementAttributesKey]);
+            }
+        }
+
+        return $formElements;
+    }
 
     /**#@-*/
 
