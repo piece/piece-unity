@@ -18,8 +18,16 @@
     - name: actionDirectory
       type: configuration
       value: ../webapp/actions
-- name: Renderer_PHP
+- name: View
   point:
-    - name: templateDirectory
+    - name: renderer
+      type: extension
+      value: Renderer_Flexy
+- name: Renderer_Flexy
+  point:
+    - name: templateDir
       type: configuration
       value: ../webapp/templates
+    - name: compileDir
+      type: configuration
+      value: ../webapp/compiled-templates
