@@ -4,6 +4,9 @@ firstState: Displaying
 viewState:
   - name: Displaying
     view: Input
+    activity:
+      class: RegistrationAction
+      method: setupForm
     transition:
       - event: next
         nextState: Validated
@@ -18,11 +21,16 @@ viewState:
         action:
           class: RegistrationAction
           method: register
+      - event: reedit
+        nextState: Displaying
   - name: Finishing
     view: Finish
     transition:
       - event: return
         nextState: Displaying
+        action:
+          class: RegistrationAction
+          method: clear
 actionState:
   - name: Validated
     transition:
