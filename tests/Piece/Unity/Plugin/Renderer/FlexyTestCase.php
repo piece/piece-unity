@@ -71,12 +71,59 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
      */
 
     var $_target = 'Flexy';
+    var $_expectedAutomaticFormElements = '<body>
+  <form name="theform" action="http://pear.php.net">    <textarea name="test_textarea">Blogs</textarea>
+    <select name="test_select"><option value="123">a select option</option><option value="1234" selected>another select option</option></select>
+    <input name="test_checkbox" type="checkbox" value="1" checked>
+    <input name="test_checkbox_array[]" type="checkbox" value="1" id="tmpId1" checked>1<br>
+    <input name="test_checkbox_array[]" type="checkbox" value="2" id="tmpId2" checked>2<br>
+    <input name="test_checkbox_array[]" type="checkbox" value="3" id="tmpId3">3<br>
+
+    <input name="test_radio" type="radio" id="radio_yes" value="yes" checked>yes<br>
+    <input name="test_radio" type="radio" id="radio_no" value="no">no<br>
+  </form>
+</body>
+';
 
     /**#@-*/
 
     /**#@+
      * @access public
      */
+
+    function testAutomaticFormElements()
+    {
+        $viewString = "{$this->_target}AutomaticFormElements";
+        $context = &Piece_Unity_Context::singleton();
+
+        $config = &$this->_getConfig();
+        $context->setConfiguration($config);
+
+        $elements['theform']['_attributes']['action'] = 'http://pear.php.net';
+        $elements['test_textarea']['_value'] = 'Blogs';
+        $elements['test_select']['_options'] = array('123' => 'a select option',
+                                                     '1234' => 'another select option'
+                                                     );
+        $elements['test_select']['_value'] = '1234';
+        $elements['test_checkbox']['_value'] = '1';
+        $elements['test_checkbox_array[]']['_value'] = array(1, 2);
+        $elements['test_radio']['_value'] = 'yes';
+
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('_elements', $elements);
+        $context->setView($viewString);
+
+        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
+        $renderer = &new $class();
+        ob_start();
+        $renderer->invoke();
+        $buffer = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals($this->_expectedAutomaticFormElements, $buffer);
+
+        $this->_clear($viewString);
+    }
 
     /**#@-*/
 
