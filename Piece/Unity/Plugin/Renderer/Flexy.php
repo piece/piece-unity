@@ -41,6 +41,7 @@
 
 require_once 'Piece/Unity/Plugin/Common.php';
 require_once 'HTML/Template/Flexy.php';
+require_once 'HTML/Template/Flexy/Element.php';
 require_once 'PEAR.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_Flexy
