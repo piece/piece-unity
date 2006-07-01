@@ -34,6 +34,7 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://iteman.typepad.jp/piece/
+ * @see        Piece_Flow_Continuation, Piece_Flow, Piece_Flow_Error
  * @since      File available since Release 0.1.0
  */
 
@@ -60,6 +61,7 @@ $GLOBALS['PIECE_UNITY_Continuation_FlowName'] = null;
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://iteman.typepad.jp/piece/
+ * @see        Piece_Flow_Continuation, Piece_Flow, Piece_Flow_Error
  * @since      Class available since Release 0.1.0
  */
 class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Common
