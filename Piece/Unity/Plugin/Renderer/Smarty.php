@@ -33,7 +33,9 @@
  * @copyright  2006 KUBO Atsuhiro <iteman2002@yahoo.co.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
+ * @link       http://smarty.php.net/
  * @link       http://iteman.typepad.jp/piece/
+ * @see        Smarty
  * @since      File available since Release 0.2.0
  */
 
@@ -47,7 +49,9 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @copyright  2006 KUBO Atsuhiro <iteman2002@yahoo.co.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
+ * @link       http://smarty.php.net/
  * @link       http://iteman.typepad.jp/piece/
+ * @see        Smarty
  * @since      Class available since Release 0.2.0
  */
 class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
@@ -64,6 +68,12 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
     /**#@+
      * @access private
      */
+
+    var $_smartyClassVariables = array('template_dir',
+                                       'compile_dir',
+                                       'config_dir',
+                                       'cache_dir'
+                                       );
 
     /**#@-*/
 
@@ -82,10 +92,9 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
         parent::Piece_Unity_Plugin_Common();
         $this->_addConfigurationPoint('templateExtension', '.tpl');
         $this->_addConfigurationPoint('SMARTY_DIR', null);
-        $this->_addConfigurationPoint('template_dir', null);
-        $this->_addConfigurationPoint('compile_dir', null);
-        $this->_addConfigurationPoint('config_dir', null);
-        $this->_addConfigurationPoint('cache_dir', null);
+        foreach ($this->_smartyClassVariables as $point) {
+            $this->_addConfigurationPoint($point, null);
+        }
     }
 
     // }}}
@@ -93,8 +102,6 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
 
     /**
      * Invokes the plugin specific code.
-     *
-     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
     function invoke()
     {
@@ -122,24 +129,11 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
 
         $smarty = &new Smarty();
 
-        $template_dir = $this->getConfiguration('template_dir');
-        if (!is_null($template_dir)) {
-            $smarty->template_dir = Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($template_dir);
-        }
-
-        $compile_dir = $this->getConfiguration('compile_dir');
-        if (!is_null($compile_dir)) {
-            $smarty->compile_dir = Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($compile_dir);
-        }
-
-        $config_dir = $this->getConfiguration('config_dir');
-        if (!is_null($config_dir)) {
-            $smarty->config_dir = Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($config_dir);
-        }
-
-        $cache_dir = $this->getConfiguration('cache_dir');
-        if (!is_null($cache_dir)) {
-            $smarty->cache_dir = Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($cache_dir);
+        foreach ($this->_smartyClassVariables as $point) {
+            $$point = $this->getConfiguration($point);
+            if (!is_null($$point)) {
+                $smarty->$point = Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($$point);
+            }
         }
 
         $viewElement = &$this->_context->getViewElement();
