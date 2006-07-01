@@ -134,7 +134,8 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
     function _clear($view)
     {
         $files = array(dirname(__FILE__) . "/$view.html.en.php",
-                       dirname(__FILE__) . "/$view.html.gettext.serial"
+                       dirname(__FILE__) . "/$view.html.gettext.serial",
+                       dirname(__FILE__) . "/$view.html.elements.serial"
                        );
         foreach ($files as $file) {
             if (file_exists($file)) {
