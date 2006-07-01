@@ -124,8 +124,30 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
         }
 
         $viewElement = &$this->_context->getViewElement();
-        $viewElements = (object)$viewElement->getElements();
-        $resultOfOutputObject = $flexy->outputObject($viewElements);
+        $viewElements = $viewElement->getElements();
+        $controller = (object)$viewElements;
+
+        $automaticFormElements = array();
+        if (array_key_exists('_elements', $viewElements)) {
+            foreach ($viewElements['_elements'] as $name => $type) {
+                $automaticFormElements[$name] = &new HTML_Template_Flexy_Element();
+                if (is_array($type)) {
+                    if (array_key_exists('_attributes', $type) && is_array($type['_attributes'])) {
+                        $automaticFormElements[$name]->setAttributes($type['_attributes']);
+                    }
+
+                    if (array_key_exists('_value', $type)) {
+                        $automaticFormElements[$name]->setValue($type['_value']);
+                    }
+
+                    if (array_key_exists('_options', $type) && is_array($type['_options'])) {
+                        $automaticFormElements[$name]->setOptions($type['_options']);
+                    }
+                }
+            }
+        }
+
+        $resultOfOutputObject = $flexy->outputObject($controller, $automaticFormElements);
         if (PEAR::isError($resultOfOutputObject)) {
             return;
         }
