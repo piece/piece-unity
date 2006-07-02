@@ -177,6 +177,30 @@ class Piece_Unity_Session
         $this->_attributes = &$_SESSION;
     }
 
+    // }}}
+    // {{{ removeAttribute()
+
+    /**
+     * Removes an attribute from the flow.
+     *
+     * @param string $name
+     */
+    function removeAttribute($name)
+    {
+        unset($this->_attributes[$name]);
+    }
+
+    // }}}
+    // {{{ clearAttributes()
+
+    /**
+     * Removes all attributes from the flow.
+     */
+    function clearAttributes()
+    {
+        $this->_attributes = array();
+    }
+
     /**#@-*/
 
     /**#@+
