@@ -109,9 +109,6 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
         }
 
         $renderer->invoke();
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            return;
-        }
     }
 
     /**#@-*/
