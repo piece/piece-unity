@@ -101,11 +101,28 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Common
 
         $file = realpath("$templateDirectory/" . str_replace('_', '/', str_replace('.', '', $this->_context->getView())) . $this->getConfiguration('templateExtension'));
 
-        if ($file && is_readable($file)) {
-            $viewElement = &$this->_context->getViewElement();
-            extract($viewElement->getElements(), EXTR_OVERWRITE | EXTR_REFS);
+        if (!$file || !is_readable($file)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                    'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
+                                    'warning',
+                                    array('plugin' => __CLASS__)
+                                    );
+            Piece_Unity_Error::popCallback();
+            return;
+         }
 
-            @include_once $file;
+        $viewElement = &$this->_context->getViewElement();
+        extract($viewElement->getElements(), EXTR_OVERWRITE | EXTR_REFS);
+
+        if (!@include_once $file) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                    'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
+                                    'warning',
+                                    array('plugin' => __CLASS__)
+                                    );
+            Piece_Unity_Error::popCallback();
         }
     }
 
