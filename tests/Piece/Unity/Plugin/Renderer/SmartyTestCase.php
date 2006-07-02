@@ -71,6 +71,7 @@ class Piece_Unity_Plugin_Renderer_SmartyTestCase extends Piece_Unity_Plugin_Rend
      */
 
     var $_target = 'Smarty';
+    var $_errorCodeWhenTemplateNotExists = PIECE_UNITY_ERROR_PHP_ERROR;
 
     /**#@-*/
 
