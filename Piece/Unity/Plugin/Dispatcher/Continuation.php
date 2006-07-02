@@ -175,7 +175,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     function getEventName()
     {
         $context = &Piece_Unity_Context::singleton();
-        return $context->getEvent();
+        return $context->getEventName();
     }
 
     // }}}

@@ -103,7 +103,7 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $context = &Piece_Unity_Context::singleton();
 
         $this->assertTrue(is_a($context->getRequest(), 'Piece_Unity_Request'));
-        $this->assertEquals('foo', $context->getEvent());
+        $this->assertEquals('foo', $context->getEventName());
         $this->assertTrue(is_a($context->getViewElement(), 'Piece_Unity_ViewElement'));
         $this->assertTrue(is_a($context->getSession(), 'Piece_Unity_Session'));
     }
@@ -114,7 +114,7 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
 
         $context = &Piece_Unity_Context::singleton();
 
-        $this->assertEquals('bar', $context->getEvent());
+        $this->assertEquals('bar', $context->getEventName());
 
         unset($_GET['_event_bar']);
     }
@@ -126,7 +126,7 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $context = &Piece_Unity_Context::singleton();
         $context->setEventNameKey('_foo');
 
-        $this->assertEquals('bar', $context->getEvent());
+        $this->assertEquals('bar', $context->getEventName());
 
         unset($_GET['_foo']);
     }
@@ -139,7 +139,7 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $context = &Piece_Unity_Context::singleton();
         $context->setEventNameKey('_foo');
 
-        $this->assertEquals('baz', $context->getEvent());
+        $this->assertEquals('baz', $context->getEventName());
 
         unset($_GET['_foo_baz']);
         unset($_GET['_foo']);
@@ -153,12 +153,12 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $this->assertEquals('_foo', $context->getEventNameKey());
     }
 
-    function testEventFixation()
+    function testEventNameFixation()
     {
         $context = &Piece_Unity_Context::singleton();
-        $context->setEvent('bar');
+        $context->setEventName('bar');
 
-        $this->assertEquals('bar', $context->getEvent());
+        $this->assertEquals('bar', $context->getEventName());
     }
 
     /**#@-*/

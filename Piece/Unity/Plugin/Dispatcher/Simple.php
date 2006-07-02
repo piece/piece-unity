@@ -98,7 +98,7 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $event = $this->_context->getEvent();
+        $event = $this->_context->getEventName();
         $class = str_replace('.', '', "{$event}Action");
 
         $actionDirectory = $this->getConfiguration('actionDirectory');
