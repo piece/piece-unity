@@ -83,6 +83,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         parent::Piece_Unity_Plugin_Common();
         $this->_addConfigurationPoint('eventNameKey', '_event');
         $this->_addConfigurationPoint('autoloadClasses', array());
+        $this->_addConfigurationPoint('eventName', null);
     }
 
     // }}}
@@ -99,6 +100,11 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         array_push($autoloadClasses, 'Piece_Flow_Continuation');
         foreach ($autoloadClasses as $class) {
             Piece_Unity_Session::addAutoloadClass($class);
+        }
+
+        $eventName = $this->getConfiguration('eventName');
+        if (!is_null($eventName)) {
+            $this->_context->setEventName($eventName);
         }
     }
 
