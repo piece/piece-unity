@@ -198,6 +198,7 @@ class Piece_Unity_Context
     function getEvent()
     {
         if (!$this->_eventImported) {
+            $this->_eventImported = true;
             foreach ($this->_request->getParameters() as $key => $value) {
                 if (preg_match("/^{$this->_eventNameKey}_([a-zA-Z_]+)$/", $key, $matches)) {
                     $this->_event = $matches[1];
@@ -260,6 +261,20 @@ class Piece_Unity_Context
     function getEventNameKey()
     {
         return $this->_eventNameKey;
+    }
+
+    // }}}
+    // {{{ setEvent()
+
+    /**
+     * Sets an event for the current request.
+     *
+     * @param string $event
+     */
+    function setEvent($event)
+    {
+        $this->_eventImported = true;
+        $this->_event = $event;
     }
 
     /**#@-*/
