@@ -190,6 +190,49 @@ class Piece_Unity_Error
         $stack->getErrors(true);
     }
 
+    // }}}
+    // {{{ pushPearError()
+
+    /**
+     * Adds a PEAR error to the stack for the package.
+     *
+     * @param PEAR_Error $error
+     * @param integer    $code
+     * @param string     $message
+     * @param string     $level
+     * @param array      $params
+     * @param array      $backtrace
+     */
+    function pushPearError($error, $code, $message = false,
+                           $level = 'exception', $params = array(),
+                           $backtrace = false
+                           )
+    {
+        $time = explode(' ', microtime());
+        $time = $time[1] + $time[0];
+
+        if (!$backtrace) {
+            $backtrace = debug_backtrace();
+        }
+
+        if ($level == 'exception') {
+            $context = $error->getBacktrace();
+        } else {
+            $context = array();
+        }
+
+        Piece_Unity_Error::push($code, $message, $level, $params,
+                                array('code' => $error->getCode(),
+                                      'message' => $error->getMessage(),
+                                      'params' => array(),
+                                      'package' => 'PEAR',
+                                      'level' => 'exception',
+                                      'time' => $time,
+                                      'context' => $context),
+                                $backtrace
+                                );
+    }
+
     /**#@-*/
 
     /**#@+
