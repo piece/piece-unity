@@ -95,16 +95,12 @@ class Piece_Unity_Plugin_Factory
     {
         $plugin = "Piece_Unity_Plugin_$plugin";
         if (!array_key_exists($plugin, $GLOBALS['PIECE_UNITY_Plugin_Instances'])) {
+            $found = false;
             foreach ($GLOBALS['PIECE_UNITY_Plugin_Directories'] as $pluginDirectory) {
                 Piece_Unity_Plugin_Factory::_load($plugin, $pluginDirectory);
 
-                if (version_compare(phpversion(), '5.0.0', '<')) {
-                    $found = class_exists($plugin);
-                } else {
-                    $found = class_exists($plugin, false);
-                }
-
-                if ($found) {
+                if (!Piece_Unity_Error::hasErrors('warning')) {
+                    $found = true;
                     break;
                 }
             }
@@ -194,6 +190,21 @@ class Piece_Unity_Plugin_Factory
                                     );
             Piece_Unity_Error::popCallback();
             return;
+        }
+
+        if (version_compare(phpversion(), '5.0.0', '<')) {
+            $found = class_exists($plugin);
+        } else {
+            $found = class_exists($plugin, false);
+        }
+
+        if (!$found) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                    "The plugin [ $class ] not defined in the file [ $file ].",
+                                    'warning'
+                                    );
+            Piece_Unity_Error::popCallback();
         }
     }
 
