@@ -84,6 +84,7 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
   </form>
 </body>
 ';
+    var $_errorCodeWhenTemplateNotExists = PIECE_UNITY_ERROR_INVOCATION_FAILED;
 
     /**#@-*/
 
@@ -123,35 +124,6 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
         $this->assertEquals($this->_expectedOutput, $buffer);
 
         $this->_clear($viewString);
-    }
-
-    function testNonExistingFile()
-    {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_DIE . ';'));
-
-        $viewString = "{$this->_target}NonExistingFile";
-        $context = &Piece_Unity_Context::singleton();
-
-        $config = &$this->_getConfig();
-        $context->setConfiguration($config);
-        $context->setView($viewString);
-
-        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
-        $renderer = &new $class();
-        ob_start();
-        $renderer->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
-
-        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
-
-        $this->_clear($viewString);
-
-        Piece_Unity_Error::popCallback();
     }
 
     /**#@-*/
