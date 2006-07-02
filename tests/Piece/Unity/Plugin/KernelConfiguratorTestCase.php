@@ -103,7 +103,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $configurator = &new Piece_Unity_Plugin_KernelConfigurator();
         $configurator->invoke();
 
-        $this->assertEquals('bar', $context->getEvent());
+        $this->assertEquals('bar', $context->getEventName());
 
         unset($_GET['_foo']);
     }
@@ -135,6 +135,23 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $this->assertTrue($found);
 
         ini_set('include_path', $includePath);
+    }
+
+    function testEventNameFixation()
+    {
+        $_GET['_event'] = 'foo';
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('KernelConfigurator', 'eventName', 'bar');
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $configurator = &new Piece_Unity_Plugin_KernelConfigurator();
+        $configurator->invoke();
+
+        $this->assertEquals('bar', $context->getEventName());
+
+        unset($_GET['_event']);
     }
 
     /**#@-*/
