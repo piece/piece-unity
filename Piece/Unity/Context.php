@@ -78,9 +78,9 @@ class Piece_Unity_Context
     var $_view;
     var $_request;
     var $_viewElement;
-    var $_event;
+    var $_eventName;
     var $_session;
-    var $_eventImported = false;
+    var $_eventNameImported = false;
     var $_eventNameKey = '_event';
 
     /**#@-*/
@@ -188,28 +188,28 @@ class Piece_Unity_Context
     }
 
     // }}}
-    // {{{ getEvent()
+    // {{{ getEventName()
 
     /**
      * Gets the event name.
      *
      * @return string
      */
-    function getEvent()
+    function getEventName()
     {
-        if (!$this->_eventImported) {
-            $this->_eventImported = true;
+        if (!$this->_eventNameImported) {
+            $this->_eventNameImported = true;
             foreach ($this->_request->getParameters() as $key => $value) {
                 if (preg_match("/^{$this->_eventNameKey}_([a-zA-Z_]+)$/", $key, $matches)) {
-                    $this->_event = $matches[1];
+                    $this->_eventName = $matches[1];
                 }
             }
-            if (is_null($this->_event)) {
-                $this->_event = $this->_request->hasParameter($this->_eventNameKey) ? $this->_request->getParameter($this->_eventNameKey) : null;
+            if (is_null($this->_eventName)) {
+                $this->_eventName = $this->_request->hasParameter($this->_eventNameKey) ? $this->_request->getParameter($this->_eventNameKey) : null;
             }
         }
 
-        return $this->_event;
+        return $this->_eventName;
     }
 
     // }}}
@@ -264,17 +264,17 @@ class Piece_Unity_Context
     }
 
     // }}}
-    // {{{ setEvent()
+    // {{{ setEventName()
 
     /**
-     * Sets an event for the current request.
+     * Sets an event name for the current request.
      *
-     * @param string $event
+     * @param string $eventName
      */
-    function setEvent($event)
+    function setEventName($eventName)
     {
-        $this->_eventImported = true;
-        $this->_event = $event;
+        $this->_eventNameImported = true;
+        $this->_eventName = $eventName;
     }
 
     /**#@-*/
