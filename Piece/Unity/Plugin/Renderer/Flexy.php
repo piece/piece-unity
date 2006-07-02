@@ -114,6 +114,14 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
         $flexy = &new HTML_Template_Flexy($this->_getOptions());
         $resultOfCompile = $flexy->compile(str_replace('_', '/', str_replace('.', '', $this->_context->getView())) . $this->getConfiguration('templateExtension'));
         if (PEAR::isError($resultOfCompile)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::pushPearError($resultOfCompile,
+                                             PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                             'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
+                                             'warning',
+                                             array('plugin' => __CLASS__)
+                                             );
+            Piece_Unity_Error::popCallback();
             return;
         }
 
@@ -130,6 +138,14 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
         $controller = (object)$viewElements;
         $resultOfOutputObject = $flexy->outputObject($controller, $formElements);
         if (PEAR::isError($resultOfOutputObject)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::pushPearError($resultOfCompile,
+                                             PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                             'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
+                                             'warning',
+                                             array('plugin' => __CLASS__)
+                                             );
+            Piece_Unity_Error::popCallback();
             return;
         }
     }
