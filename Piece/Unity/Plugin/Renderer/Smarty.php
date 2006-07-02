@@ -129,7 +129,11 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
             $smarty->assign_by_ref($name, $value);
         }
 
+        set_error_handler(array('Piece_Unity_Error', 'pushPHPError'));
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         @$smarty->display(str_replace('_', '/', str_replace('.', '', $this->_context->getView())) . $this->getConfiguration('templateExtension'));
+        Piece_Unity_Error::popCallback();
+        restore_error_handler();
     }
 
     /**#@-*/
