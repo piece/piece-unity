@@ -42,6 +42,8 @@ require_once 'Piece/Unity/Plugin/Common.php';
 // {{{ Piece_Unity_Plugin_Renderer_PHP
 
 /**
+ * A renderer which uses PHP itself as a template engine.
+ *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
  * @copyright  2006 KUBO Atsuhiro <iteman2002@yahoo.co.jp>
