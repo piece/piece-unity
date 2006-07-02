@@ -47,6 +47,8 @@ require_once 'PEAR.php';
 // {{{ Piece_Unity_Plugin_Renderer_Flexy
 
 /**
+ * A renderer which is based on HTML_Template_Flexy template engine.
+ *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
  * @copyright  2006 KUBO Atsuhiro <iteman2002@yahoo.co.jp>
@@ -185,7 +187,7 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
 
     /**
      * Gets an array which contains configuration options for
-     * HTML_Template_Flexy class.
+     * a HTML_Template_Flexy object.
      *
      * @return array
      */
