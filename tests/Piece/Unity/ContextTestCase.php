@@ -76,8 +76,16 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
      * @access public
      */
 
+    function setUp()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_GET['_event'] = 'foo';
+    }
+
     function tearDown()
     {
+        unset($_GET['_event']);
+        unset($_SERVER['REQUEST_METHOD']);
         $context = &Piece_Unity_Context::singleton();
         $context->clear();
     }
@@ -92,23 +100,16 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
 
     function testInitializingProperties()
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET['_event'] = 'foo';
         $context = &Piece_Unity_Context::singleton();
 
         $this->assertTrue(is_a($context->getRequest(), 'Piece_Unity_Request'));
         $this->assertEquals('foo', $context->getEvent());
         $this->assertTrue(is_a($context->getViewElement(), 'Piece_Unity_ViewElement'));
         $this->assertTrue(is_a($context->getSession(), 'Piece_Unity_Session'));
-
-        unset($_SERVER['REQUEST_METHOD']);
-        unset($_GET['_event']);
     }
 
     function testImportingEventNameFromRequestParameters()
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET['_event'] = 'foo';
         $_GET['_event_bar'] = null;
 
         $context = &Piece_Unity_Context::singleton();
@@ -116,23 +117,22 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $this->assertEquals('bar', $context->getEvent());
 
         unset($_GET['_event_bar']);
-        unset($_GET['_event']);
-        unset($_SERVER['REQUEST_METHOD']);
     }
 
     function testSettingEventNameKey()
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_foo'] = 'bar';
+
         $context = &Piece_Unity_Context::singleton();
         $context->setEventNameKey('_foo');
 
         $this->assertEquals('bar', $context->getEvent());
+
+        unset($_GET['_foo']);
     }
 
     function testImportingEventNameFromRequestParametersWithSpecifiedEventNameKey()
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_foo'] = 'bar';
         $_GET['_foo_baz'] = null;
 
@@ -143,7 +143,6 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
 
         unset($_GET['_foo_baz']);
         unset($_GET['_foo']);
-        unset($_SERVER['REQUEST_METHOD']);
     }
 
     function testGettingEventNameKey()
@@ -156,16 +155,10 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
 
     function testEventFixation()
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET['_event'] = 'foo';
-
         $context = &Piece_Unity_Context::singleton();
         $context->setEvent('bar');
 
-        $this->assertEquals('foo', $context->getEvent());
-
-        unset($_GET['_event']);
-        unset($_SERVER['REQUEST_METHOD']);
+        $this->assertEquals('bar', $context->getEvent());
     }
 
     /**#@-*/
