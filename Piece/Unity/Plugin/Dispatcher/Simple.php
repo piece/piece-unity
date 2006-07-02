@@ -118,7 +118,9 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
 
             if ($result) {
                 $action = &new $class();
-                $action->invoke($this->_context);
+                if (method_exists($action, 'invoke')) {
+                    $action->invoke($this->_context);
+                }
             }
         }
 
