@@ -119,7 +119,7 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
         foreach ($this->_smartyClassVariables as $point) {
             $$point = $this->getConfiguration($point);
             if (!is_null($$point)) {
-                $smarty->$point = Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($$point);
+                $smarty->$point = $this->_adjustEndingSlash($$point);
             }
         }
 
@@ -146,7 +146,6 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
      *
      * @param string $directory
      * @return string
-     * @static
      */
     function _adjustEndingSlash($directory)
     {
