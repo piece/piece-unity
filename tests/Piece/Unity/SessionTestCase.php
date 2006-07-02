@@ -141,6 +141,31 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
         ini_set('include_path', $includePath);
     }
 
+    function testRemovingAttribute()
+    {
+        $this->_session->setAttribute('foo', 'bar');
+
+        $this->assertTrue($this->_session->hasAttribute('foo'));
+
+        $this->_session->removeAttribute('foo');
+
+        $this->assertFalse($this->_session->hasAttribute('foo'));
+    }
+
+    function testClearingAttributes()
+    {
+        $this->_session->setAttribute('foo', 'bar');
+        $this->_session->setAttribute('bar', 'baz');
+
+        $this->assertTrue($this->_session->hasAttribute('foo'));
+        $this->assertTrue($this->_session->hasAttribute('bar'));
+
+        $this->_session->clearAttributes();
+
+        $this->assertFalse($this->_session->hasAttribute('foo'));
+        $this->assertFalse($this->_session->hasAttribute('bar'));
+    }
+
     /**#@-*/
 
     /**#@+
