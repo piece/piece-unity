@@ -44,6 +44,8 @@ require_once 'Piece/Unity/Plugin/Common.php';
 // {{{ Piece_Unity_Plugin_Renderer_Smarty
 
 /**
+ * A renderer which is based on Smarty template engine.
+ *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman2002@yahoo.co.jp>
  * @copyright  2006 KUBO Atsuhiro <iteman2002@yahoo.co.jp>
@@ -102,28 +104,13 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
 
     /**
      * Invokes the plugin specific code.
+     *
+     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
     function invoke()
     {
-        if (!defined('SMARTY_DIR')) {
-            $SMARTY_DIR = $this->getConfiguration('SMARTY_DIR');
-            if (!is_null($SMARTY_DIR)) {
-                define('SMARTY_DIR', Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($SMARTY_DIR));
-            }
-        }
-
-        if (defined('SMARTY_DIR')) {
-            @include_once SMARTY_DIR . 'Smarty.class.php';
-        } else {
-            @include_once 'Smarty.class.php';
-        }
-
-        if (!class_exists('Smarty')) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
-                                    'exception',
-                                    array('plugin' => __CLASS__)
-                                    );
+        $this->_load();
+        if (Piece_Unity_Error::hasErrors('exception')) {
             return;
         }
 
@@ -169,7 +156,39 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
 
         return $directory;
     }
- 
+
+    // }}}
+    // {{{ _load()
+
+    /**
+     * Loads a Smarty class.
+     *
+     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     */
+    function _load()
+    {
+        if (!defined('SMARTY_DIR')) {
+            $SMARTY_DIR = $this->getConfiguration('SMARTY_DIR');
+            if (!is_null($SMARTY_DIR)) {
+                define('SMARTY_DIR', Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($SMARTY_DIR));
+            }
+        }
+
+        if (defined('SMARTY_DIR')) {
+            @include_once SMARTY_DIR . 'Smarty.class.php';
+        } else {
+            @include_once 'Smarty.class.php';
+        }
+
+        if (!class_exists('Smarty')) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                    'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
+                                    'exception',
+                                    array('plugin' => __CLASS__)
+                                    );
+        }
+    }
+
     /**#@-*/
 
     // }}}
