@@ -113,43 +113,20 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      * Starts a new continuation or continues with the current continuation,
      * and returns a view string.
      *
+     * @return string
      * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
-     * @return string
      */
     function invoke()
     {
-        $GLOBALS['PIECE_UNITY_Continuation_Session_Key'] = $this->getConfiguration('sessionKey');
-        $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key'] = $this->getConfiguration('flowExecutionTicketKey');
-        $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key'] = $this->getConfiguration('flowNameKey');
-        $GLOBALS['PIECE_UNITY_Continuation_FlowName'] = $this->getConfiguration('flowName');
-        Piece_Flow_Continuation::setActionDirectory($this->getConfiguration('actionDirectory'));
+        $this->_initialize();
 
         $session = &$this->_context->getSession();
         $continuation = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_Session_Key']);
         if (is_null($continuation)) {
-            $continuation = &new Piece_Flow_Continuation($this->getConfiguration('enableSingleFlowMode'));
-            $continuation->setCacheDirectory($this->getConfiguration('cacheDirectory'));
-            $continuation->setEventNameCallback(array(__CLASS__, 'getEventName'));
-            $continuation->setFlowExecutionTicketCallback(array(__CLASS__, 'getFlowExecutionTicket'));
-            $continuation->setFlowNameCallback(array(__CLASS__, 'getFlowName'));
-
-            foreach ($this->getConfiguration('flowDefinitions') as $flowDefinition) {
-                Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-                $result = $continuation->addFlow($flowDefinition['name'],
-                                                 $flowDefinition['file'],
-                                                 $flowDefinition['isExclusive']
-                                                 );
-                Piece_Unity_Error::popCallback();
-                if (Piece_Flow_Error::hasErrors('exception')) {
-                    Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                            'Failed to configure the plugin [ ' . __CLASS__ . ' ].',
-                                            'exception',
-                                            array('plugin' => __CLASS__),
-                                            Piece_Flow_Error::pop()
-                                            );
-                    return;
-                }
+            $continuation = &$this->_createContinuation();
+            if (Piece_Unity_Error::hasErrors('exception')) {
+                return;
             }
 
             $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_Session_Key'], $continuation);
@@ -159,12 +136,11 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $continuation->invoke($this->_context);
         Piece_Unity_Error::popCallback();
         if (Piece_Flow_Error::hasErrors('exception')) {
-            $error = Piece_Flow_Error::pop();
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
                                     'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
                                     'exception',
                                     array('plugin' => __CLASS__),
-                                    $error
+                                    Piece_Flow_Error::pop()
                                     );
             return;
         }
@@ -173,26 +149,16 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $view = $continuation->getView();
         Piece_Unity_Error::popCallback();
         if (Piece_Flow_Error::hasErrors('exception')) {
-            $error = Piece_Flow_Error::pop();
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
                                     'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
                                     'exception',
                                     array('plugin' => __CLASS__),
-                                    $error
+                                    Piece_Flow_Error::pop()
                                     );
             return;
         }
 
-        /*
-         * Sets the Piece_Flow_Continuation object, the flow execution ticket
-         * key, the flow name key, and the current flow execution ticket as a
-         * built-in view elements.
-         */
-        $viewElement = &$this->_context->getViewElement();
-        $viewElement->setElementByRef('__continuation', $continuation);
-        $viewElement->setElement('__flowExecutionTicketKey', $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key']);
-        $viewElement->setElement('__flowNameKey', $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key']);
-        $viewElement->setElement('__flowExecutionTicket', $continuation->getCurrentFlowExecutionTicket());
+        $this->_setViewElements($continuation);
 
         return $view;
     }
@@ -253,7 +219,81 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     /**#@+
      * @access private
      */
- 
+
+    // }}}
+    // {{{ _createContinuation()
+
+    /**
+     * Creates a new Piece_Flow_Continuation object and configure it.
+     *
+     * @return Piece_Flow_Continuation
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     */
+    function &_createContinuation()
+    {
+        $continuation = &new Piece_Flow_Continuation($this->getConfiguration('enableSingleFlowMode'));
+        $continuation->setCacheDirectory($this->getConfiguration('cacheDirectory'));
+        $continuation->setEventNameCallback(array(__CLASS__, 'getEventName'));
+        $continuation->setFlowExecutionTicketCallback(array(__CLASS__, 'getFlowExecutionTicket'));
+        $continuation->setFlowNameCallback(array(__CLASS__, 'getFlowName'));
+
+        foreach ($this->getConfiguration('flowDefinitions') as $flowDefinition) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            $continuation->addFlow($flowDefinition['name'],
+                                   $flowDefinition['file'],
+                                   $flowDefinition['isExclusive']
+                                   );
+            Piece_Unity_Error::popCallback();
+            if (Piece_Flow_Error::hasErrors('exception')) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                        'Failed to configure the plugin [ ' . __CLASS__ . ' ].',
+                                        'exception',
+                                        array('plugin' => __CLASS__),
+                                        Piece_Flow_Error::pop()
+                                        );
+                $return = null;
+                return $return;
+            }
+        }
+
+        return $continuation;
+    }
+
+    // }}}
+    // {{{ _initialize()
+
+    /**
+     * Initialize the global variables in the class and the action directory
+     * for the current request.
+     */
+    function _initialize()
+    {
+        $GLOBALS['PIECE_UNITY_Continuation_Session_Key'] = $this->getConfiguration('sessionKey');
+        $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key'] = $this->getConfiguration('flowExecutionTicketKey');
+        $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key'] = $this->getConfiguration('flowNameKey');
+        $GLOBALS['PIECE_UNITY_Continuation_FlowName'] = $this->getConfiguration('flowName');
+        Piece_Flow_Continuation::setActionDirectory($this->getConfiguration('actionDirectory'));
+    }
+
+    // }}}
+    // {{{ _setViewElements()
+
+    /**
+     * Sets the Piece_Flow_Continuation object, the flow execution ticket
+     * key, the flow name key, and the current flow execution ticket as a
+     * built-in view elements.
+     *
+     * @param Piece_Flow_Continuation &$continuation
+     */
+    function _setViewElements(&$continuation)
+    {
+        $viewElement = &$this->_context->getViewElement();
+        $viewElement->setElementByRef('__continuation', $continuation);
+        $viewElement->setElement('__flowExecutionTicketKey', $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key']);
+        $viewElement->setElement('__flowNameKey', $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key']);
+        $viewElement->setElement('__flowExecutionTicket', $continuation->getCurrentFlowExecutionTicket());
+    }
+
     /**#@-*/
 
     // }}}
