@@ -51,6 +51,7 @@ define('PIECE_UNITY_ERROR_CANNOT_WRITE',          -4);
 define('PIECE_UNITY_ERROR_INVALID_PLUGIN',        -5);
 define('PIECE_UNITY_ERROR_INVALID_CONFIGURATION', -6);
 define('PIECE_UNITY_ERROR_INVOCATION_FAILED',     -7);
+define('PIECE_UNITY_ERROR_PHP_ERROR',             -8);
 
 // }}}
 // {{{ Piece_Unity_Error
@@ -191,7 +192,7 @@ class Piece_Unity_Error
     }
 
     // }}}
-    // {{{ pushPearError()
+    // {{{ pushPEARError()
 
     /**
      * Adds a PEAR error to the stack for the package.
@@ -202,8 +203,9 @@ class Piece_Unity_Error
      * @param string     $level
      * @param array      $params
      * @param array      $backtrace
+     * @see Piece_Unity_Error::push()
      */
-    function pushPearError($error, $code, $message = false,
+    function pushPEARError($error, $code, $message = false,
                            $level = 'exception', $params = array(),
                            $backtrace = false
                            )
@@ -226,10 +228,59 @@ class Piece_Unity_Error
                                       'message' => $error->getMessage(),
                                       'params' => array(),
                                       'package' => 'PEAR',
-                                      'level' => 'exception',
+                                      'level' => $level,
                                       'time' => $time,
                                       'context' => $context),
                                 $backtrace
+                                );
+    }
+
+    // }}}
+    // {{{ pushPHPError()
+
+    /**
+     *
+     * @param integer $code
+     * @param string  $message
+     * @param string  $file
+     * @param integer $line
+     * @throws PIECE_UNITY_ERROR_PHP_ERROR
+     * @see Piece_Unity_Error::push()
+     */
+    function pushPHPError($code, $message, $file, $line)
+    {
+        switch ($code) {
+        case E_STRICT:
+            return;
+        case E_WARNING:
+        case E_USER_WARNING:
+            $level = 'warning';
+            break;
+        case E_NOTICE:
+        case E_USER_NOTICE:
+            $level = 'info';
+            break;
+        case E_USER_ERROR:
+        default:
+            $level = 'exception';
+            break;
+        }
+
+        $time = explode(' ', microtime());
+        $time = $time[1] + $time[0];
+        Piece_Unity_Error::push(PIECE_UNITY_ERROR_PHP_ERROR,
+                                'A PHP error raised.',
+                                $level,
+                                array(),
+                                array('code' => $code,
+                                      'message' => $message,
+                                      'params' => array(),
+                                      'package' => 'PHP',
+                                      'level' => $level,
+                                      'time' => $time,
+                                      'context' => array('file' => $file,
+                                                         'line' => $line)),
+                                debug_backtrace()
                                 );
     }
 
