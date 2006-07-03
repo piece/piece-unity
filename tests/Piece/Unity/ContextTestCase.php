@@ -163,11 +163,14 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
 
     function testGettingBaseURLPath()
     {
+        $previousScriptName = $_SERVER['SCRIPT_NAME'];
         $_SERVER['SCRIPT_NAME'] = '/path/to/foo.php';
 
         $context = &Piece_Unity_Context::singleton();
 
         $this->assertEquals('/path/to', $context->getBaseURLPath());
+
+        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
 
     /**#@-*/
