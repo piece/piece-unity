@@ -82,6 +82,7 @@ class Piece_Unity_Context
     var $_session;
     var $_eventNameImported = false;
     var $_eventNameKey = '_event';
+    var $_baseURLPath;
 
     /**#@-*/
 
@@ -277,6 +278,19 @@ class Piece_Unity_Context
         $this->_eventName = $eventName;
     }
 
+    // }}}
+    // {{{ getBaseURLPath()
+
+    /**
+     * Gets the base URL path of the current request.
+     *
+     * @return string
+     */
+    function getBaseURLPath()
+    {
+        return $this->_baseURLPath;
+    }
+
     /**#@-*/
 
     /**#@+
@@ -294,6 +308,7 @@ class Piece_Unity_Context
         $this->_request = &new Piece_Unity_Request();
         $this->_viewElement = &new Piece_Unity_ViewElement();
         $this->_session = &new Piece_Unity_Session();
+        $this->_baseURLPath = dirname($_SERVER['SCRIPT_NAME']);
     }
 
     /**#@-*/
