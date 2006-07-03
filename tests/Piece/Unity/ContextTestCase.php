@@ -161,6 +161,15 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $this->assertEquals('bar', $context->getEventName());
     }
 
+    function testGettingBaseURLPath()
+    {
+        $_SERVER['SCRIPT_NAME'] = '/path/to/foo.php';
+
+        $context = &Piece_Unity_Context::singleton();
+
+        $this->assertEquals('/path/to', $context->getBaseURLPath());
+    }
+
     /**#@-*/
 
     /**#@+
