@@ -3,7 +3,11 @@
 {if:GLOBALS.isset(__session)}
 {if:GLOBALS.is_a(__session,#Piece_Unity_Session#)}
 {if:GLOBALS.isset(__eventNameKey)}
-{if:GLOBALS.is_string(__eventNameKey)}OK{end:}
+{if:GLOBALS.is_string(__eventNameKey)}
+{if:GLOBALS.isset(__baseURLPath)}
+{if:GLOBALS.is_string(__baseURLPath)}OK{end:}
+{end:}
+{end:}
 {end:}
 {end:}
 {end:}
