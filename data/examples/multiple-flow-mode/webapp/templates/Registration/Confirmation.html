@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="{__baseURLPath}/css/default.css" media="screen,projection" />
+<title>B.1. Registration application in multiple flow mode and flow in non-exclusive mode. | Piece_Unity Examples</title>
+</head>
+<body>
+<div id="header">
+  <h1>Piece_Unity Examples</h1>
+</div><!-- end header -->
+<div id="content">
+  <h3>B.1. Registration application in multiple flow mode and flow in non-exclusive mode.</h3>
+    <p>First Name: {__continuation.getAttribute(#firstName#)}</p>
+    <p>Last Name: {__continuation.getAttribute(#lastName#)}</p>
+    <form name="confirmation">
+      <input type="hidden" name="{__flowExecutionTicketKey}" value="{__flowExecutionTicket}" />
+      <input type="submit" name="{__eventNameKey}_reedit" value="reedit" />
+      <input type="submit" name="{__eventNameKey}_register" value="register" />
+    </form>
+</div><!-- end content -->
+<div id="footer">
+  <p>Copyright &copy 2006, KUBO Atsuhiro &lt;<a href="mailto:iteman2002@yahoo.co.jp">iteman2002@yahoo.co.jp</a>&gt; All rights reserved.</p>
+</div><!-- end footer -->
+</body>
+</html>

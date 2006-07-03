@@ -58,7 +58,8 @@ session_name('MultipleFlowMode');
 $flowName = 'Registration';
 $config = &new Piece_Unity_Config();
 $config->setConfiguration('Dispatcher_Continuation', 'flowName', $flowName);
-$config->setConfiguration('Renderer_PHP', 'templateDirectory', "$base/templates/$flowName");
+$config->setConfiguration('Renderer_Flexy', 'templateDir', "$base/templates/$flowName");
+$config->setConfiguration('Renderer_Flexy', 'compileDir', "$base/compiled-templates/$flowName");
 $unity = &new Piece_Unity("$base/config", null, $config);
 $unity->dispatch();
 

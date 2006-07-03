@@ -5,6 +5,9 @@ lastState: { name: Finishing, view: Finish }
 viewState:
   - name: Displaying
     view: Input
+    activity:
+      class: RegistrationAction
+      method: setupForm
     transition:
       - event: next
         nextState: Validated
@@ -19,6 +22,8 @@ viewState:
         action:
           class: RegistrationAction
           method: register
+      - event: reedit
+        nextState: Displaying
 actionState:
   - name: Validated
     transition:
