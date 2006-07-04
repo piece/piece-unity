@@ -80,12 +80,12 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
 
     function setUp()
     {
-        unset($_SESSION);
         $this->_session = &new Piece_Unity_Session();
     }
 
     function tearDown()
     {
+        unset($_SESSION);
         $this->_session = null;
     }
 

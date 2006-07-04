@@ -82,11 +82,11 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
     function setUp()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        unset($_SESSION);
     }
 
     function tearDown()
     {
+        unset($_SESSION);
         $context = &Piece_Unity_Context::singleton();
         $context->clear();
     }

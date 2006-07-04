@@ -86,6 +86,7 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
 
     function tearDown()
     {
+        unset($_SESSION);
         $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
                                             'masterFile' => '',
                                             'automaticSerialization' => true,
