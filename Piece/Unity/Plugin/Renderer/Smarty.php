@@ -125,8 +125,8 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
 
         $viewElement = &$this->_context->getViewElement();
         $viewElements = $viewElement->getElements();
-        foreach ($viewElements as $name => &$value) {
-            $smarty->assign_by_ref($name, $value);
+        foreach (array_keys($viewElements) as $elementName) {
+            $smarty->assign_by_ref($elementName, $viewElements[$elementName]);
         }
 
         set_error_handler(array('Piece_Unity_Error', 'pushPHPError'));
@@ -193,7 +193,13 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
             return;
         }
 
-        if (!class_exists('Smarty')) {
+        if (version_compare(phpversion(), '5.0.0', '<')) {
+            $found = class_exists('Smarty');
+        } else {
+            $found = class_exists('Smarty', false);
+        }
+
+        if (!$found) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                     'The class [ Smarty ] not defined in the class file [ Smarty.class.php ].'
                                     );
