@@ -91,23 +91,6 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $context->clear();
     }
 
-    function testSettingEventNameKey()
-    {
-        $_GET['_foo'] = 'bar';
-
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('KernelConfigurator', 'eventNameKey', '_foo');
-        $context = &Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-
-        $configurator = &new Piece_Unity_Plugin_KernelConfigurator();
-        $configurator->invoke();
-
-        $this->assertEquals('bar', $context->getEventName());
-
-        unset($_GET['_foo']);
-    }
-
     function testSettingAutoloadClasses()
     {
         $class = 'Piece_Unity_Plugin_AutoloadClass';
@@ -152,6 +135,23 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $this->assertEquals('bar', $context->getEventName());
 
         unset($_GET['_event']);
+    }
+
+    function testSettingEventNameKey()
+    {
+        $_GET['_foo'] = 'bar';
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('KernelConfigurator', 'eventNameKey', '_foo');
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $configurator = &new Piece_Unity_Plugin_KernelConfigurator();
+        $configurator->invoke();
+
+        $this->assertEquals('bar', $context->getEventName());
+
+        unset($_GET['_foo']);
     }
 
     /**#@-*/
