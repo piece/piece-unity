@@ -69,7 +69,7 @@ class Piece_Unity_Session
      * @access private
      */
 
-    var $_attributes = array();
+    var $_attributes;
 
     /**#@-*/
 
@@ -146,7 +146,9 @@ class Piece_Unity_Session
      */
     function addAutoloadClass($class)
     {
-        array_push($GLOBALS['PIECE_UNITY_Session_Autoload_Classes'], $class);
+        if (!in_array($class, $GLOBALS['PIECE_UNITY_Session_Autoload_Classes'])) {
+            array_push($GLOBALS['PIECE_UNITY_Session_Autoload_Classes'], $class);
+        }
     }
 
     // }}}
@@ -158,22 +160,29 @@ class Piece_Unity_Session
      */
     function start()
     {
-        if (!isset($_SESSION)) {
-            foreach ($GLOBALS['PIECE_UNITY_Session_Autoload_Classes'] as $class) {
-                $file = str_replace('_', '/', $class) . '.php';
-                if (!@include_once($file)) {
-                    Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-                    Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                            "The class file [ $file ] not found or was not readable.",
-                                            'warning'
-                                            );
-                    Piece_Unity_Error::popCallback();
-                }
+        foreach ($GLOBALS['PIECE_UNITY_Session_Autoload_Classes'] as $class) {
+            if (version_compare(phpversion(), '5.0.0', '<')) {
+                $found = class_exists($class);
+            } else {
+                $found = class_exists($class, false);
             }
 
-            @session_start();
+            if ($found) {
+                continue;
+            }
+
+            $file = str_replace('_', '/', $class) . '.php';
+            if (!@include_once($file)) {
+                Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                        "The class file [ $file ] not found or was not readable.",
+                                        'warning'
+                                        );
+                Piece_Unity_Error::popCallback();
+            }
         }
 
+        @session_start();
         $this->_attributes = &$_SESSION;
     }
 
