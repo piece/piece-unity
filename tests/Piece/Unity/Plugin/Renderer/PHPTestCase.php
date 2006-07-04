@@ -72,7 +72,7 @@ class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Rendere
      */
 
     var $_target = 'PHP';
-    var $_errorCodeWhenTemplateNotExists = PIECE_UNITY_ERROR_INVOCATION_FAILED;
+    var $_errorCodeWhenTemplateNotExists = PIECE_UNITY_ERROR_NOT_FOUND;
 
     /**#@-*/
 
