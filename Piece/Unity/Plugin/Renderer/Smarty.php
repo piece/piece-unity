@@ -105,7 +105,7 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
     /**
      * Invokes the plugin specific code.
      *
-     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
      */
     function invoke()
     {
@@ -166,7 +166,7 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
     /**
      * Loads a Smarty class.
      *
-     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
      */
     function _load()
     {
@@ -178,16 +178,24 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
         }
 
         if (defined('SMARTY_DIR')) {
-            @include_once SMARTY_DIR . 'Smarty.class.php';
+            $included = @include_once SMARTY_DIR . 'Smarty.class.php';
         } else {
-            @include_once 'Smarty.class.php';
+            $included = @include_once 'Smarty.class.php';
+            if (!$included) {
+                $included = @include_once 'Smarty/Smarty.class.php';
+            }
+        }
+
+        if (!$included) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                    'The Smarty class file [ Smarty.class.php ] not found or was not readable.'
+                                    );
+            return;
         }
 
         if (!class_exists('Smarty')) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
-                                    'exception',
-                                    array('plugin' => __CLASS__)
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                    'The class [ Smarty ] not defined in the class file [ Smarty.class.php ].'
                                     );
         }
     }
