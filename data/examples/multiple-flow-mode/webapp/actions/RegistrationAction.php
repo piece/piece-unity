@@ -87,8 +87,10 @@ class RegistrationAction
 
     function setupForm(&$flow, $event, &$context)
     {
+        $view = $flow->getView();
         $elements = array();
-        $elements['input']['_attributes']['action'] = $_SERVER['SCRIPT_NAME'];
+        $elements[$view]['_attributes']['action'] = $context->getBaseURL();
+        $elements[$view]['_attributes']['method'] = 'post';
         $elements['firstName']['_value'] = $flow->getAttribute('firstName');
         $elements['lastName']['_value'] = $flow->getAttribute('lastName');
         $viewElement = &$context->getViewElement();

@@ -15,6 +15,9 @@ viewState:
           method: validate
   - name: Confirming
     view: Confirmation
+    activity:
+      class: RegistrationAction
+      method: setupForm
     transition:
       - event: register
         nextState: Registered

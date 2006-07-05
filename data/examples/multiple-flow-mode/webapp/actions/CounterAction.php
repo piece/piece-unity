@@ -79,15 +79,22 @@ class CounterAction
     function increase(&$flow, $event, &$context)
     {
         $flow->setAttribute('counter', $flow->getAttribute('counter') + 1);
-        $elements = array();
-        $elements['counter']['_attributes']['action'] = $_SERVER['SCRIPT_NAME'];
-        $viewElement = &$context->getViewElement();
-        $viewElement->setElement('_elements', $elements);
+        $this->setupForm($flow, $event, $context);
     }
 
     function reached(&$flow, $event, &$context)
     {
         return $flow->getAttribute('counter') >= 10;
+    }
+
+    function setupForm(&$flow, $event, &$context)
+    {
+        $view = $flow->getView();
+        $elements = array();
+        $elements[$view]['_attributes']['action'] = $context->getBaseURL();
+        $elements[$view]['_attributes']['method'] = 'post';
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('_elements', $elements);
     }
 
     /**#@-*/
