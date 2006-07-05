@@ -115,7 +115,7 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
         $resultOfCompile = $flexy->compile(str_replace('_', '/', str_replace('.', '', $this->_context->getView())) . $this->getConfiguration('templateExtension'));
         if (PEAR::isError($resultOfCompile)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::pushPearError($resultOfCompile,
+            Piece_Unity_Error::pushPEARError($resultOfCompile,
                                              PIECE_UNITY_ERROR_INVOCATION_FAILED,
                                              'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
                                              'warning',
@@ -139,7 +139,7 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
         $resultOfOutputObject = $flexy->outputObject($controller, $formElements);
         if (PEAR::isError($resultOfOutputObject)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::pushPearError($resultOfOutputObject,
+            Piece_Unity_Error::pushPEARError($resultOfOutputObject,
                                              PIECE_UNITY_ERROR_INVOCATION_FAILED,
                                              'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
                                              'warning',
