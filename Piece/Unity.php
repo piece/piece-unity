@@ -38,9 +38,9 @@
  */
 
 require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/PluginInvoker.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'Piece/Unity/Config/Factory.php';
+require_once 'Piece/Unity/Plugin/Factory.php';
 
 // {{{ GLOBALS
 
@@ -111,7 +111,12 @@ class Piece_Unity
      */
     function dispatch()
     {
-        return Piece_Unity_PluginInvoker::invoke($GLOBALS['PIECE_UNITY_Root_Plugin']);
+        $root = &Piece_Unity_Plugin_Factory::factory($GLOBALS['PIECE_UNITY_Root_Plugin']);
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
+
+        return $root->invoke();
     }
 
     /**#@-*/
