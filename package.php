@@ -42,8 +42,9 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$version = '0.1.0';
-$notes = 'The first alpha release of Piece_Unity.';
+$version = '0.2.0';
+$apiVersion = '0.2.0';
+$notes = 'The first beta release of Piece_Unity.';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
@@ -62,10 +63,10 @@ $package->setChannel('pear.hatotech.org');
 $package->setLicense('BSD License (revised)',
                      'http://www.opensource.org/licenses/bsd-license.php'
                      );
-$package->setAPIVersion('0.1.0');
-$package->setAPIStability('alpha');
+$package->setAPIVersion($apiVersion);
+$package->setAPIStability('beta');
 $package->setReleaseVersion($version);
-$package->setReleaseStability('alpha');
+$package->setReleaseStability('beta');
 $package->setNotes($notes);
 $package->setPhpDep('4.3.0');
 $package->setPearinstallerDep('1.4.3');

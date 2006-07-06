@@ -6,37 +6,72 @@
  <name>Piece_Unity</name>
  <channel>pear.hatotech.org</channel>
  <summary>A stateful and secure MVC framework for PHP</summary>
- <description>Piece_Unity is a stateful and secure MVC framework for PHP. Piece_Unity has two major features. The first one is a technology known as the continuation server - It based on Piece_Flow web flow engine, flow control using it, and storing/restoring states. The second one is an Eclipse like plug-in system using extension points and configuration points.</description>
+ <description>Piece_Unity is a stateful and secure MVC framework for PHP. Piece_Unity has two major features. The first one is a technology known as continuation server - It based on Piece_Flow web flow engine, flow control using it, and storing/restoring states. The second one is an Eclipse like plug-in system using extension points and configuration points.</description>
  <lead>
   <name>KUBO Atsuhiro</name>
   <user>iteman</user>
   <email>iteman2002@yahoo.co.jp</email>
   <active>yes</active>
  </lead>
- <date>2006-06-21</date>
- <time>09:44:06</time>
+ <date>2006-07-06</date>
+ <time>11:47:02</time>
  <version>
-  <release>0.1.0</release>
-  <api>0.1.0</api>
+  <release>0.2.0</release>
+  <api>0.2.0</api>
  </version>
  <stability>
-  <release>alpha</release>
-  <api>alpha</api>
+  <release>beta</release>
+  <api>beta</api>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
- <notes>The first alpha release of Piece_Unity.</notes>
+ <notes>The first beta release of Piece_Unity.</notes>
  <contents>
   <dir baseinstalldir="/" name="/">
    <dir name="data">
     <dir name="examples">
+     <dir name="css">
+      <file name="default.css" role="data">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+     </dir> <!-- /data/examples/css -->
+     <dir name="images">
+      <file name="bg.gif" role="data">
+      </file>
+      <file name="piece_footer.jpg" role="data">
+      </file>
+      <file name="piece_header.jpg" role="data">
+      </file>
+     </dir> <!-- /data/examples/images -->
      <dir name="multiple-flow-mode">
       <dir name="htdocs">
-       <file name="index.php" role="data">
+       <dir name="css">
+        <file name="default.css" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+       </dir> <!-- /data/examples/multiple-flow-mode/htdocs/css -->
+       <dir name="images">
+        <file name="bg.gif" role="data">
+        </file>
+        <file name="piece_footer.jpg" role="data">
+        </file>
+        <file name="piece_header.jpg" role="data">
+        </file>
+       </dir> <!-- /data/examples/multiple-flow-mode/htdocs/images -->
+       <file name="counter.php" role="data">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="register.php" role="data">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="static.php" role="data">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
       </dir> <!-- /data/examples/multiple-flow-mode/htdocs -->
       <dir name="webapp">
        <dir name="actions">
+        <file name="ActionAndDisplayAction.php" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
         <file name="CounterAction.php" role="data">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
@@ -44,6 +79,11 @@
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
        </dir> <!-- /data/examples/multiple-flow-mode/webapp/actions -->
+       <dir name="compiled-templates">
+        <file name="README" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+       </dir> <!-- /data/examples/multiple-flow-mode/webapp/compiled-templates -->
        <dir name="config">
         <file name="Counter.yaml" role="data">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
@@ -57,39 +97,71 @@
        </dir> <!-- /data/examples/multiple-flow-mode/webapp/config -->
        <dir name="templates">
         <dir name="Counter">
-         <file name="Counter.php" role="data">
+         <file name="Counter.html" role="data">
           <tasks:replace from="@package_version@" to="version" type="package-info" />
          </file>
-         <file name="Finish.php" role="data">
+         <file name="Finish.html" role="data">
           <tasks:replace from="@package_version@" to="version" type="package-info" />
          </file>
         </dir> <!-- /data/examples/multiple-flow-mode/webapp/templates/Counter -->
         <dir name="Registration">
-         <file name="Confirmation.php" role="data">
+         <file name="Confirmation.html" role="data">
           <tasks:replace from="@package_version@" to="version" type="package-info" />
          </file>
-         <file name="Finish.php" role="data">
+         <file name="Finish.html" role="data">
           <tasks:replace from="@package_version@" to="version" type="package-info" />
          </file>
-         <file name="Input.php" role="data">
+         <file name="Input.html" role="data">
           <tasks:replace from="@package_version@" to="version" type="package-info" />
          </file>
         </dir> <!-- /data/examples/multiple-flow-mode/webapp/templates/Registration -->
+        <dir name="Static">
+         <file name="ActionAndDisplay.html" role="data">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+         <file name="ImmediateDisplay.html" role="data">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+        </dir> <!-- /data/examples/multiple-flow-mode/webapp/templates/Static -->
        </dir> <!-- /data/examples/multiple-flow-mode/webapp/templates -->
       </dir> <!-- /data/examples/multiple-flow-mode/webapp -->
      </dir> <!-- /data/examples/multiple-flow-mode -->
      <dir name="single-flow-mode">
       <dir name="htdocs">
+       <dir name="css">
+        <file name="default.css" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+       </dir> <!-- /data/examples/single-flow-mode/htdocs/css -->
+       <dir name="images">
+        <file name="bg.gif" role="data">
+        </file>
+        <file name="piece_footer.jpg" role="data">
+        </file>
+        <file name="piece_header.jpg" role="data">
+        </file>
+       </dir> <!-- /data/examples/single-flow-mode/htdocs/images -->
        <file name="index.php" role="data">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="static.php" role="data">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
       </dir> <!-- /data/examples/single-flow-mode/htdocs -->
       <dir name="webapp">
        <dir name="actions">
+        <file name="ActionAndDisplayAction.php" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
         <file name="RegistrationAction.php" role="data">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
        </dir> <!-- /data/examples/single-flow-mode/webapp/actions -->
+       <dir name="compiled-templates">
+        <file name="README" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+       </dir> <!-- /data/examples/single-flow-mode/webapp/compiled-templates -->
        <dir name="config">
         <file name="piece-unity-config.yaml" role="data">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
@@ -99,13 +171,21 @@
         </file>
        </dir> <!-- /data/examples/single-flow-mode/webapp/config -->
        <dir name="templates">
-        <file name="Confirmation.php" role="data">
+        <dir name="Static">
+         <file name="ActionAndDisplay.html" role="data">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+         <file name="ImmediateDisplay.html" role="data">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+        </dir> <!-- /data/examples/single-flow-mode/webapp/templates/Static -->
+        <file name="Confirmation.html" role="data">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
-        <file name="Finish.php" role="data">
+        <file name="Finish.html" role="data">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
-        <file name="Input.php" role="data">
+        <file name="Input.html" role="data">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
        </dir> <!-- /data/examples/single-flow-mode/webapp/templates -->
@@ -147,14 +227,17 @@
        </file>
       </dir> <!-- /Piece/Unity/Plugin/Dispatcher -->
       <dir name="Renderer">
+       <file name="Flexy.php" role="php">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
        <file name="PHP.php" role="php">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="Smarty.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
       </dir> <!-- /Piece/Unity/Plugin/Renderer -->
       <file name="Common.php" role="php">
-       <tasks:replace from="@package_version@" to="version" type="package-info" />
-      </file>
-      <file name="DispatcherQueue.php" role="php">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
       <file name="Factory.php" role="php">
@@ -170,20 +253,6 @@
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
      </dir> <!-- /Piece/Unity/Plugin -->
-     <dir name="Session">
-      <file name="Common.php" role="php">
-       <tasks:replace from="@package_version@" to="version" type="package-info" />
-      </file>
-      <file name="Factory.php" role="php">
-       <tasks:replace from="@package_version@" to="version" type="package-info" />
-      </file>
-      <file name="Mock.php" role="php">
-       <tasks:replace from="@package_version@" to="version" type="package-info" />
-      </file>
-      <file name="PHP.php" role="php">
-       <tasks:replace from="@package_version@" to="version" type="package-info" />
-      </file>
-     </dir> <!-- /Piece/Unity/Session -->
      <file name="Config.php" role="php">
       <tasks:replace from="@package_version@" to="version" type="package-info" />
      </file>
@@ -197,6 +266,9 @@
       <tasks:replace from="@package_version@" to="version" type="package-info" />
      </file>
      <file name="Request.php" role="php">
+      <tasks:replace from="@package_version@" to="version" type="package-info" />
+     </file>
+     <file name="Session.php" role="php">
       <tasks:replace from="@package_version@" to="version" type="package-info" />
      </file>
      <file name="ViewElement.php" role="php">
@@ -243,6 +315,27 @@
         </file>
        </dir> <!-- /tests/Piece/Unity/Plugin/Dispatcher -->
        <dir name="Renderer">
+        <file name="CompatibilityTest.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="FlexyAutomaticFormElements.html" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="FlexyBuiltinElements.html" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="FlexyExample.html" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="FlexyExampleAction.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="FlexyKeepingReference.html" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="FlexyTestCase.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
         <file name="PHPBuiltinElements.php" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
@@ -258,17 +351,32 @@
         <file name="PHPTestCase.php" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
+        <file name="SmartyBuiltinElements.tpl" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="SmartyExample.tpl" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="SmartyExampleAction.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="SmartyKeepingReference.tpl" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="SmartyTestCase.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
         <file name="TestRunner.php" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
        </dir> <!-- /tests/Piece/Unity/Plugin/Renderer -->
+       <file name="AutoloadClass.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
        <file name="Bar.php" role="test">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
        <file name="Baz.php" role="test">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-       <file name="DispatcherQueueTestCase.php" role="test">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
        <file name="FactoryTestCase.php" role="test">
@@ -296,23 +404,9 @@
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
       </dir> <!-- /tests/Piece/Unity/Plugin -->
-      <dir name="Session">
-       <file name="CompatibilityTest.php" role="test">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-       <file name="FactoryTestCase.php" role="test">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-       <file name="MockTestCase.php" role="test">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-       <file name="PHPTestCase.php" role="test">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-       <file name="TestRunner.php" role="test">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-      </dir> <!-- /tests/Piece/Unity/Session -->
+      <file name="AutoloadClass.php" role="test">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
       <file name="ConfigTestCase.php" role="test">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
@@ -323,6 +417,9 @@
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
       <file name="RequestTestCase.php" role="test">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file name="SessionTestCase.php" role="test">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
       <file name="TestRunner.php" role="test">
@@ -356,12 +453,17 @@
    <package>
     <name>Piece_Flow</name>
     <channel>pear.hatotech.org</channel>
-    <min>1.0.0</min>
+    <min>1.1.0</min>
    </package>
    <package>
     <name>Cache_Lite</name>
     <channel>pear.php.net</channel>
     <min>1.7.0</min>
+   </package>
+   <package>
+    <name>PEAR</name>
+    <channel>pear.php.net</channel>
+    <min>1.4.3</min>
    </package>
   </required>
   <optional>
@@ -370,35 +472,76 @@
     <channel>pear.hatotech.org</channel>
     <min>0.3.0</min>
    </package>
+   <package>
+    <name>HTML_Template_Flexy</name>
+    <channel>pear.php.net</channel>
+    <min>1.2.4</min>
+   </package>
+   <package>
+    <name>Smarty</name>
+    <channel>pearified.com</channel>
+    <min>1.6.8</min>
+   </package>
   </optional>
  </dependencies>
  <phprelease>
   <filelist>
-   <install as="examples/multiple-flow-mode/htdocs/index.php" name="data/examples/multiple-flow-mode/htdocs/index.php" />
+   <install as="examples/css/default.css" name="data/examples/css/default.css" />
+   <install as="examples/images/bg.gif" name="data/examples/images/bg.gif" />
+   <install as="examples/images/piece_footer.jpg" name="data/examples/images/piece_footer.jpg" />
+   <install as="examples/images/piece_header.jpg" name="data/examples/images/piece_header.jpg" />
+   <install as="examples/index.html" name="data/examples/index.html" />
+   <install as="examples/multiple-flow-mode/htdocs/counter.php" name="data/examples/multiple-flow-mode/htdocs/counter.php" />
+   <install as="examples/multiple-flow-mode/htdocs/css/default.css" name="data/examples/multiple-flow-mode/htdocs/css/default.css" />
+   <install as="examples/multiple-flow-mode/htdocs/images/bg.gif" name="data/examples/multiple-flow-mode/htdocs/images/bg.gif" />
+   <install as="examples/multiple-flow-mode/htdocs/images/piece_footer.jpg" name="data/examples/multiple-flow-mode/htdocs/images/piece_footer.jpg" />
+   <install as="examples/multiple-flow-mode/htdocs/images/piece_header.jpg" name="data/examples/multiple-flow-mode/htdocs/images/piece_header.jpg" />
+   <install as="examples/multiple-flow-mode/htdocs/register.php" name="data/examples/multiple-flow-mode/htdocs/register.php" />
+   <install as="examples/multiple-flow-mode/htdocs/static.php" name="data/examples/multiple-flow-mode/htdocs/static.php" />
+   <install as="examples/multiple-flow-mode/webapp/actions/ActionAndDisplayAction.php" name="data/examples/multiple-flow-mode/webapp/actions/ActionAndDisplayAction.php" />
    <install as="examples/multiple-flow-mode/webapp/actions/CounterAction.php" name="data/examples/multiple-flow-mode/webapp/actions/CounterAction.php" />
    <install as="examples/multiple-flow-mode/webapp/actions/RegistrationAction.php" name="data/examples/multiple-flow-mode/webapp/actions/RegistrationAction.php" />
+   <install as="examples/multiple-flow-mode/webapp/compiled-templates/README" name="data/examples/multiple-flow-mode/webapp/compiled-templates/README" />
    <install as="examples/multiple-flow-mode/webapp/config/Counter.yaml" name="data/examples/multiple-flow-mode/webapp/config/Counter.yaml" />
    <install as="examples/multiple-flow-mode/webapp/config/piece-unity-config.yaml" name="data/examples/multiple-flow-mode/webapp/config/piece-unity-config.yaml" />
    <install as="examples/multiple-flow-mode/webapp/config/Registration.yaml" name="data/examples/multiple-flow-mode/webapp/config/Registration.yaml" />
-   <install as="examples/multiple-flow-mode/webapp/templates/Counter/Counter.php" name="data/examples/multiple-flow-mode/webapp/templates/Counter/Counter.php" />
-   <install as="examples/multiple-flow-mode/webapp/templates/Counter/Finish.php" name="data/examples/multiple-flow-mode/webapp/templates/Counter/Finish.php" />
-   <install as="examples/multiple-flow-mode/webapp/templates/Registration/Confirmation.php" name="data/examples/multiple-flow-mode/webapp/templates/Registration/Confirmation.php" />
-   <install as="examples/multiple-flow-mode/webapp/templates/Registration/Finish.php" name="data/examples/multiple-flow-mode/webapp/templates/Registration/Finish.php" />
-   <install as="examples/multiple-flow-mode/webapp/templates/Registration/Input.php" name="data/examples/multiple-flow-mode/webapp/templates/Registration/Input.php" />
+   <install as="examples/multiple-flow-mode/webapp/templates/Counter/Counter.html" name="data/examples/multiple-flow-mode/webapp/templates/Counter/Counter.html" />
+   <install as="examples/multiple-flow-mode/webapp/templates/Counter/Finish.html" name="data/examples/multiple-flow-mode/webapp/templates/Counter/Finish.html" />
+   <install as="examples/multiple-flow-mode/webapp/templates/Registration/Confirmation.html" name="data/examples/multiple-flow-mode/webapp/templates/Registration/Confirmation.html" />
+   <install as="examples/multiple-flow-mode/webapp/templates/Registration/Finish.html" name="data/examples/multiple-flow-mode/webapp/templates/Registration/Finish.html" />
+   <install as="examples/multiple-flow-mode/webapp/templates/Registration/Input.html" name="data/examples/multiple-flow-mode/webapp/templates/Registration/Input.html" />
+   <install as="examples/multiple-flow-mode/webapp/templates/Static/ActionAndDisplay.html" name="data/examples/multiple-flow-mode/webapp/templates/Static/ActionAndDisplay.html" />
+   <install as="examples/multiple-flow-mode/webapp/templates/Static/ImmediateDisplay.html" name="data/examples/multiple-flow-mode/webapp/templates/Static/ImmediateDisplay.html" />
+   <install as="examples/single-flow-mode/htdocs/css/default.css" name="data/examples/single-flow-mode/htdocs/css/default.css" />
+   <install as="examples/single-flow-mode/htdocs/images/bg.gif" name="data/examples/single-flow-mode/htdocs/images/bg.gif" />
+   <install as="examples/single-flow-mode/htdocs/images/piece_footer.jpg" name="data/examples/single-flow-mode/htdocs/images/piece_footer.jpg" />
+   <install as="examples/single-flow-mode/htdocs/images/piece_header.jpg" name="data/examples/single-flow-mode/htdocs/images/piece_header.jpg" />
    <install as="examples/single-flow-mode/htdocs/index.php" name="data/examples/single-flow-mode/htdocs/index.php" />
+   <install as="examples/single-flow-mode/htdocs/static.php" name="data/examples/single-flow-mode/htdocs/static.php" />
+   <install as="examples/single-flow-mode/webapp/actions/ActionAndDisplayAction.php" name="data/examples/single-flow-mode/webapp/actions/ActionAndDisplayAction.php" />
    <install as="examples/single-flow-mode/webapp/actions/RegistrationAction.php" name="data/examples/single-flow-mode/webapp/actions/RegistrationAction.php" />
+   <install as="examples/single-flow-mode/webapp/compiled-templates/README" name="data/examples/single-flow-mode/webapp/compiled-templates/README" />
    <install as="examples/single-flow-mode/webapp/config/piece-unity-config.yaml" name="data/examples/single-flow-mode/webapp/config/piece-unity-config.yaml" />
    <install as="examples/single-flow-mode/webapp/config/Registration.yaml" name="data/examples/single-flow-mode/webapp/config/Registration.yaml" />
-   <install as="examples/single-flow-mode/webapp/templates/Confirmation.php" name="data/examples/single-flow-mode/webapp/templates/Confirmation.php" />
-   <install as="examples/single-flow-mode/webapp/templates/Finish.php" name="data/examples/single-flow-mode/webapp/templates/Finish.php" />
-   <install as="examples/single-flow-mode/webapp/templates/Input.php" name="data/examples/single-flow-mode/webapp/templates/Input.php" />
-   <install as="examples/index.html" name="data/examples/index.html" />
+   <install as="examples/single-flow-mode/webapp/templates/Confirmation.html" name="data/examples/single-flow-mode/webapp/templates/Confirmation.html" />
+   <install as="examples/single-flow-mode/webapp/templates/Finish.html" name="data/examples/single-flow-mode/webapp/templates/Finish.html" />
+   <install as="examples/single-flow-mode/webapp/templates/Input.html" name="data/examples/single-flow-mode/webapp/templates/Input.html" />
+   <install as="examples/single-flow-mode/webapp/templates/Static/ActionAndDisplay.html" name="data/examples/single-flow-mode/webapp/templates/Static/ActionAndDisplay.html" />
+   <install as="examples/single-flow-mode/webapp/templates/Static/ImmediateDisplay.html" name="data/examples/single-flow-mode/webapp/templates/Static/ImmediateDisplay.html" />
    <install as="piece-unity-config.yaml" name="data/piece-unity-config.yaml" />
    <install as="piece-unity.yaml" name="data/piece-unity.yaml" />
    <install as="LICENSE" name="docs/LICENSE" />
    <install as="README.sdoc" name="docs/README.sdoc" />
+   <install as="AllTestRunner.php" name="tests/AllTestRunner.php" />
+   <install as="Piece/TestRunner.php" name="tests/Piece/TestRunner.php" />
+   <install as="Piece/Unity/AutoloadClass.php" name="tests/Piece/Unity/AutoloadClass.php" />
    <install as="Piece/Unity/Config/FactoryTestCase.php" name="tests/Piece/Unity/Config/FactoryTestCase.php" />
    <install as="Piece/Unity/Config/TestRunner.php" name="tests/Piece/Unity/Config/TestRunner.php" />
+   <install as="Piece/Unity/ConfigTestCase.php" name="tests/Piece/Unity/ConfigTestCase.php" />
+   <install as="Piece/Unity/ContextTestCase.php" name="tests/Piece/Unity/ContextTestCase.php" />
+   <install as="Piece/Unity/Plugin/AutoloadClass.php" name="tests/Piece/Unity/Plugin/AutoloadClass.php" />
+   <install as="Piece/Unity/Plugin/Bar.php" name="tests/Piece/Unity/Plugin/Bar.php" />
+   <install as="Piece/Unity/Plugin/Baz.php" name="tests/Piece/Unity/Plugin/Baz.php" />
    <install as="Piece/Unity/Plugin/Dispatcher/ContinuationTestCase.php" name="tests/Piece/Unity/Plugin/Dispatcher/ContinuationTestCase.php" />
    <install as="Piece/Unity/Plugin/Dispatcher/Counter.php" name="tests/Piece/Unity/Plugin/Dispatcher/Counter.php" />
    <install as="Piece/Unity/Plugin/Dispatcher/Counter.yaml" name="tests/Piece/Unity/Plugin/Dispatcher/Counter.yaml" />
@@ -406,15 +549,6 @@
    <install as="Piece/Unity/Plugin/Dispatcher/SimpleExampleAction.php" name="tests/Piece/Unity/Plugin/Dispatcher/SimpleExampleAction.php" />
    <install as="Piece/Unity/Plugin/Dispatcher/SimpleTestCase.php" name="tests/Piece/Unity/Plugin/Dispatcher/SimpleTestCase.php" />
    <install as="Piece/Unity/Plugin/Dispatcher/TestRunner.php" name="tests/Piece/Unity/Plugin/Dispatcher/TestRunner.php" />
-   <install as="Piece/Unity/Plugin/Renderer/PHPBuiltinElements.php" name="tests/Piece/Unity/Plugin/Renderer/PHPBuiltinElements.php" />
-   <install as="Piece/Unity/Plugin/Renderer/PHPExample.php" name="tests/Piece/Unity/Plugin/Renderer/PHPExample.php" />
-   <install as="Piece/Unity/Plugin/Renderer/PHPExampleAction.php" name="tests/Piece/Unity/Plugin/Renderer/PHPExampleAction.php" />
-   <install as="Piece/Unity/Plugin/Renderer/PHPKeepingReference.php" name="tests/Piece/Unity/Plugin/Renderer/PHPKeepingReference.php" />
-   <install as="Piece/Unity/Plugin/Renderer/PHPTestCase.php" name="tests/Piece/Unity/Plugin/Renderer/PHPTestCase.php" />
-   <install as="Piece/Unity/Plugin/Renderer/TestRunner.php" name="tests/Piece/Unity/Plugin/Renderer/TestRunner.php" />
-   <install as="Piece/Unity/Plugin/Bar.php" name="tests/Piece/Unity/Plugin/Bar.php" />
-   <install as="Piece/Unity/Plugin/Baz.php" name="tests/Piece/Unity/Plugin/Baz.php" />
-   <install as="Piece/Unity/Plugin/DispatcherQueueTestCase.php" name="tests/Piece/Unity/Plugin/DispatcherQueueTestCase.php" />
    <install as="Piece/Unity/Plugin/FactoryTestCase.php" name="tests/Piece/Unity/Plugin/FactoryTestCase.php" />
    <install as="Piece/Unity/Plugin/Foo.php" name="tests/Piece/Unity/Plugin/Foo.php" />
    <install as="Piece/Unity/Plugin/Invalid.php" name="tests/Piece/Unity/Plugin/Invalid.php" />
@@ -422,24 +556,47 @@
    <install as="Piece/Unity/Plugin/Qux.php" name="tests/Piece/Unity/Plugin/Qux.php" />
    <install as="Piece/Unity/Plugin/RelativePathVulnerability.php" name="tests/Piece/Unity/Plugin/RelativePathVulnerability.php" />
    <install as="Piece/Unity/Plugin/RelativePathVulnerabilityAction.php" name="tests/Piece/Unity/Plugin/RelativePathVulnerabilityAction.php" />
+   <install as="Piece/Unity/Plugin/Renderer/CompatibilityTest.php" name="tests/Piece/Unity/Plugin/Renderer/CompatibilityTest.php" />
+   <install as="Piece/Unity/Plugin/Renderer/FlexyAutomaticFormElements.html" name="tests/Piece/Unity/Plugin/Renderer/FlexyAutomaticFormElements.html" />
+   <install as="Piece/Unity/Plugin/Renderer/FlexyBuiltinElements.html" name="tests/Piece/Unity/Plugin/Renderer/FlexyBuiltinElements.html" />
+   <install as="Piece/Unity/Plugin/Renderer/FlexyExample.html" name="tests/Piece/Unity/Plugin/Renderer/FlexyExample.html" />
+   <install as="Piece/Unity/Plugin/Renderer/FlexyExampleAction.php" name="tests/Piece/Unity/Plugin/Renderer/FlexyExampleAction.php" />
+   <install as="Piece/Unity/Plugin/Renderer/FlexyKeepingReference.html" name="tests/Piece/Unity/Plugin/Renderer/FlexyKeepingReference.html" />
+   <install as="Piece/Unity/Plugin/Renderer/FlexyTestCase.php" name="tests/Piece/Unity/Plugin/Renderer/FlexyTestCase.php" />
+   <install as="Piece/Unity/Plugin/Renderer/PHPBuiltinElements.php" name="tests/Piece/Unity/Plugin/Renderer/PHPBuiltinElements.php" />
+   <install as="Piece/Unity/Plugin/Renderer/PHPExample.php" name="tests/Piece/Unity/Plugin/Renderer/PHPExample.php" />
+   <install as="Piece/Unity/Plugin/Renderer/PHPExampleAction.php" name="tests/Piece/Unity/Plugin/Renderer/PHPExampleAction.php" />
+   <install as="Piece/Unity/Plugin/Renderer/PHPKeepingReference.php" name="tests/Piece/Unity/Plugin/Renderer/PHPKeepingReference.php" />
+   <install as="Piece/Unity/Plugin/Renderer/PHPTestCase.php" name="tests/Piece/Unity/Plugin/Renderer/PHPTestCase.php" />
+   <install as="Piece/Unity/Plugin/Renderer/SmartyBuiltinElements.tpl" name="tests/Piece/Unity/Plugin/Renderer/SmartyBuiltinElements.tpl" />
+   <install as="Piece/Unity/Plugin/Renderer/SmartyExample.tpl" name="tests/Piece/Unity/Plugin/Renderer/SmartyExample.tpl" />
+   <install as="Piece/Unity/Plugin/Renderer/SmartyExampleAction.php" name="tests/Piece/Unity/Plugin/Renderer/SmartyExampleAction.php" />
+   <install as="Piece/Unity/Plugin/Renderer/SmartyKeepingReference.tpl" name="tests/Piece/Unity/Plugin/Renderer/SmartyKeepingReference.tpl" />
+   <install as="Piece/Unity/Plugin/Renderer/SmartyTestCase.php" name="tests/Piece/Unity/Plugin/Renderer/SmartyTestCase.php" />
+   <install as="Piece/Unity/Plugin/Renderer/TestRunner.php" name="tests/Piece/Unity/Plugin/Renderer/TestRunner.php" />
    <install as="Piece/Unity/Plugin/TestRunner.php" name="tests/Piece/Unity/Plugin/TestRunner.php" />
-   <install as="Piece/Unity/Session/CompatibilityTest.php" name="tests/Piece/Unity/Session/CompatibilityTest.php" />
-   <install as="Piece/Unity/Session/FactoryTestCase.php" name="tests/Piece/Unity/Session/FactoryTestCase.php" />
-   <install as="Piece/Unity/Session/MockTestCase.php" name="tests/Piece/Unity/Session/MockTestCase.php" />
-   <install as="Piece/Unity/Session/PHPTestCase.php" name="tests/Piece/Unity/Session/PHPTestCase.php" />
-   <install as="Piece/Unity/Session/TestRunner.php" name="tests/Piece/Unity/Session/TestRunner.php" />
-   <install as="Piece/Unity/ConfigTestCase.php" name="tests/Piece/Unity/ConfigTestCase.php" />
-   <install as="Piece/Unity/ContextTestCase.php" name="tests/Piece/Unity/ContextTestCase.php" />
    <install as="Piece/Unity/PluginInvokerTestCase.php" name="tests/Piece/Unity/PluginInvokerTestCase.php" />
    <install as="Piece/Unity/RequestTestCase.php" name="tests/Piece/Unity/RequestTestCase.php" />
+   <install as="Piece/Unity/SessionTestCase.php" name="tests/Piece/Unity/SessionTestCase.php" />
    <install as="Piece/Unity/TestRunner.php" name="tests/Piece/Unity/TestRunner.php" />
    <install as="Piece/Unity/ViewElementTestCase.php" name="tests/Piece/Unity/ViewElementTestCase.php" />
-   <install as="Piece/TestRunner.php" name="tests/Piece/TestRunner.php" />
    <install as="Piece/UnityTestCase.php" name="tests/Piece/UnityTestCase.php" />
-   <install as="AllTestRunner.php" name="tests/AllTestRunner.php" />
   </filelist>
  </phprelease>
  <changelog>
+  <release>
+   <version>
+    <release>0.2.0</release>
+    <api>0.2.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2006-07-06</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+   <notes>The first beta release of Piece_Unity.</notes>
+  </release>
   <release>
    <version>
     <release>0.1.0</release>
