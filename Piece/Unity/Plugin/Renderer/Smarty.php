@@ -71,10 +71,10 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
      * @access private
      */
 
-    var $_smartyClassVariables = array('template_dir',
-                                       'compile_dir',
-                                       'config_dir',
-                                       'cache_dir'
+    var $_smartyClassVariables = array('template_dir' => null,
+                                       'compile_dir'  => null,
+                                       'config_dir'   => null,
+                                       'cache_dir'    => null
                                        );
 
     /**#@-*/
@@ -94,8 +94,8 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
         parent::Piece_Unity_Plugin_Common();
         $this->_addConfigurationPoint('templateExtension', '.tpl');
         $this->_addConfigurationPoint('SMARTY_DIR', null);
-        foreach ($this->_smartyClassVariables as $point) {
-            $this->_addConfigurationPoint($point, null);
+        foreach ($this->_smartyClassVariables as $point => $default) {
+            $this->_addConfigurationPoint($point, $default);
         }
     }
 
@@ -116,7 +116,7 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
 
         $smarty = &new Smarty();
 
-        foreach ($this->_smartyClassVariables as $point) {
+        foreach (array_keys($this->_smartyClassVariables) as $point) {
             $$point = $this->getConfiguration($point);
             if (!is_null($$point)) {
                 $smarty->$point = $this->_adjustEndingSlash($$point);
