@@ -120,11 +120,12 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
         if (PEAR::isError($resultOfCompile)) {
             if ($flexy->currentTemplate === false) {
                 Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The HTML template file [ $file ] not found.",
-                                        'warning',
-                                        array('plugin' => __CLASS__)
-                                        );
+                Piece_Unity_Error::pushPEARError($resultOfCompile,
+                                                 PIECE_UNITY_ERROR_NOT_FOUND,
+                                                 "The HTML template file [ $file ] not found.",
+                                                 'warning',
+                                                 array('plugin' => __CLASS__)
+                                                 );
                 Piece_Unity_Error::popCallback();
                 return;
             }
@@ -157,7 +158,6 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
                                              'exception',
                                              array('plugin' => __CLASS__)
                                              );
-            return;
         }
     }
 
