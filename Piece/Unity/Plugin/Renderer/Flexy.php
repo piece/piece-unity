@@ -74,8 +74,9 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
      * @access private
      */
 
-    var $_configurationOptions = array('templateDir',
-                                       'compileDir'
+    var $_configurationOptions = array('templateDir' => null,
+                                       'compileDir'  => null,
+                                       'debug'       => 0
                                        );
 
     /**#@-*/
@@ -98,8 +99,8 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
         $this->_addConfigurationPoint('formElementValueKey', '_value');
         $this->_addConfigurationPoint('formElementOptionsKey', '_options');
         $this->_addConfigurationPoint('formElementAttributesKey', '_attributes');
-        foreach ($this->_configurationOptions as $point) {
-            $this->_addConfigurationPoint($point, null);
+        foreach ($this->_configurationOptions as $point => $default) {
+            $this->_addConfigurationPoint($point, $default);
         }
     }
 
@@ -108,20 +109,32 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
 
     /**
      * Invokes the plugin specific code.
+     *
+     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
     function invoke()
     {
         $flexy = &new HTML_Template_Flexy($this->_getOptions());
-        $resultOfCompile = $flexy->compile(str_replace('_', '/', str_replace('.', '', $this->_context->getView())) . $this->getConfiguration('templateExtension'));
+        $file = str_replace('_', '/', str_replace('.', '', $this->_context->getView())) . $this->getConfiguration('templateExtension');
+        $resultOfCompile = $flexy->compile($file);
         if (PEAR::isError($resultOfCompile)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            if ($flexy->currentTemplate === false) {
+                Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                        "The HTML template file [ $file ] not found.",
+                                        'warning',
+                                        array('plugin' => __CLASS__)
+                                        );
+                Piece_Unity_Error::popCallback();
+                return;
+            }
+
             Piece_Unity_Error::pushPEARError($resultOfCompile,
                                              PIECE_UNITY_ERROR_INVOCATION_FAILED,
                                              'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
-                                             'warning',
+                                             'exception',
                                              array('plugin' => __CLASS__)
                                              );
-            Piece_Unity_Error::popCallback();
             return;
         }
 
@@ -138,14 +151,12 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
         $controller = (object)$viewElements;
         $resultOfOutputObject = $flexy->outputObject($controller, $formElements);
         if (PEAR::isError($resultOfOutputObject)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::pushPEARError($resultOfOutputObject,
                                              PIECE_UNITY_ERROR_INVOCATION_FAILED,
                                              'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
-                                             'warning',
+                                             'exception',
                                              array('plugin' => __CLASS__)
                                              );
-            Piece_Unity_Error::popCallback();
             return;
         }
     }
@@ -215,7 +226,7 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
                          'globalfunctions' => true
                          );
 
-        foreach ($this->_configurationOptions as $point) {
+        foreach (array_keys($this->_configurationOptions) as $point) {
             $$point = $this->getConfiguration($point);
             if (!is_null($$point)) {
                 $options[$point] = $$point;
