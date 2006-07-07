@@ -101,8 +101,7 @@ class Piece_Unity_Config_Factory
             return $config;
         }
 
-        $absolutePathOfConfigDirectory = realpath($configDirectory);
-        if (!$absolutePathOfConfigDirectory) {
+        if (!file_exists($configDirectory)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                     "The configuration directory [ $configDirectory ] not found.",
@@ -113,12 +112,23 @@ class Piece_Unity_Config_Factory
             return $config;
         }
 
-        $absolutePathOfConfigFile = "$absolutePathOfConfigDirectory/piece-unity-config.yaml";
+        $configFile = "$configDirectory/piece-unity-config.yaml";
 
-        if (!is_readable($absolutePathOfConfigFile)) {
+        if (!file_exists($configFile)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                    "The configuration file [ $configFile ] not found.",
+                                    'warning'
+                                    );
+            Piece_Unity_Error::popCallback();
+            $config = &new Piece_Unity_Config();
+            return $config;
+        }
+
+        if (!is_readable($configFile)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_READABLE,
-                                    "The configuration file [ $absolutePathOfConfigFile ] was not readable.",
+                                    "The configuration file [ $configFile ] was not readable.",
                                     'warning'
                                     );
             Piece_Unity_Error::popCallback();
@@ -130,33 +140,32 @@ class Piece_Unity_Config_Factory
             $cacheDirectory = './cache';
         }
 
-        $absolutePathOfCacheDirectory = realpath($cacheDirectory);
-        if (!$absolutePathOfCacheDirectory) {
+        if (!file_exists($cacheDirectory)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                     "The cache directory [ $cacheDirectory ] not found.",
                                     'warning'
                                     );
             Piece_Unity_Error::popCallback();
-            $config = &Piece_Unity_Config_Factory::_parseFile($absolutePathOfConfigFile);
+            $config = &Piece_Unity_Config_Factory::_parseFile($configFile);
             return $config;
         }
 
-        if (!is_readable($absolutePathOfCacheDirectory)
-            || !is_writable($absolutePathOfCacheDirectory)
+        if (!is_readable($cacheDirectory)
+            || !is_writable($cacheDirectory)
             ) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_READABLE,
-                                    "The cache directory [ $absolutePathOfCacheDirectory ] was not readable or writable.",
+                                    "The cache directory [ $cacheDirectory ] was not readable or writable.",
                                     'warning'
                                     );
             Piece_Unity_Error::popCallback();
-            $config = &Piece_Unity_Config_Factory::_parseFile($absolutePathOfConfigFile);
+            $config = &Piece_Unity_Config_Factory::_parseFile($configFile);
             return $config;
         }
 
-        $config = &Piece_Unity_Config_Factory::_getConfiguration($absolutePathOfCacheDirectory,
-                                                                 $absolutePathOfConfigFile
+        $config = &Piece_Unity_Config_Factory::_getConfiguration($cacheDirectory,
+                                                                 $configFile
                                                                  );
 
         return $config;
