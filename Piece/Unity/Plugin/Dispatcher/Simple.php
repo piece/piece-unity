@@ -106,8 +106,8 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
             return $event;
         }
 
-        $file = realpath("$actionDirectory/" . str_replace('_', '/', $class) . '.php');
-        if ($file && is_readable($file)) {
+        $file = "$actionDirectory/" . str_replace('_', '/', $class) . '.php';
+        if (is_readable($file)) {
             @include_once $file;
 
             if (version_compare(phpversion(), '5.0.0', '<')) {

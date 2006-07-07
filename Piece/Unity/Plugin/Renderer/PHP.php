@@ -99,9 +99,9 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Common
             return;
         }
 
-        $file = realpath("$templateDirectory/" . str_replace('_', '/', str_replace('.', '', $this->_context->getView())) . $this->getConfiguration('templateExtension'));
+        $file = "$templateDirectory/" . str_replace('_', '/', str_replace('.', '', $this->_context->getView())) . $this->getConfiguration('templateExtension');
 
-        if (!$file) {
+        if (!file_exists($file)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                    "The HTML template file [ $file ] not found.",
