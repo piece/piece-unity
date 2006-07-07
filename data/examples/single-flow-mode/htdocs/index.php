@@ -54,7 +54,7 @@ $base = dirname(__FILE__) . '/../webapp';
 ini_set('session.cookie_path', dirname($_SERVER['SCRIPT_NAME']));
 session_name('SingleFlowMode');
 
-$unity = &new Piece_Unity("$base/config");
+$unity = &new Piece_Unity("$base/config", "$base/cache");
 $unity->dispatch();
 
 /*
