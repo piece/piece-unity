@@ -152,7 +152,7 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
         Piece_Unity_Error::popCallback();
     }
 
-    function testCreatingIfConfigurationFileWasNotReadable()
+    function testCreatingIfConfigurationFileNotFound()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
 
@@ -167,7 +167,7 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
 
         $error = Piece_Unity_Error::pop();
 
-        $this->assertEquals(PIECE_UNITY_ERROR_NOT_READABLE, $error['code']);
+        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
 
         Piece_Unity_Error::popCallback();
     }
