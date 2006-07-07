@@ -159,9 +159,9 @@ class Piece_Unity_Plugin_Factory
      */
     function _load($plugin, $pluginDirectory)
     {
-        $file = realpath("$pluginDirectory/" . str_replace('_', '/', $plugin) . '.php');
+        $file = "$pluginDirectory/" . str_replace('_', '/', $plugin) . '.php';
 
-        if (!$file) {
+        if (!file_exists($file)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                     "The plugin file for the class [ $plugin ] not found.",
