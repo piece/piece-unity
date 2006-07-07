@@ -60,7 +60,7 @@ $config = &new Piece_Unity_Config();
 $config->setConfiguration('Dispatcher_Continuation', 'flowName', $flowName);
 $config->setConfiguration('Renderer_Flexy', 'templateDir', "$base/templates/$flowName");
 $config->setConfiguration('Renderer_Flexy', 'compileDir', "$base/compiled-templates/$flowName");
-$unity = &new Piece_Unity("$base/config", null, $config);
+$unity = &new Piece_Unity("$base/config", "$base/cache", $config);
 $unity->dispatch();
 
 /*
