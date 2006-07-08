@@ -14,11 +14,24 @@
   </maintainer>
   </maintainers>
  <release>
-  <version>0.2.0</version>
-  <date>2006-07-06</date>
+  <version>0.3.0</version>
+  <date>2006-07-08</date>
   <license>BSD License (revised)</license>
   <state>beta</state>
-  <notes>The first beta release of Piece_Unity.
+  <notes>This release includes a few enhancements and fixing a problem as follows:
+
+Enhancements:
+
+* &apos;Renderer_Flexy&apos; plug-in
+- Added a configuration point &apos;debug&apos; to display debugging information.
+- Changed error handling so as to be thrown any errors as &apos;exception&apos; except non-existing template.
+
+* Example applications
+- Set the cache directory for Piece_Unity configurations and Piece_Flow flow definitions.
+
+Defect fixes:
+
+- Fixed the problem that relative path cannot be used as the cache directory and action cirectory with Solaris.
   </notes>
   <deps>
    <dep type="php" rel="ge" version="4.3.0" optional="no"/>
@@ -83,6 +96,11 @@
           <replace from="@package_version@" to="version" type="package-info"/>
          </file>
         </dir> <!-- /data/examples/multiple-flow-mode/webapp/actions -->
+        <dir name="cache">
+         <file role="data" name="README" install-as="examples/multiple-flow-mode/webapp/cache/README">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+        </dir> <!-- /data/examples/multiple-flow-mode/webapp/cache -->
         <dir name="compiled-templates">
          <file role="data" name="README" install-as="examples/multiple-flow-mode/webapp/compiled-templates/README">
           <replace from="@package_version@" to="version" type="package-info"/>
@@ -161,6 +179,11 @@
           <replace from="@package_version@" to="version" type="package-info"/>
          </file>
         </dir> <!-- /data/examples/single-flow-mode/webapp/actions -->
+        <dir name="cache">
+         <file role="data" name="README" install-as="examples/single-flow-mode/webapp/cache/README">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+        </dir> <!-- /data/examples/single-flow-mode/webapp/cache -->
         <dir name="compiled-templates">
          <file role="data" name="README" install-as="examples/single-flow-mode/webapp/compiled-templates/README">
           <replace from="@package_version@" to="version" type="package-info"/>
@@ -264,9 +287,6 @@
        <replace from="@package_version@" to="version" type="package-info"/>
       </file>
       <file role="php" name="Error.php">
-       <replace from="@package_version@" to="version" type="package-info"/>
-      </file>
-      <file role="php" name="PluginInvoker.php">
        <replace from="@package_version@" to="version" type="package-info"/>
       </file>
       <file role="php" name="Request.php">
@@ -417,9 +437,6 @@
        <file role="test" name="ContextTestCase.php" install-as="Piece/Unity/ContextTestCase.php">
         <replace from="@package_version@" to="version" type="package-info"/>
        </file>
-       <file role="test" name="PluginInvokerTestCase.php" install-as="Piece/Unity/PluginInvokerTestCase.php">
-        <replace from="@package_version@" to="version" type="package-info"/>
-       </file>
        <file role="test" name="RequestTestCase.php" install-as="Piece/Unity/RequestTestCase.php">
         <replace from="@package_version@" to="version" type="package-info"/>
        </file>
@@ -448,6 +465,27 @@
   </filelist>
  </release>
  <changelog>
+   <release>
+    <version>0.3.0</version>
+    <date>2006-07-08</date>
+    <license>BSD License (revised)</license>
+    <state>beta</state>
+    <notes>This release includes a few enhancements and fixing a problem as follows:
+
+Enhancements:
+
+* &apos;Renderer_Flexy&apos; plug-in
+- Added a configuration point &apos;debug&apos; to display debugging information.
+- Changed error handling so as to be thrown any errors as &apos;exception&apos; except non-existing template.
+
+* Example applications
+- Set the cache directory for Piece_Unity configurations and Piece_Flow flow definitions.
+
+Defect fixes:
+
+- Fixed the problem that relative path cannot be used as the cache directory and action cirectory with Solaris.
+    </notes>
+   </release>
    <release>
     <version>0.2.0</version>
     <date>2006-07-06</date>

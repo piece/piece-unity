@@ -13,10 +13,10 @@
   <email>iteman2002@yahoo.co.jp</email>
   <active>yes</active>
  </lead>
- <date>2006-07-06</date>
- <time>11:47:02</time>
+ <date>2006-07-08</date>
+ <time>19:11:33</time>
  <version>
-  <release>0.2.0</release>
+  <release>0.3.0</release>
   <api>0.2.0</api>
  </version>
  <stability>
@@ -24,7 +24,20 @@
   <api>beta</api>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
- <notes>The first beta release of Piece_Unity.</notes>
+ <notes>This release includes a few enhancements and fixing a problem as follows:
+
+Enhancements:
+
+* &apos;Renderer_Flexy&apos; plug-in
+- Added a configuration point &apos;debug&apos; to display debugging information.
+- Changed error handling so as to be thrown any errors as &apos;exception&apos; except non-existing template.
+
+* Example applications
+- Set the cache directory for Piece_Unity configurations and Piece_Flow flow definitions.
+
+Defect fixes:
+
+- Fixed the problem that relative path cannot be used as the cache directory and action cirectory with Solaris.</notes>
  <contents>
   <dir baseinstalldir="/" name="/">
    <dir name="data">
@@ -79,6 +92,12 @@
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
        </dir> <!-- /data/examples/multiple-flow-mode/webapp/actions -->
+       <dir name="cache">
+        <file name="README" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info"
+ />
+        </file>
+       </dir> <!-- /data/examples/multiple-flow-mode/webapp/cache -->
        <dir name="compiled-templates">
         <file name="README" role="data">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
@@ -157,6 +176,12 @@
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
        </dir> <!-- /data/examples/single-flow-mode/webapp/actions -->
+       <dir name="cache">
+        <file name="README" role="data">
+         <tasks:replace from="@package_version@" to="version" type="package-info"
+ />
+        </file>
+       </dir> <!-- /data/examples/single-flow-mode/webapp/cache -->
        <dir name="compiled-templates">
         <file name="README" role="data">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
@@ -260,9 +285,6 @@
       <tasks:replace from="@package_version@" to="version" type="package-info" />
      </file>
      <file name="Error.php" role="php">
-      <tasks:replace from="@package_version@" to="version" type="package-info" />
-     </file>
-     <file name="PluginInvoker.php" role="php">
       <tasks:replace from="@package_version@" to="version" type="package-info" />
      </file>
      <file name="Request.php" role="php">
@@ -413,9 +435,6 @@
       <file name="ContextTestCase.php" role="test">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
-      <file name="PluginInvokerTestCase.php" role="test">
-       <tasks:replace from="@package_version@" to="version" type="package-info" />
-      </file>
       <file name="RequestTestCase.php" role="test">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
@@ -501,6 +520,7 @@
    <install as="examples/multiple-flow-mode/webapp/actions/ActionAndDisplayAction.php" name="data/examples/multiple-flow-mode/webapp/actions/ActionAndDisplayAction.php" />
    <install as="examples/multiple-flow-mode/webapp/actions/CounterAction.php" name="data/examples/multiple-flow-mode/webapp/actions/CounterAction.php" />
    <install as="examples/multiple-flow-mode/webapp/actions/RegistrationAction.php" name="data/examples/multiple-flow-mode/webapp/actions/RegistrationAction.php" />
+   <install as="examples/multiple-flow-mode/webapp/cache/README" name="data/examples/multiple-flow-mode/webapp/cache/README" />
    <install as="examples/multiple-flow-mode/webapp/compiled-templates/README" name="data/examples/multiple-flow-mode/webapp/compiled-templates/README" />
    <install as="examples/multiple-flow-mode/webapp/config/Counter.yaml" name="data/examples/multiple-flow-mode/webapp/config/Counter.yaml" />
    <install as="examples/multiple-flow-mode/webapp/config/piece-unity-config.yaml" name="data/examples/multiple-flow-mode/webapp/config/piece-unity-config.yaml" />
@@ -520,6 +540,7 @@
    <install as="examples/single-flow-mode/htdocs/static.php" name="data/examples/single-flow-mode/htdocs/static.php" />
    <install as="examples/single-flow-mode/webapp/actions/ActionAndDisplayAction.php" name="data/examples/single-flow-mode/webapp/actions/ActionAndDisplayAction.php" />
    <install as="examples/single-flow-mode/webapp/actions/RegistrationAction.php" name="data/examples/single-flow-mode/webapp/actions/RegistrationAction.php" />
+   <install as="examples/single-flow-mode/webapp/cache/README" name="data/examples/single-flow-mode/webapp/cache/README" />
    <install as="examples/single-flow-mode/webapp/compiled-templates/README" name="data/examples/single-flow-mode/webapp/compiled-templates/README" />
    <install as="examples/single-flow-mode/webapp/config/piece-unity-config.yaml" name="data/examples/single-flow-mode/webapp/config/piece-unity-config.yaml" />
    <install as="examples/single-flow-mode/webapp/config/Registration.yaml" name="data/examples/single-flow-mode/webapp/config/Registration.yaml" />
@@ -575,7 +596,6 @@
    <install as="Piece/Unity/Plugin/Renderer/SmartyTestCase.php" name="tests/Piece/Unity/Plugin/Renderer/SmartyTestCase.php" />
    <install as="Piece/Unity/Plugin/Renderer/TestRunner.php" name="tests/Piece/Unity/Plugin/Renderer/TestRunner.php" />
    <install as="Piece/Unity/Plugin/TestRunner.php" name="tests/Piece/Unity/Plugin/TestRunner.php" />
-   <install as="Piece/Unity/PluginInvokerTestCase.php" name="tests/Piece/Unity/PluginInvokerTestCase.php" />
    <install as="Piece/Unity/RequestTestCase.php" name="tests/Piece/Unity/RequestTestCase.php" />
    <install as="Piece/Unity/SessionTestCase.php" name="tests/Piece/Unity/SessionTestCase.php" />
    <install as="Piece/Unity/TestRunner.php" name="tests/Piece/Unity/TestRunner.php" />
@@ -584,6 +604,32 @@
   </filelist>
  </phprelease>
  <changelog>
+  <release>
+   <version>
+    <release>0.3.0</release>
+    <api>0.2.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2006-07-08</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+   <notes>This release includes a few enhancements and fixing a problem as follows:
+
+Enhancements:
+
+* &apos;Renderer_Flexy&apos; plug-in
+- Added a configuration point &apos;debug&apos; to display debugging information.
+- Changed error handling so as to be thrown any errors as &apos;exception&apos; except non-existing template.
+
+* Example applications
+- Set the cache directory for Piece_Unity configurations and Piece_Flow flow definitions.
+
+Defect fixes:
+
+- Fixed the problem that relative path cannot be used as the cache directory and action cirectory with Solaris.</notes>
+  </release>
   <release>
    <version>
     <release>0.2.0</release>

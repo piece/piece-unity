@@ -34,7 +34,6 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://iteman.typepad.jp/piece/
- * @see        Stagehand_TestRunner_PHPUnitTestRunner::runAll()
  * @since      File available since Release 0.1.0
  */
 
@@ -42,9 +41,22 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$version = '0.2.0';
+$version = '0.3.0';
 $apiVersion = '0.2.0';
-$notes = 'The first beta release of Piece_Unity.';
+$notes = "This release includes a few enhancements and fixing a problem as follows:
+
+Enhancements:
+
+* 'Renderer_Flexy' plug-in
+- Added a configuration point 'debug' to display debugging information.
+- Changed error handling so as to be thrown any errors as 'exception' except non-existing template.
+
+* Example applications
+- Set the cache directory for Piece_Unity configurations and Piece_Flow flow definitions.
+
+Defect fixes:
+
+- Fixed the problem that relative path cannot be used as the cache directory and action cirectory with Solaris.";
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
