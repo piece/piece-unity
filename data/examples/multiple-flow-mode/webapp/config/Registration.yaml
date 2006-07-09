@@ -18,7 +18,7 @@ viewState:
     view: Confirmation
     activity:
       class: RegistrationAction
-      method: setupForm
+      method: setupConfirmation
     transition:
       - event: register
         nextState: processRegister

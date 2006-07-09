@@ -74,8 +74,13 @@ class RegistrationAction
     function validate(&$flow, $event, &$context)
     {
         $request = &$context->getRequest();
-        $flow->setAttribute('firstName', $request->getParameter('firstName'));
-        $flow->setAttribute('lastName', $request->getParameter('lastName'));
+        $user = &new stdClass();
+        $user->firstName = $request->getParameter('firstName');
+        $user->lastName = $request->getParameter('lastName');
+        $flow->setAttributeByRef('user', $user);
+
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElementByRef('user', $user);
 
         return 'succeed';
     }
@@ -91,9 +96,30 @@ class RegistrationAction
         $elements = array();
         $elements[$view]['_attributes']['action'] = $context->getBaseURL();
         $elements[$view]['_attributes']['method'] = 'post';
-        $elements['firstName']['_value'] = $flow->getAttribute('firstName');
-        $elements['lastName']['_value'] = $flow->getAttribute('lastName');
+
         $viewElement = &$context->getViewElement();
+        $user = &$flow->getAttribute('user');
+        if (!is_null($user)) {
+            $elements['firstName']['_value'] = $user->firstName;
+            $elements['lastName']['_value'] = $user->lastName;
+        }
+
+        $viewElement->setElement('_elements', $elements);
+    }
+
+    function setupConfirmation(&$flow, $event, &$context)
+    {
+        $view = $flow->getView();
+        $elements = array();
+        $elements[$view]['_attributes']['action'] = $context->getBaseURL();
+        $elements[$view]['_attributes']['method'] = 'post';
+
+        $viewElement = &$context->getViewElement();
+        $user = &$flow->getAttribute('user');
+        if (!is_null($user)) {
+            $viewElement->setElementByRef('user', $user);
+        }
+
         $viewElement->setElement('_elements', $elements);
     }
 
