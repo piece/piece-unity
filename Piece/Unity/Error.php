@@ -249,6 +249,11 @@ class Piece_Unity_Error
      */
     function pushPHPError($code, $message, $file, $line)
     {
+        $errorReporting = error_reporting();
+        if (!($errorReporting & $code)) {
+            return;
+        }
+
         switch ($code) {
         case E_STRICT:
             return;
