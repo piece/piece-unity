@@ -74,6 +74,10 @@ class Piece_Unity
      * @access private
      */
 
+    var $_configDirectory;
+    var $_cacheDirectory;
+    var $_dynamicConfig;
+
     /**#@-*/
 
     /**#@+
@@ -95,7 +99,10 @@ class Piece_Unity
                          $dynamicConfig = null
                          )
     {
-        $this->_configure($configDirectory, $cacheDirectory, $dynamicConfig);
+        $this->_configDirectory = $configDirectory;
+        $this->_cacheDirectory = $cacheDirectory;
+        $this->_dynamicConfig = $dynamicConfig;
+        $this->_configure();
     }
 
     // }}}
@@ -138,22 +145,15 @@ class Piece_Unity
      * Second this method merges the given configuretion into the loaded
      * configuration.
      * Finally this method sets the configuration to the current context.
-     *
-     * @param string             $configDirectory
-     * @param string             $cacheDirectory
-     * @param Piece_Unity_Config $dynamicConfig
      */
-    function _configure($configDirectory = null,
-                        $cacheDirectory = null,
-                        $dynamicConfig = null
-                        )
+    function _configure()
     {
-        $config = &Piece_Unity_Config_Factory::factory($configDirectory, $cacheDirectory);
-        $config->setConfigurationDirectory($configDirectory);
-        $config->setCacheDirectory($cacheDirectory);
+        $config = &Piece_Unity_Config_Factory::factory($this->_configDirectory,
+                                                       $this->_cacheDirectory
+                                                       );
 
-        if (is_a($dynamicConfig, 'Piece_Unity_Config')) {
-            $config->merge($dynamicConfig);
+        if (is_a($this->_dynamicConfig, 'Piece_Unity_Config')) {
+            $config->merge($this->_dynamicConfig);
         }
 
         $context = &Piece_Unity_Context::singleton();
