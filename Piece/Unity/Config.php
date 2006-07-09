@@ -67,10 +67,6 @@ class Piece_Unity_Config
 
     var $_extensions = array();
     var $_configurations = array();
-    var $_configurationDirectory;
-    var $_cacheDirectory;
-    var $_mergedExtensions = array();
-    var $_mergedConfigurations = array();
 
     /**#@-*/
 
@@ -106,32 +102,6 @@ class Piece_Unity_Config
     function setConfiguration($plugin, $configurationPoint, $configuration)
     {
         $this->_configurations[ strtolower($plugin) ][ strtolower($configurationPoint) ] = $configuration;
-    }
-
-    // }}}
-    // {{{ setConfigurationDirectory()
-
-    /**
-     * Sets the configuration directory.
-     *
-     * @param string $configDirectory
-     */
-    function setConfigurationDirectory($configDirectory)
-    {
-        $this->_configurationDirectory = $configDirectory;
-    }
-
-    // }}}
-    // {{{ setCacheDirectory()
-
-    /**
-     * Sets the cache directory.
-     *
-     * @param string $cacheDirectory
-     */
-    function setCacheDirectory($cacheDirectory)
-    {
-        $this->_cacheDirectory = $cacheDirectory;
     }
 
     // }}}
@@ -214,7 +184,6 @@ class Piece_Unity_Config
     {
         foreach ($value as $extensionPoint => $extension) {
             $this->_extensions[ strtolower($plugin) ][ strtolower($extensionPoint) ] = $extension;
-            $this->_mergedExtensions[ strtolower($plugin) ][ strtolower($extensionPoint) ] = $extension;
         }
     }
 
@@ -231,7 +200,6 @@ class Piece_Unity_Config
     {
         foreach ($value as $configurationPoint => $configuration) {
             $this->_configurations[ strtolower($plugin) ][ strtolower($configurationPoint) ] = $configuration;
-            $this->_mergedConfigurations[ strtolower($plugin) ][ strtolower($configurationPoint) ] = $configuration;
         }
     }
 
@@ -259,88 +227,6 @@ class Piece_Unity_Config
     function getConfigurations()
     {
         return $this->_configurations;
-    }
-
-    // }}}
-    // {{{ getConfigurationDirectory()
-
-    /**
-     * Gets the configuration directory.
-     *
-     * @return string
-     */
-    function getConfigurationDirectory()
-    {
-        return $this->_configurationDirectory;
-    }
-
-    // }}}
-    // {{{ getCacheDirectory()
-
-    /**
-     * Gets the cache directory.
-     *
-     * @return string
-     */
-    function getCacheDirectory()
-    {
-        return $this->_cacheDirectory;
-    }
-
-    // }}}
-    // {{{ getError()
-
-    /**
-     * Gets an error on loading a configuration file.
-     *
-     * @return array
-     * @see Piece_Unity_Config::setError()
-     */
-    function getError()
-    {
-        return $this->_error;
-    }
-
-    // }}}
-    // {{{ isMergedExtensionPoint()
-
-    /**
-     * Returns whether the given extension point is merged with a dynamic configration.
-     *
-     * @param string $plugin
-     * @param string $extensionPoint
-     * @return boolean
-     */
-    function isMergedExtensionPoint($plugin, $extensionPoint)
-    {
-        if (array_key_exists(strtolower($plugin), $this->_mergedExtensions)
-            && array_key_exists(strtolower($extensionPoint), $this->_mergedExtensions[ strtolower($plugin) ])
-            ) {
-            return true;
-        }
-
-        return false;
-    }
-
-    // }}}
-    // {{{ isMergedConfigurationPoint()
-
-    /**
-     * Returns whether the given configuration point is merged with a dynamic configration.
-     *
-     * @param string $plugin
-     * @param string $configurationPoint
-     * @return boolean
-     */
-    function isMergedConfigurationPoint($plugin, $configurationPoint)
-    {
-        if (array_key_exists(strtolower($plugin), $this->_mergedConfigurations)
-            && array_key_exists(strtolower($configurationPoint), $this->_mergedConfigurations[ strtolower($plugin) ])
-            ) {
-            return true;
-        }
-
-        return false;
     }
 
     /**#@-*/
