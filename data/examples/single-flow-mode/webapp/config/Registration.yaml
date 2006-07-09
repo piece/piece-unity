@@ -1,45 +1,45 @@
 # $Id$
 name: Registration
-firstState: Displaying
+firstState: DisplayForm
 viewState:
-  - name: Displaying
-    view: Input
+  - name: DisplayForm
+    view: Form
     activity:
       class: RegistrationAction
       method: setupForm
     transition:
-      - event: next
-        nextState: Validated
+      - event: goNext
+        nextState: processGoNext
         action:
           class: RegistrationAction
           method: validate
-  - name: Confirming
+  - name: ConfirmForm
     view: Confirmation
     activity:
       class: RegistrationAction
       method: setupForm
     transition:
       - event: register
-        nextState: Registered
+        nextState: processRegister
         action:
           class: RegistrationAction
           method: register
       - event: reedit
-        nextState: Displaying
-  - name: Finishing
+        nextState: DisplayForm
+  - name: Finish
     view: Finish
     transition:
-      - event: return
-        nextState: Displaying
+      - event: restart
+        nextState: DisplayForm
         action:
           class: RegistrationAction
           method: clear
 actionState:
-  - name: Validated
+  - name: processGoNext
     transition:
       - event: succeed
-        nextState: Confirming
-  - name: Registered
+        nextState: ConfirmForm
+  - name: processRegister
     transition:
       - event: succeed
-        nextState: Finishing
+        nextState: Finish
