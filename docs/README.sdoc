@@ -4,7 +4,7 @@
   <head>
     <title locale="ja">Piece_Unity - PHPのためのステートフルでセキュアなMVCフレームワーク</title>
     <title locale="en">Piece_Unity - A stateful and secure MVC framework for PHP</title>
-    <author>KUBO Atsuhiro &lt;iteman2002@yahoo.co.jp&gt;</author>
+    <author>KUBO Atsuhiro &lt;iteman@users.sourceforge.net&gt;</author>
     <date>2006-06-21</date>
   </head>
   <body>
