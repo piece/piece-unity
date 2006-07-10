@@ -83,6 +83,7 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
     {
         parent::Piece_Unity_Plugin_Common();
         $this->_addExtensionPoint('configurator', 'KernelConfigurator');
+        $this->_addExtensionPoint('interceptor', 'InterceptorChain');
         $this->_addExtensionPoint('dispatcher', 'Dispatcher_Continuation');
         $this->_addExtensionPoint('view', 'View');
     }
@@ -112,6 +113,16 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
 
         $session = &$this->_context->getSession();
         $session->start();
+
+        $interceptor = &$this->getExtension('interceptor');
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
+
+        $interceptor->invoke();
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
 
         $dispatcher = &$this->getExtension('dispatcher');
         if (Piece_Unity_Error::hasErrors('exception')) {
