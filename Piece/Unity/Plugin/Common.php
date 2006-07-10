@@ -125,7 +125,7 @@ class Piece_Unity_Plugin_Common
 
         if (is_null($extension)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "Any extensions are not defined for the extension point [ $extensionPoint ]."
+                                    "No extensions are defined for the extension point [ $extensionPoint ]."
                                     );
             $return = null;
             return $return;
