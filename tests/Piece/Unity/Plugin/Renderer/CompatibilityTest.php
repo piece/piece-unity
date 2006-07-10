@@ -47,7 +47,8 @@ require_once 'Piece/Unity/Plugin/View.php';
 // {{{ Piece_Unity_Plugin_Renderer_CompatibilityTest
 
 /**
- * Base class for compatibility test of Piece_Unity_Plugin_View's renderers.
+ * The base class for compatibility test of Piece_Unity_Plugin_View's
+ * renderers.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
