@@ -43,6 +43,8 @@ require_once 'Piece/Unity/Plugin/Factory.php';
 // {{{ Piece_Unity_Plugin_Common
 
 /**
+ * The base class for Piece_Unity plug-ins.
+ *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
