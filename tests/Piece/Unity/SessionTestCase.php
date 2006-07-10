@@ -121,10 +121,10 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
     function testAutoloaingClass()
     {
         $class = 'Piece_Unity_AutoloadClass';
-        $includePath = ini_get('include_path');
+        $oldIncludePath = ini_get('include_path');
         ini_set('include_path',
                 dirname(__FILE__) . '/../..' . PATH_SEPARATOR .
-                $includePath
+                $oldIncludePath
                 );
         Piece_Unity_Session::addAutoloadClass($class);
         $session = &new Piece_Unity_Session();
@@ -138,7 +138,7 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
 
         $this->assertTrue($found);
 
-        ini_set('include_path', $includePath);
+        ini_set('include_path', $oldIncludePath);
     }
 
     function testRemovingAttribute()

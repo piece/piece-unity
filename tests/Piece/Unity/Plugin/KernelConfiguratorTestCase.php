@@ -94,10 +94,10 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
     function testSettingAutoloadClasses()
     {
         $class = 'Piece_Unity_Plugin_AutoloadClass';
-        $includePath = ini_get('include_path');
+        $oldIncludePath = ini_get('include_path');
         ini_set('include_path',
                 dirname(__FILE__) . '/../../..' . PATH_SEPARATOR .
-                $includePath
+                $oldIncludePath
                 );
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('KernelConfigurator', 'autoloadClasses', array($class));
@@ -117,7 +117,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
 
         $this->assertTrue($found);
 
-        ini_set('include_path', $includePath);
+        ini_set('include_path', $oldIncludePath);
     }
 
     function testEventNameFixation()
