@@ -116,8 +116,8 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
                                                        dirname(__FILE__)
                                                        );
         $this->assertTrue(is_a($config, 'Piece_Unity_Config'));
-        $this->assertEquals('View', $config->getExtension($GLOBALS['PIECE_UNITY_Root_Plugin'], 'view'));
-        $this->assertEquals('Dispatcher_Simple', $config->getExtension($GLOBALS['PIECE_UNITY_Root_Plugin'], 'dispatcher'));
+        $this->assertEquals('View', $config->getExtension('Controller', 'view'));
+        $this->assertEquals('Dispatcher_Simple', $config->getExtension('Controller', 'dispatcher'));
         $this->assertEquals('../webapp/actions', $config->getConfiguration('Dispatcher_Continuation', 'actionDirectory'));
         $this->assertTrue($config->getConfiguration('Dispatcher_Continuation', 'enableSingleFlowMode'));
         $this->assertEquals('../webapp/cache', $config->getConfiguration('Dispatcher_Continuation', 'cacheDirectory'));
@@ -141,7 +141,7 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
                                                        );
         $this->assertTrue(is_a($config, 'Piece_Unity_Config'));
 
-        $config->getExtension($GLOBALS['PIECE_UNITY_Root_Plugin'], 'renderer');
+        $config->getExtension('View', 'renderer');
 
         $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
 
@@ -161,7 +161,7 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
                                                        );
         $this->assertTrue(is_a($config, 'Piece_Unity_Config'));
 
-        $config->getExtension($GLOBALS['PIECE_UNITY_Root_Plugin'], 'renderer');
+        $config->getExtension('View', 'renderer');
 
         $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
 
@@ -180,7 +180,7 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
 
         $this->assertTrue(is_a($config, 'Piece_Unity_Config'));
 
-        $config->getExtension($GLOBALS['PIECE_UNITY_Root_Plugin'], 'renderer');
+        $config->getExtension('View', 'renderer');
 
         $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
 

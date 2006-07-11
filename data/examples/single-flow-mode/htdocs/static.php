@@ -56,7 +56,7 @@ ini_set('session.cookie_path', dirname($_SERVER['SCRIPT_NAME']));
 session_name('MultipleFlowMode');
 
 $config = &new Piece_Unity_Config();
-$config->setExtension('Root', 'dispatcher', 'Dispatcher_Simple');
+$config->setExtension('Controller', 'dispatcher', 'Dispatcher_Simple');
 $config->setConfiguration('Renderer_Flexy', 'templateDir', "$base/templates/Static");
 $config->setConfiguration('Renderer_Flexy', 'compileDir', "$base/compiled-templates/Static");
 $unity = &new Piece_Unity("$base/config", "$base/cache", $config);
