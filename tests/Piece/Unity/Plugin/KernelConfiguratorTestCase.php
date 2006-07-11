@@ -154,6 +154,26 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         unset($_GET['_foo']);
     }
 
+    function testImportingPathInfo()
+    {
+        $_SERVER['PATH_INFO'] = '/foo/bar/bar/baz/qux';
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('KernelConfigurator', 'importPathInfo', true);
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $configurator = &new Piece_Unity_Plugin_KernelConfigurator();
+        $configurator->invoke();
+        $request = &$context->getRequest();
+
+        $this->assertEquals('bar', $request->getParameter('foo'));
+        $this->assertEquals('baz', $request->getParameter('bar'));
+        $this->assertNull($request->getParameter('qux'));
+
+        unset($_SERVER['PATH_INFO']);
+    }
+
     /**#@-*/
 
     /**#@+
