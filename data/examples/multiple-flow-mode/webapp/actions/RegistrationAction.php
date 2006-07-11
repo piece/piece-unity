@@ -73,59 +73,49 @@ class RegistrationAction
 
     function validate(&$flow, $event, &$context)
     {
+        $fields = $this->_getFormFields();
+
         $request = &$context->getRequest();
         $user = &new stdClass();
-        $user->firstName = $request->getParameter('firstName');
-        $user->lastName = $request->getParameter('lastName');
-        $flow->setAttributeByRef('user', $user);
+        foreach ($fields as $field) {
+            $user->$field = @$request->getParameter($field);
+        }
 
-        $viewElement = &$context->getViewElement();
-        $viewElement->setElementByRef('user', $user);
+        $flow->setAttributeByRef('user', $user);
 
         return 'succeed';
     }
 
     function register(&$flow, $event, &$context)
     {
+        $flow->clearAttributes();
         return 'succeed';
     }
 
     function setupForm(&$flow, $event, &$context)
     {
-        $view = $flow->getView();
-        $elements = array();
-        $elements[$view]['_attributes']['action'] = $context->getBaseURL();
-        $elements[$view]['_attributes']['method'] = 'post';
+        $this->_setupFormAttributes($flow, $context);
 
-        $viewElement = &$context->getViewElement();
-        $user = &$flow->getAttribute('user');
-        if (!is_null($user)) {
-            $elements['firstName']['_value'] = $user->firstName;
-            $elements['lastName']['_value'] = $user->lastName;
+        if ($flow->hasAttribute('user')) {
+            $user = &$flow->getAttribute('user');
+            $fields = $this->_getFormFields();
+            $elements = $this->_getFormElements($context);
+            foreach ($fields as $field) {
+                $elements[$field]['_value'] = $user->$field;
+            }
+
+            $viewElement = &$context->getViewElement();
+            $viewElement->setElement('_elements', $elements);
         }
-
-        $viewElement->setElement('_elements', $elements);
     }
 
     function setupConfirmation(&$flow, $event, &$context)
     {
-        $view = $flow->getView();
-        $elements = array();
-        $elements[$view]['_attributes']['action'] = $context->getBaseURL();
-        $elements[$view]['_attributes']['method'] = 'post';
+        $this->_setupFormAttributes($flow, $context);
 
-        $viewElement = &$context->getViewElement();
         $user = &$flow->getAttribute('user');
-        if (!is_null($user)) {
-            $viewElement->setElementByRef('user', $user);
-        }
-
-        $viewElement->setElement('_elements', $elements);
-    }
-
-    function clear(&$flow, $event, &$context)
-    {
-        $flow->clearAttributes();
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElementByRef('user', $user);
     }
 
     /**#@-*/
@@ -133,6 +123,34 @@ class RegistrationAction
     /**#@+
      * @access private
      */
+
+    function _getFormFields()
+    {
+        $fields = array('first_name', 'last_name');
+        return $fields;
+    }
+
+    function _setupFormAttributes(&$flow, &$context)
+    {
+        $view = $flow->getView();
+        $elements = $this->_getFormElements($context);
+        $elements[$view]['_attributes']['action'] = $context->getBaseURL();
+        $elements[$view]['_attributes']['method'] = 'post';
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('_elements', $elements);
+    }
+
+    function _getFormElements(&$context)
+    {
+        $viewElement = &$context->getViewElement();
+        if (!$viewElement->hasElement('_elements')) {
+            $elements = array();
+        } else {
+            $elements = $viewElement->getElement('_elements');
+        }
+
+        return $elements;
+    }
 
     /**#@-*/
 

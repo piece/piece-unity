@@ -1,7 +1,7 @@
 # $Id$
 name: Registration
 firstState: DisplayForm
-lastState: { name: Finish, view: Finish }
+lastState: { name: DisplayFinish, view: Finish }
 viewState:
   - name: DisplayForm
     view: Form
@@ -9,12 +9,12 @@ viewState:
       class: RegistrationAction
       method: setupForm
     transition:
-      - event: goNext
-        nextState: processGoNext
+      - event: confirmForm
+        nextState: processConfirmForm
         action:
           class: RegistrationAction
           method: validate
-  - name: ConfirmForm
+  - name: DisplayConfirmation
     view: Confirmation
     activity:
       class: RegistrationAction
@@ -25,14 +25,14 @@ viewState:
         action:
           class: RegistrationAction
           method: register
-      - event: reedit
+      - event: goDisplayForm
         nextState: DisplayForm
 actionState:
-  - name: processGoNext
+  - name: processConfirmForm
     transition:
       - event: succeed
-        nextState: ConfirmForm
+        nextState: DisplayConfirmation
   - name: processRegister
     transition:
       - event: succeed
-        nextState: Finish
+        nextState: DisplayFinish
