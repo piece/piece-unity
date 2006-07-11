@@ -114,6 +114,35 @@ class Piece_Unity_ViewElement
         return $this->_elements;
     }
 
+    // }}}
+    // {{{ hasElement()
+
+    /**
+     * Returns whether this object has an element with a given name.
+     *
+     * @param string $name
+     * @return boolean
+     */
+    function hasElement($name)
+    {
+        return array_key_exists($name, $this->_elements);
+    }
+
+    // }}}
+    // {{{ getElement()
+
+    /**
+     * Gets an element for this object.
+     *
+     * @param string $name
+     * @return mixed
+     */
+    function &getElement($name)
+    {
+        $element = &$this->_elements[$name];
+        return $element;
+    }
+
     /**#@-*/
 
     /**#@+
