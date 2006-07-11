@@ -78,19 +78,13 @@ class Piece_Unity_Request
 
     /**
      * Imports client request data correspoinding to the request method.
-     *
-     * @param boolean $importPathInfo
      */
-    function Piece_Unity_Request($importPathInfo = false)
+    function Piece_Unity_Request()
     {
         if (@$_SERVER['REQUEST_METHOD'] == 'GET') {
             $this->_parameters = $_GET;
         } elseif (@$_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->_parameters = $_POST;
-        }
-
-        if ($importPathInfo) {
-            $this->_importPathInfo();
         }
     }
 
@@ -149,21 +143,15 @@ class Piece_Unity_Request
         return $this->_parameters;
     }
 
-    /**#@-*/
-
-    /**#@+
-     * @access private
-     */
-
     // }}}
-    // {{{ _importPathInfo()
+    // {{{ importPathInfo()
 
     /**
      * Imports the PATH_INFO string as parameters.
      *
      * @param boolean $importPathInfo
      */
-    function _importPathInfo()
+    function importPathInfo()
     {
         if (PHP_SAPI != 'cgi') {
             if (array_key_exists('PATH_INFO', $_SERVER)) {
@@ -180,6 +168,12 @@ class Piece_Unity_Request
             $this->_parameters[ $pathInfoParameters[$i] ] = @$pathInfoParameters[$i + 1];
         }
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
 
     /**#@-*/
 
