@@ -140,9 +140,6 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
         }
 
         $controller->invoke();
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            return;
-        }
     }
 
     /**#@-*/
