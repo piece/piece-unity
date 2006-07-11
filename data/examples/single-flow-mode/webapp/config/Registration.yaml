@@ -8,12 +8,12 @@ viewState:
       class: RegistrationAction
       method: setupForm
     transition:
-      - event: goNext
-        nextState: processGoNext
+      - event: confirmForm
+        nextState: processConfirmForm
         action:
           class: RegistrationAction
           method: validate
-  - name: ConfirmForm
+  - name: DisplayConfirmation
     view: Confirmation
     activity:
       class: RegistrationAction
@@ -24,22 +24,19 @@ viewState:
         action:
           class: RegistrationAction
           method: register
-      - event: reedit
+      - event: goDisplayForm
         nextState: DisplayForm
-  - name: Finish
+  - name: DisplayFinish
     view: Finish
     transition:
       - event: restart
         nextState: DisplayForm
-        action:
-          class: RegistrationAction
-          method: clear
 actionState:
-  - name: processGoNext
+  - name: processConfirmForm
     transition:
       - event: succeed
-        nextState: ConfirmForm
+        nextState: DisplayConfirmation
   - name: processRegister
     transition:
       - event: succeed
-        nextState: Finish
+        nextState: DisplayFinish
