@@ -83,6 +83,7 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
     {
         parent::Piece_Unity_Plugin_Common();
         $this->_addExtensionPoint('configurator', 'KernelConfigurator');
+        $this->_addExtensionPoint('outputFilter', 'OutputBufferStack');
         $this->_addExtensionPoint('interceptor', 'InterceptorChain');
         $this->_addExtensionPoint('dispatcher', 'Dispatcher_Continuation');
         $this->_addExtensionPoint('view', 'View');
@@ -113,6 +114,16 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
 
         $session = &$this->_context->getSession();
         $session->start();
+
+        $outputFilter = &$this->getExtension('outputFilter');
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
+
+        $outputFilter->invoke();
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
 
         $interceptor = &$this->getExtension('interceptor');
         if (Piece_Unity_Error::hasErrors('exception')) {
