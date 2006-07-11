@@ -82,6 +82,9 @@ class Piece_Unity_ViewElementTestCase extends PHPUnit_TestCase
         $viewElement->setElement('foo', 'bar');
         $viewElement->setElement('bar', 'baz');
 
+        $this->assertTrue($viewElement->hasElement('foo'));
+        $this->assertTrue($viewElement->hasElement('bar'));
+
         $elements = $viewElement->getElements();
 
         $this->assertEquals('bar', $elements['foo']);
@@ -95,11 +98,33 @@ class Piece_Unity_ViewElementTestCase extends PHPUnit_TestCase
         $viewElement->setElementByRef('foo', $foo);
         $foo->bar = 'baz';
 
+        $this->assertTrue($viewElement->hasElement('foo'));
+
         $elements = $viewElement->getElements();
 
         $this->assertTrue(array_key_exists('foo', $elements));
         $this->assertTrue(array_key_exists('bar', $elements['foo']));
         $this->assertEquals('baz', $elements['foo']->bar);
+    }
+
+    function testGettingElement()
+    {
+        $element1 = array('foo' => 1, 'bar' => 2, 'baz' => 3);
+        $viewElement = &new Piece_Unity_ViewElement();
+        $viewElement->setElement('foo', $element1);
+
+        $this->assertTrue($viewElement->hasElement('foo'));
+
+        $element2 = $viewElement->getElement('foo');
+
+        $this->assertEquals($element1, $element2);
+
+        $element2['qux'] = 4;
+        $viewElement->setElement('foo', $element2);
+
+        $element3 = $viewElement->getElement('foo');
+
+        $this->assertTrue(array_key_exists('qux', $element3));
     }
 
     /**#@-*/
