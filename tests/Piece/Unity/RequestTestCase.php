@@ -117,7 +117,8 @@ class Piece_Unity_RequestTestCase extends PHPUnit_TestCase
     {
         $_SERVER['PATH_INFO'] = '/foo/bar/bar/baz/qux';
 
-        $request = &new Piece_Unity_Request(true);
+        $request = &new Piece_Unity_Request();
+        $request->importPathInfo();
 
         $this->assertEquals('bar', $request->getParameter('foo'));
         $this->assertEquals('baz', $request->getParameter('bar'));
