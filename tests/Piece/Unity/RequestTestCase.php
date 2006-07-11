@@ -113,6 +113,19 @@ class Piece_Unity_RequestTestCase extends PHPUnit_TestCase
         unset($_GET['bar']);
     }
 
+    function testImportingPathinfo()
+    {
+        $_SERVER['PATH_INFO'] = '/foo/bar/bar/baz/qux';
+
+        $request = &new Piece_Unity_Request(true);
+
+        $this->assertEquals('bar', $request->getParameter('foo'));
+        $this->assertEquals('baz', $request->getParameter('bar'));
+        $this->assertNull($request->getParameter('qux'));
+
+        unset($_SERVER['PATH_INFO']);
+    }
+
     /**#@-*/
 
     /**#@+
