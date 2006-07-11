@@ -84,6 +84,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         $this->_addConfigurationPoint('eventNameKey', '_event');
         $this->_addConfigurationPoint('autoloadClasses', array());
         $this->_addConfigurationPoint('eventName', null);
+        $this->_addConfigurationPoint('importPathInfo', false);
     }
 
     // }}}
@@ -105,6 +106,12 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         $eventName = $this->getConfiguration('eventName');
         if (!is_null($eventName)) {
             $this->_context->setEventName($eventName);
+        }
+
+        $importPathInfo = $this->getConfiguration('importPathInfo');
+        if ($importPathInfo) {
+            $request = &$this->_context->getRequest();
+            $request->importPathInfo();
         }
     }
 
