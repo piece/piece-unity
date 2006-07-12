@@ -79,7 +79,8 @@ class CounterAction
     function increase(&$flow, $event, &$context)
     {
         $flow->setAttribute('counter', $flow->getAttribute('counter') + 1);
-        $this->setupForm($flow, $event, $context);
+        $this->_setupFormAttributes($flow, $context);
+        $this->_setupCounter($flow, $context);
     }
 
     function reached(&$flow, $event, &$context)
@@ -87,14 +88,9 @@ class CounterAction
         return $flow->getAttribute('counter') >= 10;
     }
 
-    function setupForm(&$flow, $event, &$context)
+    function setupFinish(&$flow, $event, &$context)
     {
-        $view = $flow->getView();
-        $elements = array();
-        $elements[$view]['_attributes']['action'] = $context->getBaseURL();
-        $elements[$view]['_attributes']['method'] = 'post';
-        $viewElement = &$context->getViewElement();
-        $viewElement->setElement('_elements', $elements);
+        $this->_setupCounter($flow, $context);
     }
 
     /**#@-*/
@@ -102,6 +98,41 @@ class CounterAction
     /**#@+
      * @access private
      */
+
+    function _getFormFields()
+    {
+        $fields = array('counter');
+        return $fields;
+    }
+
+    function _setupFormAttributes(&$flow, &$context)
+    {
+        $view = $flow->getView();
+        $elements = $this->_getFormElements($context);
+        $elements[$view]['_attributes']['action'] = $context->getBaseURL();
+        $elements[$view]['_attributes']['method'] = 'post';
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('_elements', $elements);
+    }
+
+    function _getFormElements(&$context)
+    {
+        $viewElement = &$context->getViewElement();
+        if (!$viewElement->hasElement('_elements')) {
+            $elements = array();
+        } else {
+            $elements = $viewElement->getElement('_elements');
+        }
+
+        return $elements;
+    }
+
+    function _setupCounter(&$flow, &$context)
+    {
+        $counter = $flow->getAttribute('counter');
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('counter', $counter);
+    }
 
     /**#@-*/
 

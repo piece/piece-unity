@@ -12,10 +12,10 @@
 </div><!-- end header -->
 <div id="content">
   <h3>B.2. Counter application in multiple flow mode and flow in exclusive mode.</h3>
-    <p>Counter: {__continuation.getAttribute(#counter#)}</p>
+    <p>Counter: {counter}</p>
     <form name="Counter">
       <input type="hidden" name="{__flowExecutionTicketKey}" value="{__flowExecutionTicket}" />
-      <input type="submit" name="{__eventNameKey}_goNext" value="next" />
+      <input type="submit" name="{__eventNameKey}_check" value="check over 10" />
     </form>
 </div><!-- end content -->
 <div id="footer">
