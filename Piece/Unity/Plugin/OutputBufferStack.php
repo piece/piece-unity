@@ -42,7 +42,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
 // {{{ Piece_Unity_Plugin_OutputBufferStack
 
 /**
- * A output filter which turns output buffering on, and registers all output
+ * An output filter which turns output buffering on, and registers all output
  * handlers.
  *
  * @package    Piece_Unity
