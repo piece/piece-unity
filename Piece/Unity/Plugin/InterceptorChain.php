@@ -42,7 +42,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
 // {{{ Piece_Unity_Plugin_InterceptorChain
 
 /**
- * A interceptor which invokes all interceptors.
+ * An interceptor which invokes all interceptors.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
