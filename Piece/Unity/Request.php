@@ -150,6 +150,7 @@ class Piece_Unity_Request
      * Imports the PATH_INFO string as parameters.
      *
      * @param boolean $importPathInfo
+     * @since Method available since Release 0.4.0
      */
     function importPathInfo()
     {

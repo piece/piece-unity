@@ -122,6 +122,7 @@ class Piece_Unity_ViewElement
      *
      * @param string $name
      * @return boolean
+     * @since Method available since Release 0.4.0
      */
     function hasElement($name)
     {
@@ -136,6 +137,7 @@ class Piece_Unity_ViewElement
      *
      * @param string $name
      * @return mixed
+     * @since Method available since Release 0.4.0
      */
     function &getElement($name)
     {
