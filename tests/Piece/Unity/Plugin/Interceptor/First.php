@@ -83,7 +83,7 @@ class Piece_Unity_Plugin_Interceptor_First extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $request = $this->_context->getRequest();
+        $request = &$this->_context->getRequest();
         $request->setParameter('FirstInterceptorCalled', true);
 
         if (!$request->hasParameter('logs')) {

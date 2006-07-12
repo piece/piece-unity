@@ -111,7 +111,7 @@ class Piece_Unity_Plugin_OutputBufferStackTestCase extends PHPUnit_TestCase
             ob_end_flush();
         }
 
-        $request = $context->getRequest();
+        $request = &$context->getRequest();
 
         $this->assertTrue($request->hasParameter('FirstOutputFilterCalled'));
         $this->assertTrue($request->getParameter('FirstOutputFilterCalled'));
@@ -131,7 +131,7 @@ class Piece_Unity_Plugin_OutputBufferStackTestCase extends PHPUnit_TestCase
             ob_end_flush();
         }
 
-        $request = $context->getRequest();
+        $request = &$context->getRequest();
 
         $this->assertTrue($request->hasParameter('FirstOutputFilterCalled'));
         $this->assertTrue($request->getParameter('FirstOutputFilterCalled'));

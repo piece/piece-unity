@@ -86,7 +86,7 @@ class Piece_Unity_Plugin_OutputFilter_Second extends Piece_Unity_Plugin_Common
      */
     function invoke($buffer)
     {
-        $request = $this->_context->getRequest();
+        $request = &$this->_context->getRequest();
         $request->setParameter('SecondOutputFilterCalled', true);
 
         if (!$request->hasParameter('logs')) {

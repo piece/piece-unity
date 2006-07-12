@@ -83,7 +83,7 @@ class Piece_Unity_Plugin_Interceptor_Second extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $request = $this->_context->getRequest();
+        $request = &$this->_context->getRequest();
         $request->setParameter('SecondInterceptorCalled', true);
 
         if (!$request->hasParameter('logs')) {

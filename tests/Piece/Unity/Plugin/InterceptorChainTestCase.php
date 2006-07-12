@@ -110,7 +110,7 @@ class Piece_Unity_Plugin_InterceptorChainTestCase extends PHPUnit_TestCase
 
         $chain = &new Piece_Unity_Plugin_InterceptorChain();
         $chain->invoke();
-        $request = $context->getRequest();
+        $request = &$context->getRequest();
 
         $this->assertTrue($request->hasParameter('FirstInterceptorCalled'));
         $this->assertTrue($request->getParameter('FirstInterceptorCalled'));
@@ -125,7 +125,7 @@ class Piece_Unity_Plugin_InterceptorChainTestCase extends PHPUnit_TestCase
 
         $chain = &new Piece_Unity_Plugin_InterceptorChain();
         $chain->invoke();
-        $request = $context->getRequest();
+        $request = &$context->getRequest();
 
         $this->assertTrue($request->hasParameter('FirstInterceptorCalled'));
         $this->assertTrue($request->getParameter('FirstInterceptorCalled'));
