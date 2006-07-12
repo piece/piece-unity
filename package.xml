@@ -14,28 +14,54 @@
   </maintainer>
   </maintainers>
  <release>
-  <version>0.3.0</version>
-  <date>2006-07-08</date>
+  <version>0.4.0</version>
+  <date>2006-07-12</date>
   <license>BSD License (revised)</license>
   <state>beta</state>
-  <notes>This release includes a few enhancements and fixing a problem as follows:
+  <notes>This release includes a lot of enhancements as follows:
 
 Enhancements:
 
-* &apos;Renderer_Flexy&apos; plug-in
-- Added a configuration point &apos;debug&apos; to display debugging information.
-- Changed error handling so as to be thrown any errors as &apos;exception&apos; except non-existing template.
+* Piece_Unity
+- Added properties $_configDirectory, $_cacheDirectory, and $_dynamicConfig to use after instantiation.
 
-* Example applications
-- Set the cache directory for Piece_Unity configurations and Piece_Flow flow definitions.
+* Piece_Unity_Config
+- Removed methods setConfigurationDirectory(), setCacheDirectory(), getConfigurationDirectory(), getCacheDirectory(), getError(), isMergedExtensionPoint(), isMergedConfigurationPoint().
 
-Defect fixes:
+* Piece_Unity_Error
+- pushPHPError(): Added logic to return immediately with the current value of error_reporting() function.
 
-- Fixed the problem that relative path cannot be used as the cache directory and action cirectory with Solaris.
+* Piece_Unity_Request
+- Added support for importing the PATH_INFO string as parameters.
+
+* Piece_Unity_ViewElement
+- Added getElement() method for getting elements.
+- Added hasElement() method for checking whether the object has an element with a given name.
+
+* &apos;Root&apos; plug-in
+- Added &apos;interceptor&apos; extension point.
+- Added &apos;outputFilter&apos; extension point.
+- Added &apos;controller&apos; extension point.
+- Removed &apos;dispatcher&apos; and &apos;view&apos; extension points.
+
+* &apos;Controller&apos; plug-in
+- A controller which delegates requests to appropriate dispatchers and fowards requests to the view handler.
+
+* &apos;InterceptorChain&apos; plug-in
+- An interceptor which invokes all interceptors.
+
+* &apos;OutputBufferStack&apos; plug-in
+- An output filter which turns output buffering on, and registers all output handlers.
+
+* &apos;OutputFilter_ContentLength&apos; plug-in
+- An output filter which outputs Content-Legnth header.
+
+* &apos;Renderer_Smarty&apos; plug-in
+- Changed error handling so as to be thrown any errors as exception except non-existing templates.
   </notes>
   <deps>
    <dep type="php" rel="ge" version="4.3.0" optional="no"/>
-   <dep type="pkg" rel="ge" version="1.1.0" optional="no">Piece_Flow</dep>
+   <dep type="pkg" rel="ge" version="1.2.1" optional="no">Piece_Flow</dep>
    <dep type="pkg" rel="ge" version="1.7.0" optional="no">Cache_Lite</dep>
    <dep type="pkg" rel="ge" version="1.4.3" optional="no">PEAR</dep>
    <dep type="pkg" rel="ge" version="0.3.0" optional="yes">Stagehand_TestRunner</dep>
@@ -133,7 +159,7 @@ Defect fixes:
           <file role="data" name="Finish.html" install-as="examples/multiple-flow-mode/webapp/templates/Registration/Finish.html">
            <replace from="@package_version@" to="version" type="package-info"/>
           </file>
-          <file role="data" name="Input.html" install-as="examples/multiple-flow-mode/webapp/templates/Registration/Input.html">
+          <file role="data" name="Form.html" install-as="examples/multiple-flow-mode/webapp/templates/Registration/Form.html">
            <replace from="@package_version@" to="version" type="package-info"/>
           </file>
          </dir> <!-- /data/examples/multiple-flow-mode/webapp/templates/Registration -->
@@ -212,7 +238,7 @@ Defect fixes:
          <file role="data" name="Finish.html" install-as="examples/single-flow-mode/webapp/templates/Finish.html">
           <replace from="@package_version@" to="version" type="package-info"/>
          </file>
-         <file role="data" name="Input.html" install-as="examples/single-flow-mode/webapp/templates/Input.html">
+         <file role="data" name="Form.html" install-as="examples/single-flow-mode/webapp/templates/Form.html">
           <replace from="@package_version@" to="version" type="package-info"/>
          </file>
         </dir> <!-- /data/examples/single-flow-mode/webapp/templates -->
@@ -253,6 +279,11 @@ Defect fixes:
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
        </dir> <!-- /Piece/Unity/Plugin/Dispatcher -->
+       <dir name="OutputFilter">
+        <file role="php" name="ContentLength.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+       </dir> <!-- /Piece/Unity/Plugin/OutputFilter -->
        <dir name="Renderer">
         <file role="php" name="Flexy.php">
          <replace from="@package_version@" to="version" type="package-info"/>
@@ -267,10 +298,19 @@ Defect fixes:
        <file role="php" name="Common.php">
         <replace from="@package_version@" to="version" type="package-info"/>
        </file>
+       <file role="php" name="Controller.php">
+        <replace from="@package_version@" to="version" type="package-info"/>
+       </file>
        <file role="php" name="Factory.php">
         <replace from="@package_version@" to="version" type="package-info"/>
        </file>
+       <file role="php" name="InterceptorChain.php">
+        <replace from="@package_version@" to="version" type="package-info"/>
+       </file>
        <file role="php" name="KernelConfigurator.php">
+        <replace from="@package_version@" to="version" type="package-info"/>
+       </file>
+       <file role="php" name="OutputBufferStack.php">
         <replace from="@package_version@" to="version" type="package-info"/>
        </file>
        <file role="php" name="Root.php">
@@ -338,6 +378,22 @@ Defect fixes:
           <replace from="@package_version@" to="version" type="package-info"/>
          </file>
         </dir> <!-- /tests/Piece/Unity/Plugin/Dispatcher -->
+        <dir name="Interceptor">
+         <file role="test" name="First.php" install-as="Piece/Unity/Plugin/Interceptor/First.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+         <file role="test" name="Second.php" install-as="Piece/Unity/Plugin/Interceptor/Second.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+        </dir> <!-- /tests/Piece/Unity/Plugin/Interceptor -->
+        <dir name="OutputFilter">
+         <file role="test" name="First.php" install-as="Piece/Unity/Plugin/OutputFilter/First.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+         <file role="test" name="Second.php" install-as="Piece/Unity/Plugin/OutputFilter/Second.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+        </dir> <!-- /tests/Piece/Unity/Plugin/OutputFilter -->
         <dir name="Renderer">
          <file role="test" name="CompatibilityTest.php" install-as="Piece/Unity/Plugin/Renderer/CompatibilityTest.php">
           <replace from="@package_version@" to="version" type="package-info"/>
@@ -409,10 +465,16 @@ Defect fixes:
         <file role="test" name="Foo.php" install-as="Piece/Unity/Plugin/Foo.php">
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
+        <file role="test" name="InterceptorChainTestCase.php" install-as="Piece/Unity/Plugin/InterceptorChainTestCase.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
         <file role="test" name="Invalid.php" install-as="Piece/Unity/Plugin/Invalid.php">
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
         <file role="test" name="KernelConfiguratorTestCase.php" install-as="Piece/Unity/Plugin/KernelConfiguratorTestCase.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+        <file role="test" name="OutputBufferStackTestCase.php" install-as="Piece/Unity/Plugin/OutputBufferStackTestCase.php">
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
         <file role="test" name="Qux.php" install-as="Piece/Unity/Plugin/Qux.php">
@@ -465,6 +527,53 @@ Defect fixes:
   </filelist>
  </release>
  <changelog>
+   <release>
+    <version>0.4.0</version>
+    <date>2006-07-12</date>
+    <license>BSD License (revised)</license>
+    <state>beta</state>
+    <notes>This release includes a lot of enhancements as follows:
+
+Enhancements:
+
+* Piece_Unity
+- Added properties $_configDirectory, $_cacheDirectory, and $_dynamicConfig to use after instantiation.
+
+* Piece_Unity_Config
+- Removed methods setConfigurationDirectory(), setCacheDirectory(), getConfigurationDirectory(), getCacheDirectory(), getError(), isMergedExtensionPoint(), isMergedConfigurationPoint().
+
+* Piece_Unity_Error
+- pushPHPError(): Added logic to return immediately with the current value of error_reporting() function.
+
+* Piece_Unity_Request
+- Added support for importing the PATH_INFO string as parameters.
+
+* Piece_Unity_ViewElement
+- Added getElement() method for getting elements.
+- Added hasElement() method for checking whether the object has an element with a given name.
+
+* &apos;Root&apos; plug-in
+- Added &apos;interceptor&apos; extension point.
+- Added &apos;outputFilter&apos; extension point.
+- Added &apos;controller&apos; extension point.
+- Removed &apos;dispatcher&apos; and &apos;view&apos; extension points.
+
+* &apos;Controller&apos; plug-in
+- A controller which delegates requests to appropriate dispatchers and fowards requests to the view handler.
+
+* &apos;InterceptorChain&apos; plug-in
+- An interceptor which invokes all interceptors.
+
+* &apos;OutputBufferStack&apos; plug-in
+- An output filter which turns output buffering on, and registers all output handlers.
+
+* &apos;OutputFilter_ContentLength&apos; plug-in
+- An output filter which outputs Content-Legnth header.
+
+* &apos;Renderer_Smarty&apos; plug-in
+- Changed error handling so as to be thrown any errors as exception except non-existing templates.
+    </notes>
+   </release>
    <release>
     <version>0.3.0</version>
     <date>2006-07-08</date>

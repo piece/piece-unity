@@ -41,22 +41,48 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$version = '0.3.0';
-$apiVersion = '0.2.0';
-$notes = "This release includes a few enhancements and fixing a problem as follows:
+$version = '0.4.0';
+$apiVersion = '0.4.0';
+$notes = "This release includes a lot of enhancements as follows:
 
 Enhancements:
 
-* 'Renderer_Flexy' plug-in
-- Added a configuration point 'debug' to display debugging information.
-- Changed error handling so as to be thrown any errors as 'exception' except non-existing template.
+* Piece_Unity
+- Added properties \$_configDirectory, \$_cacheDirectory, and \$_dynamicConfig to use after instantiation.
 
-* Example applications
-- Set the cache directory for Piece_Unity configurations and Piece_Flow flow definitions.
+* Piece_Unity_Config
+- Removed methods setConfigurationDirectory(), setCacheDirectory(), getConfigurationDirectory(), getCacheDirectory(), getError(), isMergedExtensionPoint(), isMergedConfigurationPoint().
 
-Defect fixes:
+* Piece_Unity_Error
+- pushPHPError(): Added logic to return immediately with the current value of error_reporting() function.
 
-- Fixed the problem that relative path cannot be used as the cache directory and action cirectory with Solaris.";
+* Piece_Unity_Request
+- Added support for importing the PATH_INFO string as parameters.
+
+* Piece_Unity_ViewElement
+- Added getElement() method for getting elements.
+- Added hasElement() method for checking whether the object has an element with a given name.
+
+* 'Root' plug-in
+- Added 'interceptor' extension point.
+- Added 'outputFilter' extension point.
+- Added 'controller' extension point.
+- Removed 'dispatcher' and 'view' extension points.
+
+* 'Controller' plug-in
+- A controller which delegates requests to appropriate dispatchers and fowards requests to the view handler.
+
+* 'InterceptorChain' plug-in
+- An interceptor which invokes all interceptors.
+
+* 'OutputBufferStack' plug-in
+- An output filter which turns output buffering on, and registers all output handlers.
+
+* 'OutputFilter_ContentLength' plug-in
+- An output filter which outputs Content-Legnth header.
+
+* 'Renderer_Smarty' plug-in
+- Changed error handling so as to be thrown any errors as exception except non-existing templates.";
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
