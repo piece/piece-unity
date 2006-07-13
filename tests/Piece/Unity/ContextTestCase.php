@@ -185,6 +185,38 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
 
+    function testSettingBaseURLPath()
+    {
+        $previousScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/path/to/foo.php';
+
+        $context = &Piece_Unity_Context::singleton();
+
+        $this->assertEquals('/path/to', $context->getBaseURLPath());
+
+        $context->setBaseURLPath('/path/to/foo');
+
+        $this->assertEquals('/path/to/foo', $context->getBaseURLPath());
+
+        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
+    }
+
+    function testSettingBaseURL()
+    {
+        $previousScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/path/to/foo.php';
+
+        $context = &Piece_Unity_Context::singleton();
+
+        $this->assertEquals('/path/to/foo.php', $context->getBaseURL());
+
+        $context->setBaseURLPath('/path/to/foo/bar.php');
+
+        $this->assertEquals('/path/to/foo/bar.php', $context->getBaseURLPath());
+
+        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
+    }
+
     /**#@-*/
 
     /**#@+
