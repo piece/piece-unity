@@ -82,8 +82,8 @@ class Piece_Unity_Context
     var $_session;
     var $_eventNameImported = false;
     var $_eventNameKey = '_event';
-    var $_baseURLPath = '';
-    var $_baseURL;
+    var $_scriptName = '';
+    var $_basePath;
 
     /**#@-*/
 
@@ -280,57 +280,57 @@ class Piece_Unity_Context
     }
 
     // }}}
-    // {{{ getBaseURLPath()
+    // {{{ getScriptName()
 
     /**
      * Gets the base URL path of the current request.
      *
      * @return string
      */
-    function getBaseURLPath()
+    function getScriptName()
     {
-        return $this->_baseURLPath;
+        return $this->_scriptName;
     }
 
     // }}}
-    // {{{ getBaseURL()
+    // {{{ getBasePath()
 
     /**
      * Gets the base URL of the current request.
      *
      * @return string
      */
-    function getBaseURL()
+    function getBasePath()
     {
-        return $this->_baseURL;
+        return $this->_basePath;
     }
 
     // }}}
-    // {{{ setBaseURLPath()
+    // {{{ setScriptName()
 
     /**
-     * Sets the base URL path of the current request.
+     * Sets the script name of the current request.
      *
-     * @param string $baseURLPath
+     * @param string $scriptName
      * @since Method available since Release 0.5.0
      */
-    function setBaseURLPath($baseURLPath)
+    function setScriptName($scriptName)
     {
-        $this->_baseURLPath = $baseURLPath;
+        $this->_scriptName = $scriptName;
     }
 
     // }}}
-    // {{{ setBaseURL()
+    // {{{ setBasePath()
 
     /**
-     * Sets the base URL of the current request.
+     * Sets the base path of the current request.
      *
-     * @param string $baseURL
+     * @param string $basePath
      * @since Method available since Release 0.5.0
      */
-    function setBaseURL($baseURL)
+    function setBasePath($basePath)
     {
-        $this->_baseURL = $baseURL;
+        $this->_basePath = $basePath;
     }
 
     /**#@-*/
@@ -350,23 +350,11 @@ class Piece_Unity_Context
         $this->_request = &new Piece_Unity_Request();
         $this->_viewElement = &new Piece_Unity_ViewElement();
         $this->_session = &new Piece_Unity_Session();
-        $this->_baseURL = $_SERVER['SCRIPT_NAME'];
-        $this->_setBaseURLPath();
-    }
+        $this->_basePath = $_SERVER['SCRIPT_NAME'];
 
-    // }}}
-    // {{{ _setBaseURLPath()
-
-    /**
-     * Sets the base path of the requested URL.
-     *
-     * @since Method available since Release 0.5.0
-     */
-    function _setBaseURLPath()
-    {
         $positionOfSlash = strrpos($_SERVER['SCRIPT_NAME'], '/');
         if ($positionOfSlash) {
-            $this->_baseURLPath = substr($_SERVER['SCRIPT_NAME'], 0, $positionOfSlash);
+            $this->_scriptName = substr($_SERVER['SCRIPT_NAME'], 0, $positionOfSlash);
         }
     }
 
