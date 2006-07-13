@@ -123,7 +123,7 @@ class Piece_Unity
             return;
         }
 
-        return $root->invoke();
+        $root->invoke();
     }
 
     /**#@-*/
