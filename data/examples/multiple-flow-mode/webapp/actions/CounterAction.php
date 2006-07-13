@@ -109,7 +109,7 @@ class CounterAction
     {
         $view = $flow->getView();
         $elements = $this->_getFormElements($context);
-        $elements[$view]['_attributes']['action'] = $context->getBaseURL();
+        $elements[$view]['_attributes']['action'] = $context->getBasePath();
         $elements[$view]['_attributes']['method'] = 'post';
         $viewElement = &$context->getViewElement();
         $viewElement->setElement('_elements', $elements);

@@ -102,8 +102,8 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
         $session = &$this->_context->getSession();
         $viewElement->setElementByRef('__session', $session);
         $viewElement->setElement('__eventNameKey', $this->_context->getEventNameKey());
-        $viewElement->setElement('__baseURLPath', $this->_context->getBaseURLPath());
-        $viewElement->setElement('__baseURL', $this->_context->getBaseURL());
+        $viewElement->setElement('__scriptName', $this->_context->getScriptName());
+        $viewElement->setElement('__basePath', $this->_context->getBasePath());
 
         $renderer = &$this->getExtension('renderer');
         if (Piece_Unity_Error::hasErrors('exception')) {

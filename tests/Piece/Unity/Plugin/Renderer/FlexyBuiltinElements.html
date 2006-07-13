@@ -4,10 +4,10 @@
 {if:GLOBALS.is_a(__session,#Piece_Unity_Session#)}
 {if:GLOBALS.isset(__eventNameKey)}
 {if:GLOBALS.is_string(__eventNameKey)}
-{if:GLOBALS.isset(__baseURLPath)}
-{if:GLOBALS.is_string(__baseURLPath)}
-{if:GLOBALS.isset(__baseURL)}
-{if:GLOBALS.is_string(__baseURL)}OK{end:}
+{if:GLOBALS.isset(__scriptName)}
+{if:GLOBALS.is_string(__scriptName)}
+{if:GLOBALS.isset(__basePath)}
+{if:GLOBALS.is_string(__basePath)}OK{end:}
 {end:}
 {end:}
 {end:}

@@ -161,45 +161,26 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $this->assertEquals('bar', $context->getEventName());
     }
 
-    function testGettingBaseURLPath()
+    function testGettingScriptName()
     {
         $previousScriptName = $_SERVER['SCRIPT_NAME'];
         $_SERVER['SCRIPT_NAME'] = '/path/to/foo.php';
 
         $context = &Piece_Unity_Context::singleton();
 
-        $this->assertEquals('/path/to', $context->getBaseURLPath());
+        $this->assertEquals('/path/to', $context->getScriptName());
 
         $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
 
-    function testGettingBaseURL()
+    function testGettingBasePath()
     {
         $previousScriptName = $_SERVER['SCRIPT_NAME'];
         $_SERVER['SCRIPT_NAME'] = '/path/to/foo.php';
 
         $context = &Piece_Unity_Context::singleton();
 
-        $this->assertEquals('/path/to/foo.php', $context->getBaseURL());
-
-        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
-    }
-
-    /**
-     * @since Method available since Release 0.5.0
-     */
-    function testSettingBaseURLPath()
-    {
-        $previousScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = '/path/to/foo.php';
-
-        $context = &Piece_Unity_Context::singleton();
-
-        $this->assertEquals('/path/to', $context->getBaseURLPath());
-
-        $context->setBaseURLPath('/path/to/foo');
-
-        $this->assertEquals('/path/to/foo', $context->getBaseURLPath());
+        $this->assertEquals('/path/to/foo.php', $context->getBasePath());
 
         $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
@@ -207,18 +188,37 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
     /**
      * @since Method available since Release 0.5.0
      */
-    function testSettingBaseURL()
+    function testSettingScriptName()
     {
         $previousScriptName = $_SERVER['SCRIPT_NAME'];
         $_SERVER['SCRIPT_NAME'] = '/path/to/foo.php';
 
         $context = &Piece_Unity_Context::singleton();
 
-        $this->assertEquals('/path/to/foo.php', $context->getBaseURL());
+        $this->assertEquals('/path/to', $context->getScriptName());
 
-        $context->setBaseURLPath('/path/to/foo/bar.php');
+        $context->setScriptName('/path/to/foo');
 
-        $this->assertEquals('/path/to/foo/bar.php', $context->getBaseURLPath());
+        $this->assertEquals('/path/to/foo', $context->getScriptName());
+
+        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
+    }
+
+    /**
+     * @since Method available since Release 0.5.0
+     */
+    function testSettingBasePath()
+    {
+        $previousScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/path/to/foo.php';
+
+        $context = &Piece_Unity_Context::singleton();
+
+        $this->assertEquals('/path/to/foo.php', $context->getBasePath());
+
+        $context->setScriptName('/path/to/foo/bar.php');
+
+        $this->assertEquals('/path/to/foo/bar.php', $context->getScriptName());
 
         $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
