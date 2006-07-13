@@ -359,6 +359,8 @@ class Piece_Unity_Context
 
     /**
      * Sets the base path of the requested URL.
+     *
+     * @since Method available since Release 0.5.0
      */
     function _setBaseURLPath()
     {
