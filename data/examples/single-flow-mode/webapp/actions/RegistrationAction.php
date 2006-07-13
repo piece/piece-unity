@@ -83,13 +83,13 @@ class RegistrationAction
 
         $flow->setAttributeByRef('user', $user);
 
-        return 'succeed';
+        return 'goDisplayConfirmation';
     }
 
     function register(&$flow, $event, &$context)
     {
         $flow->clearAttributes();
-        return 'succeed';
+        return 'goDisplayFinish';
     }
 
     function setupForm(&$flow, $event, &$context)

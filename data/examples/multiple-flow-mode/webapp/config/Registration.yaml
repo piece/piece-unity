@@ -30,9 +30,9 @@ viewState:
 actionState:
   - name: processConfirmForm
     transition:
-      - event: succeed
+      - event: goDisplayConfirmation
         nextState: DisplayConfirmation
   - name: processRegister
     transition:
-      - event: succeed
+      - event: goDisplayFinish
         nextState: DisplayFinish
