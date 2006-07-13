@@ -305,6 +305,34 @@ class Piece_Unity_Context
         return $this->_baseURL;
     }
 
+    // }}}
+    // {{{ setBaseURLPath()
+
+    /**
+     * Sets the base URL path of the current request.
+     *
+     * @param string $baseURLPath
+     * @since Method available since Release 0.5.0
+     */
+    function setBaseURLPath($baseURLPath)
+    {
+        $this->_baseURLPath = $baseURLPath;
+    }
+
+    // }}}
+    // {{{ setBaseURL()
+
+    /**
+     * Sets the base URL of the current request.
+     *
+     * @param string $baseURL
+     * @since Method available since Release 0.5.0
+     */
+    function setBaseURL($baseURL)
+    {
+        $this->_baseURL = $baseURL;
+    }
+
     /**#@-*/
 
     /**#@+
