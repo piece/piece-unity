@@ -44,7 +44,8 @@ require_once 'Piece/Unity/Plugin/Common.php';
 /**
  * An interceptor to adjust the base path and the base path of the current
  * request which are held in the Piece_Unity_Context object.
- * This interceptor is used when your web servers are used as reverse proxies.
+ * This interceptor is used and only works when your web servers are used as
+ * reverse proxies.
  *
  * The base path and the script name are both relative paths since they based
  * on SCRIPT_NAME environment variable. The following is a example of a
@@ -84,6 +85,15 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePath extends Piece_Unity_Plugin_Co
      * @access private
      */
 
+    var $_measures = array('HTTP_X_FORWARDED_FOR',
+                           'HTTP_X_FORWARDED',
+                           'HTTP_FORWARDED_FOR',
+                           'HTTP_FORWARDED',
+                           'HTTP_VIA',
+                           'HTTP_X_COMING_FROM',
+                           'HTTP_COMING_FROM'
+                           );
+
     /**#@-*/
 
     /**#@+
@@ -110,6 +120,10 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePath extends Piece_Unity_Plugin_Co
      */
     function invoke()
     {
+        if (!$this->_useProxy()) {
+            return;
+        }
+
         $path = $this->getConfiguration('path');
         if (!is_null($path)) {
             $this->_context->setBasePath($path . $this->_context->getBasePath());
@@ -122,6 +136,25 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePath extends Piece_Unity_Plugin_Co
     /**#@+
      * @access private
      */
+
+    // }}}
+    // {{{ _useProxy()
+
+    /**
+     * Returns whether the application is accessed via reverse proxies.
+     *
+     * @return boolean
+     */
+    function _useProxy()
+    {
+        foreach ($this->_measures as $measure) {
+            if (array_key_exists($measure, $_SERVER)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
  
     /**#@-*/
 
