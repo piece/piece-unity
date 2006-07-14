@@ -110,6 +110,7 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePath extends Piece_Unity_Plugin_Co
     {
         parent::Piece_Unity_Plugin_Common();
         $this->_addConfigurationPoint('path', null);
+        $this->_addConfigurationPoint('adjustSessionCookiePath', true);
     }
 
     // }}}
@@ -128,6 +129,13 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePath extends Piece_Unity_Plugin_Co
         if (!is_null($path)) {
             $this->_context->setBasePath($path . $this->_context->getBasePath());
             $this->_context->setScriptName($path . $this->_context->getScriptName());
+
+            $adjustSessionCookiePath = $this->getConfiguration('adjustSessionCookiePath');
+            if ($adjustSessionCookiePath) {
+                ini_set('session.cookie_path',
+                        $path . str_replace('//', '/', ini_get('session.cookie_path'))
+                        );
+            }
         }
     }
 
