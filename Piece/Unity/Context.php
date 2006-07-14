@@ -82,8 +82,8 @@ class Piece_Unity_Context
     var $_session;
     var $_eventNameImported = false;
     var $_eventNameKey = '_event';
-    var $_scriptName = '';
-    var $_basePath;
+    var $_scriptName;
+    var $_basePath = '';
 
     /**#@-*/
 
@@ -283,7 +283,7 @@ class Piece_Unity_Context
     // {{{ getScriptName()
 
     /**
-     * Gets the base URL path of the current request.
+     * Gets the script name of the current request.
      *
      * @return string
      */
@@ -296,7 +296,7 @@ class Piece_Unity_Context
     // {{{ getBasePath()
 
     /**
-     * Gets the base URL of the current request.
+     * Gets the base path of the current request.
      *
      * @return string
      */
@@ -350,11 +350,11 @@ class Piece_Unity_Context
         $this->_request = &new Piece_Unity_Request();
         $this->_viewElement = &new Piece_Unity_ViewElement();
         $this->_session = &new Piece_Unity_Session();
-        $this->_basePath = $_SERVER['SCRIPT_NAME'];
+        $this->_scriptName = $_SERVER['SCRIPT_NAME'];
 
         $positionOfSlash = strrpos($_SERVER['SCRIPT_NAME'], '/');
         if ($positionOfSlash) {
-            $this->_scriptName = substr($_SERVER['SCRIPT_NAME'], 0, $positionOfSlash);
+            $this->_basePath = substr($_SERVER['SCRIPT_NAME'], 0, $positionOfSlash);
         }
     }
 
