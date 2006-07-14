@@ -74,7 +74,7 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
      * @access private
      */
 
-    var $_pluginDirectories;
+    var $_oldPluginDirectories;
 
     /**#@-*/
 
@@ -85,14 +85,14 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
     function setUp()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
-        $this->_pluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
+        $this->_oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
         Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/../../..');
     }
 
     function tearDown()
     {
         $GLOBALS['PIECE_UNITY_Plugin_Instances'] = array();
-        $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $this->_pluginDirectories;
+        $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $this->_oldPluginDirectories;
         $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
                                             'masterFile' => '',
                                             'automaticSerialization' => true,
