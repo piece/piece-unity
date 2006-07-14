@@ -94,11 +94,15 @@ class Piece_Unity_Plugin_OutputBufferStack extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
+        $filters = &$this->getExtension('filters');
+        if (!is_array($filters)) {
+            return;
+        }
+
         while (ob_get_level()) {
             ob_end_clean();
         }
 
-        $filters = &$this->getExtension('filters');
         foreach ($filters as $extension) {
             $handler = &Piece_Unity_Plugin_Factory::factory($extension);
             if (Piece_Unity_Error::hasErrors('exception')) {
