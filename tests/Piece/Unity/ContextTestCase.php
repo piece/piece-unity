@@ -168,7 +168,7 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
 
         $context = &Piece_Unity_Context::singleton();
 
-        $this->assertEquals('/path/to', $context->getScriptName());
+        $this->assertEquals('/path/to/foo.php', $context->getScriptName());
 
         $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
@@ -180,7 +180,7 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
 
         $context = &Piece_Unity_Context::singleton();
 
-        $this->assertEquals('/path/to/foo.php', $context->getBasePath());
+        $this->assertEquals('/path/to', $context->getBasePath());
 
         $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
@@ -195,11 +195,11 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
 
         $context = &Piece_Unity_Context::singleton();
 
-        $this->assertEquals('/path/to', $context->getScriptName());
+        $this->assertEquals('/path/to/foo.php', $context->getScriptName());
 
-        $context->setScriptName('/path/to/foo');
+        $context->setScriptName('/path/to/foo/bar.php');
 
-        $this->assertEquals('/path/to/foo', $context->getScriptName());
+        $this->assertEquals('/path/to/foo/bar.php', $context->getScriptName());
 
         $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
@@ -214,11 +214,11 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
 
         $context = &Piece_Unity_Context::singleton();
 
-        $this->assertEquals('/path/to/foo.php', $context->getBasePath());
+        $this->assertEquals('/path/to', $context->getBasePath());
 
-        $context->setScriptName('/path/to/foo/bar.php');
+        $context->setBasePath('/path/to/foo/bar');
 
-        $this->assertEquals('/path/to/foo/bar.php', $context->getScriptName());
+        $this->assertEquals('/path/to/foo/bar', $context->getBasePath());
 
         $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
