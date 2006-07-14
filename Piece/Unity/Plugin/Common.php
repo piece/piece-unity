@@ -113,25 +113,15 @@ class Piece_Unity_Plugin_Common
     function &getExtension($extensionPoint)
     {
         $config = &$this->_context->getConfiguration();
-        if (!is_null($config)) {
-            $extension = $config->getExtension(str_replace('piece_unity_plugin_', '', strtolower(get_class($this))),
-                                               strtolower($extensionPoint)
-                                               );
-        }
+        $extension = $config->getExtension(str_replace('piece_unity_plugin_', '', strtolower(get_class($this))),
+                                           strtolower($extensionPoint)
+                                           );
 
-        if (is_null($config) || is_null($extension)) {
+        if (is_null($extension)) {
             $extension = $this->_extensionPoints[ strtolower($extensionPoint) ];
         }
 
-        if (is_null($extension)) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "No extensions are defined for the extension point [ $extensionPoint ]."
-                                    );
-            $return = null;
-            return $return;
-        }
-
-        if (is_array($extension)) {
+        if (!$extension || is_array($extension)) {
             return $extension;
         }
 
@@ -151,13 +141,11 @@ class Piece_Unity_Plugin_Common
     function &getConfiguration($configurationPoint)
     {
         $config = &$this->_context->getConfiguration();
-        if (!is_null($config)) {
-            $configuration = $config->getConfiguration(str_replace('piece_unity_plugin_', '', strtolower(get_class($this))),
-                                                       strtolower($configurationPoint)
-                                                       );
-        }
+        $configuration = $config->getConfiguration(str_replace('piece_unity_plugin_', '', strtolower(get_class($this))),
+                                                   strtolower($configurationPoint)
+                                                   );
 
-        if (is_null($config) || is_null($configuration)) {
+        if (is_null($configuration)) {
             $configuration = $this->_configurationPoints[ strtolower($configurationPoint) ];
         }
 
