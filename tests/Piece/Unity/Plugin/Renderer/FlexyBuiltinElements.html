@@ -7,7 +7,15 @@
 {if:GLOBALS.isset(__scriptName)}
 {if:GLOBALS.is_string(__scriptName)}
 {if:GLOBALS.isset(__basePath)}
-{if:GLOBALS.is_string(__basePath)}OK{end:}
+{if:GLOBALS.is_string(__basePath)}
+{if:GLOBALS.isset(__sessionName)}
+{if:GLOBALS.is_string(__sessionName)}
+{if:GLOBALS.isset(__sessionID)}
+{if:GLOBALS.is_string(__sessionID)}OK{end:}
+{end:}
+{end:}
+{end:}
+{end:}
 {end:}
 {end:}
 {end:}
