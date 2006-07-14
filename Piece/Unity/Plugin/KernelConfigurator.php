@@ -85,6 +85,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         $this->_addConfigurationPoint('autoloadClasses', array());
         $this->_addConfigurationPoint('eventName', null);
         $this->_addConfigurationPoint('importPathInfo', false);
+        $this->_addConfigurationPoint('pluginDirectories', array());
     }
 
     // }}}
@@ -98,9 +99,20 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         $this->_context->setEventNameKey($this->getConfiguration('eventNameKey'));
 
         $autoloadClasses = $this->getConfiguration('autoloadClasses');
+        if (!is_array($autoloadClasses)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    'Failed to configure the configuration point [ autoloadClasses ] at the plugin [ ' . __CLASS__ . ' ].',
+                                    'warning',
+                                    array('plugin' => __CLASS__)
+                                    );
+            Piece_Unity_Error::popCallback();
+            $autoloadClasses = array();
+        }
+
         array_push($autoloadClasses, 'Piece_Flow_Continuation');
-        foreach ($autoloadClasses as $class) {
-            Piece_Unity_Session::addAutoloadClass($class);
+        foreach ($autoloadClasses as $autoloadClass) {
+            Piece_Unity_Session::addAutoloadClass($autoloadClass);
         }
 
         $eventName = $this->getConfiguration('eventName');
@@ -112,6 +124,22 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         if ($importPathInfo) {
             $request = &$this->_context->getRequest();
             $request->importPathInfo();
+        }
+
+        $pluginDirectories = $this->getConfiguration('pluginDirectories');
+        if (!is_array($pluginDirectories)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    'Failed to configure the configuration point [ pluginDirectories ] at the plugin [ ' . __CLASS__ . ' ].',
+                                    'warning',
+                                    array('plugin' => __CLASS__)
+                                    );
+            Piece_Unity_Error::popCallback();
+            return;
+        }
+
+        foreach (array_reverse($pluginDirectories) as $pluginDirectory) {
+            Piece_Unity_Plugin_Factory::addPluginDirectory($pluginDirectory);
         }
     }
 
