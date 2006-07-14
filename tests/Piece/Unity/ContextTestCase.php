@@ -223,6 +223,9 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
 
+    /**
+     * @since Method available since Release 0.5.0
+     */
     function testGettingBasePathWithWindows()
     {
         $previousScriptName = $_SERVER['SCRIPT_NAME'];
