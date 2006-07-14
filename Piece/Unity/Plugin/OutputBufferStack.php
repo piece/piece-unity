@@ -96,6 +96,13 @@ class Piece_Unity_Plugin_OutputBufferStack extends Piece_Unity_Plugin_Common
     {
         $filters = &$this->getExtension('filters');
         if (!is_array($filters)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    'Failed to configure the configuration point [ filters ] at the plugin [ ' . __CLASS__ . ' ].',
+                                    'warning',
+                                    array('plugin' => __CLASS__)
+                                    );
+            Piece_Unity_Error::popCallback();
             return;
         }
 

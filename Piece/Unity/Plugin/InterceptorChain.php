@@ -95,6 +95,13 @@ class Piece_Unity_Plugin_InterceptorChain extends Piece_Unity_Plugin_Common
     {
         $interceptors = &$this->getExtension('interceptors');
         if (!is_array($interceptors)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    'Failed to configure the configuration point [ interceptors ] at the plugin [ ' . __CLASS__ . ' ].',
+                                    'warning',
+                                    array('plugin' => __CLASS__)
+                                    );
+            Piece_Unity_Error::popCallback();
             return;
         }
 
