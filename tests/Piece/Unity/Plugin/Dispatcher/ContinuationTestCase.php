@@ -43,6 +43,7 @@ require_once 'Piece/Unity/Plugin/Dispatcher/Continuation.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Cache/Lite/File.php';
 require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
+require_once 'Piece/Unity/Config.php';
 
 // {{{ Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
 
