@@ -81,6 +81,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
 
     function setUp()
     {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $_SERVER['REQUEST_METHOD'] = 'GET';
     }
 
@@ -89,6 +90,8 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         unset($_SESSION);
         $context = &Piece_Unity_Context::singleton();
         $context->clear();
+        Piece_Unity_Error::clearErrors();
+        Piece_Unity_Error::popCallback();
     }
 
     function testSettingAutoloadClasses()
@@ -172,6 +175,35 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $this->assertNull($request->getParameter('qux'));
 
         unset($_SERVER['PATH_INFO']);
+    }
+
+    function testSettingPluginDirectories()
+    {
+        $oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('KernelConfigurator', 'pluginDirectories', array(dirname(__FILE__) . '/../../..'));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $configurator = &new Piece_Unity_Plugin_KernelConfigurator();
+        $configurator->invoke();
+
+        $fooPlugin = &Piece_Unity_Plugin_Factory::factory('Foo');
+
+        $this->assertTrue(is_a($fooPlugin, 'Piece_Unity_Plugin_Foo'));
+
+        $barPlugin = &Piece_Unity_Plugin_Factory::factory('Bar');
+
+        $this->assertTrue(is_a($barPlugin, 'Piece_Unity_Plugin_Bar'));
+
+        $fooPlugin->baz = 'qux';
+
+        $plugin = &Piece_Unity_Plugin_Factory::factory('Foo');
+
+        $this->assertTrue(array_key_exists('baz', $fooPlugin));
+
+        $GLOBALS['PIECE_UNITY_Plugin_Instances'] = array();
+        $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $oldPluginDirectories;
     }
 
     /**#@-*/
