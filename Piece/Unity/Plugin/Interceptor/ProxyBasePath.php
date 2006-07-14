@@ -42,7 +42,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
 // {{{ Piece_Unity_Plugin_Interceptor_ProxyBasePath
 
 /**
- * An interceptor to adjust the base path and the base path of the current
+ * An interceptor to adjust the base path and the script name of the current
  * request which are held in the Piece_Unity_Context object.
  * This interceptor is used and only works when your web servers are used as
  * reverse proxies.
