@@ -105,7 +105,7 @@ class Piece_Unity_Plugin_Factory
 
             if (!$found) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The plugin [ $plugin ] not found in the directories.\n" .
+                                        "The plugin [ $plugin ] not found in the following directories:\n" .
                                         implode("\n", $GLOBALS['PIECE_UNITY_Plugin_Directories'])
                                         );
                 $return = null;
