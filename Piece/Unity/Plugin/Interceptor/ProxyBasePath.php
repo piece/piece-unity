@@ -47,8 +47,8 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * This interceptor is used and only works when your web servers are used as
  * reverse proxies.
  *
- * The base path and the script name are both relative paths since they based
- * on SCRIPT_NAME environment variable. The following is a example of a
+ * The base path and the script name are both relative paths since they are
+ * based on SCRIPT_NAME environment variable. The following is a example of a
  * context change when 'path' configuration point is set to '/foo'.
  *
  * <pre>
