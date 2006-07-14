@@ -111,9 +111,6 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
             return;
         }
 
-        $session = &$this->_context->getSession();
-        $session->start();
-
         $outputFilter = &$this->getExtension('outputFilter');
         if (Piece_Unity_Error::hasErrors('exception')) {
             return;
