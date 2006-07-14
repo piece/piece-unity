@@ -89,6 +89,8 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePathTestCase extends PHPUnit_TestC
         $previousScriptName = $_SERVER['SCRIPT_NAME'];
         $_SERVER['SCRIPT_NAME'] = '/bar/baz.php';
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
+        $previousSessionCookiePath = ini_get('session.cookie_path');
+        ini_set('session.cookie_path', '/bar');
 
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Interceptor_ProxyBasePath', 'path', '/foo');
@@ -100,7 +102,9 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePathTestCase extends PHPUnit_TestC
 
         $this->assertEquals('/foo/bar', $context->getBasePath());
         $this->assertEquals('/foo/bar/baz.php', $context->getScriptName());
+        $this->assertEquals('/foo/bar', ini_get('session.cookie_path'));
 
+        ini_set('session.cookie_path', $previousSessionCookiePath);
         unset($_SERVER['HTTP_X_FORWARDED_FOR']);
         $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
@@ -122,6 +126,27 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePathTestCase extends PHPUnit_TestC
         $this->assertEquals('/bar/baz.php', $context->getScriptName());
 
         $_SERVER['SCRIPT_NAME'] = $previousScriptName;
+    }
+
+    function testAdjustSessionCookiePathToOff()
+    {
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
+        $previousSessionCookiePath = ini_get('session.cookie_path');
+        ini_set('session.cookie_path', '/bar');
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Interceptor_ProxyBasePath', 'path', '/foo');
+        $config->setConfiguration('Interceptor_ProxyBasePath', 'adjustSessionCookiePath', false);
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $interceptor = &new Piece_Unity_Plugin_Interceptor_ProxyBasePath();
+        $interceptor->invoke();
+
+        $this->assertEquals('/bar', ini_get('session.cookie_path'));
+
+        ini_set('session.cookie_path', $previousSessionCookiePath);
+        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
     }
 
     /**#@-*/
