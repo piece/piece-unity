@@ -84,10 +84,11 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePathTestCase extends PHPUnit_TestC
         $context->clear();
     }
 
-    function testProxyBasePath()
+    function testProxy()
     {
         $previousScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = '/bar.php';
+        $_SERVER['SCRIPT_NAME'] = '/bar/baz.php';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
 
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Interceptor_ProxyBasePath', 'path', '/foo');
@@ -97,8 +98,28 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePathTestCase extends PHPUnit_TestC
         $interceptor = &new Piece_Unity_Plugin_Interceptor_ProxyBasePath();
         $interceptor->invoke();
 
-        $this->assertEquals('/foo', $context->getBasePath());
-        $this->assertEquals('/foo/bar.php', $context->getScriptName());
+        $this->assertEquals('/foo/bar', $context->getBasePath());
+        $this->assertEquals('/foo/bar/baz.php', $context->getScriptName());
+
+        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
+        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
+    }
+
+    function testNonProxy()
+    {
+        $previousScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/bar/baz.php';
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Interceptor_ProxyBasePath', 'path', '/foo');
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $interceptor = &new Piece_Unity_Plugin_Interceptor_ProxyBasePath();
+        $interceptor->invoke();
+
+        $this->assertEquals('/bar', $context->getBasePath());
+        $this->assertEquals('/bar/baz.php', $context->getScriptName());
 
         $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
