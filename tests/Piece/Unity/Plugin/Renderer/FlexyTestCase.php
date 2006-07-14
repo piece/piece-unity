@@ -79,8 +79,8 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
     <input name="test_checkbox_array[]" type="checkbox" value="2" id="tmpId2" checked>2<br>
     <input name="test_checkbox_array[]" type="checkbox" value="3" id="tmpId3">3<br>
 
-    <input name="test_radio" type="radio" id="radio_yes" value="yes" checked>yes<br>
-    <input name="test_radio" type="radio" id="radio_no" value="no">no<br>
+    <input name="test_radio" type="radio" id="test_radio_yes" value="yes" checked>yes<br>
+    <input name="test_radio" type="radio" id="test_radio_no" value="no">no<br>
   </form>
 </body>
 ';
