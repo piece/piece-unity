@@ -118,11 +118,13 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePath extends Piece_Unity_Plugin_Co
 
     /**
      * Invokes the plugin specific code.
+     *
+     * @return boolean
      */
     function invoke()
     {
         if (!$this->_useProxy()) {
-            return;
+            return true;
         }
 
         $path = $this->getConfiguration('path');
@@ -137,6 +139,8 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePath extends Piece_Unity_Plugin_Co
                         );
             }
         }
+
+        return true;
     }
 
     /**#@-*/
