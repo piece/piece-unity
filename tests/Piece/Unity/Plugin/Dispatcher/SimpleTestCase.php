@@ -93,6 +93,9 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
     function testDispatchingWithoutAction()
     {
         $_GET['_event'] = 'foo';
+        $config = &new Piece_Unity_Config();
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
 
         $this->assertEquals('foo', $dispatcher->invoke());
