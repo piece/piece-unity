@@ -41,48 +41,66 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$version = '0.4.0';
-$apiVersion = '0.4.0';
-$notes = "This release includes a lot of enhancements as follows:
+$version = '0.5.0';
+$apiVersion = '0.5.0';
+$notes = "This release includes a lot of enhancements and fixing two problems as follows:
 
-Enhancements:
+<<< Enhancements >>>
+
+Kernel:
 
 * Piece_Unity
-- Added properties \$_configDirectory, \$_cacheDirectory, and \$_dynamicConfig to use after instantiation.
+- invoke(): Changed the return value to null.
 
-* Piece_Unity_Config
-- Removed methods setConfigurationDirectory(), setCacheDirectory(), getConfigurationDirectory(), getCacheDirectory(), getError(), isMergedExtensionPoint(), isMergedConfigurationPoint().
+* Piece_Unity_Plugin_Common
+- getExtension(): Changed code so as to immediately return when an extension is false or an array.
+- Removed unused statements.
 
-* Piece_Unity_Error
-- pushPHPError(): Added logic to return immediately with the current value of error_reporting() function.
+* Piece_Unity_Context
+- Added setBasePath() method for setting the base path of the current request.
+- Added setScriptName() method for setting the script name of the current request.
+- Renamed the method from getBaseURLPath() to getBasePath().
+- Renamed the method from getBaseURL() to getScriptName().
 
-* Piece_Unity_Request
-- Added support for importing the PATH_INFO string as parameters.
+Plug-ins:
 
-* Piece_Unity_ViewElement
-- Added getElement() method for getting elements.
-- Added hasElement() method for checking whether the object has an element with a given name.
+* Interceptor_ProxyBasePath
+- An interceptor to adjust the base path and the script name of the current request which are held in the Piece_Unity_Context object. This interceptor is used and only works when your web servers are used as reverse proxies.
 
-* 'Root' plug-in
-- Added 'interceptor' extension point.
-- Added 'outputFilter' extension point.
-- Added 'controller' extension point.
-- Removed 'dispatcher' and 'view' extension points.
+* Interceptor_SessionStart
+- An interceptor to start session automatically.
 
-* 'Controller' plug-in
-- A controller which delegates requests to appropriate dispatchers and fowards requests to the view handler.
+* Root
+- Removed code to start a session.
 
-* 'InterceptorChain' plug-in
-- An interceptor which invokes all interceptors.
+* OutputBufferStack
+- Changed code so as to immediately return when the extension is not an array.
+- Added error handling.
 
-* 'OutputBufferStack' plug-in
-- An output filter which turns output buffering on, and registers all output handlers.
+* InterceptorChain
+- Changed the default value of 'interceptors' extension point to the array which only includes 'Interceptor_SessionStart' plug-in.
+- Changed code so as to immediately return when the extension is not an array.
+- Added error handling.
 
-* 'OutputFilter_ContentLength' plug-in
-- An output filter which outputs Content-Legnth header.
+* KernelConfigurator
+- Added 'pluginDirectories' configuration point for setting plug-in directories.
+- Added error handling.
 
-* 'Renderer_Smarty' plug-in
-- Changed error handling so as to be thrown any errors as exception except non-existing templates.";
+* View
+- Added the current session name and the current session id as view elements __sessionName and __sessionID.
+
+Example applications:
+
+- Updated and improved.
+- Changed the event names in the action states.
+
+<<< Defect fixes >>>
+
+Kernel:
+
+* Piece_Unity_Context
+- Fixed the problem that slashes are replaced with backslashes.
+- Fixed the problem where the base path and the script name include the starting slash with Apache 2.0.58 on Windows.";
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',

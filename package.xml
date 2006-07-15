@@ -14,50 +14,68 @@
   </maintainer>
   </maintainers>
  <release>
-  <version>0.4.0</version>
-  <date>2006-07-12</date>
+  <version>0.5.0</version>
+  <date>2006-07-15</date>
   <license>BSD License (revised)</license>
   <state>beta</state>
-  <notes>This release includes a lot of enhancements as follows:
+  <notes>This release includes a lot of enhancements and fixing two problems as follows:
 
-Enhancements:
+&lt;&lt;&lt; Enhancements &gt;&gt;&gt;
+
+Kernel:
 
 * Piece_Unity
-- Added properties $_configDirectory, $_cacheDirectory, and $_dynamicConfig to use after instantiation.
+- invoke(): Changed the return value to null.
 
-* Piece_Unity_Config
-- Removed methods setConfigurationDirectory(), setCacheDirectory(), getConfigurationDirectory(), getCacheDirectory(), getError(), isMergedExtensionPoint(), isMergedConfigurationPoint().
+* Piece_Unity_Plugin_Common
+- getExtension(): Changed code so as to immediately return when an extension is false or an array.
+- Removed unused statements.
 
-* Piece_Unity_Error
-- pushPHPError(): Added logic to return immediately with the current value of error_reporting() function.
+* Piece_Unity_Context
+- Added setBasePath() method for setting the base path of the current request.
+- Added setScriptName() method for setting the script name of the current request.
+- Renamed the method from getBaseURLPath() to getBasePath().
+- Renamed the method from getBaseURL() to getScriptName().
 
-* Piece_Unity_Request
-- Added support for importing the PATH_INFO string as parameters.
+Plug-ins:
 
-* Piece_Unity_ViewElement
-- Added getElement() method for getting elements.
-- Added hasElement() method for checking whether the object has an element with a given name.
+* Interceptor_ProxyBasePath
+- An interceptor to adjust the base path and the script name of the current request which are held in the Piece_Unity_Context object. This interceptor is used and only works when your web servers are used as reverse proxies.
 
-* &apos;Root&apos; plug-in
-- Added &apos;interceptor&apos; extension point.
-- Added &apos;outputFilter&apos; extension point.
-- Added &apos;controller&apos; extension point.
-- Removed &apos;dispatcher&apos; and &apos;view&apos; extension points.
+* Interceptor_SessionStart
+- An interceptor to start session automatically.
 
-* &apos;Controller&apos; plug-in
-- A controller which delegates requests to appropriate dispatchers and fowards requests to the view handler.
+* Root
+- Removed code to start a session.
 
-* &apos;InterceptorChain&apos; plug-in
-- An interceptor which invokes all interceptors.
+* OutputBufferStack
+- Changed code so as to immediately return when the extension is not an array.
+- Added error handling.
 
-* &apos;OutputBufferStack&apos; plug-in
-- An output filter which turns output buffering on, and registers all output handlers.
+* InterceptorChain
+- Changed the default value of &apos;interceptors&apos; extension point to the array which only includes &apos;Interceptor_SessionStart&apos; plug-in.
+- Changed code so as to immediately return when the extension is not an array.
+- Added error handling.
 
-* &apos;OutputFilter_ContentLength&apos; plug-in
-- An output filter which outputs Content-Legnth header.
+* KernelConfigurator
+- Added &apos;pluginDirectories&apos; configuration point for setting plug-in directories.
+- Added error handling.
 
-* &apos;Renderer_Smarty&apos; plug-in
-- Changed error handling so as to be thrown any errors as exception except non-existing templates.
+* View
+- Added the current session name and the current session id as view elements __sessionName and __sessionID.
+
+Example applications:
+
+- Updated and improved.
+- Changed the event names in the action states.
+
+&lt;&lt;&lt; Defect fixes &gt;&gt;&gt;
+
+Kernel:
+
+* Piece_Unity_Context
+- Fixed the problem that slashes are replaced with backslashes.
+- Fixed the problem where the base path and the script name include the starting slash with Apache 2.0.58 on Windows.
   </notes>
   <deps>
    <dep type="php" rel="ge" version="4.3.0" optional="no"/>
@@ -279,6 +297,14 @@ Enhancements:
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
        </dir> <!-- /Piece/Unity/Plugin/Dispatcher -->
+       <dir name="Interceptor">
+        <file role="php" name="ProxyBasePath.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+        <file role="php" name="SessionStart.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+       </dir> <!-- /Piece/Unity/Plugin/Interceptor -->
        <dir name="OutputFilter">
         <file role="php" name="ContentLength.php">
          <replace from="@package_version@" to="version" type="package-info"/>
@@ -382,7 +408,13 @@ Enhancements:
          <file role="test" name="First.php" install-as="Piece/Unity/Plugin/Interceptor/First.php">
           <replace from="@package_version@" to="version" type="package-info"/>
          </file>
+         <file role="test" name="ProxyBasePathTestCase.php" install-as="Piece/Unity/Plugin/Interceptor/ProxyBasePathTestCase.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
          <file role="test" name="Second.php" install-as="Piece/Unity/Plugin/Interceptor/Second.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+         <file role="test" name="TestRunner.php" install-as="Piece/Unity/Plugin/Interceptor/TestRunner.php">
           <replace from="@package_version@" to="version" type="package-info"/>
          </file>
         </dir> <!-- /tests/Piece/Unity/Plugin/Interceptor -->
@@ -527,6 +559,71 @@ Enhancements:
   </filelist>
  </release>
  <changelog>
+   <release>
+    <version>0.5.0</version>
+    <date>2006-07-15</date>
+    <license>BSD License (revised)</license>
+    <state>beta</state>
+    <notes>This release includes a lot of enhancements and fixing two problems as follows:
+
+&lt;&lt;&lt; Enhancements &gt;&gt;&gt;
+
+Kernel:
+
+* Piece_Unity
+- invoke(): Changed the return value to null.
+
+* Piece_Unity_Plugin_Common
+- getExtension(): Changed code so as to immediately return when an extension is false or an array.
+- Removed unused statements.
+
+* Piece_Unity_Context
+- Added setBasePath() method for setting the base path of the current request.
+- Added setScriptName() method for setting the script name of the current request.
+- Renamed the method from getBaseURLPath() to getBasePath().
+- Renamed the method from getBaseURL() to getScriptName().
+
+Plug-ins:
+
+* Interceptor_ProxyBasePath
+- An interceptor to adjust the base path and the script name of the current request which are held in the Piece_Unity_Context object. This interceptor is used and only works when your web servers are used as reverse proxies.
+
+* Interceptor_SessionStart
+- An interceptor to start session automatically.
+
+* Root
+- Removed code to start a session.
+
+* OutputBufferStack
+- Changed code so as to immediately return when the extension is not an array.
+- Added error handling.
+
+* InterceptorChain
+- Changed the default value of &apos;interceptors&apos; extension point to the array which only includes &apos;Interceptor_SessionStart&apos; plug-in.
+- Changed code so as to immediately return when the extension is not an array.
+- Added error handling.
+
+* KernelConfigurator
+- Added &apos;pluginDirectories&apos; configuration point for setting plug-in directories.
+- Added error handling.
+
+* View
+- Added the current session name and the current session id as view elements __sessionName and __sessionID.
+
+Example applications:
+
+- Updated and improved.
+- Changed the event names in the action states.
+
+&lt;&lt;&lt; Defect fixes &gt;&gt;&gt;
+
+Kernel:
+
+* Piece_Unity_Context
+- Fixed the problem that slashes are replaced with backslashes.
+- Fixed the problem where the base path and the script name include the starting slash with Apache 2.0.58 on Windows.
+    </notes>
+   </release>
    <release>
     <version>0.4.0</version>
     <date>2006-07-12</date>
