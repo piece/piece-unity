@@ -175,14 +175,15 @@ class Piece_Unity_Config
     // {{{ mergeExtensions()
 
     /**
-     * A callback that will be called by array_walk in merge method.
+     * A callback that will be called by array_walk() function in merge()
+     * method.
      *
-     * @param string $value
-     * @param string $key
+     * @param string $extensions
+     * @param string $plugin
      */
-    function mergeExtensions($value, $plugin)
+    function mergeExtensions($extensions, $plugin)
     {
-        foreach ($value as $extensionPoint => $extension) {
+        foreach ($extensions as $extensionPoint => $extension) {
             $this->_extensions[ strtolower($plugin) ][ strtolower($extensionPoint) ] = $extension;
         }
     }
@@ -191,14 +192,15 @@ class Piece_Unity_Config
     // {{{ mergeConfigurations()
 
     /**
-     * A callback that will be called by array_walk in merge method.
+     * A callback that will be called by array_walk() function in merge()
+     * method.
      *
-     * @param string $value
+     * @param string $configurations
      * @param string $key
      */
-    function mergeConfigurations($value, $plugin)
+    function mergeConfigurations($configurations, $plugin)
     {
-        foreach ($value as $configurationPoint => $configuration) {
+        foreach ($configurations as $configurationPoint => $configuration) {
             $this->_configurations[ strtolower($plugin) ][ strtolower($configurationPoint) ] = $configuration;
         }
     }
