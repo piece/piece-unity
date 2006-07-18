@@ -74,8 +74,6 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
      * @access private
      */
 
-    var $_oldPluginDirectories;
-
     /**#@-*/
 
     /**#@+
@@ -85,14 +83,10 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
     function setUp()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
-        $this->_oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
-        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/../../..');
     }
 
     function tearDown()
     {
-        $GLOBALS['PIECE_UNITY_Plugin_Instances'] = array();
-        $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $this->_oldPluginDirectories;
         $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
                                             'masterFile' => '',
                                             'automaticSerialization' => true,
@@ -140,9 +134,6 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
                                                        dirname(__FILE__)
                                                        );
         $this->assertTrue(is_a($config, 'Piece_Unity_Config'));
-
-        $config->getExtension('View', 'renderer');
-
         $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
 
         $error = Piece_Unity_Error::pop();
@@ -160,9 +151,6 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
                                                        dirname(__FILE__)
                                                        );
         $this->assertTrue(is_a($config, 'Piece_Unity_Config'));
-
-        $config->getExtension('View', 'renderer');
-
         $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
 
         $error = Piece_Unity_Error::pop();
@@ -179,9 +167,6 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
         $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__) . '/../../../../data');
 
         $this->assertTrue(is_a($config, 'Piece_Unity_Config'));
-
-        $config->getExtension('View', 'renderer');
-
         $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
 
         $error = Piece_Unity_Error::pop();
