@@ -41,9 +41,7 @@
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Config/Factory.php';
 require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
 require_once 'Cache/Lite/File.php';
-require_once 'Piece/Unity.php';
 
 // {{{ Piece_Unity_Config_FactoryTestCase
 
