@@ -238,6 +238,69 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
 
+    /**
+     * @since Method available since Release 0.6.0
+     */
+    function testSettingAttribute()
+    {
+        $context = &Piece_Unity_Context::singleton();
+        $context->setAttribute('foo', 'bar');
+
+        $this->assertTrue($context->hasAttribute('foo'));
+        $this->assertEquals('bar', $context->getAttribute('foo'));
+    }
+
+    /**
+     * @since Method available since Release 0.6.0
+     */
+    function testSettingAttributeByReference()
+    {
+        $foo1 = &new stdClass();
+        $context = &Piece_Unity_Context::singleton();
+        $context->setAttributeByRef('foo', $foo1);
+        $foo1->bar = 'baz';
+
+        $this->assertTrue($context->hasAttribute('foo'));
+
+        $foo2 = &$context->getAttribute('foo');
+
+        $this->assertTrue(array_key_exists('bar', $foo2));
+        $this->assertEquals('baz', $foo2->bar);
+    }
+
+    /**
+     * @since Method available since Release 0.6.0
+     */
+    function testRemovingAttribute()
+    {
+        $context = &Piece_Unity_Context::singleton();
+        $context->setAttribute('foo', 'bar');
+
+        $this->assertTrue($context->hasAttribute('foo'));
+
+        $context->removeAttribute('foo');
+
+        $this->assertFalse($context->hasAttribute('foo'));
+    }
+
+    /**
+     * @since Method available since Release 0.6.0
+     */
+    function testClearingAttributes()
+    {
+        $context = &Piece_Unity_Context::singleton();
+        $context->setAttribute('foo', 'bar');
+        $context->setAttribute('bar', 'baz');
+
+        $this->assertTrue($context->hasAttribute('foo'));
+        $this->assertTrue($context->hasAttribute('bar'));
+
+        $context->clearAttributes();
+
+        $this->assertFalse($context->hasAttribute('foo'));
+        $this->assertFalse($context->hasAttribute('bar'));
+    }
+
     /**#@-*/
 
     /**#@+
