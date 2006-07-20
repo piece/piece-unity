@@ -39,6 +39,8 @@
 
 require_once 'Piece/Unity/Plugin/Common.php';
 require_once 'Piece/Unity/Session.php';
+require_once 'Piece/Unity/Plugin/Factory.php';
+require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_Plugin_KernelConfigurator
 
