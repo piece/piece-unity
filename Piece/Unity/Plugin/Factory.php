@@ -84,7 +84,7 @@ class Piece_Unity_Plugin_Factory
     // {{{ factory()
 
     /**
-     * Creates a plugin object from a configuration file or a cache.
+     * Creates a plugin object from the plugin directories.
      *
      * @param string $plugin
      * @return mixed
