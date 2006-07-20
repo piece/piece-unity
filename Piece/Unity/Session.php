@@ -190,7 +190,7 @@ class Piece_Unity_Session
     // {{{ removeAttribute()
 
     /**
-     * Removes an attribute from the flow.
+     * Removes an attribute from the current session state.
      *
      * @param string $name
      */
@@ -203,7 +203,7 @@ class Piece_Unity_Session
     // {{{ clearAttributes()
 
     /**
-     * Removes all attributes from the flow.
+     * Removes all attributes from the current session state.
      */
     function clearAttributes()
     {
