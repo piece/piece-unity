@@ -12,9 +12,9 @@
       <title locale="ja">はじめに</title>
       <title locale="en">Introduction</title>
 
-      <p locale="ja">Piece_UnityはPHPのためのステートフルでセキュアなMVCフレームワークです。Piece_Unityには2つの主要な特徴があります。ひとつは継続サーバとして知られている技術〜それはPiece_Flow Webフローエンジンに基づいています〜を使ったフロー制御、そして状態の保存と復元です。もうひとつはEclipseライクな拡張ポイントと設定ポイントを使ったプラグインシステムです。</p>
+      <p locale="ja">Piece_UnityはPHPのためのステートフルでセキュアなMVCフレームワークです。Piece_Unityには2つの主要な特徴があります。ひとつは継続サーバとして知られている技術〜それはPiece_Flow Webフローエンジンに基づいています〜を使ったフロー制御及び状態の保存/復元です。もうひとつはEclipseライクな拡張ポイントと設定ポイントを使ったプラグインシステムです。</p>
 
-      <p locale="en">Piece_Unity is a stateful and secure MVC framework for PHP. Piece_Unity has two major features. The first one is a technology known as continuation server - It based on Piece_Flow web flow engine, flow control using it, and storing/restoring states. The second one is an Eclipse like plug-in system using extension points and configuration points.</p>
+      <p locale="en">Piece_Unity is a stateful and secure MVC framework for PHP. Piece_Unity has two major features. The first one is flow control and storing/restoring states with a technology known as continuation server - It based on Piece_Flow web flow engine. The second one is an Eclipse like plug-in system using extension points and configuration points.</p>
     </section>
 
     <section>
