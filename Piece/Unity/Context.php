@@ -49,7 +49,7 @@ $GLOBALS['PIECE_UNITY_Context_Instance'] = null;
 // {{{ Piece_Unity_Context
 
 /**
- * The context holder for Piece_Unity applications.
+ * The application context holder for Piece_Unity applications.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
@@ -84,6 +84,7 @@ class Piece_Unity_Context
     var $_eventNameKey = '_event';
     var $_scriptName;
     var $_basePath = '';
+    var $_attributes;
 
     /**#@-*/
 
@@ -218,10 +219,11 @@ class Piece_Unity_Context
     // {{{ clear()
 
     /**
-     * Clears all properties.
+     * Removed a single instance safely.
      */
     function clear()
     {
+        $GLOBALS['PIECE_UNITY_Context_Instance']->clearAttributes();
         unset($GLOBALS['PIECE_UNITY_Context_Instance']);
         $GLOBALS['PIECE_UNITY_Context_Instance'] = null;
     }
@@ -331,6 +333,95 @@ class Piece_Unity_Context
     function setBasePath($basePath)
     {
         $this->_basePath = $basePath;
+    }
+
+    // }}}
+    // {{{ setAttribute()
+
+    /**
+     * Sets an attribute for the current application context.
+     *
+     * @param string $name
+     * @param mixed  $value
+     * @since Method available since Release 0.6.0
+     */
+    function setAttribute($name, $value)
+    {
+        $this->_attributes[$name] = $value;
+    }
+
+    // }}}
+    // {{{ setAttributeByRef()
+
+    /**
+     * Sets an attribute by reference for the current application context.
+     *
+     * @param string $name
+     * @param mixed  &$value
+     * @since Method available since Release 0.6.0
+     */
+    function setAttributeByRef($name, &$value)
+    {
+        $this->_attributes[$name] = &$value;
+    }
+
+    // }}}
+    // {{{ hasAttribute()
+
+    /**
+     * Returns whether the current application context has an attribute with
+     * a given name.
+     *
+     * @param string $name
+     * @return boolean
+     * @since Method available since Release 0.6.0
+     */
+    function hasAttribute($name)
+    {
+        return array_key_exists($name, $this->_attributes);
+    }
+
+    // }}}
+    // {{{ getAttribute()
+
+    /**
+     * Gets an attribute for the current application context.
+     *
+     * @param string $name
+     * @return mixed
+     * @since Method available since Release 0.6.0
+     */
+    function &getAttribute($name)
+    {
+        $attribute = &$this->_attributes[$name];
+        return $attribute;
+    }
+
+    // }}}
+    // {{{ removeAttribute()
+
+    /**
+     * Removes an attribute from the current application context.
+     *
+     * @param string $name
+     * @since Method available since Release 0.6.0
+     */
+    function removeAttribute($name)
+    {
+        unset($this->_attributes[$name]);
+    }
+
+    // }}}
+    // {{{ clearAttributes()
+
+    /**
+     * Removes all attributes from the current application context.
+     *
+     * @since Method available since Release 0.6.0
+     */
+    function clearAttributes()
+    {
+        $this->_attributes = array();
     }
 
     /**#@-*/
