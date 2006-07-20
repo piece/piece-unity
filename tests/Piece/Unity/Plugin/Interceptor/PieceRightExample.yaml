@@ -1,0 +1,24 @@
+# $Id$
+- name: first_name
+  validator: &name
+    - name: Required
+      message: foo
+    - name: Length
+      rule:
+        min: 1
+        max: 255
+      message: bar
+- name: last_name
+  validator: *name
+- name: country
+  validator:
+    - name: Required
+    - name: Length
+      rule:
+        min: 1
+        max: 255
+- name: hello
+  validator:
+    - name: Required
+    - name: HelloWorld
+      message: This field must be 'Hello World'
