@@ -117,11 +117,29 @@ class Piece_Unity_Plugin_Interceptor_PieceRight extends Piece_Unity_Plugin_Commo
         }
 
         $right = &new Piece_Right($this->getConfiguration('configDirectory'),
-                                  $this->getConfiguration('cacheDirectory')
+                                  $this->getConfiguration('cacheDirectory'),
+                                  array(&$this, 'getFieldValueFromContext')
                                   );
         $this->_context->setAttributeByRef('_pieceRight', $right);
 
         return true;
+    }
+
+    // }}}
+    // {{{ getFieldValueFromContext()
+
+    /**
+     * Gets the value of the given field name from the current application
+     * context.This method is used as a callback for Piece_Right package.
+     *
+     * @param string $fieldName
+     * @return mixed
+     */
+    function getFieldValueFromContext($fieldName)
+    {
+        $request = &$this->_context->getRequest();
+
+        return @$request->getParameter($fieldName);
     }
 
     /**#@-*/
