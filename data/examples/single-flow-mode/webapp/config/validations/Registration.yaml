@@ -1,0 +1,19 @@
+# $Id$
+- name: first_name
+  validator:
+    - name: Required
+      message: First Name is required
+    - name: Length
+      rule:
+        min: 1
+        max: 255
+      message: The length of First Name must be less than 255 characters
+- name: last_name
+  validator:
+    - name: Required
+      message: Last Name is required
+    - name: Length
+      rule:
+        min: 1
+        max: 255
+      message: The length of Last Name must be less than 255 characters
