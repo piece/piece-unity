@@ -1,5 +1,4 @@
 # $Id$
-name: Registration
 firstState: DisplayForm
 lastState: { name: DisplayFinish, view: Finish }
 viewState:
@@ -32,6 +31,8 @@ actionState:
     transition:
       - event: goDisplayConfirmation
         nextState: DisplayConfirmation
+      - event: goDisplayForm
+        nextState: DisplayForm
   - name: processRegister
     transition:
       - event: goDisplayFinish
