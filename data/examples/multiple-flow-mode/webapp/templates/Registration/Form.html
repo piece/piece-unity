@@ -15,9 +15,11 @@
     <h4 class="date-header">B.1. Registration application in multiple flow mode and flow in non-exclusive mode.</h4>
       <form name="Form">
         <input type="hidden" name="{__flowExecutionTicketKey}" value="{__flowExecutionTicket}" />
+        <p class="error" flexy:if="_results.isError(#first_name#)">{_results.getErrorMessage(#first_name#)}</p>
         <p>
           First Name: <input type="text" name="first_name" />
         </p>
+        <p class="error" flexy:if="_results.isError(#last_name#)">{_results.getErrorMessage(#last_name#)}</p>
         <p>
           Last Name: <input type="text" name="last_name" />
         </p>

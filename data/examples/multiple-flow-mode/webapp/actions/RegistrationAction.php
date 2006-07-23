@@ -73,17 +73,32 @@ class RegistrationAction
 
     function validate(&$flow, $event, &$context)
     {
-        $fields = $this->_getFormFields();
+        $right = &$context->getAttribute('_pieceRight');
+        $right->validate('Registration');
+        $results = &$right->getResults();
 
-        $request = &$context->getRequest();
-        $user = &new stdClass();
-        foreach ($fields as $field) {
-            $user->$field = @$request->getParameter($field);
+        if (!$results->countErrors()) {
+            $user = &new stdClass();
+            $fields = $this->_getFormFields();
+            foreach ($fields as $field) {
+                $user->$field = $results->getFieldValue($field);
+            }
+            $flow->setAttributeByRef('user', $user);
+
+            return 'goDisplayConfirmation';
+        } else {
+            $request = &$context->getRequest();
+            $user = &new stdClass();
+            $fields = $this->_getFormFields();
+            foreach ($fields as $field) {
+                $user->$field = @$request->getParameter($field);
+            }
+            $flow->setAttributeByRef('user', $user);
+
+            $viewElement = &$context->getViewElement();
+            $viewElement->setElement('_results', $results);
+            return 'goDisplayForm';
         }
-
-        $flow->setAttributeByRef('user', $user);
-
-        return 'goDisplayConfirmation';
     }
 
     function register(&$flow, $event, &$context)
@@ -96,6 +111,8 @@ class RegistrationAction
     {
         $this->_setupFormAttributes($flow, $context);
 
+        $viewElement = &$context->getViewElement();
+
         if ($flow->hasAttribute('user')) {
             $user = &$flow->getAttribute('user');
             $fields = $this->_getFormFields();
@@ -104,7 +121,6 @@ class RegistrationAction
                 $elements[$field]['_value'] = $user->$field;
             }
 
-            $viewElement = &$context->getViewElement();
             $viewElement->setElement('_elements', $elements);
         }
     }
