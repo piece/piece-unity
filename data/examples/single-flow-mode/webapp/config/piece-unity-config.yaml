@@ -14,7 +14,7 @@
       type: configuration
       value:
         - name: Registration
-          file: ../webapp/config/Registration.yaml
+          file: ../webapp/config/flows/Registration.yaml
           isExclusive: false
 - name: Dispatcher_Simple
   point:
@@ -34,3 +34,18 @@
     - name: compileDir
       type: configuration
       value: ../webapp/compiled-templates
+- name: InterceptorChain
+  point:
+    - name: interceptors
+      type: extension
+      value:
+        - Interceptor_SessionStart
+        - Interceptor_PieceRight
+- name: Interceptor_PieceRight
+  point:
+    - name: configDirectory
+      type: configuration
+      value: ../webapp/config/validations
+    - name: cacheDirectory
+      type: configuration
+      value: ../webapp/cache

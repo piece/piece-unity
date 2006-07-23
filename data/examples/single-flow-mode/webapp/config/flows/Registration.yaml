@@ -36,6 +36,8 @@ actionState:
     transition:
       - event: goDisplayConfirmation
         nextState: DisplayConfirmation
+      - event: goDisplayForm
+        nextState: DisplayForm
   - name: processRegister
     transition:
       - event: goDisplayFinish
