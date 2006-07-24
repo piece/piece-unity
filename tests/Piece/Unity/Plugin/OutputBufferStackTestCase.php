@@ -148,6 +148,9 @@ class Piece_Unity_Plugin_OutputBufferStackTestCase extends PHPUnit_TestCase
         $this->assertEquals(strtolower('Piece_Unity_Plugin_OutputFilter_First'), strtolower(array_shift($logs)));
     }
 
+    /**
+     * @since Method available since Release 0.6.0
+     */
     function testBuiltinFunction()
     {
         $config = &new Piece_Unity_Config();
