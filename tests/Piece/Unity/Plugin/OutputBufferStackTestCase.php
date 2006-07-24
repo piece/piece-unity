@@ -148,6 +148,33 @@ class Piece_Unity_Plugin_OutputBufferStackTestCase extends PHPUnit_TestCase
         $this->assertEquals(strtolower('Piece_Unity_Plugin_OutputFilter_First'), strtolower(array_shift($logs)));
     }
 
+    function testBuiltinFunction()
+    {
+        $config = &new Piece_Unity_Config();
+        $config->setExtension('OutputBufferStack', 'filters', array('OutputFilter_First', 'mb_output_handler', 'OutputFilter_Second'));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $chain = &new Piece_Unity_Plugin_OutputBufferStack();
+        $chain->invoke();
+
+        while (ob_get_level()) {
+            ob_end_flush();
+        }
+
+        $request = &$context->getRequest();
+
+        $this->assertTrue($request->hasParameter('FirstOutputFilterCalled'));
+        $this->assertTrue($request->getParameter('FirstOutputFilterCalled'));
+        $this->assertTrue($request->hasParameter('SecondOutputFilterCalled'));
+        $this->assertTrue($request->getParameter('SecondOutputFilterCalled'));
+
+        $logs = $request->getParameter('logs');
+
+        $this->assertEquals(strtolower('Piece_Unity_Plugin_OutputFilter_Second'), strtolower(array_shift($logs)));
+        $this->assertEquals(strtolower('Piece_Unity_Plugin_OutputFilter_First'), strtolower(array_shift($logs)));
+    }
+
     /**#@-*/
 
     /**#@+
