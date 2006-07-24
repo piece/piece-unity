@@ -111,9 +111,15 @@ class Piece_Unity_Plugin_OutputBufferStack extends Piece_Unity_Plugin_Common
         }
 
         foreach ($filters as $extension) {
-            $handler = &Piece_Unity_Plugin_Factory::factory($extension);
-            if (Piece_Unity_Error::hasErrors('exception')) {
-                return;
+            if (!function_exists($extension)) {
+                $handler = &Piece_Unity_Plugin_Factory::factory($extension);
+                if (Piece_Unity_Error::hasErrors('exception')) {
+                    return;
+                }
+
+                $callback = array(&$handler, 'invoke');
+            } else {
+                $callback = $extension;
             }
 
             /*
@@ -122,7 +128,7 @@ class Piece_Unity_Plugin_OutputBufferStack extends Piece_Unity_Plugin_Common
              * @param string $buffer
              * @return string
              */
-            ob_start(array(&$handler, 'invoke'));
+            ob_start($callback);
         }
     }
 
