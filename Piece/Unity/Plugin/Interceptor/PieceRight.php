@@ -41,6 +41,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
 require_once 'Piece/Right.php';
 require_once 'Piece/Right/Validator/Factory.php';
 require_once 'Piece/Unity/Error.php';
+require_once 'Piece/Right/Filter/Factory.php';
 
 // {{{ Piece_Unity_Plugin_Interceptor_PieceRight
 
@@ -89,6 +90,7 @@ class Piece_Unity_Plugin_Interceptor_PieceRight extends Piece_Unity_Plugin_Commo
         $this->_addConfigurationPoint('configDirectory', null);
         $this->_addConfigurationPoint('cacheDirectory', null);
         $this->_addConfigurationPoint('validatorDirectories', array());
+        $this->_addConfigurationPoint('filterDirectories', array());
     }
 
     // }}}
@@ -110,6 +112,21 @@ class Piece_Unity_Plugin_Interceptor_PieceRight extends Piece_Unity_Plugin_Commo
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
                                     'Failed to configure the configuration point [ validatorDirectories ] at the plugin [ ' . __CLASS__ . ' ].',
+                                    'warning',
+                                    array('plugin' => __CLASS__)
+                                    );
+            Piece_Unity_Error::popCallback();
+        }
+
+        $filterDirectories = $this->getConfiguration('filterDirectories');
+        if (is_array($filterDirectories)) {
+            foreach (array_reverse($filterDirectories) as $filterDirectory) {
+                Piece_Right_Filter_Factory::addFilterDirectory($filterDirectory);
+            }
+        } else {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    'Failed to configure the configuration point [ filterDirectories ] at the plugin [ ' . __CLASS__ . ' ].',
                                     'warning',
                                     array('plugin' => __CLASS__)
                                     );
