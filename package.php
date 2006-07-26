@@ -41,66 +41,9 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$version = '0.5.0';
-$apiVersion = '0.5.0';
-$notes = "This release includes a lot of enhancements and fixing two problems as follows:
-
-<<< Enhancements >>>
-
-Kernel:
-
-* Piece_Unity
-- invoke(): Changed the return value to null.
-
-* Piece_Unity_Plugin_Common
-- getExtension(): Changed code so as to immediately return when an extension is false or an array.
-- Removed unused statements.
-
-* Piece_Unity_Context
-- Added setBasePath() method for setting the base path of the current request.
-- Added setScriptName() method for setting the script name of the current request.
-- Renamed the method from getBaseURLPath() to getBasePath().
-- Renamed the method from getBaseURL() to getScriptName().
-
-Plug-ins:
-
-* Interceptor_ProxyBasePath
-- An interceptor to adjust the base path and the script name of the current request which are held in the Piece_Unity_Context object. This interceptor is used and only works when your web servers are used as reverse proxies.
-
-* Interceptor_SessionStart
-- An interceptor to start session automatically.
-
-* Root
-- Removed code to start a session.
-
-* OutputBufferStack
-- Changed code so as to immediately return when the extension is not an array.
-- Added error handling.
-
-* InterceptorChain
-- Changed the default value of 'interceptors' extension point to the array which only includes 'Interceptor_SessionStart' plug-in.
-- Changed code so as to immediately return when the extension is not an array.
-- Added error handling.
-
-* KernelConfigurator
-- Added 'pluginDirectories' configuration point for setting plug-in directories.
-- Added error handling.
-
-* View
-- Added the current session name and the current session id as view elements __sessionName and __sessionID.
-
-Example applications:
-
-- Updated and improved.
-- Changed the event names in the action states.
-
-<<< Defect fixes >>>
-
-Kernel:
-
-* Piece_Unity_Context
-- Fixed the problem that slashes are replaced with backslashes.
-- Fixed the problem where the base path and the script name include the starting slash with Apache 2.0.58 on Windows.";
+$version = '0.6.0';
+$apiVersion = '0.6.0';
+$notes = 'dummy';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
@@ -114,7 +57,7 @@ $package->setOptions(array('filelistgenerator' => 'svn',
 $package->setPackage('Piece_Unity');
 $package->setPackageType('php');
 $package->setSummary('A stateful and secure MVC framework for PHP');
-$package->setDescription('Piece_Unity is a stateful and secure MVC framework for PHP. Piece_Unity has two major features. The first one is a technology known as continuation server - It based on Piece_Flow web flow engine, flow control using it, and storing/restoring states. The second one is an Eclipse like plug-in system using extension points and configuration points.');
+$package->setDescription('Piece_Unity is a stateful and secure MVC framework for PHP. Piece_Unity has two major features. The first one is flow control and storing/restoring states with a technology known as continuation server - It based on Piece_Flow web flow engine. The second one is an Eclipse like plug-in system using extension points and configuration points.');
 $package->setChannel('pear.hatotech.org');
 $package->setLicense('BSD License (revised)',
                      'http://www.opensource.org/licenses/bsd-license.php'

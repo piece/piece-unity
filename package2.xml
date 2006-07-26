@@ -6,82 +6,25 @@
  <name>Piece_Unity</name>
  <channel>pear.hatotech.org</channel>
  <summary>A stateful and secure MVC framework for PHP</summary>
- <description>Piece_Unity is a stateful and secure MVC framework for PHP. Piece_Unity has two major features. The first one is a technology known as continuation server - It based on Piece_Flow web flow engine, flow control using it, and storing/restoring states. The second one is an Eclipse like plug-in system using extension points and configuration points.</description>
+ <description>Piece_Unity is a stateful and secure MVC framework for PHP. Piece_Unity has two major features. The first one is flow control and storing/restoring states with a technology known as continuation server - It based on Piece_Flow web flow engine. The second one is an Eclipse like plug-in system using extension points and configuration points.</description>
  <lead>
   <name>KUBO Atsuhiro</name>
   <user>iteman</user>
   <email>iteman@users.sourceforge.net</email>
   <active>yes</active>
  </lead>
- <date>2006-07-15</date>
- <time>01:19:03</time>
+ <date>2006-07-26</date>
+ <time>12:52:57</time>
  <version>
-  <release>0.5.0</release>
-  <api>0.5.0</api>
+  <release>0.6.0</release>
+  <api>0.6.0</api>
  </version>
  <stability>
   <release>beta</release>
   <api>beta</api>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
- <notes>This release includes a lot of enhancements and fixing two problems as follows:
-
-&lt;&lt;&lt; Enhancements &gt;&gt;&gt;
-
-Kernel:
-
-* Piece_Unity
-- invoke(): Changed the return value to null.
-
-* Piece_Unity_Plugin_Common
-- getExtension(): Changed code so as to immediately return when an extension is false or an array.
-- Removed unused statements.
-
-* Piece_Unity_Context
-- Added setBasePath() method for setting the base path of the current request.
-- Added setScriptName() method for setting the script name of the current request.
-- Renamed the method from getBaseURLPath() to getBasePath().
-- Renamed the method from getBaseURL() to getScriptName().
-
-Plug-ins:
-
-* Interceptor_ProxyBasePath
-- An interceptor to adjust the base path and the script name of the current request which are held in the Piece_Unity_Context object. This interceptor is used and only works when your web servers are used as reverse proxies.
-
-* Interceptor_SessionStart
-- An interceptor to start session automatically.
-
-* Root
-- Removed code to start a session.
-
-* OutputBufferStack
-- Changed code so as to immediately return when the extension is not an array.
-- Added error handling.
-
-* InterceptorChain
-- Changed the default value of &apos;interceptors&apos; extension point to the array which only includes &apos;Interceptor_SessionStart&apos; plug-in.
-- Changed code so as to immediately return when the extension is not an array.
-- Added error handling.
-
-* KernelConfigurator
-- Added &apos;pluginDirectories&apos; configuration point for setting plug-in directories.
-- Added error handling.
-
-* View
-- Added the current session name and the current session id as view elements __sessionName and __sessionID.
-
-Example applications:
-
-- Updated and improved.
-- Changed the event names in the action states.
-
-&lt;&lt;&lt; Defect fixes &gt;&gt;&gt;
-
-Kernel:
-
-* Piece_Unity_Context
-- Fixed the problem that slashes are replaced with backslashes.
-- Fixed the problem where the base path and the script name include the starting slash with Apache 2.0.58 on Windows.</notes>
+ <notes>dummy</notes>
  <contents>
   <dir baseinstalldir="/" name="/">
    <dir name="data">
@@ -94,11 +37,20 @@ Kernel:
      <dir name="images">
       <file name="bg.gif" role="data">
       </file>
+      <file name="date_icon.gif" role="data">
+      </file>
       <file name="piece_footer.jpg" role="data">
       </file>
       <file name="piece_header.jpg" role="data">
       </file>
+      <file name="quotes.gif" role="data">
+      </file>
      </dir> <!-- /data/examples/images -->
+     <dir name="js">
+      <file name="window_operation.js" role="data">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+     </dir> <!-- /data/examples/js -->
      <dir name="multiple-flow-mode">
       <dir name="htdocs">
        <dir name="css">
@@ -109,9 +61,13 @@ Kernel:
        <dir name="images">
         <file name="bg.gif" role="data">
         </file>
+        <file name="date_icon.gif" role="data">
+        </file>
         <file name="piece_footer.jpg" role="data">
         </file>
         <file name="piece_header.jpg" role="data">
+        </file>
+        <file name="quotes.gif" role="data">
         </file>
        </dir> <!-- /data/examples/multiple-flow-mode/htdocs/images -->
        <file name="counter.php" role="data">
@@ -147,13 +103,20 @@ Kernel:
         </file>
        </dir> <!-- /data/examples/multiple-flow-mode/webapp/compiled-templates -->
        <dir name="config">
-        <file name="Counter.yaml" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
+        <dir name="flows">
+         <file name="Counter.yaml" role="data">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+         <file name="Registration.yaml" role="data">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+        </dir> <!-- /data/examples/multiple-flow-mode/webapp/config/flows -->
+        <dir name="validations">
+         <file name="Registration.yaml" role="data">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+        </dir> <!-- /data/examples/multiple-flow-mode/webapp/config/validations -->
         <file name="piece-unity-config.yaml" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="Registration.yaml" role="data">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
        </dir> <!-- /data/examples/multiple-flow-mode/webapp/config -->
@@ -198,9 +161,13 @@ Kernel:
        <dir name="images">
         <file name="bg.gif" role="data">
         </file>
+        <file name="date_icon.gif" role="data">
+        </file>
         <file name="piece_footer.jpg" role="data">
         </file>
         <file name="piece_header.jpg" role="data">
+        </file>
+        <file name="quotes.gif" role="data">
         </file>
        </dir> <!-- /data/examples/single-flow-mode/htdocs/images -->
        <file name="index.php" role="data">
@@ -230,10 +197,17 @@ Kernel:
         </file>
        </dir> <!-- /data/examples/single-flow-mode/webapp/compiled-templates -->
        <dir name="config">
+        <dir name="flows">
+         <file name="Registration.yaml" role="data">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+        </dir> <!-- /data/examples/single-flow-mode/webapp/config/flows -->
+        <dir name="validations">
+         <file name="Registration.yaml" role="data">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+        </dir> <!-- /data/examples/single-flow-mode/webapp/config/validations -->
         <file name="piece-unity-config.yaml" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="Registration.yaml" role="data">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
        </dir> <!-- /data/examples/single-flow-mode/webapp/config -->
@@ -294,6 +268,9 @@ Kernel:
        </file>
       </dir> <!-- /Piece/Unity/Plugin/Dispatcher -->
       <dir name="Interceptor">
+       <file name="PieceRight.php" role="php">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
        <file name="ProxyBasePath.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
@@ -401,7 +378,27 @@ Kernel:
         </file>
        </dir> <!-- /tests/Piece/Unity/Plugin/Dispatcher -->
        <dir name="Interceptor">
+        <dir name="Piece">
+         <dir name="Right">
+          <dir name="Filter">
+           <file name="LowerCase.php" role="test">
+            <tasks:replace from="@package_version@" to="version" type="package-info" />
+           </file>
+          </dir> <!-- /tests/Piece/Unity/Plugin/Interceptor/Piece/Right/Filter -->
+          <dir name="Validator">
+           <file name="HelloWorld.php" role="test">
+            <tasks:replace from="@package_version@" to="version" type="package-info" />
+           </file>
+          </dir> <!-- /tests/Piece/Unity/Plugin/Interceptor/Piece/Right/Validator -->
+         </dir> <!-- /tests/Piece/Unity/Plugin/Interceptor/Piece/Right -->
+        </dir> <!-- /tests/Piece/Unity/Plugin/Interceptor/Piece -->
         <file name="First.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="PieceRightExample.yaml" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="PieceRightTestCase.php" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
         <file name="ProxyBasePathTestCase.php" role="test">
@@ -564,7 +561,7 @@ Kernel:
    <package>
     <name>Piece_Flow</name>
     <channel>pear.hatotech.org</channel>
-    <min>1.2.1</min>
+    <min>1.4.0</min>
    </package>
    <package>
     <name>Cache_Lite</name>
@@ -593,20 +590,30 @@ Kernel:
     <channel>pearified.com</channel>
     <min>1.6.8</min>
    </package>
+   <package>
+    <name>Piece_Right</name>
+    <channel>pear.hatotech.org</channel>
+    <min>0.3.0</min>
+   </package>
   </optional>
  </dependencies>
  <phprelease>
   <filelist>
    <install as="examples/css/default.css" name="data/examples/css/default.css" />
    <install as="examples/images/bg.gif" name="data/examples/images/bg.gif" />
+   <install as="examples/images/date_icon.gif" name="data/examples/images/date_icon.gif" />
    <install as="examples/images/piece_footer.jpg" name="data/examples/images/piece_footer.jpg" />
    <install as="examples/images/piece_header.jpg" name="data/examples/images/piece_header.jpg" />
+   <install as="examples/images/quotes.gif" name="data/examples/images/quotes.gif" />
    <install as="examples/index.html" name="data/examples/index.html" />
+   <install as="examples/js/window_operation.js" name="data/examples/js/window_operation.js" />
    <install as="examples/multiple-flow-mode/htdocs/counter.php" name="data/examples/multiple-flow-mode/htdocs/counter.php" />
    <install as="examples/multiple-flow-mode/htdocs/css/default.css" name="data/examples/multiple-flow-mode/htdocs/css/default.css" />
    <install as="examples/multiple-flow-mode/htdocs/images/bg.gif" name="data/examples/multiple-flow-mode/htdocs/images/bg.gif" />
+   <install as="examples/multiple-flow-mode/htdocs/images/date_icon.gif" name="data/examples/multiple-flow-mode/htdocs/images/date_icon.gif" />
    <install as="examples/multiple-flow-mode/htdocs/images/piece_footer.jpg" name="data/examples/multiple-flow-mode/htdocs/images/piece_footer.jpg" />
    <install as="examples/multiple-flow-mode/htdocs/images/piece_header.jpg" name="data/examples/multiple-flow-mode/htdocs/images/piece_header.jpg" />
+   <install as="examples/multiple-flow-mode/htdocs/images/quotes.gif" name="data/examples/multiple-flow-mode/htdocs/images/quotes.gif" />
    <install as="examples/multiple-flow-mode/htdocs/register.php" name="data/examples/multiple-flow-mode/htdocs/register.php" />
    <install as="examples/multiple-flow-mode/htdocs/static.php" name="data/examples/multiple-flow-mode/htdocs/static.php" />
    <install as="examples/multiple-flow-mode/webapp/actions/ActionAndDisplayAction.php" name="data/examples/multiple-flow-mode/webapp/actions/ActionAndDisplayAction.php" />
@@ -614,9 +621,10 @@ Kernel:
    <install as="examples/multiple-flow-mode/webapp/actions/RegistrationAction.php" name="data/examples/multiple-flow-mode/webapp/actions/RegistrationAction.php" />
    <install as="examples/multiple-flow-mode/webapp/cache/README" name="data/examples/multiple-flow-mode/webapp/cache/README" />
    <install as="examples/multiple-flow-mode/webapp/compiled-templates/README" name="data/examples/multiple-flow-mode/webapp/compiled-templates/README" />
-   <install as="examples/multiple-flow-mode/webapp/config/Counter.yaml" name="data/examples/multiple-flow-mode/webapp/config/Counter.yaml" />
+   <install as="examples/multiple-flow-mode/webapp/config/flows/Counter.yaml" name="data/examples/multiple-flow-mode/webapp/config/flows/Counter.yaml" />
+   <install as="examples/multiple-flow-mode/webapp/config/flows/Registration.yaml" name="data/examples/multiple-flow-mode/webapp/config/flows/Registration.yaml" />
    <install as="examples/multiple-flow-mode/webapp/config/piece-unity-config.yaml" name="data/examples/multiple-flow-mode/webapp/config/piece-unity-config.yaml" />
-   <install as="examples/multiple-flow-mode/webapp/config/Registration.yaml" name="data/examples/multiple-flow-mode/webapp/config/Registration.yaml" />
+   <install as="examples/multiple-flow-mode/webapp/config/validations/Registration.yaml" name="data/examples/multiple-flow-mode/webapp/config/validations/Registration.yaml" />
    <install as="examples/multiple-flow-mode/webapp/templates/Counter/Counter.html" name="data/examples/multiple-flow-mode/webapp/templates/Counter/Counter.html" />
    <install as="examples/multiple-flow-mode/webapp/templates/Counter/Finish.html" name="data/examples/multiple-flow-mode/webapp/templates/Counter/Finish.html" />
    <install as="examples/multiple-flow-mode/webapp/templates/Registration/Confirmation.html" name="data/examples/multiple-flow-mode/webapp/templates/Registration/Confirmation.html" />
@@ -626,21 +634,26 @@ Kernel:
    <install as="examples/multiple-flow-mode/webapp/templates/Static/ImmediateDisplay.html" name="data/examples/multiple-flow-mode/webapp/templates/Static/ImmediateDisplay.html" />
    <install as="examples/single-flow-mode/htdocs/css/default.css" name="data/examples/single-flow-mode/htdocs/css/default.css" />
    <install as="examples/single-flow-mode/htdocs/images/bg.gif" name="data/examples/single-flow-mode/htdocs/images/bg.gif" />
+   <install as="examples/single-flow-mode/htdocs/images/date_icon.gif" name="data/examples/single-flow-mode/htdocs/images/date_icon.gif" />
    <install as="examples/single-flow-mode/htdocs/images/piece_footer.jpg" name="data/examples/single-flow-mode/htdocs/images/piece_footer.jpg" />
    <install as="examples/single-flow-mode/htdocs/images/piece_header.jpg" name="data/examples/single-flow-mode/htdocs/images/piece_header.jpg" />
+   <install as="examples/single-flow-mode/htdocs/images/quotes.gif" name="data/examples/single-flow-mode/htdocs/images/quotes.gif" />
    <install as="examples/single-flow-mode/htdocs/index.php" name="data/examples/single-flow-mode/htdocs/index.php" />
    <install as="examples/single-flow-mode/htdocs/static.php" name="data/examples/single-flow-mode/htdocs/static.php" />
    <install as="examples/single-flow-mode/webapp/actions/ActionAndDisplayAction.php" name="data/examples/single-flow-mode/webapp/actions/ActionAndDisplayAction.php" />
    <install as="examples/single-flow-mode/webapp/actions/RegistrationAction.php" name="data/examples/single-flow-mode/webapp/actions/RegistrationAction.php" />
    <install as="examples/single-flow-mode/webapp/cache/README" name="data/examples/single-flow-mode/webapp/cache/README" />
    <install as="examples/single-flow-mode/webapp/compiled-templates/README" name="data/examples/single-flow-mode/webapp/compiled-templates/README" />
+   <install as="examples/single-flow-mode/webapp/config/flows/Registration.yaml" name="data/examples/single-flow-mode/webapp/config/flows/Registration.yaml" />
    <install as="examples/single-flow-mode/webapp/config/piece-unity-config.yaml" name="data/examples/single-flow-mode/webapp/config/piece-unity-config.yaml" />
-   <install as="examples/single-flow-mode/webapp/config/Registration.yaml" name="data/examples/single-flow-mode/webapp/config/Registration.yaml" />
+   <install as="examples/single-flow-mode/webapp/config/validations/Registration.yaml" name="data/examples/single-flow-mode/webapp/config/validations/Registration.yaml" />
    <install as="examples/single-flow-mode/webapp/templates/Confirmation.html" name="data/examples/single-flow-mode/webapp/templates/Confirmation.html" />
    <install as="examples/single-flow-mode/webapp/templates/Finish.html" name="data/examples/single-flow-mode/webapp/templates/Finish.html" />
    <install as="examples/single-flow-mode/webapp/templates/Form.html" name="data/examples/single-flow-mode/webapp/templates/Form.html" />
    <install as="examples/single-flow-mode/webapp/templates/Static/ActionAndDisplay.html" name="data/examples/single-flow-mode/webapp/templates/Static/ActionAndDisplay.html" />
    <install as="examples/single-flow-mode/webapp/templates/Static/ImmediateDisplay.html" name="data/examples/single-flow-mode/webapp/templates/Static/ImmediateDisplay.html" />
+   <install as="piece-unity-config.yaml" name="data/piece-unity-config.yaml" />
+   <install as="piece-unity.yaml" name="data/piece-unity.yaml" />
    <install as="piece-unity-config.yaml" name="data/piece-unity-config.yaml" />
    <install as="piece-unity.yaml" name="data/piece-unity.yaml" />
    <install as="LICENSE" name="docs/LICENSE" />
@@ -665,6 +678,10 @@ Kernel:
    <install as="Piece/Unity/Plugin/FactoryTestCase.php" name="tests/Piece/Unity/Plugin/FactoryTestCase.php" />
    <install as="Piece/Unity/Plugin/Foo.php" name="tests/Piece/Unity/Plugin/Foo.php" />
    <install as="Piece/Unity/Plugin/Interceptor/First.php" name="tests/Piece/Unity/Plugin/Interceptor/First.php" />
+   <install as="Piece/Unity/Plugin/Interceptor/Piece/Right/Filter/LowerCase.php" name="tests/Piece/Unity/Plugin/Interceptor/Piece/Right/Filter/LowerCase.php" />
+   <install as="Piece/Unity/Plugin/Interceptor/Piece/Right/Validator/HelloWorld.php" name="tests/Piece/Unity/Plugin/Interceptor/Piece/Right/Validator/HelloWorld.php" />
+   <install as="Piece/Unity/Plugin/Interceptor/PieceRightExample.yaml" name="tests/Piece/Unity/Plugin/Interceptor/PieceRightExample.yaml" />
+   <install as="Piece/Unity/Plugin/Interceptor/PieceRightTestCase.php" name="tests/Piece/Unity/Plugin/Interceptor/PieceRightTestCase.php" />
    <install as="Piece/Unity/Plugin/Interceptor/ProxyBasePathTestCase.php" name="tests/Piece/Unity/Plugin/Interceptor/ProxyBasePathTestCase.php" />
    <install as="Piece/Unity/Plugin/Interceptor/Second.php" name="tests/Piece/Unity/Plugin/Interceptor/Second.php" />
    <install as="Piece/Unity/Plugin/Interceptor/TestRunner.php" name="tests/Piece/Unity/Plugin/Interceptor/TestRunner.php" />
@@ -704,6 +721,19 @@ Kernel:
   </filelist>
  </phprelease>
  <changelog>
+  <release>
+   <version>
+    <release>0.6.0</release>
+    <api>0.6.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2006-07-26</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+   <notes>dummy</notes>
+  </release>
   <release>
    <version>
     <release>0.5.0</release>
