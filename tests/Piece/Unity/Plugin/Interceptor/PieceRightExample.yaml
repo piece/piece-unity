@@ -1,24 +1,74 @@
 # $Id$
 - name: first_name
+  required:
+    message: foo
+  filter:
+     - trim
   validator: &name
-    - name: Required
-      message: foo
     - name: Length
       rule:
         min: 1
         max: 255
       message: bar
 - name: last_name
+  required:
+    message: baz
   validator: *name
 - name: country
   validator:
-    - name: Required
     - name: Length
       rule:
         min: 1
         max: 255
-- name: hello
+- name: birthdayYear
+  watcher:
+    target:
+      - name: birthdayMonth
+      - name: birthdayDay
+    turnOff:
+      - age
   validator:
-    - name: Required
-    - name: HelloWorld
-      message: This field must be 'Hello World'
+    - name: Regex
+      rule:
+        pattern: /^(19|20)\d{2}$/
+    - name: Date
+      rule:
+        year: birthdayYear
+        month: birthdayMonth
+        day: birthdayDay
+      message: birthday is not valid.
+- name: birthdayMonth
+  validator:
+    - name: Regex
+      rule:
+        pattern: /^(0?[1-9]|1[12])$/
+- name: birthdayDay
+  validator:
+    - name: Regex
+      rule:
+        pattern: /^(0?[1-9]|1[0-9]|2[0-9]|3[01])$/
+- name: hobbies
+  required:
+  validator:
+    - name: List
+      rule:
+        elements: [ programming, wine, manga ]
+- name: use_php
+  required:
+  validator:
+    - name: Range
+      rule:
+        min: 0
+        max: 1
+- name: favorite_framework
+  watcher:
+    target:
+      - name: use_php
+        trigger:
+          comparisonOperator: ==
+          comparisonTo: 1
+  validator:
+    - name: Length
+      rule:
+        min: 1
+        max: 255
