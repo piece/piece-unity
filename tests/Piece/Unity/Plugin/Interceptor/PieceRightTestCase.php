@@ -80,6 +80,11 @@ class Piece_Unity_Plugin_Interceptor_PieceRightTestCase extends PHPUnit_TestCase
      * @access public
      */
 
+    function setUp()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+    }
+
     function tearDown()
     {
         $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
@@ -90,25 +95,38 @@ class Piece_Unity_Plugin_Interceptor_PieceRightTestCase extends PHPUnit_TestCase
         $cache->clean();
         $context = &Piece_Unity_Context::singleton();
         $context->clear();
+        Piece_Unity_Error::clearErrors();
+        Piece_Unity_Error::popCallback();
     }
 
     function testValidation()
     {
         $oldValidatorDirectories = $GLOBALS['PIECE_RIGHT_Validator_Directories'];
+        $oldFilterDirectories = $GLOBALS['PIECE_RIGHT_Filter_Directories'];
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_POST['first_name'] = 'Foo';
         $_POST['last_name'] = 'Bar';
         $_POST['phone'] = '0123456789';
         $_POST['country'] = 'Japan';
-        $_POST['hello'] = 'Hello World';
+        $_POST['hobbies'] = array('wine', 'manga');
+        $_POST['use_php'] = '1';
+        $_POST['favorite_framework'] = 'Piece Framework';
+        $_POST['birthdayYear'] = '1977';
+        $_POST['birthdayMonth'] = '6';
+        $_POST['birthdayDay'] = '14';
+        $_POST['greeting'] = 'Hello World';
         $dynamicConfig = &new Piece_Right_Config();
-        $dynamicConfig->addValidation('phone', 'Required');
+        $dynamicConfig->setRequired('phone');
         $dynamicConfig->addValidation('phone', 'Length', array('min' => 10, 'max' => 11));
+        $dynamicConfig->setRequired('greeting');
+        $dynamicConfig->addValidation('greeting', 'HelloWorld');
+        $dynamicConfig->addFilter('greeting', 'LowerCase');
 
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Interceptor_PieceRight', 'configDirectory', dirname(__FILE__));
         $config->setConfiguration('Interceptor_PieceRight', 'cacheDirectory', dirname(__FILE__));
         $config->setConfiguration('Interceptor_PieceRight', 'validatorDirectories', array(dirname(__FILE__)));
+        $config->setConfiguration('Interceptor_PieceRight', 'filterDirectories', array(dirname(__FILE__)));
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
@@ -120,13 +138,19 @@ class Piece_Unity_Plugin_Interceptor_PieceRightTestCase extends PHPUnit_TestCase
         $this->assertTrue(is_a($right, 'Piece_Right'));
         $this->assertTrue($right->validate('PieceRightExample', $dynamicConfig));
 
-        unset($_POST['hello']);
+        unset($_POST['birthdayDay']);
+        unset($_POST['birthdayMonth']);
+        unset($_POST['birthdayYear']);
+        unset($_POST['favorite_framework']);
+        unset($_POST['use_php']);
+        unset($_POST['hobbies']);
         unset($_POST['country']);
         unset($_POST['phone']);
         unset($_POST['last_name']);
         unset($_POST['first_name']);
         unset($_SERVER['REQUEST_METHOD']);
-
+        $GLOBALS['PIECE_RIGHT_Filter_Instances'] = array();
+        $GLOBALS['PIECE_RIGHT_Filter_Directories'] = $oldValidatorDirectories;
         $GLOBALS['PIECE_RIGHT_Validator_Instances'] = array();
         $GLOBALS['PIECE_RIGHT_Validator_Directories'] = $oldValidatorDirectories;
     }
