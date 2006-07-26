@@ -87,8 +87,8 @@ class Piece_Unity_Plugin_Interceptor_PieceRight extends Piece_Unity_Plugin_Commo
     function Piece_Unity_Plugin_Interceptor_PieceRight()
     {
         parent::Piece_Unity_Plugin_Common();
-        $this->_addConfigurationPoint('configDirectory', null);
-        $this->_addConfigurationPoint('cacheDirectory', null);
+        $this->_addConfigurationPoint('configDirectory');
+        $this->_addConfigurationPoint('cacheDirectory');
         $this->_addConfigurationPoint('validatorDirectories', array());
         $this->_addConfigurationPoint('filterDirectories', array());
     }

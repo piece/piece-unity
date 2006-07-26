@@ -109,7 +109,7 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePath extends Piece_Unity_Plugin_Co
     function Piece_Unity_Plugin_Interceptor_ProxyBasePath()
     {
         parent::Piece_Unity_Plugin_Common();
-        $this->_addConfigurationPoint('path', null);
+        $this->_addConfigurationPoint('path');
         $this->_addConfigurationPoint('adjustSessionCookiePath', true);
     }
 

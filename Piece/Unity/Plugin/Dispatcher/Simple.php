@@ -82,7 +82,7 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
     function Piece_Unity_Plugin_Dispatcher_Simple()
     {
         parent::Piece_Unity_Plugin_Common();
-        $this->_addConfigurationPoint('actionDirectory', null);
+        $this->_addConfigurationPoint('actionDirectory');
     }
 
     // }}}

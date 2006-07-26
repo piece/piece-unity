@@ -82,7 +82,7 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Common
     function Piece_Unity_Plugin_Renderer_PHP()
     {
         parent::Piece_Unity_Plugin_Common();
-        $this->_addConfigurationPoint('templateDirectory', null);
+        $this->_addConfigurationPoint('templateDirectory');
         $this->_addConfigurationPoint('templateExtension', '.php');
     }
 

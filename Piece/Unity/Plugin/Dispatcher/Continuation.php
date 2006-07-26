@@ -94,14 +94,14 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     function Piece_Unity_Plugin_Dispatcher_Continuation()
     {
         parent::Piece_Unity_Plugin_Common();
-        $this->_addConfigurationPoint('actionDirectory', null);
+        $this->_addConfigurationPoint('actionDirectory');
         $this->_addConfigurationPoint('enableSingleFlowMode', false);
-        $this->_addConfigurationPoint('cacheDirectory', null);
+        $this->_addConfigurationPoint('cacheDirectory');
         $this->_addConfigurationPoint('flowDefinitions', array());
         $this->_addConfigurationPoint('sessionKey', strtolower(__CLASS__));
         $this->_addConfigurationPoint('flowExecutionTicketKey', '_flowExecutionTicket');
         $this->_addConfigurationPoint('flowNameKey', '_flow');
-        $this->_addConfigurationPoint('flowName', null);
+        $this->_addConfigurationPoint('flowName');
     }
 
     // }}}

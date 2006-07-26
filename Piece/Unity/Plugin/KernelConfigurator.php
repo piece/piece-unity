@@ -85,7 +85,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         parent::Piece_Unity_Plugin_Common();
         $this->_addConfigurationPoint('eventNameKey', '_event');
         $this->_addConfigurationPoint('autoloadClasses', array());
-        $this->_addConfigurationPoint('eventName', null);
+        $this->_addConfigurationPoint('eventName');
         $this->_addConfigurationPoint('importPathInfo', false);
         $this->_addConfigurationPoint('pluginDirectories', array());
     }

@@ -93,7 +93,7 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
     {
         parent::Piece_Unity_Plugin_Common();
         $this->_addConfigurationPoint('templateExtension', '.tpl');
-        $this->_addConfigurationPoint('SMARTY_DIR', null);
+        $this->_addConfigurationPoint('SMARTY_DIR');
         foreach ($this->_smartyClassVariables as $point => $default) {
             $this->_addConfigurationPoint($point, $default);
         }
