@@ -38,9 +38,7 @@
  * @since      File available since Release 0.6.0
  */
 
-require_once 'Piece/Right/Validator/Common.php';
-
-// {{{ Piece_Right_Validator_HelloWorld
+// {{{ Piece_Right_Filter_LowerCase
 
 /**
  * A class for unit tests.
@@ -52,9 +50,9 @@ require_once 'Piece/Right/Validator/Common.php';
  * @version    Release: @package_version@
  * @link       http://iteman.typepad.jp/piece/
  * @see        Piece_Unity_Plugin_Interceptor_PieceRightTestCase
- * @since      File available since Release 0.6.0
+ * @since      Class available since Release 0.6.0
  */
-class Piece_Right_Validator_HelloWorld extends Piece_Right_Validator_Common
+class Piece_Right_Filter_LowerCase
 {
 
     // {{{ properties
@@ -75,9 +73,9 @@ class Piece_Right_Validator_HelloWorld extends Piece_Right_Validator_Common
      * @access public
      */
 
-    function validate($value)
+    function filter($value)
     {
-        return $value == 'hello world';
+        return strtolower($value);
     }
 
     /**#@-*/
