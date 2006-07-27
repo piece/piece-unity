@@ -164,7 +164,7 @@ class Piece_Unity_Plugin_Factory
         if (!file_exists($file)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The plugin file for the class [ $plugin ] not found.",
+                                    "The plugin file [ $file ] for the class [ $plugin ] not found.",
                                     'warning'
                                     );
             Piece_Unity_Error::popCallback();
@@ -181,7 +181,7 @@ class Piece_Unity_Plugin_Factory
             return false;
         }
 
-        if (!@include_once $file) {
+        if (!include_once $file) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                     "The plugin file [ $file ] not found or was not readable.",
