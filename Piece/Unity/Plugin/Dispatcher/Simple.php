@@ -95,6 +95,7 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
      * an event name as a view string.
      *
      * @return string
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
      */
     function invoke()
     {
@@ -108,7 +109,12 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
 
         $file = "$actionDirectory/" . str_replace('_', '/', $class) . '.php';
         if (is_readable($file)) {
-            @include_once $file;
+            if (!include_once $file) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                        "The action file [ $file ] not found or was not readable."
+                                        );
+                return;
+            }
 
             if (version_compare(phpversion(), '5.0.0', '<')) {
                 $result = class_exists($class);
