@@ -147,7 +147,7 @@ class Piece_Unity_Session
     function addAutoloadClass($class)
     {
         if (!in_array($class, $GLOBALS['PIECE_UNITY_Session_Autoload_Classes'])) {
-            array_push($GLOBALS['PIECE_UNITY_Session_Autoload_Classes'], $class);
+            $GLOBALS['PIECE_UNITY_Session_Autoload_Classes'][] = $class;
         }
     }
 

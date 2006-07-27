@@ -112,7 +112,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
             $autoloadClasses = array();
         }
 
-        array_push($autoloadClasses, 'Piece_Flow_Continuation');
+        $autoloadClasses[] = 'Piece_Flow_Continuation';
         foreach ($autoloadClasses as $autoloadClass) {
             Piece_Unity_Session::addAutoloadClass($autoloadClass);
         }

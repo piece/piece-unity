@@ -95,7 +95,7 @@ class Piece_Unity_Plugin_OutputFilter_Second extends Piece_Unity_Plugin_Common
             $logs = $request->getParameter('logs');
         }
 
-        array_push($logs, __CLASS__);
+        $logs[] = __CLASS__;
         $request->setParameter('logs', $logs);
 
         return $buffer;
