@@ -126,7 +126,7 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Common
         $viewElement = &$this->_context->getViewElement();
         extract($viewElement->getElements(), EXTR_OVERWRITE | EXTR_REFS);
 
-        if (!@include_once $file) {
+        if (!include_once $file) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                     'The HTML template file [ $file ] not found or was not readable.',

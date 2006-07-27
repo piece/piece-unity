@@ -172,7 +172,7 @@ class Piece_Unity_Session
             }
 
             $file = str_replace('_', '/', $class) . '.php';
-            if (!@include_once($file)) {
+            if (!include_once($file)) {
                 Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                         "The class file [ $file ] not found or was not readable.",
