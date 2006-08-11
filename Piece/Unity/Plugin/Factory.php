@@ -96,8 +96,8 @@ class Piece_Unity_Plugin_Factory
         $plugin = "Piece_Unity_Plugin_$plugin";
         if (!array_key_exists($plugin, $GLOBALS['PIECE_UNITY_Plugin_Instances'])) {
             $found = false;
-            for ($i = 0; $i < count($GLOBALS['PIECE_UNITY_Plugin_Directories']); ++$i) {
-                $found = Piece_Unity_Plugin_Factory::_load($plugin, $GLOBALS['PIECE_UNITY_Plugin_Directories'][$i]);
+            foreach ($GLOBALS['PIECE_UNITY_Plugin_Directories'] as $pluginDirectory) {
+                $found = Piece_Unity_Plugin_Factory::_load($plugin, $pluginDirectory);
                 if ($found) {
                     break;
                 }
