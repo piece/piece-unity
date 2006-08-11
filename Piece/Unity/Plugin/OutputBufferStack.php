@@ -111,16 +111,6 @@ class Piece_Unity_Plugin_OutputBufferStack extends Piece_Unity_Plugin_Common
         }
 
         foreach ($filters as $extension) {
-            if (!function_exists($extension)) {
-                $handler = &Piece_Unity_Plugin_Factory::factory($extension);
-                if (Piece_Unity_Error::hasErrors('exception')) {
-                    return;
-                }
-
-                $callback = array(&$handler, 'invoke');
-            } else {
-                $callback = $extension;
-            }
 
             /*
              * All output filters must have the signature as follows.
@@ -128,7 +118,16 @@ class Piece_Unity_Plugin_OutputBufferStack extends Piece_Unity_Plugin_Common
              * @param string $buffer
              * @return string
              */
-            ob_start($callback);
+            if (!function_exists($extension)) {
+                $filter = &Piece_Unity_Plugin_Factory::factory($extension);
+                if (Piece_Unity_Error::hasErrors('exception')) {
+                    return;
+                }
+
+                ob_start(array(&$filter, 'invoke'));
+            } else {
+                ob_start($extension);
+            }
         }
     }
 
