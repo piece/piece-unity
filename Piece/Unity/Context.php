@@ -203,7 +203,7 @@ class Piece_Unity_Context
         if (!$this->_eventNameImported) {
             $this->_eventNameImported = true;
             foreach ($this->_request->getParameters() as $key => $value) {
-                if (preg_match("/^{$this->_eventNameKey}_([a-zA-Z_]+)$/", $key, $matches)) {
+                if (preg_match("/^{$this->_eventNameKey}_(.+)$/", $key, $matches)) {
                     $this->_eventName = $matches[1];
                 }
             }
