@@ -1,19 +1,21 @@
 # $Id$
 - name: first_name
+  description: First Name
+  required:
+    message: %_description% is required
   validator:
-    - name: Required
-      message: First Name is required
     - name: Length
       rule:
         min: 1
         max: 255
-      message: The length of First Name must be less than 255 characters
+      message: The length of %_description% must be less than 255 characters
 - name: last_name
+  description: Last Name
+  required:
+    message: %_description% is required
   validator:
-    - name: Required
-      message: Last Name is required
     - name: Length
       rule:
         min: 1
         max: 255
-      message: The length of Last Name must be less than 255 characters
+      message: The length of %_description% must be less than 255 characters
