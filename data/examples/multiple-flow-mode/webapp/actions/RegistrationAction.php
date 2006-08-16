@@ -37,6 +37,8 @@
  * @since      File available since Release 0.2.0
  */
 
+require_once 'Piece/Flow/Action.php';
+
 // {{{ RegistrationAction
 
 /**
@@ -50,7 +52,7 @@
  * @link       http://iteman.typepad.jp/piece/
  * @since      Class available since Release 0.2.0
  */
-class RegistrationAction
+class RegistrationAction extends Piece_Flow_Action
 {
 
     // {{{ properties
@@ -71,52 +73,51 @@ class RegistrationAction
      * @access public
      */
 
-    function validate(&$flow, $event, &$context)
+    function validate()
     {
-        $right = &$context->getAttribute('_pieceRight');
+        $right = &$this->_payload->getAttribute('_pieceRight');
         $right->validate('Registration');
         $results = &$right->getResults();
 
         if (!$results->countErrors()) {
             $user = &new stdClass();
-            $fields = $this->_getFormFields();
-            foreach ($fields as $field) {
+            foreach ($results->getFieldNames() as $field) {
                 $user->$field = $results->getFieldValue($field);
             }
-            $flow->setAttributeByRef('user', $user);
+            $this->_flow->setAttributeByRef('user', $user);
 
             return 'goDisplayConfirmation';
         } else {
-            $request = &$context->getRequest();
+            $request = &$this->_payload->getRequest();
             $user = &new stdClass();
-            $fields = $this->_getFormFields();
-            foreach ($fields as $field) {
+            foreach ($results->getFieldNames() as $field) {
                 $user->$field = @$request->getParameter($field);
             }
-            $flow->setAttributeByRef('user', $user);
+            $this->_flow->setAttributeByRef('user', $user);
 
-            $viewElement = &$context->getViewElement();
+            $viewElement = &$this->_payload->getViewElement();
             $viewElement->setElement('_results', $results);
+
             return 'goDisplayForm';
         }
     }
 
-    function register(&$flow, $event, &$context)
+    function register()
     {
-        $flow->clearAttributes();
+        $this->_flow->clearAttributes();
         return 'goDisplayFinish';
     }
 
-    function setupForm(&$flow, $event, &$context)
+    function setupForm()
     {
-        $this->_setupFormAttributes($flow, $context);
+        $this->_setupFormAttributes();
 
-        $viewElement = &$context->getViewElement();
+        $viewElement = &$this->_payload->getViewElement();
 
-        if ($flow->hasAttribute('user')) {
-            $user = &$flow->getAttribute('user');
+        if ($this->_flow->hasAttribute('user')) {
+            $user = &$this->_flow->getAttribute('user');
             $fields = $this->_getFormFields();
-            $elements = $this->_getFormElements($context);
+            $elements = $this->_getFormElements();
             foreach ($fields as $field) {
                 $elements[$field]['_value'] = $user->$field;
             }
@@ -125,12 +126,12 @@ class RegistrationAction
         }
     }
 
-    function setupConfirmation(&$flow, $event, &$context)
+    function setupConfirmation()
     {
-        $this->_setupFormAttributes($flow, $context);
+        $this->_setupFormAttributes();
 
-        $user = &$flow->getAttribute('user');
-        $viewElement = &$context->getViewElement();
+        $user = &$this->_flow->getAttribute('user');
+        $viewElement = &$this->_payload->getViewElement();
         $viewElement->setElementByRef('user', $user);
     }
 
@@ -146,19 +147,19 @@ class RegistrationAction
         return $fields;
     }
 
-    function _setupFormAttributes(&$flow, &$context)
+    function _setupFormAttributes()
     {
-        $view = $flow->getView();
-        $elements = $this->_getFormElements($context);
-        $elements[$view]['_attributes']['action'] = $context->getScriptName();
+        $view = $this->_flow->getView();
+        $elements = $this->_getFormElements();
+        $elements[$view]['_attributes']['action'] = $this->_payload->getScriptName();
         $elements[$view]['_attributes']['method'] = 'post';
-        $viewElement = &$context->getViewElement();
+        $viewElement = &$this->_payload->getViewElement();
         $viewElement->setElement('_elements', $elements);
     }
 
-    function _getFormElements(&$context)
+    function _getFormElements()
     {
-        $viewElement = &$context->getViewElement();
+        $viewElement = &$this->_payload->getViewElement();
         if (!$viewElement->hasElement('_elements')) {
             $elements = array();
         } else {

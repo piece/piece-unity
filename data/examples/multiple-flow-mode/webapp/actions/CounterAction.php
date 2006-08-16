@@ -37,6 +37,8 @@
  * @since      File available since Release 0.2.0
  */
 
+require_once 'Piece/Flow/Action.php';
+
 // {{{ CounterAction
 
 /**
@@ -50,7 +52,7 @@
  * @link       http://iteman.typepad.jp/piece/
  * @since      Class available since Release 0.2.0
  */
-class CounterAction
+class CounterAction extends Piece_Flow_Action
 {
 
     // {{{ properties
@@ -71,26 +73,26 @@ class CounterAction
      * @access public
      */
 
-    function initialize(&$flow, $event, &$context)
+    function initialize()
     {
-        $flow->setAttribute('counter', 0);
+        $this->_flow->setAttribute('counter', 0);
     }
 
-    function increase(&$flow, $event, &$context)
+    function increase()
     {
-        $flow->setAttribute('counter', $flow->getAttribute('counter') + 1);
-        $this->_setupFormAttributes($flow, $context);
-        $this->_setupCounter($flow, $context);
+        $this->_flow->setAttribute('counter', $this->_flow->getAttribute('counter') + 1);
+        $this->_setupFormAttributes();
+        $this->_setupCounter();
     }
 
-    function reached(&$flow, $event, &$context)
+    function reached()
     {
-        return $flow->getAttribute('counter') >= 10;
+        return $this->_flow->getAttribute('counter') >= 10;
     }
 
-    function setupFinish(&$flow, $event, &$context)
+    function setupFinish()
     {
-        $this->_setupCounter($flow, $context);
+        $this->_setupCounter();
     }
 
     /**#@-*/
@@ -105,19 +107,19 @@ class CounterAction
         return $fields;
     }
 
-    function _setupFormAttributes(&$flow, &$context)
+    function _setupFormAttributes()
     {
-        $view = $flow->getView();
-        $elements = $this->_getFormElements($context);
-        $elements[$view]['_attributes']['action'] = $context->getScriptName();
+        $view = $this->_flow->getView();
+        $elements = $this->_getFormElements();
+        $elements[$view]['_attributes']['action'] = $this->_payload->getScriptName();
         $elements[$view]['_attributes']['method'] = 'post';
-        $viewElement = &$context->getViewElement();
+        $viewElement = &$this->_payload->getViewElement();
         $viewElement->setElement('_elements', $elements);
     }
 
-    function _getFormElements(&$context)
+    function _getFormElements()
     {
-        $viewElement = &$context->getViewElement();
+        $viewElement = &$this->_payload->getViewElement();
         if (!$viewElement->hasElement('_elements')) {
             $elements = array();
         } else {
@@ -127,10 +129,10 @@ class CounterAction
         return $elements;
     }
 
-    function _setupCounter(&$flow, &$context)
+    function _setupCounter()
     {
-        $counter = $flow->getAttribute('counter');
-        $viewElement = &$context->getViewElement();
+        $counter = $this->_flow->getAttribute('counter');
+        $viewElement = &$this->_payload->getViewElement();
         $viewElement->setElement('counter', $counter);
     }
 
