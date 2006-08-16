@@ -84,22 +84,6 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ constructor
-
-    /**
-     * Defines extension points and configuration points for the plugin.
-     */
-    function Piece_Unity_Plugin_Renderer_Smarty()
-    {
-        parent::Piece_Unity_Plugin_Common();
-        $this->_addConfigurationPoint('templateExtension', '.tpl');
-        $this->_addConfigurationPoint('SMARTY_DIR');
-        foreach ($this->_smartyClassVariables as $point => $default) {
-            $this->_addConfigurationPoint($point, $default);
-        }
-    }
-
-    // }}}
     // {{{ invoke()
 
     /**
@@ -211,6 +195,23 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                     'The class [ Smarty ] not defined in the class file [ Smarty.class.php ].'
                                     );
+        }
+    }
+
+    // }}}
+    // {{{ _initialize()
+
+    /**
+     * Defines and initializes extension points and configuration points.
+     *
+     * @since Method available since Release 0.6.0
+     */
+    function _initialize()
+    {
+        $this->_addConfigurationPoint('templateExtension', '.tpl');
+        $this->_addConfigurationPoint('SMARTY_DIR');
+        foreach ($this->_smartyClassVariables as $point => $default) {
+            $this->_addConfigurationPoint($point, $default);
         }
     }
 

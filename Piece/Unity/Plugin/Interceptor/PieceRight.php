@@ -79,21 +79,6 @@ class Piece_Unity_Plugin_Interceptor_PieceRight extends Piece_Unity_Plugin_Commo
      */
 
     // }}}
-    // {{{ constructor
-
-    /**
-     * Defines extension points and configuration points for the plugin.
-     */
-    function Piece_Unity_Plugin_Interceptor_PieceRight()
-    {
-        parent::Piece_Unity_Plugin_Common();
-        $this->_addConfigurationPoint('configDirectory');
-        $this->_addConfigurationPoint('cacheDirectory');
-        $this->_addConfigurationPoint('validatorDirectories', array());
-        $this->_addConfigurationPoint('filterDirectories', array());
-    }
-
-    // }}}
     // {{{ invoke()
 
     /**
@@ -164,6 +149,22 @@ class Piece_Unity_Plugin_Interceptor_PieceRight extends Piece_Unity_Plugin_Commo
     /**#@+
      * @access private
      */
+
+    // }}}
+    // {{{ _initialize()
+
+    /**
+     * Defines and initializes extension points and configuration points.
+     *
+     * @since Method available since Release 0.6.0
+     */
+    function _initialize()
+    {
+        $this->_addConfigurationPoint('configDirectory');
+        $this->_addConfigurationPoint('cacheDirectory');
+        $this->_addConfigurationPoint('validatorDirectories', array());
+        $this->_addConfigurationPoint('filterDirectories', array());
+    }
 
     /**#@-*/
 

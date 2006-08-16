@@ -74,19 +74,6 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ constructor
-
-    /**
-     * Defines extension points and configuration points for the plugin.
-     */
-    function Piece_Unity_Plugin_Renderer_PHP()
-    {
-        parent::Piece_Unity_Plugin_Common();
-        $this->_addConfigurationPoint('templateDirectory');
-        $this->_addConfigurationPoint('templateExtension', '.php');
-    }
-
-    // }}}
     // {{{ invoke()
 
     /**
@@ -142,6 +129,20 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Common
     /**#@+
      * @access private
      */
+
+    // }}}
+    // {{{ _initialize()
+
+    /**
+     * Defines and initializes extension points and configuration points.
+     *
+     * @since Method available since Release 0.6.0
+     */
+    function _initialize()
+    {
+        $this->_addConfigurationPoint('templateDirectory');
+        $this->_addConfigurationPoint('templateExtension', '.php');
+    }
  
     /**#@-*/
 

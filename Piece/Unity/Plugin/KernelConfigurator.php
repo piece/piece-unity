@@ -75,22 +75,6 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ constructor
-
-    /**
-     * Defines extension points and configuration points for the plugin.
-     */
-    function Piece_Unity_Plugin_KernelConfigurator()
-    {
-        parent::Piece_Unity_Plugin_Common();
-        $this->_addConfigurationPoint('eventNameKey', '_event');
-        $this->_addConfigurationPoint('autoloadClasses', array());
-        $this->_addConfigurationPoint('eventName');
-        $this->_addConfigurationPoint('importPathInfo', false);
-        $this->_addConfigurationPoint('pluginDirectories', array());
-    }
-
-    // }}}
     // {{{ invoke()
 
     /**
@@ -150,6 +134,23 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
     /**#@+
      * @access private
      */
+
+    // }}}
+    // {{{ _initialize()
+
+    /**
+     * Defines and initializes extension points and configuration points.
+     *
+     * @since Method available since Release 0.6.0
+     */
+    function _initialize()
+    {
+        $this->_addConfigurationPoint('eventNameKey', '_event');
+        $this->_addConfigurationPoint('autoloadClasses', array());
+        $this->_addConfigurationPoint('eventName');
+        $this->_addConfigurationPoint('importPathInfo', false);
+        $this->_addConfigurationPoint('pluginDirectories', array());
+    }
  
     /**#@-*/
 

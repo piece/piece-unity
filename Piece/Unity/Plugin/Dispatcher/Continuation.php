@@ -86,25 +86,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      */
 
     // }}}
-    // {{{ constructor
-
-    /**
-     * Defines extension points and configuration points for the plugin.
-     */
-    function Piece_Unity_Plugin_Dispatcher_Continuation()
-    {
-        parent::Piece_Unity_Plugin_Common();
-        $this->_addConfigurationPoint('actionDirectory');
-        $this->_addConfigurationPoint('enableSingleFlowMode', false);
-        $this->_addConfigurationPoint('cacheDirectory');
-        $this->_addConfigurationPoint('flowDefinitions', array());
-        $this->_addConfigurationPoint('sessionKey', strtolower(__CLASS__));
-        $this->_addConfigurationPoint('flowExecutionTicketKey', '_flowExecutionTicket');
-        $this->_addConfigurationPoint('flowNameKey', '_flow');
-        $this->_addConfigurationPoint('flowName');
-    }
-
-    // }}}
     // {{{ invoke()
 
     /**
@@ -119,8 +100,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      */
     function invoke()
     {
-        $this->_initialize();
-
         $session = &$this->_context->getSession();
         $continuation = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_Session_Key']);
         if (is_null($continuation)) {
@@ -258,22 +237,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     }
 
     // }}}
-    // {{{ _initialize()
-
-    /**
-     * Initialize the global variables in the class and the action directory
-     * for the current request.
-     */
-    function _initialize()
-    {
-        $GLOBALS['PIECE_UNITY_Continuation_Session_Key'] = $this->getConfiguration('sessionKey');
-        $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key'] = $this->getConfiguration('flowExecutionTicketKey');
-        $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key'] = $this->getConfiguration('flowNameKey');
-        $GLOBALS['PIECE_UNITY_Continuation_FlowName'] = $this->getConfiguration('flowName');
-        Piece_Flow_Continuation::setActionDirectory($this->getConfiguration('actionDirectory'));
-    }
-
-    // }}}
     // {{{ _setViewElements()
 
     /**
@@ -290,6 +253,32 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $viewElement->setElement('__flowExecutionTicketKey', $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key']);
         $viewElement->setElement('__flowNameKey', $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key']);
         $viewElement->setElement('__flowExecutionTicket', $continuation->getCurrentFlowExecutionTicket());
+    }
+
+    // }}}
+    // {{{ _initialize()
+
+    /**
+     * Defines and initializes extension points and configuration points.
+     *
+     * @since Method available since Release 0.6.0
+     */
+    function _initialize()
+    {
+        $this->_addConfigurationPoint('actionDirectory');
+        $this->_addConfigurationPoint('enableSingleFlowMode', false);
+        $this->_addConfigurationPoint('cacheDirectory');
+        $this->_addConfigurationPoint('flowDefinitions', array());
+        $this->_addConfigurationPoint('sessionKey', strtolower(__CLASS__));
+        $this->_addConfigurationPoint('flowExecutionTicketKey', '_flowExecutionTicket');
+        $this->_addConfigurationPoint('flowNameKey', '_flow');
+        $this->_addConfigurationPoint('flowName');
+
+        $GLOBALS['PIECE_UNITY_Continuation_Session_Key'] = $this->getConfiguration('sessionKey');
+        $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key'] = $this->getConfiguration('flowExecutionTicketKey');
+        $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key'] = $this->getConfiguration('flowNameKey');
+        $GLOBALS['PIECE_UNITY_Continuation_FlowName'] = $this->getConfiguration('flowName');
+        Piece_Flow_Continuation::setActionDirectory($this->getConfiguration('actionDirectory'));
     }
 
     /**#@-*/

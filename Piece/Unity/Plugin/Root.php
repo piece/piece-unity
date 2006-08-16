@@ -74,21 +74,6 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ constructor
-
-    /**
-     * Defines extension points and configuration points for the plugin.
-     */
-    function Piece_Unity_Plugin_Root()
-    {
-        parent::Piece_Unity_Plugin_Common();
-        $this->_addExtensionPoint('configurator', 'KernelConfigurator');
-        $this->_addExtensionPoint('outputFilter', 'OutputBufferStack');
-        $this->_addExtensionPoint('interceptor', 'InterceptorChain');
-        $this->_addExtensionPoint('controller', 'Controller');
-    }
-
-    // }}}
     // {{{ invoke()
 
     /**
@@ -144,6 +129,22 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
     /**#@+
      * @access private
      */
+
+    // }}}
+    // {{{ _initialize()
+
+    /**
+     * Defines and initializes extension points and configuration points.
+     *
+     * @since Method available since Release 0.6.0
+     */
+    function _initialize()
+    {
+        $this->_addExtensionPoint('configurator', 'KernelConfigurator');
+        $this->_addExtensionPoint('outputFilter', 'OutputBufferStack');
+        $this->_addExtensionPoint('interceptor', 'InterceptorChain');
+        $this->_addExtensionPoint('controller', 'Controller');
+    }
  
     /**#@-*/
 

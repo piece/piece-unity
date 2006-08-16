@@ -86,25 +86,6 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ constructor
-
-    /**
-     * Defines extension points and configuration points for the plugin.
-     */
-    function Piece_Unity_Plugin_Renderer_Flexy()
-    {
-        parent::Piece_Unity_Plugin_Common();
-        $this->_addConfigurationPoint('templateExtension', '.html');
-        $this->_addConfigurationPoint('formElementsKey', '_elements');
-        $this->_addConfigurationPoint('formElementValueKey', '_value');
-        $this->_addConfigurationPoint('formElementOptionsKey', '_options');
-        $this->_addConfigurationPoint('formElementAttributesKey', '_attributes');
-        foreach ($this->_configurationOptions as $point => $default) {
-            $this->_addConfigurationPoint($point, $default);
-        }
-    }
-
-    // }}}
     // {{{ invoke()
 
     /**
@@ -234,6 +215,26 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
         }
 
         return $options;
+    }
+
+    // }}}
+    // {{{ _initialize()
+
+    /**
+     * Defines and initializes extension points and configuration points.
+     *
+     * @since Method available since Release 0.6.0
+     */
+    function _initialize()
+    {
+        $this->_addConfigurationPoint('templateExtension', '.html');
+        $this->_addConfigurationPoint('formElementsKey', '_elements');
+        $this->_addConfigurationPoint('formElementValueKey', '_value');
+        $this->_addConfigurationPoint('formElementOptionsKey', '_options');
+        $this->_addConfigurationPoint('formElementAttributesKey', '_attributes');
+        foreach ($this->_configurationOptions as $point => $default) {
+            $this->_addConfigurationPoint($point, $default);
+        }
     }
 
     /**#@-*/

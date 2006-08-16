@@ -101,19 +101,6 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePath extends Piece_Unity_Plugin_Co
      */
 
     // }}}
-    // {{{ constructor
-
-    /**
-     * Defines extension points and configuration points for the plugin.
-     */
-    function Piece_Unity_Plugin_Interceptor_ProxyBasePath()
-    {
-        parent::Piece_Unity_Plugin_Common();
-        $this->_addConfigurationPoint('path');
-        $this->_addConfigurationPoint('adjustSessionCookiePath', true);
-    }
-
-    // }}}
     // {{{ invoke()
 
     /**
@@ -166,6 +153,20 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePath extends Piece_Unity_Plugin_Co
         }
 
         return false;
+    }
+
+    // }}}
+    // {{{ _initialize()
+
+    /**
+     * Defines and initializes extension points and configuration points.
+     *
+     * @since Method available since Release 0.6.0
+     */
+    function _initialize()
+    {
+        $this->_addConfigurationPoint('path');
+        $this->_addConfigurationPoint('adjustSessionCookiePath', true);
     }
  
     /**#@-*/
