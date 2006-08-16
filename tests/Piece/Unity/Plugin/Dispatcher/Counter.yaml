@@ -1,5 +1,4 @@
 # $Id$
-name: Counter
 firstState: DisplayCounter
 lastState: { name: Finish, view: Finish }
 viewState:
