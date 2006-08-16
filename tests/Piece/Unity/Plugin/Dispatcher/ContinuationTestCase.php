@@ -132,11 +132,11 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $_GET['_event'] = 'increase';
         $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
         unset($_GET['_flow']);
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $session = &$context->getSession();
         $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_Session_Key'], $continuation);
-        $context->setConfiguration($config);
         $dispatcher->invoke();
 
         $this->assertEquals(1, $continuation->getAttribute('counter'));
@@ -202,11 +202,11 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $_GET['_event'] = 'increase';
         $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
         unset($_GET['_flow']);
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $session = &$context->getSession();
         $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_Session_Key'], $continuation);
-        $context->setConfiguration($config);
         $dispatcher->invoke();
         $dispatcher->invoke();
         $dispatcher->invoke();
