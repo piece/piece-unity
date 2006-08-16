@@ -38,6 +38,8 @@
  * @since      File available since Release 0.1.0
  */
 
+require_once 'Piece/Flow/Action.php';
+
 // {{{ Piece_Unity_CounterAction
 
 /**
@@ -52,7 +54,7 @@
  * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
  * @since      File available since Release 0.1.0
  */
-class CounterAction
+class CounterAction extends Piece_Flow_Action
 {
 
     // {{{ properties
@@ -73,17 +75,17 @@ class CounterAction
      * @access public
      */
 
-    function setup(&$flow, $event, &$payload)
+    function setup()
     {
-        if (!$flow->hasAttribute('counter')) {
-            $flow->setAttribute('counter', 0);
+        if (!$this->_flow->hasAttribute('counter')) {
+            $this->_flow->setAttribute('counter', 0);
         }
     }
 
-    function increase(&$flow, $event, &$payload)
+    function increase()
     {
-        $counter = $flow->getAttribute('counter') + 1;
-        $flow->setAttribute('counter', $counter);
+        $counter = $this->_flow->getAttribute('counter') + 1;
+        $this->_flow->setAttribute('counter', $counter);
 
         if ($counter < 3) {
             return 'succeed';
