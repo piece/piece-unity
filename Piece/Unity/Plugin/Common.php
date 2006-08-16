@@ -82,11 +82,13 @@ class Piece_Unity_Plugin_Common
     // {{{ constructor
 
     /**
-     * Sets a single instance of Piece_Unity_Context class to a plugin.
+     * Sets a single instance of Piece_Unity_Context class to a plugin, and
+     * defines extension points and configuration points for the plugin.
      */
     function Piece_Unity_Plugin_Common()
     {
         $this->_context = &Piece_Unity_Context::singleton();
+        $this->_initialize();
     }
 
     // }}}
@@ -187,6 +189,16 @@ class Piece_Unity_Plugin_Common
     {
         $this->_configurationPoints[ strtolower($configurationPoint) ] = $default;
     }
+
+    // }}}
+    // {{{ _initialize()
+
+    /**
+     * Defines and initializes extension points and configuration points.
+     *
+     * @since Method available since Release 0.6.0
+     */
+    function _initialize() {}
 
     /**#@-*/
 
