@@ -93,8 +93,8 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePathTestCase extends PHPUnit_TestC
         ini_set('session.cookie_path', '/bar');
 
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Interceptor_ProxyBasePath', 'path', '/foo');
         $context = &Piece_Unity_Context::singleton();
+        $context->setProxyPath('/foo');
         $context->setConfiguration($config);
 
         $interceptor = &new Piece_Unity_Plugin_Interceptor_ProxyBasePath();
@@ -115,8 +115,8 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePathTestCase extends PHPUnit_TestC
         $_SERVER['SCRIPT_NAME'] = '/bar/baz.php';
 
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Interceptor_ProxyBasePath', 'path', '/foo');
         $context = &Piece_Unity_Context::singleton();
+        $context->setProxyPath('/foo');
         $context->setConfiguration($config);
 
         $interceptor = &new Piece_Unity_Plugin_Interceptor_ProxyBasePath();
@@ -128,16 +128,17 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePathTestCase extends PHPUnit_TestC
         $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
 
-    function testAdjustSessionCookiePathToOff()
+    function testAdjustingSessionCookiePathToOff()
     {
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
         $previousSessionCookiePath = ini_get('session.cookie_path');
         ini_set('session.cookie_path', '/bar');
 
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Interceptor_ProxyBasePath', 'path', '/foo');
         $config->setConfiguration('Interceptor_ProxyBasePath', 'adjustSessionCookiePath', false);
         $context = &Piece_Unity_Context::singleton();
+        $context->setProxyPath('/foo');
+
         $context->setConfiguration($config);
 
         $interceptor = &new Piece_Unity_Plugin_Interceptor_ProxyBasePath();
