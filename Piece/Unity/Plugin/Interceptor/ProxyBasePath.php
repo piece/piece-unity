@@ -49,10 +49,11 @@ require_once 'Piece/Unity/Plugin/Common.php';
  *
  * The base path and the script name are both relative paths since they are
  * based on SCRIPT_NAME environment variable. The following is a example of a
- * context change when 'path' configuration point is set to '/foo'.
+ * context change when 'proxyPath' configuration point is set to '/foo' in
+ * KernelConfigurator plug-in.
  *
  * <pre>
- * 'path' Configuration Point: /foo
+ * 'proxyPath' Configuration Point in KernelConfigurator plug-in: /foo
  *
  * Requested URL (frontend): http://example.org/foo/bar/baz.php
  * Requested URL (backend):  http://backend.example.org/bar/baz.php
@@ -85,15 +86,6 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePath extends Piece_Unity_Plugin_Co
      * @access private
      */
 
-    var $_measures = array('HTTP_X_FORWARDED_FOR',
-                           'HTTP_X_FORWARDED',
-                           'HTTP_FORWARDED_FOR',
-                           'HTTP_FORWARDED',
-                           'HTTP_VIA',
-                           'HTTP_X_COMING_FROM',
-                           'HTTP_COMING_FROM'
-                           );
-
     /**#@-*/
 
     /**#@+
@@ -110,11 +102,11 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePath extends Piece_Unity_Plugin_Co
      */
     function invoke()
     {
-        if (!$this->_useProxy()) {
+        if (!$this->_context->usingProxy()) {
             return true;
         }
 
-        $path = $this->getConfiguration('path');
+        $path = $this->_context->getProxyPath();
         if (!is_null($path)) {
             $this->_context->setBasePath($path . $this->_context->getBasePath());
             $this->_context->setScriptName($path . $this->_context->getScriptName());
@@ -137,25 +129,6 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePath extends Piece_Unity_Plugin_Co
      */
 
     // }}}
-    // {{{ _useProxy()
-
-    /**
-     * Returns whether the application is accessed via reverse proxies.
-     *
-     * @return boolean
-     */
-    function _useProxy()
-    {
-        foreach ($this->_measures as $measure) {
-            if (array_key_exists($measure, $_SERVER)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    // }}}
     // {{{ _initialize()
 
     /**
@@ -165,7 +138,6 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePath extends Piece_Unity_Plugin_Co
      */
     function _initialize()
     {
-        $this->_addConfigurationPoint('path');
         $this->_addConfigurationPoint('adjustSessionCookiePath', true);
     }
  
