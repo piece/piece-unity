@@ -85,6 +85,7 @@ class Piece_Unity_Context
     var $_scriptName;
     var $_basePath = '';
     var $_attributes;
+    var $_proxyPath;
 
     /**#@-*/
 
@@ -220,6 +221,8 @@ class Piece_Unity_Context
 
     /**
      * Removed a single instance safely.
+     *
+     * @static
      */
     function clear()
     {
@@ -422,6 +425,61 @@ class Piece_Unity_Context
     function clearAttributes()
     {
         $this->_attributes = array();
+    }
+
+    // }}}
+    // {{{ setProxyPath()
+
+    /**
+     * Sets the proxy path if the application uses proxy servers.
+     *
+     * @param string $proxyPath
+     * @since Method available since Release 0.6.0
+     */
+    function setProxyPath($proxyPath)
+    {
+        $this->_proxyPath = $proxyPath;
+    }
+
+    // }}}
+    // {{{ getProxyPath()
+
+    /**
+     * Gets the proxy path of the application.
+     *
+     * @return string
+     * @since Method available since Release 0.6.0
+     */
+    function getProxyPath()
+    {
+        return $this->_proxyPath;
+    }
+
+    // }}}
+    // {{{ usingProxy()
+
+    /**
+     * Returns whether the application is accessed via reverse proxies.
+     *
+     * @return boolean
+     */
+    function usingProxy()
+    {
+        $measures = array('HTTP_X_FORWARDED_FOR',
+                          'HTTP_X_FORWARDED',
+                          'HTTP_FORWARDED_FOR',
+                          'HTTP_FORWARDED',
+                          'HTTP_VIA',
+                          'HTTP_X_COMING_FROM',
+                          'HTTP_COMING_FROM'
+                          );
+        foreach ($measures as $measure) {
+            if (array_key_exists($measure, $_SERVER)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**#@-*/
