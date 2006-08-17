@@ -33,7 +33,7 @@
  * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://iteman.typepad.jp/piece/
+ * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_InterceptorChainTestCase
  * @since      File available since Release 0.4.0
  */
@@ -50,7 +50,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://iteman.typepad.jp/piece/
+ * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_InterceptorChainTestCase
  * @since      Class available since Release 0.4.0
  */

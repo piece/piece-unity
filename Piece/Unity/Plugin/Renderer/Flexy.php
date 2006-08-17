@@ -34,7 +34,7 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://pear.php.net/package/HTML_Template_Flexy/
- * @link       http://iteman.typepad.jp/piece/
+ * @link       http://piece-framework.com/piece-unity/
  * @see        HTML_Template_Flexy
  * @since      File available since Release 0.2.0
  */
@@ -55,7 +55,7 @@ require_once 'PEAR.php';
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://pear.php.net/package/HTML_Template_Flexy/
- * @link       http://iteman.typepad.jp/piece/
+ * @link       http://piece-framework.com/piece-unity/
  * @see        HTML_Template_Flexy
  * @since      Class available since Release 0.2.0
  */

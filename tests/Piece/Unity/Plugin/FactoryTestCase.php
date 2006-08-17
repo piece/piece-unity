@@ -33,7 +33,7 @@
  * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://iteman.typepad.jp/piece/
+ * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_Factory
  */
 
@@ -52,7 +52,7 @@ require_once 'Piece/Unity/Context.php';
  * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://iteman.typepad.jp/piece/
+ * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_Factory
  */
 class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase

@@ -33,7 +33,7 @@
  * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://iteman.typepad.jp/piece/
+ * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.6.0
  */
 
@@ -50,7 +50,7 @@ require_once 'Net/URL.php';
  * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://iteman.typepad.jp/piece/
+ * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.6.0
  */
 class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common

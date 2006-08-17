@@ -33,7 +33,7 @@
  * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://iteman.typepad.jp/piece/
+ * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_Renderer_Smarty
  * @since      File available since Release 0.2.0
  */
@@ -51,7 +51,7 @@ require_once dirname(__FILE__) . '/CompatibilityTest.php';
  * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://iteman.typepad.jp/piece/
+ * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_Renderer_Smarty
  * @since      Class available since Release 0.2.0
  */

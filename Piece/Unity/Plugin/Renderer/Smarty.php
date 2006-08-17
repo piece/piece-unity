@@ -34,7 +34,7 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://smarty.php.net/
- * @link       http://iteman.typepad.jp/piece/
+ * @link       http://piece-framework.com/piece-unity/
  * @see        Smarty
  * @since      File available since Release 0.2.0
  */
@@ -52,7 +52,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://smarty.php.net/
- * @link       http://iteman.typepad.jp/piece/
+ * @link       http://piece-framework.com/piece-unity/
  * @see        Smarty
  * @since      Class available since Release 0.2.0
  */
