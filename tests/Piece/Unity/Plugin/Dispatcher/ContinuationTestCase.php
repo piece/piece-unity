@@ -95,8 +95,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
                                             'errorHandlingAPIBreak' => true)
                                       );
         $cache->clean();
-        $context = &Piece_Unity_Context::singleton();
-        $context->clear();
+        Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
         unset($_GET['_flowExecutionTicket']);
         unset($_GET['_event']);
@@ -128,7 +127,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertTrue($continuation->hasAttribute('counter'));
         $this->assertEquals(0, $continuation->getAttribute('counter'));
 
-        $context->clear();
+        Piece_Unity_Context::clear();
         $_GET['_event'] = 'increase';
         $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
         unset($_GET['_flow']);
@@ -198,7 +197,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $session = &$context->getSession();
         $continuation = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_Session_Key']);
         $flowExecutionTicket = $continuation->getCurrentFlowExecutionTicket();
-        $context->clear();
+        Piece_Unity_Context::clear();
         $_GET['_event'] = 'increase';
         $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
         unset($_GET['_flow']);

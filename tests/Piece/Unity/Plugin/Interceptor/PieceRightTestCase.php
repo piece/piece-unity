@@ -93,8 +93,7 @@ class Piece_Unity_Plugin_Interceptor_PieceRightTestCase extends PHPUnit_TestCase
                                             'errorHandlingAPIBreak' => true)
                                       );
         $cache->clean();
-        $context = &Piece_Unity_Context::singleton();
-        $context->clear();
+        Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
         Piece_Unity_Error::popCallback();
     }

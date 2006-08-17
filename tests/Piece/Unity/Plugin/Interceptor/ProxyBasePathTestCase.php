@@ -80,8 +80,7 @@ class Piece_Unity_Plugin_Interceptor_ProxyBasePathTestCase extends PHPUnit_TestC
 
     function tearDown()
     {
-        $context = &Piece_Unity_Context::singleton();
-        $context->clear();
+        Piece_Unity_Context::clear();
     }
 
     function testProxy()

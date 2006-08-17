@@ -91,8 +91,7 @@ class Piece_Unity_Plugin_Renderer_CompatibilityTest extends PHPUnit_TestCase
 
     function tearDown()
     {
-        $context = &Piece_Unity_Context::singleton();
-        $context->clear();
+        Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
         unset($_GET['_event']);
         unset($_SERVER['REQUEST_METHOD']);

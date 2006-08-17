@@ -84,8 +84,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
 
     function tearDown()
     {
-        $context = &Piece_Unity_Context::singleton();
-        $context->clear();
+        Piece_Unity_Context::clear();
         unset($_GET['_event']);
         unset($_SERVER['REQUEST_METHOD']);
     }

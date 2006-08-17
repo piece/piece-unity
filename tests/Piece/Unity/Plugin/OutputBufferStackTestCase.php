@@ -93,8 +93,7 @@ class Piece_Unity_Plugin_OutputBufferStackTestCase extends PHPUnit_TestCase
     function tearDown()
     {
         unset($_SERVER['REQUEST_METHOD']);
-        $context = &Piece_Unity_Context::singleton();
-        $context->clear();
+        Piece_Unity_Context::clear();
         $GLOBALS['PIECE_UNITY_Plugin_Instances'] = array();
         $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $this->_oldPluginDirectories;
         Piece_Unity_Error::clearErrors();

@@ -88,8 +88,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
     function tearDown()
     {
         unset($_SESSION);
-        $context = &Piece_Unity_Context::singleton();
-        $context->clear();
+        Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
         Piece_Unity_Error::popCallback();
     }

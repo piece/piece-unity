@@ -86,8 +86,7 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
     {
         unset($_GET['_event']);
         unset($_SERVER['REQUEST_METHOD']);
-        $context = &Piece_Unity_Context::singleton();
-        $context->clear();
+        Piece_Unity_Context::clear();
     }
 
     function testSettingView()
