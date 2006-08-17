@@ -95,6 +95,15 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
         $viewElement->setElement('__sessionName', session_name());
         $viewElement->setElement('__sessionID', session_id());
 
+        /*
+         * Overwrites the extension 'renderer' if the view string start with
+         * http(s)://, since it is considered as a URL to redirect.
+         */
+        if (preg_match('!^https?://!', $this->_context->getView())) {
+            $config = &$this->_context->getConfiguration();
+            $config->setExtension('View', 'renderer', 'Renderer_Redirection');
+        }
+
         $renderer = &$this->getExtension('renderer');
         if (Piece_Unity_Error::hasErrors('exception')) {
             return;
