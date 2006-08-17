@@ -127,6 +127,8 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         foreach (array_reverse($pluginDirectories) as $pluginDirectory) {
             Piece_Unity_Plugin_Factory::addPluginDirectory($pluginDirectory);
         }
+
+        $this->_context->setProxyPath($this->getConfiguration('proxyPath'));
     }
 
     /**#@-*/
@@ -150,6 +152,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         $this->_addConfigurationPoint('eventName');
         $this->_addConfigurationPoint('importPathInfo', false);
         $this->_addConfigurationPoint('pluginDirectories', array());
+        $this->_addConfigurationPoint('proxyPath');
     }
  
     /**#@-*/
