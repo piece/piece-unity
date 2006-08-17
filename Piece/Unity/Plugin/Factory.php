@@ -93,11 +93,11 @@ class Piece_Unity_Plugin_Factory
      */
     function &factory($plugin)
     {
-        $plugin = "Piece_Unity_Plugin_$plugin";
         if (!array_key_exists($plugin, $GLOBALS['PIECE_UNITY_Plugin_Instances'])) {
+            $pluginClass = "Piece_Unity_Plugin_$plugin";
             $found = false;
             foreach ($GLOBALS['PIECE_UNITY_Plugin_Directories'] as $pluginDirectory) {
-                $found = Piece_Unity_Plugin_Factory::_load($plugin, $pluginDirectory);
+                $found = Piece_Unity_Plugin_Factory::_load($pluginClass, $pluginDirectory);
                 if ($found) {
                     break;
                 }
@@ -112,7 +112,7 @@ class Piece_Unity_Plugin_Factory
                 return $return;
             }
 
-            $instance = &new $plugin();
+            $instance = &new $pluginClass();
             if (!is_a($instance, 'Piece_Unity_Plugin_Common')) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_PLUGIN,
                                         "The plugin [ $plugin ] is invalid."
