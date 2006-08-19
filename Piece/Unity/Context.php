@@ -86,6 +86,7 @@ class Piece_Unity_Context
     var $_basePath = '';
     var $_attributes;
     var $_proxyPath;
+    var $_continuation;
 
     /**#@-*/
 
@@ -226,7 +227,6 @@ class Piece_Unity_Context
      */
     function clear()
     {
-        $GLOBALS['PIECE_UNITY_Context_Instance']->clearAttributes();
         unset($GLOBALS['PIECE_UNITY_Context_Instance']);
         $GLOBALS['PIECE_UNITY_Context_Instance'] = null;
     }
@@ -342,7 +342,7 @@ class Piece_Unity_Context
     // {{{ setAttribute()
 
     /**
-     * Sets an attribute for the current application context.
+     * Sets an attribute for the current request.
      *
      * @param string $name
      * @param mixed  $value
@@ -357,7 +357,7 @@ class Piece_Unity_Context
     // {{{ setAttributeByRef()
 
     /**
-     * Sets an attribute by reference for the current application context.
+     * Sets an attribute by reference for the current request.
      *
      * @param string $name
      * @param mixed  &$value
@@ -372,8 +372,7 @@ class Piece_Unity_Context
     // {{{ hasAttribute()
 
     /**
-     * Returns whether the current application context has an attribute with
-     * a given name.
+     * Returns whether the current request has an attribute with a given name.
      *
      * @param string $name
      * @return boolean
@@ -388,7 +387,7 @@ class Piece_Unity_Context
     // {{{ getAttribute()
 
     /**
-     * Gets an attribute for the current application context.
+     * Gets an attribute for the current request.
      *
      * @param string $name
      * @return mixed
@@ -404,7 +403,7 @@ class Piece_Unity_Context
     // {{{ removeAttribute()
 
     /**
-     * Removes an attribute from the current application context.
+     * Removes an attribute from the current request.
      *
      * @param string $name
      * @since Method available since Release 0.6.0
@@ -418,7 +417,7 @@ class Piece_Unity_Context
     // {{{ clearAttributes()
 
     /**
-     * Removes all attributes from the current application context.
+     * Removes all attributes from the current request.
      *
      * @since Method available since Release 0.6.0
      */
@@ -480,6 +479,34 @@ class Piece_Unity_Context
         }
 
         return false;
+    }
+
+    // }}}
+    // {{{ setContinuation()
+
+    /**
+     * Sets the Piece_Flow_Continuation object for the current session.
+     *
+     * @param Piece_Flow_Continuation &$continuation
+     * @since Method available since Release 0.6.0
+     */
+    function setContinuation(&$continuation)
+    {
+        $this->_continuation = &$continuation;
+    }
+
+    // }}}
+    // {{{ getContinuation()
+
+    /**
+     * Gets the Piece_Flow_Continuation object for the current session.
+     *
+     * @return Piece_Flow_Continuation
+     * @since Method available since Release 0.6.0
+     */
+    function &getContinuation()
+    {
+        return $this->_continuation;
     }
 
     /**#@-*/
