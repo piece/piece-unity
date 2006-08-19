@@ -44,7 +44,79 @@ PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'va
 
 $version = '0.6.0';
 $apiVersion = '0.6.0';
-$notes = 'dummy';
+$releaseStability = 'beta';
+$notes = "This release includes a lot of enhancements and a few defect fixes as follows:
+
+<<< Enhancements >>>
+
+Kernel:
+
+* Piece_Unity_Context
+- Added support for context attributes.
+- Added setProxyPath() method for setting the proxy path if the application uses proxy servers.
+- Added getProxyPath() method for getting the proxy path of the application.
+- Added usingProxy() method for checking whether the application is accessed via reverse proxies.
+- Added setContinuation()/getContinuation() methods for setting/getting the Piece_Flow_Continuation object for the current session.
+
+* Piece_Unity_Plugin_Common
+- Added _initialize() method as a template method, and changed the code so as to call it in the constructor.
+
+Plug-ins:
+
+* Interceptor_PieceRight
+- An interceptor to set a Piece_Right object to the current application context.
+
+* OutputBufferStack
+- Added support for PHP built-in functions.
+
+* Dispatcher_Simple
+- Added error handling when include_once fail.
+
+* Interceptor_ProxyBasePath
+- Changed the code so as to use Piece_Unity_Context::usingProxy() and Piece_Unity_Context::getProxyPath() methods instead of _useProxy() method and 'path' configuration point.
+- Removed _useProxy() method.
+- Removed 'path' configuration point.
+
+* KernelConfigurator
+- Added 'proxyPath' configuratin point for setting the proxy path of applications.
+
+* Renderer_Redirection
+- A renderer which is used to redirect requests.
+
+* View
+- Added the code to overwrite the extension 'renderer' if the view string start with http(s)://.
+
+* Dispatcher_Continuation
+- Added the code to set the Piece_Flow_Continuation object to the current context.
+
+* Interceptor_NullByteAttackPreventation
+- An interceptor to prevent Null Byte Attack for applications.
+
+* OutputFilter_JapaneseZ2H
+- An output filter which can be used to converts Japanese JIS X0208 kana to JIS X0201 kana.
+
+Example applications:
+
+- Updated and improved the design.
+- Removed the mailto: link to my e-mail address.
+- Changed my e-mail address.
+- Introduced form validation using Piece_Right.
+- Adjusted to the new interface of Piece_Flow actions.
+
+<<< Defect fixes >>>
+
+Kernel:
+
+* Piece_Unity_Context
+- Fixed the problem that an event is ignored when the event name includes the characters other than letters or numbers.
+
+Plug-ins:
+
+* Dispatcher_Continuation
+- Removed wrong error handling which disables the current callback.
+
+* OutputBufferStack
+- Changed the code to prevent strange behaviour.";
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
@@ -52,7 +124,10 @@ $package->setOptions(array('filelistgenerator' => 'svn',
                            'simpleoutput'      => true,
                            'baseinstalldir'    => '/',
                            'packagefile'       => 'package2.xml',
-                           'packagedirectory'  => '.')
+                           'packagedirectory'  => '.',
+                           'dir_roles'         => array('data' => 'data',
+                                                        'tests' => 'test',
+                                                        'docs' => 'doc'))
                      );
 
 $package->setPackage('Piece_Unity');
@@ -66,7 +141,7 @@ $package->setLicense('BSD License (revised)',
 $package->setAPIVersion($apiVersion);
 $package->setAPIStability('beta');
 $package->setReleaseVersion($version);
-$package->setReleaseStability('beta');
+$package->setReleaseStability($releaseStability);
 $package->setNotes($notes);
 $package->setPhpDep('4.3.0');
 $package->setPearinstallerDep('1.4.3');

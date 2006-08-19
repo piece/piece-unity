@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Id$ -->
 <!DOCTYPE package SYSTEM "http://pear.php.net/dtd/package-1.0">
 <package version="1.0" packagerversion="1.4.9">
  <name>Piece_Unity</name>
@@ -15,20 +16,92 @@
   </maintainers>
  <release>
   <version>0.6.0</version>
-  <date>2006-07-26</date>
+  <date>2006-08-19</date>
   <license>BSD License (revised)</license>
   <state>beta</state>
-  <notes>dummy
+  <notes>This release includes a lot of enhancements and a few defect fixes as follows:
+
+&lt;&lt;&lt; Enhancements &gt;&gt;&gt;
+
+Kernel:
+
+* Piece_Unity_Context
+- Added support for context attributes.
+- Added setProxyPath() method for setting the proxy path if the application uses proxy servers.
+- Added getProxyPath() method for getting the proxy path of the application.
+- Added usingProxy() method for checking whether the application is accessed via reverse proxies.
+- Added setContinuation()/getContinuation() methods for setting/getting the Piece_Flow_Continuation object for the current session.
+
+* Piece_Unity_Plugin_Common
+- Added _initialize() method as a template method, and changed the code so as to call it in the constructor.
+
+Plug-ins:
+
+* Interceptor_PieceRight
+- An interceptor to set a Piece_Right object to the current application context.
+
+* OutputBufferStack
+- Added support for PHP built-in functions.
+
+* Dispatcher_Simple
+- Added error handling when include_once fail.
+
+* Interceptor_ProxyBasePath
+- Changed the code so as to use Piece_Unity_Context::usingProxy() and Piece_Unity_Context::getProxyPath() methods instead of _useProxy() method and &apos;path&apos; configuration point.
+- Removed _useProxy() method.
+- Removed &apos;path&apos; configuration point.
+
+* KernelConfigurator
+- Added &apos;proxyPath&apos; configuratin point for setting the proxy path of applications.
+
+* Renderer_Redirection
+- A renderer which is used to redirect requests.
+
+* View
+- Added the code to overwrite the extension &apos;renderer&apos; if the view string start with http(s)://.
+
+* Dispatcher_Continuation
+- Added the code to set the Piece_Flow_Continuation object to the current context.
+
+* Interceptor_NullByteAttackPreventation
+- An interceptor to prevent Null Byte Attack for applications.
+
+* OutputFilter_JapaneseZ2H
+- An output filter which can be used to converts Japanese JIS X0208 kana to JIS X0201 kana.
+
+Example applications:
+
+- Updated and improved the design.
+- Removed the mailto: link to my e-mail address.
+- Changed my e-mail address.
+- Introduced form validation using Piece_Right.
+- Adjusted to the new interface of Piece_Flow actions.
+
+&lt;&lt;&lt; Defect fixes &gt;&gt;&gt;
+
+Kernel:
+
+* Piece_Unity_Context
+- Fixed the problem that an event is ignored when the event name includes the characters other than letters or numbers.
+
+Plug-ins:
+
+* Dispatcher_Continuation
+- Removed wrong error handling which disables the current callback.
+
+* OutputBufferStack
+- Changed the code to prevent strange behaviour.
   </notes>
   <deps>
    <dep type="php" rel="ge" version="4.3.0" optional="no"/>
-   <dep type="pkg" rel="ge" version="1.4.0" optional="no">Piece_Flow</dep>
+   <dep type="pkg" rel="ge" version="1.5.0" optional="no">Piece_Flow</dep>
    <dep type="pkg" rel="ge" version="1.7.0" optional="no">Cache_Lite</dep>
    <dep type="pkg" rel="ge" version="1.4.3" optional="no">PEAR</dep>
+   <dep type="pkg" rel="ge" version="1.0.14" optional="no">Net_URL</dep>
    <dep type="pkg" rel="ge" version="0.3.0" optional="yes">Stagehand_TestRunner</dep>
    <dep type="pkg" rel="ge" version="1.2.4" optional="yes">HTML_Template_Flexy</dep>
    <dep type="pkg" rel="ge" version="1.6.8" optional="yes">Smarty</dep>
-   <dep type="pkg" rel="ge" version="0.3.0" optional="yes">Piece_Right</dep>
+   <dep type="pkg" rel="ge" version="1.0.0" optional="yes">Piece_Right</dep>
   </deps>
   <filelist>
    <dir name="/" baseinstalldir="/">
@@ -273,6 +346,9 @@
         </file>
        </dir> <!-- /Piece/Unity/Plugin/Dispatcher -->
        <dir name="Interceptor">
+        <file role="php" name="NullByteAttackPreventation.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
         <file role="php" name="PieceRight.php">
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
@@ -287,12 +363,18 @@
         <file role="php" name="ContentLength.php">
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
+        <file role="php" name="JapaneseZ2H.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
        </dir> <!-- /Piece/Unity/Plugin/OutputFilter -->
        <dir name="Renderer">
         <file role="php" name="Flexy.php">
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
         <file role="php" name="PHP.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+        <file role="php" name="Redirection.php">
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
         <file role="php" name="Smarty.php">
@@ -400,6 +482,9 @@
          <file role="test" name="First.php" install-as="Piece/Unity/Plugin/Interceptor/First.php">
           <replace from="@package_version@" to="version" type="package-info"/>
          </file>
+         <file role="test" name="NullByteAttackPreventationTestCase.php" install-as="Piece/Unity/Plugin/Interceptor/NullByteAttackPreventationTestCase.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
          <file role="test" name="PieceRightExample.yaml" install-as="Piece/Unity/Plugin/Interceptor/PieceRightExample.yaml">
           <replace from="@package_version@" to="version" type="package-info"/>
          </file>
@@ -459,6 +544,9 @@
           <replace from="@package_version@" to="version" type="package-info"/>
          </file>
          <file role="test" name="PHPTestCase.php" install-as="Piece/Unity/Plugin/Renderer/PHPTestCase.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+         <file role="test" name="RedirectionTestCase.php" install-as="Piece/Unity/Plugin/Renderer/RedirectionTestCase.php">
           <replace from="@package_version@" to="version" type="package-info"/>
          </file>
          <file role="test" name="SmartyBuiltinElements.tpl" install-as="Piece/Unity/Plugin/Renderer/SmartyBuiltinElements.tpl">
@@ -559,10 +647,81 @@
  <changelog>
    <release>
     <version>0.6.0</version>
-    <date>2006-07-26</date>
+    <date>2006-08-19</date>
     <license>BSD License (revised)</license>
     <state>beta</state>
-    <notes>dummy
+    <notes>This release includes a lot of enhancements and a few defect fixes as follows:
+
+&lt;&lt;&lt; Enhancements &gt;&gt;&gt;
+
+Kernel:
+
+* Piece_Unity_Context
+- Added support for context attributes.
+- Added setProxyPath() method for setting the proxy path if the application uses proxy servers.
+- Added getProxyPath() method for getting the proxy path of the application.
+- Added usingProxy() method for checking whether the application is accessed via reverse proxies.
+- Added setContinuation()/getContinuation() methods for setting/getting the Piece_Flow_Continuation object for the current session.
+
+* Piece_Unity_Plugin_Common
+- Added _initialize() method as a template method, and changed the code so as to call it in the constructor.
+
+Plug-ins:
+
+* Interceptor_PieceRight
+- An interceptor to set a Piece_Right object to the current application context.
+
+* OutputBufferStack
+- Added support for PHP built-in functions.
+
+* Dispatcher_Simple
+- Added error handling when include_once fail.
+
+* Interceptor_ProxyBasePath
+- Changed the code so as to use Piece_Unity_Context::usingProxy() and Piece_Unity_Context::getProxyPath() methods instead of _useProxy() method and &apos;path&apos; configuration point.
+- Removed _useProxy() method.
+- Removed &apos;path&apos; configuration point.
+
+* KernelConfigurator
+- Added &apos;proxyPath&apos; configuratin point for setting the proxy path of applications.
+
+* Renderer_Redirection
+- A renderer which is used to redirect requests.
+
+* View
+- Added the code to overwrite the extension &apos;renderer&apos; if the view string start with http(s)://.
+
+* Dispatcher_Continuation
+- Added the code to set the Piece_Flow_Continuation object to the current context.
+
+* Interceptor_NullByteAttackPreventation
+- An interceptor to prevent Null Byte Attack for applications.
+
+* OutputFilter_JapaneseZ2H
+- An output filter which can be used to converts Japanese JIS X0208 kana to JIS X0201 kana.
+
+Example applications:
+
+- Updated and improved the design.
+- Removed the mailto: link to my e-mail address.
+- Changed my e-mail address.
+- Introduced form validation using Piece_Right.
+- Adjusted to the new interface of Piece_Flow actions.
+
+&lt;&lt;&lt; Defect fixes &gt;&gt;&gt;
+
+Kernel:
+
+* Piece_Unity_Context
+- Fixed the problem that an event is ignored when the event name includes the characters other than letters or numbers.
+
+Plug-ins:
+
+* Dispatcher_Continuation
+- Removed wrong error handling which disables the current callback.
+
+* OutputBufferStack
+- Changed the code to prevent strange behaviour.
     </notes>
    </release>
    <release>
