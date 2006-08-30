@@ -100,13 +100,22 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
             $url->addQueryString($viewElements['__sessionName'], $viewElements['__sessionID']);
         }
 
-        if (!$this->getConfiguration('externalURL')
-            && !$this->_context->usingProxy()
-            ) {
-            $url->host = $_SERVER['SERVER_NAME'];
-            $url->port = $_SERVER['SERVER_PORT'];
-            $proxyPath = $this->_context->getProxyPath();
-            $url->path = preg_replace("!^$proxyPath!", '', $url->path);
+        if (!$this->getConfiguration('externalURL')) {
+            if ($this->_context->usingProxy()) {
+                if ($url->host != $_SERVER['HTTP_X_FORWARDED_SERVER']) {
+                    $url->host = $_SERVER['HTTP_X_FORWARDED_SERVER'];
+                    $url->protocol = 'http';
+                    $url->port = 80;
+                }
+            } else {
+                if ($_SERVER['SERVER_PORT'] != 443) {
+                    $url->protocol = 'http';
+                }
+                $url->host = $_SERVER['SERVER_NAME'];
+                $url->port = $_SERVER['SERVER_PORT'];
+                $proxyPath = $this->_context->getProxyPath();
+                $url->path = preg_replace("!^$proxyPath!", '', $url->path);
+            }
         }
 
         $this->_url = $url->getURL();
