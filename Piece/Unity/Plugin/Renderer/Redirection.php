@@ -92,12 +92,10 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
             if (array_key_exists($elementName, $viewElements)
                 && is_scalar($viewElements[$elementName])
                 ) {
-                $url->addQueryString($elementName, $viewElements[$elementName]);
+                $url->addQueryString($elementName,
+                                     $viewElements[$elementName]
+                                     );
             }
-        }
-
-        if ($this->getConfiguration('addSessionID')) {
-            $url->addQueryString($viewElements['__sessionName'], $viewElements['__sessionID']);
         }
 
         if (!$this->getConfiguration('externalURL')) {
@@ -115,6 +113,20 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
                 $url->port = $_SERVER['SERVER_PORT'];
                 $proxyPath = $this->_context->getProxyPath();
                 $url->path = preg_replace("!^$proxyPath!", '', $url->path);
+            }
+
+            if ($this->getConfiguration('addSessionID')) {
+                $url->addQueryString($viewElements['__sessionName'],
+                                     $viewElements['__sessionID']
+                                     );
+            }
+
+            if ($this->getConfiguration('addFlowExecutionTicket')) {
+                if ($viewElement->hasElement('__flowExecutionTicketKey')) {
+                    $url->addQueryString($viewElements->getElement('__flowExecutionTicketKey'),
+                                         $viewElements->getElement('__flowExecutionTicket')
+                                         );
+                }
             }
         }
 
@@ -156,6 +168,7 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
     {
         $this->_addConfigurationPoint('addSessionID', false);
         $this->_addConfigurationPoint('externalURL', false);
+        $this->_addConfigurationPoint('addFlowExecutionTicket', false);
     }
  
     /**#@-*/
