@@ -122,9 +122,9 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
             }
 
             if ($this->getConfiguration('addFlowExecutionTicket')) {
-                if ($viewElement->hasElement('__flowExecutionTicketKey')) {
-                    $url->addQueryString($viewElements->getElement('__flowExecutionTicketKey'),
-                                         $viewElements->getElement('__flowExecutionTicket')
+                if (array_key_exists('__flowExecutionTicketKey', $viewElements)) {
+                    $url->addQueryString($viewElements['__flowExecutionTicketKey'],
+                                         $viewElements['__flowExecutionTicket']
                                          );
                 }
             }
