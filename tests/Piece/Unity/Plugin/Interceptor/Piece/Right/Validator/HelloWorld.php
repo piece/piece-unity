@@ -36,6 +36,7 @@
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_Interceptor_PieceRightTestCase
  * @since      File available since Release 0.6.0
+ * @deprecated File deprecated in Release 0.7.0
  */
 
 require_once 'Piece/Right/Validator/Common.php';
@@ -53,6 +54,7 @@ require_once 'Piece/Right/Validator/Common.php';
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_Interceptor_PieceRightTestCase
  * @since      File available since Release 0.6.0
+ * @deprecated Class deprecated in Release 0.7.0
  */
 class Piece_Right_Validator_HelloWorld extends Piece_Right_Validator_Common
 {

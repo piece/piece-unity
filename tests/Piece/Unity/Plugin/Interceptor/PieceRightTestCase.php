@@ -36,6 +36,7 @@
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_Interceptor_PieceRight
  * @since      File available since Release 0.6.0
+ * @deprecated File deprecated in Release 0.7.0
  */
 
 require_once 'PHPUnit.php';
@@ -58,6 +59,7 @@ require_once 'Cache/Lite/File.php';
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_Interceptor_PieceRight
  * @since      Class available since Release 0.6.0
+ * @deprecated Class deprecated in Release 0.7.0
  */
 class Piece_Unity_Plugin_Interceptor_PieceRightTestCase extends PHPUnit_TestCase
 {
