@@ -40,6 +40,7 @@
 require_once 'Piece/Unity/Request.php';
 require_once 'Piece/Unity/ViewElement.php';
 require_once 'Piece/Unity/Session.php';
+require_once 'Piece/Unity/Validation.php';
 
 // {{{ GLOBALS
 
@@ -87,6 +88,7 @@ class Piece_Unity_Context
     var $_attributes;
     var $_proxyPath;
     var $_continuation;
+    var $_validation;
 
     /**#@-*/
 
@@ -509,6 +511,20 @@ class Piece_Unity_Context
         return $this->_continuation;
     }
 
+    // }}}
+    // {{{ getValidation()
+
+    /**
+     * Gets the Piece_Unity_Validation object for the current request.
+     *
+     * @return Piece_Unity_Validation
+     * @since Method available since Release 0.7.0
+     */
+    function &getValidation()
+    {
+        return $this->_validation;
+    }
+
     /**#@-*/
 
     /**#@+
@@ -532,6 +548,8 @@ class Piece_Unity_Context
         if ($positionOfSlash) {
             $this->_basePath = substr($this->_scriptName, 0, $positionOfSlash);
         }
+
+        $this->_validation = &new Piece_Unity_Validation();
     }
 
     /**#@-*/
