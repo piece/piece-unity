@@ -75,29 +75,13 @@ class RegistrationAction extends Piece_Flow_Action
 
     function validate()
     {
-        $right = &$this->_payload->getAttribute('_pieceRight');
-        $right->validate('Registration');
-        $results = &$right->getResults();
+        $user = &new stdClass();
+        $this->_flow->setAttributeByRef('user', $user);
 
-        if (!$results->countErrors()) {
-            $user = &new stdClass();
-            foreach ($results->getFieldNames() as $field) {
-                $user->$field = $results->getFieldValue($field);
-            }
-            $this->_flow->setAttributeByRef('user', $user);
-
+        $validation = &$this->_payload->getValidation();
+        if ($validation->validate('Registration', $user)) {
             return 'goDisplayConfirmation';
         } else {
-            $request = &$this->_payload->getRequest();
-            $user = &new stdClass();
-            foreach ($results->getFieldNames() as $field) {
-                $user->$field = @$request->getParameter($field);
-            }
-            $this->_flow->setAttributeByRef('user', $user);
-
-            $viewElement = &$this->_payload->getViewElement();
-            $viewElement->setElement('_results', $results);
-
             return 'goDisplayForm';
         }
     }

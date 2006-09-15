@@ -43,12 +43,11 @@
       type: extension
       value:
         - Interceptor_SessionStart
-        - Interceptor_PieceRight
-- name: Interceptor_PieceRight
+- name: KernelConfigurator
   point:
-    - name: configDirectory
+    - name: validationConfigDirectory
       type: configuration
       value: ../webapp/config/validations
-    - name: cacheDirectory
+    - name: validationCacheDirectory
       type: configuration
       value: ../webapp/cache
