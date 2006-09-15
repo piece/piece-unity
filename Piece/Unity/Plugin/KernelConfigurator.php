@@ -129,6 +129,10 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         }
 
         $this->_context->setProxyPath($this->getConfiguration('proxyPath'));
+
+        $validation = &$this->_context->getValidation();
+        $validation->setConfigDirectory($this->getConfiguration('validationConfigDirectory'));
+        $validation->setCacheDirectory($this->getConfiguration('validationCacheDirectory'));
     }
 
     /**#@-*/
@@ -153,6 +157,8 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         $this->_addConfigurationPoint('importPathInfo', false);
         $this->_addConfigurationPoint('pluginDirectories', array());
         $this->_addConfigurationPoint('proxyPath');
+        $this->_addConfigurationPoint('validationConfigDirectory');
+        $this->_addConfigurationPoint('validationCacheDirectory');
     }
  
     /**#@-*/

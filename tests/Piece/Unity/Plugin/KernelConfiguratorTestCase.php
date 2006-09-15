@@ -82,12 +82,16 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
     function setUp()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
-        $_SERVER['REQUEST_METHOD'] = 'GET';
     }
 
     function tearDown()
     {
-        unset($_SESSION);
+        $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
+                                            'masterFile' => '',
+                                            'automaticSerialization' => true,
+                                            'errorHandlingAPIBreak' => true)
+                                      );
+        $cache->clean();
         Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
         Piece_Unity_Error::popCallback();
@@ -120,10 +124,12 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $this->assertTrue($found);
 
         ini_set('include_path', $oldIncludePath);
+        unset($_SESSION);
     }
 
     function testEventNameFixation()
     {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_event'] = 'foo';
 
         $config = &new Piece_Unity_Config();
@@ -137,10 +143,12 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $this->assertEquals('bar', $context->getEventName());
 
         unset($_GET['_event']);
+        unset($_SERVER['REQUEST_METHOD']);
     }
 
     function testSettingEventNameKey()
     {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_foo'] = 'bar';
 
         $config = &new Piece_Unity_Config();
@@ -154,10 +162,12 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $this->assertEquals('bar', $context->getEventName());
 
         unset($_GET['_foo']);
+        unset($_SERVER['REQUEST_METHOD']);
     }
 
     function testImportingPathInfo()
     {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['PATH_INFO'] = '/foo/bar/bar/baz/qux';
 
         $config = &new Piece_Unity_Config();
@@ -174,6 +184,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $this->assertNull($request->getParameter('qux'));
 
         unset($_SERVER['PATH_INFO']);
+        unset($_SERVER['REQUEST_METHOD']);
     }
 
     function testSettingPluginDirectories()
@@ -203,6 +214,43 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
 
         $GLOBALS['PIECE_UNITY_Plugin_Instances'] = array();
         $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $oldPluginDirectories;
+    }
+
+    /**
+     * @since Method available since Release 0.7.0
+     */
+    function testSettingTwoDirectoriesForValidation()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_POST['login_name'] = 'iteman';
+        $_POST['password'] = 'iteman30';
+        $_POST['email'] = 'iteman@users.sourceforge.net';
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('KernelConfigurator', 'validationConfigDirectory', dirname(__FILE__) . '/..');
+        $config->setConfiguration('KernelConfigurator', 'validationCacheDirectory', dirname(__FILE__));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $configurator = &new Piece_Unity_Plugin_KernelConfigurator();
+        $configurator->invoke();
+
+        $validation = &$context->getValidation();
+        $validationConfig = &$validation->getConfiguration();
+        $validationConfig->setRequired('email');
+        $validationConfig->addValidation('email', 'Email');
+
+        $container = &new stdClass();
+
+        $this->assertTrue($validation->validate('Authentication', $container));
+        $this->assertEquals($_POST['login_name'], $container->login_name);
+        $this->assertEquals($_POST['password'], $container->password);
+        $this->assertEquals($_POST['email'], $container->email);
+
+        unset($_POST['email']);
+        unset($_POST['password']);
+        unset($_POST['login_name']);
+        unset($_SERVER['REQUEST_METHOD']);
     }
 
     /**#@-*/
