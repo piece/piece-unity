@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
 <!DOCTYPE package SYSTEM "http://pear.php.net/dtd/package-1.0">
-<package version="1.0" packagerversion="1.4.9">
+<package version="1.0" packagerversion="1.4.11">
  <name>Piece_Unity</name>
  <summary>A stateful and secure MVC framework for PHP</summary>
  <description>Piece_Unity is a stateful and secure MVC framework for PHP. Piece_Unity has two major features. The first one is flow control and storing/restoring states with a technology known as continuation server - It based on Piece_Flow web flow engine. The second one is an Eclipse like plug-in system using extension points and configuration points.
@@ -15,82 +15,39 @@
   </maintainer>
   </maintainers>
  <release>
-  <version>0.6.0</version>
-  <date>2006-08-19</date>
+  <version>0.7.0</version>
+  <date>2006-09-16</date>
   <license>BSD License (revised)</license>
   <state>beta</state>
-  <notes>This release includes a lot of enhancements and a few defect fixes as follows:
+  <notes>This release includes built-in validation system with Piece_Right integration, and a few improvement of Renderer_Redirection plug-in. See the following release notes for details.
 
-&lt;&lt;&lt; Enhancements &gt;&gt;&gt;
+Note: Interceptor_PieceRight plug-in has been deprecated. It will be removed in the next release.
 
-Kernel:
+## Enhancements ##
 
-* Piece_Unity_Context
-- Added support for context attributes.
-- Added setProxyPath() method for setting the proxy path if the application uses proxy servers.
-- Added getProxyPath() method for getting the proxy path of the application.
-- Added usingProxy() method for checking whether the application is accessed via reverse proxies.
-- Added setContinuation()/getContinuation() methods for setting/getting the Piece_Flow_Continuation object for the current session.
+### Kernel ###
 
-* Piece_Unity_Plugin_Common
-- Added _initialize() method as a template method, and changed the code so as to call it in the constructor.
+##### Piece_Unity_Validation #####
+- The validation class for Piece_Unity applications. This class is available from this release.
 
-Plug-ins:
+##### Piece_Unity_Context #####
+- Added a new method getValidation() for getting the Piece_Unity_Validation object for the current request.
 
-* Interceptor_PieceRight
-- An interceptor to set a Piece_Right object to the current application context.
+### Plug-ins ###
 
-* OutputBufferStack
-- Added support for PHP built-in functions.
+##### Renderer_Redirection #####
+- Added support for redirections with direct access to backend servers when HTTPS protocol is given as a view string.
+- Added support for redirections with other proxy servers.
+- Changed the code so as to add session ID to the query string only if the URL is internal.
+- Added a new configuration point addFlowExecutionTicket to add flow execution ticket to the query string.
 
-* Dispatcher_Simple
-- Added error handling when include_once fail.
+##### KernelConfigurator #####
+- Added two configuration points validationConfigDirectory and validationCacheDirectory for setting the configuration directory and the cache directory for validations.
 
-* Interceptor_ProxyBasePath
-- Changed the code so as to use Piece_Unity_Context::usingProxy() and Piece_Unity_Context::getProxyPath() methods instead of _useProxy() method and &apos;path&apos; configuration point.
-- Removed _useProxy() method.
-- Removed &apos;path&apos; configuration point.
+### Example Applications ###
 
-* KernelConfigurator
-- Added &apos;proxyPath&apos; configuratin point for setting the proxy path of applications.
-
-* Renderer_Redirection
-- A renderer which is used to redirect requests.
-
-* View
-- Added the code to overwrite the extension &apos;renderer&apos; if the view string start with http(s)://.
-
-* Dispatcher_Continuation
-- Added the code to set the Piece_Flow_Continuation object to the current context.
-
-* Interceptor_NullByteAttackPreventation
-- An interceptor to prevent Null Byte Attack for applications.
-
-* OutputFilter_JapaneseZ2H
-- An output filter which can be used to converts Japanese JIS X0208 kana to JIS X0201 kana.
-
-Example applications:
-
-- Updated and improved the design.
-- Removed the mailto: link to my e-mail address.
-- Changed my e-mail address.
-- Introduced form validation using Piece_Right.
-- Adjusted to the new interface of Piece_Flow actions.
-
-&lt;&lt;&lt; Defect fixes &gt;&gt;&gt;
-
-Kernel:
-
-* Piece_Unity_Context
-- Fixed the problem that an event is ignored when the event name includes the characters other than letters or numbers.
-
-Plug-ins:
-
-* Dispatcher_Continuation
-- Removed wrong error handling which disables the current callback.
-
-* OutputBufferStack
-- Changed the code to prevent strange behaviour.
+- Removed XML declarations.
+- Changed the code so as to use built-in validation instead of Interceptor_PieceRight plug-in.
   </notes>
   <deps>
    <dep type="php" rel="ge" version="4.3.0" optional="no"/>
@@ -98,10 +55,10 @@ Plug-ins:
    <dep type="pkg" rel="ge" version="1.7.0" optional="no">Cache_Lite</dep>
    <dep type="pkg" rel="ge" version="1.4.3" optional="no">PEAR</dep>
    <dep type="pkg" rel="ge" version="1.0.14" optional="no">Net_URL</dep>
+   <dep type="pkg" rel="ge" version="1.1.0" optional="no">Piece_Right</dep>
    <dep type="pkg" rel="ge" version="0.3.0" optional="yes">Stagehand_TestRunner</dep>
    <dep type="pkg" rel="ge" version="1.2.4" optional="yes">HTML_Template_Flexy</dep>
    <dep type="pkg" rel="ge" version="1.6.8" optional="yes">Smarty</dep>
-   <dep type="pkg" rel="ge" version="1.0.0" optional="yes">Piece_Right</dep>
   </deps>
   <filelist>
    <dir name="/" baseinstalldir="/">
@@ -325,9 +282,6 @@ Plug-ins:
      <file role="doc" name="LICENSE" install-as="LICENSE">
       <replace from="@package_version@" to="version" type="package-info"/>
      </file>
-     <file role="doc" name="README.sdoc" install-as="README.sdoc">
-      <replace from="@package_version@" to="version" type="package-info"/>
-     </file>
     </dir> <!-- /docs -->
     <dir name="Piece">
      <dir name="Unity">
@@ -419,6 +373,9 @@ Plug-ins:
        <replace from="@package_version@" to="version" type="package-info"/>
       </file>
       <file role="php" name="Session.php">
+       <replace from="@package_version@" to="version" type="package-info"/>
+      </file>
+      <file role="php" name="Validation.php">
        <replace from="@package_version@" to="version" type="package-info"/>
       </file>
       <file role="php" name="ViewElement.php">
@@ -608,6 +565,9 @@ Plug-ins:
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
        </dir> <!-- /tests/Piece/Unity/Plugin -->
+       <file role="test" name="Authentication.yaml" install-as="Piece/Unity/Authentication.yaml">
+        <replace from="@package_version@" to="version" type="package-info"/>
+       </file>
        <file role="test" name="AutoloadClass.php" install-as="Piece/Unity/AutoloadClass.php">
         <replace from="@package_version@" to="version" type="package-info"/>
        </file>
@@ -624,6 +584,9 @@ Plug-ins:
         <replace from="@package_version@" to="version" type="package-info"/>
        </file>
        <file role="test" name="TestRunner.php" install-as="Piece/Unity/TestRunner.php">
+        <replace from="@package_version@" to="version" type="package-info"/>
+       </file>
+       <file role="test" name="ValidationTestCase.php" install-as="Piece/Unity/ValidationTestCase.php">
         <replace from="@package_version@" to="version" type="package-info"/>
        </file>
        <file role="test" name="ViewElementTestCase.php" install-as="Piece/Unity/ViewElementTestCase.php">
@@ -646,61 +609,96 @@ Plug-ins:
  </release>
  <changelog>
    <release>
+    <version>0.7.0</version>
+    <date>2006-09-16</date>
+    <license>BSD License (revised)</license>
+    <state>beta</state>
+    <notes>This release includes built-in validation system with Piece_Right integration, and a few improvement of Renderer_Redirection plug-in. See the following release notes for details.
+
+Note: Interceptor_PieceRight plug-in has been deprecated. It will be removed in the next release.
+
+## Enhancements ##
+
+### Kernel ###
+
+##### Piece_Unity_Validation #####
+- The validation class for Piece_Unity applications. This class is available from this release.
+
+##### Piece_Unity_Context #####
+- Added a new method getValidation() for getting the Piece_Unity_Validation object for the current request.
+
+### Plug-ins ###
+
+##### Renderer_Redirection #####
+- Added support for redirections with direct access to backend servers when HTTPS protocol is given as a view string.
+- Added support for redirections with other proxy servers.
+- Changed the code so as to add session ID to the query string only if the URL is internal.
+- Added a new configuration point addFlowExecutionTicket to add flow execution ticket to the query string.
+
+##### KernelConfigurator #####
+- Added two configuration points validationConfigDirectory and validationCacheDirectory for setting the configuration directory and the cache directory for validations.
+
+### Example Applications ###
+- Removed XML declarations.
+- Changed the code so as to use built-in validation instead of Interceptor_PieceRight plug-in.
+    </notes>
+   </release>
+   <release>
     <version>0.6.0</version>
     <date>2006-08-19</date>
     <license>BSD License (revised)</license>
     <state>beta</state>
     <notes>This release includes a lot of enhancements and a few defect fixes as follows:
 
-&lt;&lt;&lt; Enhancements &gt;&gt;&gt;
+## Enhancements ##
 
-Kernel:
+### Kernel ###
 
-* Piece_Unity_Context
+##### Piece_Unity_Context #####
 - Added support for context attributes.
 - Added setProxyPath() method for setting the proxy path if the application uses proxy servers.
 - Added getProxyPath() method for getting the proxy path of the application.
 - Added usingProxy() method for checking whether the application is accessed via reverse proxies.
 - Added setContinuation()/getContinuation() methods for setting/getting the Piece_Flow_Continuation object for the current session.
 
-* Piece_Unity_Plugin_Common
+##### Piece_Unity_Plugin_Common #####
 - Added _initialize() method as a template method, and changed the code so as to call it in the constructor.
 
-Plug-ins:
+### Plug-ins ###
 
-* Interceptor_PieceRight
+##### Interceptor_PieceRight #####
 - An interceptor to set a Piece_Right object to the current application context.
 
-* OutputBufferStack
+##### OutputBufferStack #####
 - Added support for PHP built-in functions.
 
-* Dispatcher_Simple
+##### Dispatcher_Simple #####
 - Added error handling when include_once fail.
 
-* Interceptor_ProxyBasePath
+##### Interceptor_ProxyBasePath #####
 - Changed the code so as to use Piece_Unity_Context::usingProxy() and Piece_Unity_Context::getProxyPath() methods instead of _useProxy() method and &apos;path&apos; configuration point.
 - Removed _useProxy() method.
 - Removed &apos;path&apos; configuration point.
 
-* KernelConfigurator
+##### KernelConfigurator #####
 - Added &apos;proxyPath&apos; configuratin point for setting the proxy path of applications.
 
-* Renderer_Redirection
+##### Renderer_Redirection #####
 - A renderer which is used to redirect requests.
 
-* View
+##### View #####
 - Added the code to overwrite the extension &apos;renderer&apos; if the view string start with http(s)://.
 
-* Dispatcher_Continuation
+##### Dispatcher_Continuation #####
 - Added the code to set the Piece_Flow_Continuation object to the current context.
 
-* Interceptor_NullByteAttackPreventation
+##### Interceptor_NullByteAttackPreventation #####
 - An interceptor to prevent Null Byte Attack for applications.
 
-* OutputFilter_JapaneseZ2H
+##### OutputFilter_JapaneseZ2H #####
 - An output filter which can be used to converts Japanese JIS X0208 kana to JIS X0201 kana.
 
-Example applications:
+## Example Applications ##
 
 - Updated and improved the design.
 - Removed the mailto: link to my e-mail address.
@@ -708,19 +706,19 @@ Example applications:
 - Introduced form validation using Piece_Right.
 - Adjusted to the new interface of Piece_Flow actions.
 
-&lt;&lt;&lt; Defect fixes &gt;&gt;&gt;
+## Defect Fixes ##
 
-Kernel:
+### Kernel ###
 
-* Piece_Unity_Context
+##### Piece_Unity_Context #####
 - Fixed the problem that an event is ignored when the event name includes the characters other than letters or numbers.
 
-Plug-ins:
+## Plug-ins ##
 
-* Dispatcher_Continuation
+##### Dispatcher_Continuation #####
 - Removed wrong error handling which disables the current callback.
 
-* OutputBufferStack
+##### OutputBufferStack #####
 - Changed the code to prevent strange behaviour.
     </notes>
    </release>
@@ -731,60 +729,60 @@ Plug-ins:
     <state>beta</state>
     <notes>This release includes a lot of enhancements and fixing two problems as follows:
 
-&lt;&lt;&lt; Enhancements &gt;&gt;&gt;
+## Enhancements ##
 
-Kernel:
+### Kernel ###
 
-* Piece_Unity
+##### Piece_Unity #####
 - invoke(): Changed the return value to null.
 
-* Piece_Unity_Plugin_Common
+##### Piece_Unity_Plugin_Common #####
 - getExtension(): Changed code so as to immediately return when an extension is false or an array.
 - Removed unused statements.
 
-* Piece_Unity_Context
+##### Piece_Unity_Context #####
 - Added setBasePath() method for setting the base path of the current request.
 - Added setScriptName() method for setting the script name of the current request.
 - Renamed the method from getBaseURLPath() to getBasePath().
 - Renamed the method from getBaseURL() to getScriptName().
 
-Plug-ins:
+### Plug-ins ###
 
-* Interceptor_ProxyBasePath
+##### Interceptor_ProxyBasePath #####
 - An interceptor to adjust the base path and the script name of the current request which are held in the Piece_Unity_Context object. This interceptor is used and only works when your web servers are used as reverse proxies.
 
-* Interceptor_SessionStart
+##### Interceptor_SessionStart #####
 - An interceptor to start session automatically.
 
-* Root
+##### Root #####
 - Removed code to start a session.
 
-* OutputBufferStack
+##### OutputBufferStack #####
 - Changed code so as to immediately return when the extension is not an array.
 - Added error handling.
 
-* InterceptorChain
+##### InterceptorChain #####
 - Changed the default value of &apos;interceptors&apos; extension point to the array which only includes &apos;Interceptor_SessionStart&apos; plug-in.
 - Changed code so as to immediately return when the extension is not an array.
 - Added error handling.
 
-* KernelConfigurator
+##### KernelConfigurator #####
 - Added &apos;pluginDirectories&apos; configuration point for setting plug-in directories.
 - Added error handling.
 
-* View
+##### View #####
 - Added the current session name and the current session id as view elements __sessionName and __sessionID.
 
-Example applications:
+## Example Applications ##
 
 - Updated and improved.
 - Changed the event names in the action states.
 
-&lt;&lt;&lt; Defect fixes &gt;&gt;&gt;
+## Defect Fixes ##
 
-Kernel:
+### Kernel ###
 
-* Piece_Unity_Context
+##### Piece_Unity_Context #####
 - Fixed the problem that slashes are replaced with backslashes.
 - Fixed the problem where the base path and the script name include the starting slash with Apache 2.0.58 on Windows.
     </notes>
@@ -796,43 +794,43 @@ Kernel:
     <state>beta</state>
     <notes>This release includes a lot of enhancements as follows:
 
-Enhancements:
+## Enhancements ##
 
-* Piece_Unity
+##### Piece_Unity #####
 - Added properties $_configDirectory, $_cacheDirectory, and $_dynamicConfig to use after instantiation.
 
-* Piece_Unity_Config
+##### Piece_Unity_Config #####
 - Removed methods setConfigurationDirectory(), setCacheDirectory(), getConfigurationDirectory(), getCacheDirectory(), getError(), isMergedExtensionPoint(), isMergedConfigurationPoint().
 
-* Piece_Unity_Error
+##### Piece_Unity_Error #####
 - pushPHPError(): Added logic to return immediately with the current value of error_reporting() function.
 
-* Piece_Unity_Request
+##### Piece_Unity_Request #####
 - Added support for importing the PATH_INFO string as parameters.
 
-* Piece_Unity_ViewElement
+##### Piece_Unity_ViewElement #####
 - Added getElement() method for getting elements.
 - Added hasElement() method for checking whether the object has an element with a given name.
 
-* &apos;Root&apos; plug-in
+##### Root #####
 - Added &apos;interceptor&apos; extension point.
 - Added &apos;outputFilter&apos; extension point.
 - Added &apos;controller&apos; extension point.
 - Removed &apos;dispatcher&apos; and &apos;view&apos; extension points.
 
-* &apos;Controller&apos; plug-in
+##### Controller #####
 - A controller which delegates requests to appropriate dispatchers and fowards requests to the view handler.
 
-* &apos;InterceptorChain&apos; plug-in
+##### InterceptorChain #####
 - An interceptor which invokes all interceptors.
 
-* &apos;OutputBufferStack&apos; plug-in
+##### OutputBufferStack #####
 - An output filter which turns output buffering on, and registers all output handlers.
 
-* &apos;OutputFilter_ContentLength&apos; plug-in
+##### OutputFilter_ContentLength #####
 - An output filter which outputs Content-Legnth header.
 
-* &apos;Renderer_Smarty&apos; plug-in
+##### Renderer_Smarty #####
 - Changed error handling so as to be thrown any errors as exception except non-existing templates.
     </notes>
    </release>
@@ -843,16 +841,16 @@ Enhancements:
     <state>beta</state>
     <notes>This release includes a few enhancements and fixing a problem as follows:
 
-Enhancements:
+## Enhancements ##
 
-* &apos;Renderer_Flexy&apos; plug-in
+##### Renderer_Flexy #####
 - Added a configuration point &apos;debug&apos; to display debugging information.
 - Changed error handling so as to be thrown any errors as &apos;exception&apos; except non-existing template.
 
-* Example applications
+## Example Applications ##
 - Set the cache directory for Piece_Unity configurations and Piece_Flow flow definitions.
 
-Defect fixes:
+## Defect Fixes ##
 
 - Fixed the problem that relative path cannot be used as the cache directory and action cirectory with Solaris.
     </notes>

@@ -42,81 +42,38 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$version = '0.6.0';
-$apiVersion = '0.6.0';
+$version = '0.7.0';
+$apiVersion = '0.7.0';
 $releaseStability = 'beta';
-$notes = "This release includes a lot of enhancements and a few defect fixes as follows:
+$notes = 'This release includes built-in validation system with Piece_Right integration, and a few improvement of Renderer_Redirection plug-in. See the following release notes for details.
 
-<<< Enhancements >>>
+Note: Interceptor_PieceRight plug-in has been deprecated. It will be removed in the next release.
 
-Kernel:
+## Enhancements ##
 
-* Piece_Unity_Context
-- Added support for context attributes.
-- Added setProxyPath() method for setting the proxy path if the application uses proxy servers.
-- Added getProxyPath() method for getting the proxy path of the application.
-- Added usingProxy() method for checking whether the application is accessed via reverse proxies.
-- Added setContinuation()/getContinuation() methods for setting/getting the Piece_Flow_Continuation object for the current session.
+### Kernel ###
 
-* Piece_Unity_Plugin_Common
-- Added _initialize() method as a template method, and changed the code so as to call it in the constructor.
+##### Piece_Unity_Validation #####
+- The validation class for Piece_Unity applications. This class is available from this release.
 
-Plug-ins:
+##### Piece_Unity_Context #####
+- Added a new method getValidation() for getting the Piece_Unity_Validation object for the current request.
 
-* Interceptor_PieceRight
-- An interceptor to set a Piece_Right object to the current application context.
+### Plug-ins ###
 
-* OutputBufferStack
-- Added support for PHP built-in functions.
+##### Renderer_Redirection #####
+- Added support for redirections with direct access to backend servers when HTTPS protocol is given as a view string.
+- Added support for redirections with other proxy servers.
+- Changed the code so as to add session ID to the query string only if the URL is internal.
+- Added a new configuration point addFlowExecutionTicket to add flow execution ticket to the query string.
 
-* Dispatcher_Simple
-- Added error handling when include_once fail.
+##### KernelConfigurator #####
+- Added two configuration points validationConfigDirectory and validationCacheDirectory for setting the configuration directory and the cache directory for validations.
 
-* Interceptor_ProxyBasePath
-- Changed the code so as to use Piece_Unity_Context::usingProxy() and Piece_Unity_Context::getProxyPath() methods instead of _useProxy() method and 'path' configuration point.
-- Removed _useProxy() method.
-- Removed 'path' configuration point.
+### Example Applications ###
 
-* KernelConfigurator
-- Added 'proxyPath' configuratin point for setting the proxy path of applications.
-
-* Renderer_Redirection
-- A renderer which is used to redirect requests.
-
-* View
-- Added the code to overwrite the extension 'renderer' if the view string start with http(s)://.
-
-* Dispatcher_Continuation
-- Added the code to set the Piece_Flow_Continuation object to the current context.
-
-* Interceptor_NullByteAttackPreventation
-- An interceptor to prevent Null Byte Attack for applications.
-
-* OutputFilter_JapaneseZ2H
-- An output filter which can be used to converts Japanese JIS X0208 kana to JIS X0201 kana.
-
-Example applications:
-
-- Updated and improved the design.
-- Removed the mailto: link to my e-mail address.
-- Changed my e-mail address.
-- Introduced form validation using Piece_Right.
-- Adjusted to the new interface of Piece_Flow actions.
-
-<<< Defect fixes >>>
-
-Kernel:
-
-* Piece_Unity_Context
-- Fixed the problem that an event is ignored when the event name includes the characters other than letters or numbers.
-
-Plug-ins:
-
-* Dispatcher_Continuation
-- Removed wrong error handling which disables the current callback.
-
-* OutputBufferStack
-- Changed the code to prevent strange behaviour.";
+- Removed XML declarations.
+- Changed the code so as to use built-in validation instead of Interceptor_PieceRight plug-in.';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
