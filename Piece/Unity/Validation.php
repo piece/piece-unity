@@ -218,6 +218,19 @@ class Piece_Unity_Validation
         $this->_config = null;
     }
 
+    // }}}
+    // {{{ getResults()
+
+    /**
+     * Gets the Piece_Right_Results object of the latest validation.
+     *
+     * @return Piece_Right_Results
+     */
+    function &getResults()
+    {
+        return $this->_results;
+    }
+
     /**#@-*/
 
     /**#@+

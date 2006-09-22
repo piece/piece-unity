@@ -114,6 +114,7 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
         $this->assertEquals($_POST['login_name'], $container->login_name);
         $this->assertEquals($_POST['password'], $container->password);
         $this->assertEquals($_POST['email'], $container->email);
+        $this->assertTrue(is_a($validation->getResults(), 'Piece_Right_Results'));
 
         unset($_POST['email']);
         unset($_POST['password']);
