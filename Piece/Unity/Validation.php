@@ -168,6 +168,13 @@ class Piece_Unity_Validation
                                  $this->_results
                                  );
 
+        $continuation = &$context->getContinuation();
+        if (!is_null($continuation)) {
+            $continuation->setAttribute(!is_null($validationSet) ? "__{$validationSet}Results" : '__results',
+                                        $this->_results
+                                        );
+        }
+
         return $result;
     }
 
