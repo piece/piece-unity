@@ -97,6 +97,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         }
 
         $autoloadClasses[] = 'Piece_Flow_Continuation';
+        $autoloadClasses[] = 'Piece_Right_Results';
         foreach ($autoloadClasses as $autoloadClass) {
             Piece_Unity_Session::addAutoloadClass($autoloadClass);
         }
