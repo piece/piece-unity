@@ -34,6 +34,7 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://piece-framework.com/piece-unity/
+ * @see        Piece_Right, Piece_Right_Config, Piece_Right_Results
  * @since      File available since Release 0.7.0
  */
 
@@ -54,6 +55,7 @@ require_once 'Piece/Unity/Context.php';
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://piece-framework.com/piece-unity/
+ * @see        Piece_Right, Piece_Right_Config, Piece_Right_Results
  * @since      Class available since Release 0.7.0
  */
 class Piece_Unity_Validation
