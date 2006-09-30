@@ -44,6 +44,7 @@ require_once 'Piece/Unity/Context.php';
 require_once 'Cache/Lite/File.php';
 require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
 require_once 'Piece/Unity/Config.php';
+require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
 
@@ -265,6 +266,63 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertFalse(Piece_Unity_Error::hasErrors('exception'));
 
         Piece_Unity_Error::popCallback();
+    }
+
+    /**
+     * @since Method available since Release 0.8.0
+     */
+    function testSettingResultsAsViewElementAndFlowAttribute()
+    {
+        $_GET['_flow'] = 'ContinuationValidation';
+        $fields = array('first_name' => ' Foo ',
+                        'last_name' => ' Bar ',
+                        'email' => 'baz@example.org',
+                        );
+        foreach ($fields as $name => $value) {
+            $_GET[$name] = $value;
+        }
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'ContinuationValidation', 'file' => dirname(__FILE__) . '/ContinuationValidation.yaml', 'isExclusive' => true)));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $validation = &$context->getValidation();
+        $validation->setConfigDirectory(dirname(__FILE__));
+        $validation->setCacheDirectory(dirname(__FILE__));
+
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+
+        $this->assertEquals('Form', $dispatcher->invoke());
+
+        unset($_GET['_flow']);
+
+        $context->setEventName('validate');
+        $context->setConfiguration($config);
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+
+        $this->assertEquals('Success', $dispatcher->invoke());
+
+        $viewElement = &$context->getViewElement();
+
+        $this->assertTrue($viewElement->hasElement('__ValidationResults'));
+        $this->assertEquals($validation->getResults(), $viewElement->getElement('__ValidationResults'));
+
+        $continuation = &$context->getContinuation();
+
+        $this->assertTrue($continuation->hasAttribute('__ValidationResults'));
+        $this->assertEquals($validation->getResults(), $continuation->getAttribute('__ValidationResults'));
+
+        $user = &$context->getAttribute('user');
+        foreach ($fields as $field => $value) {
+            $this->assertEquals(trim($value), $user->$field, $field);
+        }
+
+        foreach (array_keys($fields) as $field) {
+            unset($_GET[$field]);
+        }
     }
 
     /**#@-*/
