@@ -38,11 +38,11 @@
  * @since      File available since Release 0.7.0
  */
 
-require_once 'Piece/Right.php';
 require_once 'Piece/Right/Config.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'Piece/Right/Error.php';
 require_once 'Piece/Unity/Context.php';
+require_once 'Piece/Right/Validation/Script.php';
 
 // {{{ Piece_Unity_Validation
 
@@ -128,16 +128,22 @@ class Piece_Unity_Validation
                       $keepOriginalFieldValue = true
                       )
     {
-        $right = &new Piece_Right($this->_configDirectory,
-                                  $this->_cacheDirectory,
-                                  array(&$this, 'getFieldValueFromContext')
-                                  );
+        $script = &new Piece_Right_Validation_Script($this->_configDirectory,
+                                                     $this->_cacheDirectory,
+                                                     array(__CLASS__, 'getFieldValueFromContext'),
+                                                     array(__CLASS__, 'setResultsAsViewElementAndFlowAttribute')
+                                                     );
+
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-        $result = $right->validate($validationSet, $this->_config);
+        $this->_results = $script->run($validationSet,
+                                       $container,
+                                       $this->_config,
+                                       $keepOriginalFieldValue
+                                       );
         Piece_Unity_Error::popCallback();
         if (Piece_Right_Error::hasErrors('exception')) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    'Failed to invoke Piece_Right::validate() method for any reasons.',
+                                    'Failed to invoke Piece_Right_Validation_Processor::process() method for any reasons.',
                                     'exception',
                                     array(),
                                     Piece_Right_Error::pop()
@@ -145,39 +151,7 @@ class Piece_Unity_Validation
             return;
         }
 
-        $this->_results = $right->getResults();
-        $context = &Piece_Unity_Context::singleton();
-
-        if ($result) {
-            foreach ($this->_results->getFieldNames() as $field) {
-                $container->$field = $this->_results->getFieldValue($field);
-            }
-        } else {
-            if ($keepOriginalFieldValue) {
-                $request = &$context->getRequest();
-                foreach ($this->_results->getFieldNames() as $field) {
-                    $container->$field = $request->getParameter($field);
-                }
-            } else {
-                foreach ($this->_results->getFieldNames() as $field) {
-                    $container->$field = $this->_results->getFieldValue($field);
-                }
-            }
-        }
-
-        $viewElement = &$context->getViewElement();
-        $viewElement->setElement(!is_null($validationSet) ? "__{$validationSet}Results" : '__results',
-                                 $this->_results
-                                 );
-
-        $continuation = &$context->getContinuation();
-        if (!is_null($continuation)) {
-            $continuation->setAttribute(!is_null($validationSet) ? "__{$validationSet}Results" : '__results',
-                                        $this->_results
-                                        );
-        }
-
-        return $result;
+        return !$this->_results->countErrors();
     }
 
     // }}}
@@ -189,6 +163,7 @@ class Piece_Unity_Validation
      *
      * @param string $fieldName
      * @return mixed
+     * @static
      */
     function getFieldValueFromContext($fieldName)
     {
@@ -238,6 +213,33 @@ class Piece_Unity_Validation
     function &getResults()
     {
         return $this->_results;
+    }
+
+    // }}}
+    // {{{ setResultsAsViewElementAndFlowAttribute()
+
+    /**
+     * Sets a Piece_Right_Result object as a view element and a flow
+     * attribute.
+     *
+     * @param string              $validationSet
+     * @param Piece_Right_Results $results
+     * @static
+     */
+    function setResultsAsViewElementAndFlowAttribute($validationSet, $results)
+    {
+        $context = &Piece_Unity_Context::singleton();
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement(!is_null($validationSet) ? "__{$validationSet}Results" : '__results',
+                                 $results
+                                 );
+
+        $continuation = &$context->getContinuation();
+        if (!is_null($continuation)) {
+            $continuation->setAttribute(!is_null($validationSet) ? "__{$validationSet}Results" : '__results',
+                                        $results
+                                        );
+        }
     }
 
     /**#@-*/
