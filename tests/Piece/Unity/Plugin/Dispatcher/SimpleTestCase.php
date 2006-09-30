@@ -41,6 +41,8 @@
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Dispatcher/Simple.php';
 require_once 'Piece/Unity/Config.php';
+require_once 'Piece/Unity/Context.php';
+require_once 'Cache/Lite/File.php';
 
 // {{{ Piece_Unity_Plugin_Dispatcher_SimpleTestCase
 
@@ -84,6 +86,12 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
 
     function tearDown()
     {
+        $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
+                                            'masterFile' => '',
+                                            'automaticSerialization' => true,
+                                            'errorHandlingAPIBreak' => true)
+                                      );
+        $cache->clean();
         Piece_Unity_Context::clear();
         unset($_GET['_event']);
         unset($_SERVER['REQUEST_METHOD']);
@@ -123,6 +131,41 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
 
         unset($GLOBALS['actionCalled']);
         unset($GLOBALS['RelativePathVulnerabilityActionLoaded']);
+    }
+
+    /**
+     * @since Method available since Release 0.8.0
+     */
+    function testSettingResultsAsViewElement()
+    {
+        $_GET['_event'] = 'SimpleValidation';
+        $fields = array('first_name' => ' Foo ',
+                        'last_name' => ' Bar ',
+                        'email' => 'baz@example.org',
+                        );
+        foreach ($fields as $name => $value) {
+            $_GET[$name] = $value;
+        }
+
+        $context = &Piece_Unity_Context::singleton();
+        $validation = &$context->getValidation();
+        $validation->setConfigDirectory(dirname(__FILE__));
+        $validation->setCacheDirectory(dirname(__FILE__));
+        $this->_dispatch();
+
+        $viewElement = &$context->getViewElement();
+
+        $this->assertTrue($viewElement->hasElement('__ValidationResults'));
+        $this->assertEquals($validation->getResults(), $viewElement->getElement('__ValidationResults'));
+
+        $user = &$context->getAttribute('user');
+        foreach ($fields as $field => $value) {
+            $this->assertEquals(trim($value), $user->$field, $field);
+        }
+
+        foreach (array_keys($fields) as $field) {
+            unset($_GET[$field]);
+        }
     }
 
     /**#@-*/
