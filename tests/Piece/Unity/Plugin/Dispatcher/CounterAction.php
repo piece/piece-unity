@@ -40,10 +40,10 @@
 
 require_once 'Piece/Flow/Action.php';
 
-// {{{ Piece_Unity_CounterAction
+// {{{ CounterAction
 
 /**
- * An action class for 'Counter'.
+ * An action class for Counter.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
@@ -52,7 +52,7 @@ require_once 'Piece/Flow/Action.php';
  * @version    Release: @package_version@
  * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
- * @since      File available since Release 0.1.0
+ * @since      Class available since Release 0.1.0
  */
 class CounterAction extends Piece_Flow_Action
 {
