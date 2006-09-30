@@ -1,0 +1,21 @@
+# $Id$
+- name: first_name
+  required:
+  filter:
+    - trim
+  validator:
+    - name: Length
+      rule:
+        max: 255
+
+- name: last_name
+  required:
+  filter:
+    - trim
+  validator:
+    - name: Length
+      rule:
+        max: 255
+
+- name: email
+  required:
