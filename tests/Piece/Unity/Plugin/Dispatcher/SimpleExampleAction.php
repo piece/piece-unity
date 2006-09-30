@@ -41,7 +41,7 @@
 // {{{ SimpleExampleAction
 
 /**
- * Action class for the event 'SimpleExample'.
+ * Action class for the event SimpleExample.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
