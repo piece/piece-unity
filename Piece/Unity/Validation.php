@@ -252,6 +252,7 @@ class Piece_Unity_Validation
      *
      * @param array $directory
      * @static
+     * @since Method available since Release 0.8.0
      */
     function addValidatorDirectory($directory)
     {
@@ -266,6 +267,7 @@ class Piece_Unity_Validation
      *
      * @param array $directory
      * @static
+     * @since Method available since Release 0.8.0
      */
     function addFilterDirectory($directory)
     {
