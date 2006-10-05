@@ -41,10 +41,14 @@ require_once 'Piece/Unity/Plugin/Common.php';
 require_once 'Piece/Unity/Session.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
 require_once 'Piece/Unity/Error.php';
+require_once 'Piece/Unity/Validation.php';
 
 // {{{ Piece_Unity_Plugin_KernelConfigurator
 
 /**
+ * A configurator which can be used to set appropriate values to Piece_Unity
+ * Kernel Classes.
+ *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
@@ -134,6 +138,36 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         $validation = &$this->_context->getValidation();
         $validation->setConfigDirectory($this->getConfiguration('validationConfigDirectory'));
         $validation->setCacheDirectory($this->getConfiguration('validationCacheDirectory'));
+
+        $validationValidatorDirectories = $this->getConfiguration('validationValidatorDirectories');
+        if (is_array($validationValidatorDirectories)) {
+            foreach (array_reverse($validationValidatorDirectories) as $validationValidatorDirectory) {
+                Piece_Unity_Validation::addValidatorDirectory($validationValidatorDirectory);
+            }
+        } else {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    'Failed to configure the configuration point [ validationValidatorDirectories ] at the plugin [ ' . __CLASS__ . ' ].',
+                                    'warning',
+                                    array('plugin' => __CLASS__)
+                                    );
+            Piece_Unity_Error::popCallback();
+        }
+
+        $validationFilterDirectories = $this->getConfiguration('validationFilterDirectories');
+        if (is_array($validationFilterDirectories)) {
+            foreach (array_reverse($validationFilterDirectories) as $validationFilterDirectory) {
+                Piece_Unity_Validation::addFilterDirectory($validationFilterDirectory);
+            }
+        } else {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    'Failed to configure the configuration point [ validationFilterDirectories ] at the plugin [ ' . __CLASS__ . ' ].',
+                                    'warning',
+                                    array('plugin' => __CLASS__)
+                                    );
+            Piece_Unity_Error::popCallback();
+        }
     }
 
     /**#@-*/
@@ -160,6 +194,8 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         $this->_addConfigurationPoint('proxyPath');
         $this->_addConfigurationPoint('validationConfigDirectory');
         $this->_addConfigurationPoint('validationCacheDirectory');
+        $this->_addConfigurationPoint('validationValidatorDirectories', array());
+        $this->_addConfigurationPoint('validationFilterDirectories', array());
     }
  
     /**#@-*/
