@@ -43,6 +43,8 @@ require_once 'Piece/Unity/Error.php';
 require_once 'Piece/Right/Error.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Right/Validation/Script.php';
+require_once 'Piece/Right/Validator/Factory.php';
+require_once 'Piece/Right/Filter/Factory.php';
 
 // {{{ Piece_Unity_Validation
 
@@ -240,6 +242,34 @@ class Piece_Unity_Validation
                                         $results
                                         );
         }
+    }
+
+    // }}}
+    // {{{ addValidatorDirectory()
+
+    /**
+     * Adds a validator directory.
+     *
+     * @param array $directory
+     * @static
+     */
+    function addValidatorDirectory($directory)
+    {
+        Piece_Right_Validator_Factory::addValidatorDirectory($directory);
+    }
+
+    // }}}
+    // {{{ addFilterDirectory()
+
+    /**
+     * Adds a filter directory.
+     *
+     * @param array $directory
+     * @static
+     */
+    function addFilterDirectory($directory)
+    {
+        Piece_Right_Filter_Factory::addFilterDirectory($directory);
     }
 
     /**#@-*/
