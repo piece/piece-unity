@@ -225,10 +225,15 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $_POST['login_name'] = 'iteman';
         $_POST['password'] = 'iteman30';
         $_POST['email'] = 'iteman@users.sourceforge.net';
+        $_POST['greeting'] = 'Hello World';
+        $oldValidatorDirectories = $GLOBALS['PIECE_RIGHT_Validator_Directories'];
+        $oldFilterDirectories = $GLOBALS['PIECE_RIGHT_Filter_Directories'];
 
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('KernelConfigurator', 'validationConfigDirectory', dirname(__FILE__) . '/..');
         $config->setConfiguration('KernelConfigurator', 'validationCacheDirectory', dirname(__FILE__));
+        $config->setConfiguration('KernelConfigurator', 'validationValidatorDirectories', array(dirname(__FILE__) . '/KernelConfigurator'));
+        $config->setConfiguration('KernelConfigurator', 'validationFilterDirectories', array(dirname(__FILE__) . '/KernelConfigurator'));
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
@@ -239,6 +244,9 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $validationConfig = &$validation->getConfiguration();
         $validationConfig->setRequired('email');
         $validationConfig->addValidation('email', 'Email');
+        $validationConfig->setRequired('greeting');
+        $validationConfig->addValidation('greeting', 'HelloWorld');
+        $validationConfig->addFilter('greeting', 'LowerCase');
 
         $container = &new stdClass();
 
@@ -247,6 +255,11 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $this->assertEquals($_POST['password'], $container->password);
         $this->assertEquals($_POST['email'], $container->email);
 
+        $GLOBALS['PIECE_RIGHT_Filter_Instances'] = array();
+        $GLOBALS['PIECE_RIGHT_Filter_Directories'] = $oldValidatorDirectories;
+        $GLOBALS['PIECE_RIGHT_Validator_Instances'] = array();
+        $GLOBALS['PIECE_RIGHT_Validator_Directories'] = $oldValidatorDirectories;
+        unset($_POST['greeting']);
         unset($_POST['email']);
         unset($_POST['password']);
         unset($_POST['login_name']);
