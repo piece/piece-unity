@@ -11,4 +11,4 @@
   validator:
     - name: Regex
       rule:
-        pattern: /^[a-zA-Z0-9]{6,255}/
+        pattern: "/^[a-zA-Z0-9]{6,255}$/"
