@@ -145,7 +145,7 @@ class Piece_Unity_Validation
         Piece_Unity_Error::popCallback();
         if (Piece_Right_Error::hasErrors('exception')) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    'Failed to invoke Piece_Right_Validation_Processor::process() method for any reasons.',
+                                    'Failed to invoke Piece_Right_Validation_Script::run() method for any reasons.',
                                     'exception',
                                     array(),
                                     Piece_Right_Error::pop()
