@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- $Id$ -->
-<package packagerversion="1.4.11" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+<package packagerversion="1.5.0a1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
     http://pear.php.net/dtd/tasks-1.0.xsd
     http://pear.php.net/dtd/package-2.0
     http://pear.php.net/dtd/package-2.0.xsd">
  <name>Piece_Unity</name>
- <channel>pear.hatotech.org</channel>
+ <channel>pear.piece-framework.com</channel>
  <summary>A stateful and secure MVC framework for PHP</summary>
  <description>Piece_Unity is a stateful and secure MVC framework for PHP. Piece_Unity has two major features. The first one is flow control and storing/restoring states with a technology known as continuation server - It based on Piece_Flow web flow engine. The second one is an Eclipse like plug-in system using extension points and configuration points.</description>
  <lead>
@@ -14,10 +14,10 @@
   <email>iteman@users.sourceforge.net</email>
   <active>yes</active>
  </lead>
- <date>2006-09-16</date>
- <time>02:03:12</time>
+ <date>2006-10-17</date>
+ <time>02:05:17</time>
  <version>
-  <release>0.7.0</release>
+  <release>0.8.0</release>
   <api>0.7.0</api>
  </version>
  <stability>
@@ -25,35 +25,25 @@
   <api>beta</api>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
- <notes>This release includes built-in validation system with Piece_Right integration, and a few improvement of Renderer_Redirection plug-in. See the following release notes for details.
+ <notes>This is the first release of Piece_Unity with the new PEAR Channel Server pear.piece-framework.com.
 
-Note: Interceptor_PieceRight plug-in has been deprecated. It will be removed in the next release.
+This release includes a few enhancements of the validation system. See the following release notes for details.
 
 ## Enhancements ##
 
 ### Kernel ###
 
 ##### Piece_Unity_Validation #####
-- The validation class for Piece_Unity applications. This class is available from this release.
-
-##### Piece_Unity_Context #####
-- Added a new method getValidation() for getting the Piece_Unity_Validation object for the current request.
+- Added getResults() method for getting the Piece_Right_Results object of the latest validation.
+- Added setting the Piece_Right_Results object to the current flow scope when the continuation server is running.
+- Refactored validate() method using Piece_Right_Validation_Script class.
+- Added addValidatorDirectory()/addFilterDirectory() methods.
 
 ### Plug-ins ###
 
-##### Renderer_Redirection #####
-- Added support for redirections with direct access to backend servers when HTTPS protocol is given as a view string.
-- Added support for redirections with other proxy servers.
-- Changed the code so as to add session ID to the query string only if the URL is internal.
-- Added a new configuration point addFlowExecutionTicket to add flow execution ticket to the query string.
-
 ##### KernelConfigurator #####
-- Added two configuration points validationConfigDirectory and validationCacheDirectory for setting the configuration directory and the cache directory for validations.
-
-### Example Applications ###
-
-- Removed XML declarations.
-- Changed the code so as to use built-in validation instead of Interceptor_PieceRight plug-in.</notes>
+- Added Piece_Right_Results class to the array for autoloading.
+- Added missing two configuration points validationValidatorDirectories and validationFilterDirectories, and their processes, which had existed in Interceptor_PieceRight plug-in.</notes>
  <contents>
   <dir baseinstalldir="/" name="/">
    <dir name="data">
@@ -297,9 +287,6 @@ Note: Interceptor_PieceRight plug-in has been deprecated. It will be removed in 
        <file name="NullByteAttackPreventation.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
-       <file name="PieceRight.php" role="php">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
        <file name="ProxyBasePath.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
@@ -396,6 +383,12 @@ Note: Interceptor_PieceRight plug-in has been deprecated. It will be removed in 
         <file name="ContinuationTestCase.php" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
+        <file name="ContinuationValidation.yaml" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="ContinuationValidationAction.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
         <file name="Counter.php" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
@@ -411,35 +404,21 @@ Note: Interceptor_PieceRight plug-in has been deprecated. It will be removed in 
         <file name="SimpleTestCase.php" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
+        <file name="SimpleValidationAction.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
         <file name="TestRunner.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="Validation.yaml" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
        </dir> <!-- /tests/Piece/Unity/Plugin/Dispatcher -->
        <dir name="Interceptor">
-        <dir name="Piece">
-         <dir name="Right">
-          <dir name="Filter">
-           <file name="LowerCase.php" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-          </dir> <!-- /tests/Piece/Unity/Plugin/Interceptor/Piece/Right/Filter -->
-          <dir name="Validator">
-           <file name="HelloWorld.php" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-          </dir> <!-- /tests/Piece/Unity/Plugin/Interceptor/Piece/Right/Validator -->
-         </dir> <!-- /tests/Piece/Unity/Plugin/Interceptor/Piece/Right -->
-        </dir> <!-- /tests/Piece/Unity/Plugin/Interceptor/Piece -->
         <file name="First.php" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
         <file name="NullByteAttackPreventationTestCase.php" role="test">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="PieceRightExample.yaml" role="test">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="PieceRightTestCase.php" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
         <file name="ProxyBasePathTestCase.php" role="test">
@@ -452,6 +431,22 @@ Note: Interceptor_PieceRight plug-in has been deprecated. It will be removed in 
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
        </dir> <!-- /tests/Piece/Unity/Plugin/Interceptor -->
+       <dir name="KernelConfigurator">
+        <dir name="Piece">
+         <dir name="Right">
+          <dir name="Filter">
+           <file name="LowerCase.php" role="test">
+            <tasks:replace from="@package_version@" to="version" type="package-info" />
+           </file>
+          </dir> <!-- /tests/Piece/Unity/Plugin/KernelConfigurator/Piece/Right/Filter -->
+          <dir name="Validator">
+           <file name="HelloWorld.php" role="test">
+            <tasks:replace from="@package_version@" to="version" type="package-info" />
+           </file>
+          </dir> <!-- /tests/Piece/Unity/Plugin/KernelConfigurator/Piece/Right/Validator -->
+         </dir> <!-- /tests/Piece/Unity/Plugin/KernelConfigurator/Piece/Right -->
+        </dir> <!-- /tests/Piece/Unity/Plugin/KernelConfigurator/Piece -->
+       </dir> <!-- /tests/Piece/Unity/Plugin/KernelConfigurator -->
        <dir name="OutputFilter">
         <file name="First.php" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
@@ -610,8 +605,8 @@ Note: Interceptor_PieceRight plug-in has been deprecated. It will be removed in 
    </pearinstaller>
    <package>
     <name>Piece_Flow</name>
-    <channel>pear.hatotech.org</channel>
-    <min>1.5.0</min>
+    <channel>pear.piece-framework.com</channel>
+    <min>1.6.0</min>
    </package>
    <package>
     <name>Cache_Lite</name>
@@ -630,15 +625,15 @@ Note: Interceptor_PieceRight plug-in has been deprecated. It will be removed in 
    </package>
    <package>
     <name>Piece_Right</name>
-    <channel>pear.hatotech.org</channel>
-    <min>1.1.0</min>
+    <channel>pear.piece-framework.com</channel>
+    <min>1.2.0</min>
    </package>
   </required>
   <optional>
    <package>
     <name>Stagehand_TestRunner</name>
-    <channel>pear.hatotech.org</channel>
-    <min>0.3.0</min>
+    <channel>pear.piece-framework.com</channel>
+    <min>0.4.0</min>
    </package>
    <package>
     <name>HTML_Template_Flexy</name>
@@ -709,8 +704,6 @@ Note: Interceptor_PieceRight plug-in has been deprecated. It will be removed in 
    <install as="examples/single-flow-mode/webapp/templates/Static/ImmediateDisplay.html" name="data/examples/single-flow-mode/webapp/templates/Static/ImmediateDisplay.html" />
    <install as="piece-unity-config.yaml" name="data/piece-unity-config.yaml" />
    <install as="piece-unity.yaml" name="data/piece-unity.yaml" />
-   <install as="piece-unity-config.yaml" name="data/piece-unity-config.yaml" />
-   <install as="piece-unity.yaml" name="data/piece-unity.yaml" />
    <install as="LICENSE" name="docs/LICENSE" />
    <install as="AllTestRunner.php" name="tests/AllTestRunner.php" />
    <install as="Piece/TestRunner.php" name="tests/Piece/TestRunner.php" />
@@ -724,25 +717,27 @@ Note: Interceptor_PieceRight plug-in has been deprecated. It will be removed in 
    <install as="Piece/Unity/Plugin/Bar.php" name="tests/Piece/Unity/Plugin/Bar.php" />
    <install as="Piece/Unity/Plugin/Baz.php" name="tests/Piece/Unity/Plugin/Baz.php" />
    <install as="Piece/Unity/Plugin/Dispatcher/ContinuationTestCase.php" name="tests/Piece/Unity/Plugin/Dispatcher/ContinuationTestCase.php" />
+   <install as="Piece/Unity/Plugin/Dispatcher/ContinuationValidation.yaml" name="tests/Piece/Unity/Plugin/Dispatcher/ContinuationValidation.yaml" />
+   <install as="Piece/Unity/Plugin/Dispatcher/ContinuationValidationAction.php" name="tests/Piece/Unity/Plugin/Dispatcher/ContinuationValidationAction.php" />
    <install as="Piece/Unity/Plugin/Dispatcher/Counter.php" name="tests/Piece/Unity/Plugin/Dispatcher/Counter.php" />
    <install as="Piece/Unity/Plugin/Dispatcher/Counter.yaml" name="tests/Piece/Unity/Plugin/Dispatcher/Counter.yaml" />
    <install as="Piece/Unity/Plugin/Dispatcher/CounterAction.php" name="tests/Piece/Unity/Plugin/Dispatcher/CounterAction.php" />
    <install as="Piece/Unity/Plugin/Dispatcher/SimpleExampleAction.php" name="tests/Piece/Unity/Plugin/Dispatcher/SimpleExampleAction.php" />
    <install as="Piece/Unity/Plugin/Dispatcher/SimpleTestCase.php" name="tests/Piece/Unity/Plugin/Dispatcher/SimpleTestCase.php" />
+   <install as="Piece/Unity/Plugin/Dispatcher/SimpleValidationAction.php" name="tests/Piece/Unity/Plugin/Dispatcher/SimpleValidationAction.php" />
    <install as="Piece/Unity/Plugin/Dispatcher/TestRunner.php" name="tests/Piece/Unity/Plugin/Dispatcher/TestRunner.php" />
+   <install as="Piece/Unity/Plugin/Dispatcher/Validation.yaml" name="tests/Piece/Unity/Plugin/Dispatcher/Validation.yaml" />
    <install as="Piece/Unity/Plugin/FactoryTestCase.php" name="tests/Piece/Unity/Plugin/FactoryTestCase.php" />
    <install as="Piece/Unity/Plugin/Foo.php" name="tests/Piece/Unity/Plugin/Foo.php" />
    <install as="Piece/Unity/Plugin/Interceptor/First.php" name="tests/Piece/Unity/Plugin/Interceptor/First.php" />
    <install as="Piece/Unity/Plugin/Interceptor/NullByteAttackPreventationTestCase.php" name="tests/Piece/Unity/Plugin/Interceptor/NullByteAttackPreventationTestCase.php" />
-   <install as="Piece/Unity/Plugin/Interceptor/Piece/Right/Filter/LowerCase.php" name="tests/Piece/Unity/Plugin/Interceptor/Piece/Right/Filter/LowerCase.php" />
-   <install as="Piece/Unity/Plugin/Interceptor/Piece/Right/Validator/HelloWorld.php" name="tests/Piece/Unity/Plugin/Interceptor/Piece/Right/Validator/HelloWorld.php" />
-   <install as="Piece/Unity/Plugin/Interceptor/PieceRightExample.yaml" name="tests/Piece/Unity/Plugin/Interceptor/PieceRightExample.yaml" />
-   <install as="Piece/Unity/Plugin/Interceptor/PieceRightTestCase.php" name="tests/Piece/Unity/Plugin/Interceptor/PieceRightTestCase.php" />
    <install as="Piece/Unity/Plugin/Interceptor/ProxyBasePathTestCase.php" name="tests/Piece/Unity/Plugin/Interceptor/ProxyBasePathTestCase.php" />
    <install as="Piece/Unity/Plugin/Interceptor/Second.php" name="tests/Piece/Unity/Plugin/Interceptor/Second.php" />
    <install as="Piece/Unity/Plugin/Interceptor/TestRunner.php" name="tests/Piece/Unity/Plugin/Interceptor/TestRunner.php" />
    <install as="Piece/Unity/Plugin/InterceptorChainTestCase.php" name="tests/Piece/Unity/Plugin/InterceptorChainTestCase.php" />
    <install as="Piece/Unity/Plugin/Invalid.php" name="tests/Piece/Unity/Plugin/Invalid.php" />
+   <install as="Piece/Unity/Plugin/KernelConfigurator/Piece/Right/Filter/LowerCase.php" name="tests/Piece/Unity/Plugin/KernelConfigurator/Piece/Right/Filter/LowerCase.php" />
+   <install as="Piece/Unity/Plugin/KernelConfigurator/Piece/Right/Validator/HelloWorld.php" name="tests/Piece/Unity/Plugin/KernelConfigurator/Piece/Right/Validator/HelloWorld.php" />
    <install as="Piece/Unity/Plugin/KernelConfiguratorTestCase.php" name="tests/Piece/Unity/Plugin/KernelConfiguratorTestCase.php" />
    <install as="Piece/Unity/Plugin/OutputBufferStackTestCase.php" name="tests/Piece/Unity/Plugin/OutputBufferStackTestCase.php" />
    <install as="Piece/Unity/Plugin/OutputFilter/First.php" name="tests/Piece/Unity/Plugin/OutputFilter/First.php" />
@@ -779,6 +774,37 @@ Note: Interceptor_PieceRight plug-in has been deprecated. It will be removed in 
   </filelist>
  </phprelease>
  <changelog>
+  <release>
+   <version>
+    <release>0.8.0</release>
+    <api>0.7.0</api>
+   </version>
+   <stability>
+    <release>beta</release>
+    <api>beta</api>
+   </stability>
+   <date>2006-10-17</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+   <notes>This is the first release of Piece_Unity with the new PEAR Channel Server pear.piece-framework.com.
+
+This release includes a few enhancements of the validation system. See the following release notes for details.
+
+## Enhancements ##
+
+### Kernel ###
+
+##### Piece_Unity_Validation #####
+- Added getResults() method for getting the Piece_Right_Results object of the latest validation.
+- Added setting the Piece_Right_Results object to the current flow scope when the continuation server is running.
+- Refactored validate() method using Piece_Right_Validation_Script class.
+- Added addValidatorDirectory()/addFilterDirectory() methods.
+
+### Plug-ins ###
+
+##### KernelConfigurator #####
+- Added Piece_Right_Results class to the array for autoloading.
+- Added missing two configuration points validationValidatorDirectories and validationFilterDirectories, and their processes, which had existed in Interceptor_PieceRight plug-in.</notes>
+  </release>
   <release>
    <version>
     <release>0.7.0</release>

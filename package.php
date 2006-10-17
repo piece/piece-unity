@@ -42,38 +42,28 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$version = '0.7.0';
+$version = '0.8.0';
 $apiVersion = '0.7.0';
 $releaseStability = 'beta';
-$notes = 'This release includes built-in validation system with Piece_Right integration, and a few improvement of Renderer_Redirection plug-in. See the following release notes for details.
+$notes = 'This is the first release of Piece_Unity with the new PEAR Channel Server pear.piece-framework.com.
 
-Note: Interceptor_PieceRight plug-in has been deprecated. It will be removed in the next release.
+This release includes a few enhancements of the validation system. See the following release notes for details.
 
 ## Enhancements ##
 
 ### Kernel ###
 
 ##### Piece_Unity_Validation #####
-- The validation class for Piece_Unity applications. This class is available from this release.
-
-##### Piece_Unity_Context #####
-- Added a new method getValidation() for getting the Piece_Unity_Validation object for the current request.
+- Added getResults() method for getting the Piece_Right_Results object of the latest validation.
+- Added setting the Piece_Right_Results object to the current flow scope when the continuation server is running.
+- Refactored validate() method using Piece_Right_Validation_Script class.
+- Added addValidatorDirectory()/addFilterDirectory() methods.
 
 ### Plug-ins ###
 
-##### Renderer_Redirection #####
-- Added support for redirections with direct access to backend servers when HTTPS protocol is given as a view string.
-- Added support for redirections with other proxy servers.
-- Changed the code so as to add session ID to the query string only if the URL is internal.
-- Added a new configuration point addFlowExecutionTicket to add flow execution ticket to the query string.
-
 ##### KernelConfigurator #####
-- Added two configuration points validationConfigDirectory and validationCacheDirectory for setting the configuration directory and the cache directory for validations.
-
-### Example Applications ###
-
-- Removed XML declarations.
-- Changed the code so as to use built-in validation instead of Interceptor_PieceRight plug-in.';
+- Added Piece_Right_Results class to the array for autoloading.
+- Added missing two configuration points validationValidatorDirectories and validationFilterDirectories, and their processes, which had existed in Interceptor_PieceRight plug-in.';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
@@ -91,7 +81,7 @@ $package->setPackage('Piece_Unity');
 $package->setPackageType('php');
 $package->setSummary('A stateful and secure MVC framework for PHP');
 $package->setDescription('Piece_Unity is a stateful and secure MVC framework for PHP. Piece_Unity has two major features. The first one is flow control and storing/restoring states with a technology known as continuation server - It based on Piece_Flow web flow engine. The second one is an Eclipse like plug-in system using extension points and configuration points.');
-$package->setChannel('pear.hatotech.org');
+$package->setChannel('pear.piece-framework.com');
 $package->setLicense('BSD License (revised)',
                      'http://www.opensource.org/licenses/bsd-license.php'
                      );
