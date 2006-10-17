@@ -87,17 +87,19 @@ class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $dispatcher = &$this->getExtension('dispatcher');
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            return;
-        }
+        if (is_null($this->_context->getView())) {
+            $dispatcher = &$this->getExtension('dispatcher');
+            if (Piece_Unity_Error::hasErrors('exception')) {
+                return;
+            }
 
-        $viewString = $dispatcher->invoke();
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            return;
-        }
+            $viewString = $dispatcher->invoke();
+            if (Piece_Unity_Error::hasErrors('exception')) {
+                return;
+            }
 
-        $this->_context->setView($viewString);
+            $this->_context->setView($viewString);
+        }
 
         $view = &$this->getExtension('view');
         if (Piece_Unity_Error::hasErrors('exception')) {
