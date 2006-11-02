@@ -131,7 +131,21 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
                     }
                     
                     if ($useCallback === true) {
-                        $url = "{$service['url']}?{$callbackKey}={$scriptName}";
+
+                        $query = '';
+                        if (isset($_SERVER['QUERY_STRING'])
+                            && $_SERVER['QUERY_STRING'] !== ''
+                            ) {
+                            $query = "?{$_SERVER['QUERY_STRING']}";
+                        }
+
+                        $pathInfo = '';
+                        if (isset($_SERVER['PATH_INFO'])) {
+                            $pathInfo = $_SERVER['PATH_INFO'];
+                        }
+
+                        $requestCallback = urlencode("{$scriptName}{$pathInfo}{$query}");
+                        $url = "{$service['url']}?{$callbackKey}={$requestCallback}";
                     } else {
                         $url = $service['url'];
                     }
