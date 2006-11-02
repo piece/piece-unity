@@ -67,6 +67,8 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
     /**#@+
      * @access private
      */
+    var $_useCallback = false;
+    var $_callbackKey = 'callback';
 
     /**#@-*/
 
@@ -86,8 +88,9 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
      */
     function invoke()
     {
+        $scriptName = $this->_context->getScriptName();
         foreach ($this->getConfiguration('services') as $service) {
-            if (in_array($this->_context->getScriptName(), $service['resources'])) {
+            if (in_array($scriptName, $service['resources'])) {
                 $guardDirectory = $this->getConfiguration('guardDirectory');
                 if (is_null($guardDirectory)) {
                     Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
@@ -115,7 +118,25 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
                 }
 
                 if (!$guard->$service['guard']['method']($this->_context)) {
-                    $this->_context->setView($service['url']);
+                    if (isset($service['useCallback'])) {
+                        $useCallback = $service['useCallback'];
+                    } else {
+                        $useCallback = $this->_useCallback;
+                    }
+
+                    if (isset($service['callbackKey'])) {
+                        $callbackKey = $service['callbackKey'];
+                    } else {
+                        $callbackKey = $this->_callbackKey;
+                    }
+                    
+                    if ($useCallback === true) {
+                        $url = "{$service['url']}?{$callbackKey}={$scriptName}";
+                    } else {
+                        $url = $service['url'];
+                    }
+
+                    $this->_context->setView($url);
                     return false;
                 }
             }
