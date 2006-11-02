@@ -122,19 +122,25 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
         $this->assertTrue($this->_assertAccess('/one/baz.php', 'http://example.org/one/authenticate.php', false));
         $this->assertTrue($this->_assertAccess('/one/baz.php', 'http://example.org/one/authenticate.php', true));
 
-        $this->assertFalse($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=/two/foo.php', false));
-        $this->assertTrue($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=/two/foo.php', true));
-        $this->assertFalse($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=/two/bar.php', false));
-        $this->assertTrue($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=/two/bar.php', true));
-        $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=/two/baz.php', false));
-        $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=/two/baz.php', true));
+        $this->assertFalse($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php', false));
+        $this->assertTrue($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php', true));
+        $this->assertFalse($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbar.php', false));
+        $this->assertTrue($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbar.php', true));
+        $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbaz.php', false));
+        $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbaz.php', true));
+        $this->assertFalse($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php%2Ffoo%2Fbar%2F', false,
+                                                '/foo/bar/'));
+        $this->assertFalse($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php%3Ffoo%3Dbar', false,
+                                                null, 'foo=bar'));
+        $this->assertFalse($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', false,
+                                                '/foo/bar/', 'foo=bar'));
 
-        $this->assertFalse($this->_assertAccess('/three/foo.php', 'http://example.org/three/authenticate.php?three=/three/foo.php', false));
-        $this->assertTrue($this->_assertAccess('/three/foo.php', 'http://example.org/three/authenticate.php?three=/three/foo.php', true));
-        $this->assertFalse($this->_assertAccess('/three/bar.php', 'http://example.org/three/authenticate.php?three=/three/bar.php', false));
-        $this->assertTrue($this->_assertAccess('/three/bar.php', 'http://example.org/three/authenticate.php?three=/three/bar.php', true));
-        $this->assertTrue($this->_assertAccess('/three/baz.php', 'http://example.org/three/authenticate.php?three=/three/baz.php', false));
-        $this->assertTrue($this->_assertAccess('/three/baz.php', 'http://example.org/three/authenticate.php?three=/three/baz.php', true));
+        $this->assertFalse($this->_assertAccess('/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fthree%2Ffoo.php', false));
+        $this->assertTrue($this->_assertAccess('/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fthree%2Ffoo.php', true));
+        $this->assertFalse($this->_assertAccess('/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fthree%2Fbar.php', false));
+        $this->assertTrue($this->_assertAccess('/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fthree%2Fbar.php', true));
+        $this->assertTrue($this->_assertAccess('/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fthree%2Fbaz.php', false));
+        $this->assertTrue($this->_assertAccess('/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fthree%2Fbaz.php', true));
     }
 
     function testFailureToCheckSinceGuardNotFound()
@@ -157,10 +163,16 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
      * @access private
      */
 
-    function _assertAccess($scriptName, $url, $isAuthenticated)
+    function _assertAccess($scriptName, $url, $isAuthenticated, $pathInfo = null, $queryString = null)
     {
         $previousScriptName = $_SERVER['SCRIPT_NAME'];
         $_SERVER['SCRIPT_NAME'] = $scriptName;
+        if ($pathInfo) {
+            $_SERVER['PATH_INFO'] = $pathInfo;
+        }
+        if ($queryString) {
+            $_SERVER['QUERY_STRING'] = $queryString;
+        }
         $GLOBALS['isAuthenticated'] = $isAuthenticated;
         $GLOBALS['isAuthenticatedCalled'] = false;
 
@@ -177,6 +189,8 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
             Piece_Unity_Context::clear();
             unset($GLOBALS['isAuthenticatedCalled']);
             unset($GLOBALS['isAuthenticated']);
+            unset($_SERVER['PATH_INFO']);
+            unset($_SERVER['QUERY_STRING']);
             $_SERVER['SCRIPT_NAME'] = $previousScriptName;
             return;
         }
@@ -199,6 +213,8 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
         Piece_Unity_Context::clear();
         unset($GLOBALS['isAuthenticatedCalled']);
         unset($GLOBALS['isAuthenticated']);
+        unset($_SERVER['PATH_INFO']);
+        unset($_SERVER['QUERY_STRING']);
         $_SERVER['SCRIPT_NAME'] = $previousScriptName;
 
         return is_null($view) ? true : false;
