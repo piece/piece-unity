@@ -93,9 +93,9 @@ class Piece_Unity_Plugin_Renderer_CompatibilityTest extends PHPUnit_TestCase
     {
         Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
+        Piece_Unity_Error::popCallback();
         unset($_GET['_event']);
         unset($_SERVER['REQUEST_METHOD']);
-        Piece_Unity_Error::popCallback();
     }
 
     function testRendering()
