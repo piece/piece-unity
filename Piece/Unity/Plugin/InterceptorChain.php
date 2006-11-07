@@ -100,7 +100,7 @@ class Piece_Unity_Plugin_InterceptorChain extends Piece_Unity_Plugin_Common
             }
 
             /*
-             * Stops the invocation of the interceptors if a interceptor
+             * Stops the invocation of the interceptors if an interceptor
              * returns false.
              *
              * @return boolean
