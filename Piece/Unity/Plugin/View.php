@@ -99,6 +99,10 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
          * Overwrites the extension 'renderer' if the view string start with
          * http(s)://, since it is considered as a URL to redirect.
          */
+        if ($forceView = $this->getConfiguration('forceView')) {
+            $this->_context->setView($forceView);
+        }
+
         if (preg_match('!^https?://!', $this->_context->getView())) {
             $config = &$this->_context->getConfiguration();
             $config->setExtension('View', 'renderer', 'Renderer_Redirection');
