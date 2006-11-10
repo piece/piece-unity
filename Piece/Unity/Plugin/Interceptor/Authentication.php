@@ -90,7 +90,7 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
     {
         $scriptName = $this->_context->getScriptName();
         foreach ($this->getConfiguration('services') as $service) {
-            if (in_array($scriptName, $service['resources'])) {
+            if (in_array($scriptName, $this->_listResource($service))) {
                 $guardDirectory = $this->getConfiguration('guardDirectory');
                 if (is_null($guardDirectory)) {
                     Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
@@ -231,6 +231,34 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
         return $found;
     }
  
+    // }}}
+    // {{{ _listResource()
+
+    /**
+     * list services resource. (for proxy path)
+     *
+     * @param array $service
+     * @return array
+     */
+    function _listResource($service)
+    {
+        if (!$this->_context->usingProxy()) {
+            return $service['resources'];
+        }
+
+        $path = $this->_context->getProxyPath();
+        if (is_null($path)) {
+            return $service['resources'];
+        }
+               
+        $resources = array();
+        foreach ($service['resources'] as $resource) {
+            $resources[] = str_replace('//', '/', $path . $resource);
+        }
+
+        return $resources;
+    }
+
     /**#@-*/
 
     // }}}
