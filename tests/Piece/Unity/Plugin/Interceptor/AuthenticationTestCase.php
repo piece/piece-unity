@@ -80,15 +80,13 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
                                  'guard'     => array('class' => 'AuthenticationCheckerTwo', 'method' => 'isAuthenticated'),
                                  'url'       => 'http://example.org/two/authenticate.php',
                                  'resources' => array('/two/foo.php', '/two/bar.php'),
-                                 'useCallback' => true,
-                                 ),
+                                 'useCallback' => true),
                            array('name'      => 'Authentication Service Three',
                                  'guard'     => array('class' => 'AuthenticationCheckerThree', 'method' => 'isAuthenticated'),
                                  'url'       => 'http://example.org/three/authenticate.php',
                                  'resources' => array('/three/foo.php', '/three/bar.php'),
                                  'useCallback' => true,
-                                 'callbackKey' => 'three',
-                                 ),
+                                 'callbackKey' => 'three'),
                            array('name'      => 'Authentication Service Four',
                                  'guard'     => array('class' => 'AuthenticationCheckerFour', 'method' => 'isAuthenticated'),
                                  'url'       => 'http://example.org/four/authenticate.php',
@@ -113,7 +111,7 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
         Piece_Unity_Error::popCallback();
     }
 
-    function testAccessToProtectedResourcesByFirstService()
+    function testAccessToProtectedResourcesByOneService()
     {
         $this->assertFalse($this->_assertAccess('/one/foo.php', 'http://example.org/one/authenticate.php', false));
         $this->assertTrue($this->_assertAccess('/one/foo.php', 'http://example.org/one/authenticate.php', true));
@@ -121,26 +119,94 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
         $this->assertTrue($this->_assertAccess('/one/bar.php', 'http://example.org/one/authenticate.php', true));
         $this->assertTrue($this->_assertAccess('/one/baz.php', 'http://example.org/one/authenticate.php', false));
         $this->assertTrue($this->_assertAccess('/one/baz.php', 'http://example.org/one/authenticate.php', true));
+    }
 
+    function testAccessToProtectedResourcesByTwoService()
+    {
         $this->assertFalse($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php', false));
         $this->assertTrue($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php', true));
         $this->assertFalse($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbar.php', false));
         $this->assertTrue($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbar.php', true));
         $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbaz.php', false));
         $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbaz.php', true));
-        $this->assertFalse($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php%2Ffoo%2Fbar%2F', false,
-                                                '/foo/bar/'));
-        $this->assertFalse($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php%3Ffoo%3Dbar', false,
-                                                null, 'foo=bar'));
-        $this->assertFalse($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', false,
-                                                '/foo/bar/', 'foo=bar'));
+    }
 
+    function testAccessToProtectedResourcesByTwoServiceWithPathInfo()
+    {
+        $this->assertFalse($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php%2Ffoo%2Fbar%2F', false, '/foo/bar/'));
+        $this->assertTrue($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php%2Ffoo%2Fbar%2F', true, '/foo/bar/'));
+        $this->assertFalse($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbar.php%2Ffoo%2Fbar%2F', false, '/foo/bar/'));
+        $this->assertTrue($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbar.php%2Ffoo%2Fbar%2F', true, '/foo/bar/'));
+        $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbaz.php%2Ffoo%2Fbar%2F', false, '/foo/bar/'));
+        $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbaz.php%2Ffoo%2Fbar%2F', true, '/foo/bar/'));
+    }
+
+    function testAccessToProtectedResourcesByTwoServiceWithQueryString()
+    {
+        $this->assertFalse($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php%3Ffoo%3Dbar', false, null, 'foo=bar'));
+        $this->assertTrue($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php%3Ffoo%3Dbar', true, null, 'foo=bar'));
+        $this->assertFalse($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbar.php%3Ffoo%3Dbar', false, null, 'foo=bar'));
+        $this->assertTrue($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbar.php%3Ffoo%3Dbar', true, null, 'foo=bar'));
+        $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbaz.php%3Ffoo%3Dbar', false, null, 'foo=bar'));
+        $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbaz.php%3Ffoo%3Dbar', true, null, 'foo=bar'));
+    }
+
+    function testAccessToProtectedResourcesByTwoServiceWithPathInfoAndQueryString()
+    {
+        $this->assertFalse($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', false, '/foo/bar/', 'foo=bar'));
+        $this->assertTrue($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', true, '/foo/bar/', 'foo=bar'));
+        $this->assertFalse($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbar.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', false, '/foo/bar/', 'foo=bar'));
+        $this->assertTrue($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbar.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', true, '/foo/bar/', 'foo=bar'));
+        $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbaz.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', false, '/foo/bar/', 'foo=bar'));
+        $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbaz.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', true, '/foo/bar/', 'foo=bar'));
+    }
+
+    function testAccessToProtectedResourcesByThreeService()
+    {
         $this->assertFalse($this->_assertAccess('/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fthree%2Ffoo.php', false));
         $this->assertTrue($this->_assertAccess('/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fthree%2Ffoo.php', true));
         $this->assertFalse($this->_assertAccess('/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fthree%2Fbar.php', false));
         $this->assertTrue($this->_assertAccess('/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fthree%2Fbar.php', true));
         $this->assertTrue($this->_assertAccess('/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fthree%2Fbaz.php', false));
         $this->assertTrue($this->_assertAccess('/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fthree%2Fbaz.php', true));
+    }
+
+    function testAccessToProtectedResourcesByThreeServiceWithProxyPath()
+    {
+        $this->assertFalse($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php', false, null, null, '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php', true, null, null, '/proxy'));
+        $this->assertFalse($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php', false, null, null, '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php', true, null, null, '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php', false, null, null, '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php', true, null, null, '/proxy'));
+
+        $this->assertFalse($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php', false, null, null, '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php', true, null, null, '/proxy'));
+        $this->assertFalse($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php', false, null, null, '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php', true, null, null, '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php', false, null, null, '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php', true, null, null, '/proxy'));
+
+        $this->assertFalse($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php%2Ffoo%2Fbar%2F', false, '/foo/bar/', null, '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php%2Ffoo%2Fbar%2F', true, '/foo/bar/', null, '/proxy'));
+        $this->assertFalse($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php%2Ffoo%2Fbar%2F', false, '/foo/bar/', null, '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php%2Ffoo%2Fbar%2F', true, '/foo/bar/', null, '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php%2Ffoo%2Fbar%2F', false, '/foo/bar/', null, '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php%2Ffoo%2Fbar%2F', true, '/foo/bar/', null, '/proxy'));
+
+        $this->assertFalse($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php%3Ffoo%3Dbar', false, null, 'foo=bar', '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php%3Ffoo%3Dbar', true, null, 'foo=bar', '/proxy'));
+        $this->assertFalse($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php%3Ffoo%3Dbar', false, null, 'foo=bar', '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php%3Ffoo%3Dbar', true, null, 'foo=bar', '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php%3Ffoo%3Dbar', false, null, 'foo=bar', '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php%3Ffoo%3Dbar', true, null, 'foo=bar', '/proxy'));
+
+        $this->assertFalse($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', false, '/foo/bar/', 'foo=bar', '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', true, '/foo/bar/', 'foo=bar', '/proxy'));
+        $this->assertFalse($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', false, '/foo/bar/', 'foo=bar', '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', true, '/foo/bar/', 'foo=bar', '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', false, '/foo/bar/', 'foo=bar', '/proxy'));
+        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', true, '/foo/bar/', 'foo=bar', '/proxy'));
     }
 
     function testFailureToCheckSinceGuardNotFound()
@@ -163,7 +229,13 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
      * @access private
      */
 
-    function _assertAccess($scriptName, $url, $isAuthenticated, $pathInfo = null, $queryString = null)
+    function _assertAccess($scriptName,
+                           $url,
+                           $isAuthenticated,
+                           $pathInfo = null,
+                           $queryString = null,
+                           $proxy = null
+                           )
     {
         $previousScriptName = $_SERVER['SCRIPT_NAME'];
         $_SERVER['SCRIPT_NAME'] = $scriptName;
@@ -181,6 +253,11 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
         $config->setConfiguration('Interceptor_Authentication', 'guardDirectory', dirname(__FILE__));
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
+        if ($proxy) {
+            $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
+            $context->setProxyPath($proxy);
+            $context->setBasePath($proxy . $context->getBasePath());
+        }
 
         $interceptor = &new Piece_Unity_Plugin_Interceptor_Authentication();
         $interceptor->invoke();
@@ -191,12 +268,13 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
             unset($GLOBALS['isAuthenticated']);
             unset($_SERVER['PATH_INFO']);
             unset($_SERVER['QUERY_STRING']);
+            unset($_SERVER['HTTP_X_FORWARDED_FOR']);
             $_SERVER['SCRIPT_NAME'] = $previousScriptName;
             return;
         }
 
         $view = $context->getView();
-        if ($this->_isProtectedResource($scriptName)) {
+        if ($this->_isProtectedResource($scriptName, $proxy)) {
             if (!$isAuthenticated) {
                 $this->assertEquals($url, $view);
                 $this->assertFalse($GLOBALS['isAuthenticated']);
@@ -215,15 +293,25 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
         unset($GLOBALS['isAuthenticated']);
         unset($_SERVER['PATH_INFO']);
         unset($_SERVER['QUERY_STRING']);
+        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
         $_SERVER['SCRIPT_NAME'] = $previousScriptName;
 
         return is_null($view) ? true : false;
     }
 
-    function _isProtectedResource($scriptName)
+    function _isProtectedResource($scriptName, $proxy)
     {
         foreach ($this->_services as $service) {
-            if (in_array($scriptName, $service['resources'])) {
+            if ($proxy) {
+                $resources = array();
+                foreach ($service['resources'] as $resource) {
+                    $resources[] = $proxy . $resource;
+                }
+            } else {
+                $resources = $service['resources'];
+            }
+
+            if (in_array($scriptName, $resources)) {
                 return true;
             }
         }
