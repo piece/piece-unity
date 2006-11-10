@@ -133,6 +133,7 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
     function _initialize()
     {
         $this->_addExtensionPoint('renderer', 'Renderer_PHP');
+        $this->_addConfigurationPoint('forceView');
     }
 
     /**#@-*/
