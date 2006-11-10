@@ -1,0 +1,32 @@
+# $Id: Registration.yaml 460 2006-07-23 06:07:50Z iteman $
+firstState: DisplayA
+
+viewState:
+  - name: DisplayA
+    view: A
+    activity:
+      class: UserContentOneAction
+      method: displayA
+    transition:
+      - event: goNext
+        nextState: DisplayB
+
+  - name: DisplayB
+    view: B
+    activity:
+      class: UserContentOneAction
+      method: displayB
+    transition:
+      - event: goNext
+        nextState: DisplayC
+      - event: back
+        nextState: DisplayA
+
+  - name: DisplayC
+    view: C
+    activity:
+      class: UserContentOneAction
+      method: displayC
+    transition:
+      - event: back
+        nextState: DisplayB

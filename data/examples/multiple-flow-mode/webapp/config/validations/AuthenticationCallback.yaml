@@ -1,0 +1,4 @@
+# $Id: Registration.yaml 488 2006-08-16 15:34:10Z iteman $
+
+- name: callback
+  description: Callback Url
