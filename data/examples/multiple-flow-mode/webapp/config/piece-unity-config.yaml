@@ -1,4 +1,23 @@
 # $Id$
+
+- name: Interceptor_Authentication
+  point:
+    - name: services
+      type: configuration
+      value:
+        - name: Example
+          guard:
+            class: AuthenticationAction
+            method: isAuthenticated
+          url: "http://example.com/multiple-flow-mode/htdocs/authenticate.php"
+          resources:
+            - /multiple-flow-mode/htdocs/user-contents.php
+          useCallback: true
+          callbackKey: callback
+    - name: guardDirectory
+      type: configuration
+      value: ../webapp/actions
+
 - name: Dispatcher_Continuation
   point:
     - name: actionDirectory
@@ -19,6 +38,12 @@
         - name: Counter
           file: ../webapp/config/flows/Counter.yaml
           isExclusive: true
+        - name: Authentication
+          file: ../webapp/config/flows/Authentication.yaml
+          isExclusive: true
+        - name: UserContentOne
+          file: ../webapp/config/flows/UserContentOne.yaml
+          isExclusive: false
 - name: Dispatcher_Simple
   point:
     - name: actionDirectory
@@ -43,6 +68,7 @@
       type: extension
       value:
         - Interceptor_SessionStart
+        - Interceptor_Authentication
 - name: KernelConfigurator
   point:
     - name: validationConfigDirectory
