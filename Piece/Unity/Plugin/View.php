@@ -96,13 +96,18 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
         $viewElement->setElement('__sessionID', session_id());
 
         /*
+         * Overwrites the current view with another one which is specified by
+         * forcedView configuration.
+         */
+        $forcedView = $this->getConfiguration('forcedView');
+        if (!is_null($forcedView)) {
+            $this->_context->setView($forcedView);
+        }
+
+        /*
          * Overwrites the extension 'renderer' if the view string start with
          * http(s)://, since it is considered as a URL to redirect.
          */
-        if ($forceView = $this->getConfiguration('forceView')) {
-            $this->_context->setView($forceView);
-        }
-
         if (preg_match('!^https?://!', $this->_context->getView())) {
             $config = &$this->_context->getConfiguration();
             $config->setExtension('View', 'renderer', 'Renderer_Redirection');
@@ -133,7 +138,7 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
     function _initialize()
     {
         $this->_addExtensionPoint('renderer', 'Renderer_PHP');
-        $this->_addConfigurationPoint('forceView');
+        $this->_addConfigurationPoint('forcedView');
     }
 
     /**#@-*/
