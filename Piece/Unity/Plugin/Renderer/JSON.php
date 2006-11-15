@@ -34,8 +34,11 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://piece-framework.com/piece-unity/
+ * @link       http://pear.php.net/package/HTML_AJAX
+ * @see        HTML_AJAX_JSON
  * @since      File available since Release 0.9.0
  */
+
 require_once 'Piece/Unity/Plugin/Common.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_JSON
@@ -49,6 +52,8 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://piece-framework.com/piece-unity/
+ * @link       http://pear.php.net/package/HTML_AJAX
+ * @see        HTML_AJAX_JSON
  * @since      Class available since Release 0.9.0
  */
 class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
@@ -73,10 +78,10 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
     var $_useIconv = false;
 
     /**
-     * @var boolean the flag to use HTTP_AJAX instead of php-json.
+     * @var boolean the flag to use HTML_AJAX instead of php-json.
      *              this property is only for testing.
      */
-    var $_useHTTPAJAX = false;
+    var $_useHTMLAJAX = false;
 
     /**
      * @var string the HTTP response header sent in
@@ -84,7 +89,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
      *             this property is only for testing.
      */
     var $_header;
-    
+
     /**#@-*/
 
     /**#@+
@@ -99,16 +104,16 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        if (!$this->_useHTTPAJAX
+        if (!$this->_useHTMLAJAX
             && function_exists('json_encode')) {
             $jsonEncoder = 'json_encode';
         } else {
-            if (!@include_once('HTML/AJAX/JSON.php')) {
+            if (!include_once 'HTML/AJAX/JSON.php') {
                 // no json encoder is available. sorry.
-                $this->_sendInternalServiceError();
+                $this->_sendInternalServerError();
                 return;
             }
-            $jsonEncoder = array(__CLASS__, '_encodeWithHtmlAjax');
+            $jsonEncoder = array(__CLASS__, '_encodeWithHTMLAJAX');
         }
 
         $viewElement = &$this->_context->getViewElement();
@@ -126,11 +131,11 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
 
         // data to be encoded as json.
         $data = array();
-        foreach(array_keys($viewElements) as $key) {
+        foreach (array_keys($viewElements) as $key) {
             if (in_array($key, $exclude)) {
                 // discard an element which is listed explicitly.
                 continue;
-            } 
+            }
 
             if (in_array($key, $include) || substr($key, 0, 1) != '_') {
                 /*
@@ -154,11 +159,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
             if (!is_string($encoding)) {
                 $encoding = iconv_get_encoding('internal_encoding');
             }
-            $encodingCallback =
-                create_function(
-                    '$v',
-                    "return iconv('{$encoding}', 'UTF-8//IGNORE', \$v);"
-                );
+            $encodingCallback = create_function('$v', "return iconv('{$encoding}', 'UTF-8//IGNORE', \$v);");
         }
 
         /*
@@ -166,10 +167,9 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
          * it contains any circular references.
          */
         $visited = array();
-        $this->_visit($data, $visited, $encodingCallback);
-        if (Piece_Unity_Error::hasErrors('exception')) {
+        if (!$this->_visit($data, $visited, $encodingCallback)) {
             // circular refereces found.
-            $this->_sendInternalServiceError();
+            $this->_sendInternalServerError();
             return;
         }
 
@@ -186,7 +186,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
         // finally encode the data as json.
         $json = call_user_func($jsonEncoder, $data);
         if ($json === false) {
-            $this->_sendInternalServiceError();
+            $this->_sendInternalServerError();
             return;
         }
 
@@ -201,7 +201,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
         if (!is_null($contentType)) {
             /*
              * this looks redundant, but for the testing sake,
-             * do not modify it. 
+             * do not modify it.
              */
             $this->_header = $contentType;
             @header($this->_header);
@@ -217,48 +217,31 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ _sendInternalServiceError()
+    // {{{ _sendInternalServerError()
 
     /**
-     * Send the response code '500 Internal Service Error'.
-     *
+     * Send the response code '500 Internal Server Error'.
      */
-    function _sendInternalServiceError()
+    function _sendInternalServerError()
     {
         $this->_header = 'HTTP/1.0 500 Internal Server Error';
         @header($this->_header);
     }
 
     // }}}
-    // {{{ _encodeWithPHPJson()
+    // {{{ _encodeWithHTMLAJAX()
 
     /**
-     * Encode a given value with php_json extension.
+     * Encode a given value with PEAR::HTML_AJAX.
      *
      * @param mixed $value
      * @return string json string representation of a given value
      *                or false if error ocurrs.
      * @static
      */
-    function _encodeWithPhpJson($value)
+    function _encodeWithHTMLAJAX($value)
     {
-        return json_encode($value);
-    }
-
-    // }}}
-    // {{{ _encodeWithHtmlAjax()
-
-    /**
-     * Encode a given value with php_json extension.
-     *
-     * @param mixed $value
-     * @return string json string representation of a given value
-     *                or false if error ocurrs.
-     * @static
-     */
-    function _encodeWithHtmlAjax($value)
-    {
-        $encoder =& new HTML_AJAX_JSON();
+        $encoder = &new HTML_AJAX_JSON();
         $json = $encoder->encode($value);
         if (HTML_AJAX_JSON::isError($json)) {
             return false;
@@ -274,19 +257,27 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
      *
      * @param mixed $value            the value to be visited.
      * @param array $visited          the array of objects which have been visited.
-     * @param mixed $encodingCallback the callback fundtion to convert the charset.
+     * @param mixed $encodingCallback the callback fundtion to convert the
+     *                                charset.
+     * @return boolean
      */
     function _visit(&$value, &$visited, $encodingCallback = null)
     {
         if (is_array($value)) {
-            $this->_visitArray($value, $visited, $encodingCallback);
-        } else if (is_object($value)) {
-            $this->_visitObject($value, $visited, $encodingCallback);
+            if (!$this->_visitArray($value, $visited, $encodingCallback)) {
+                return false;
+            }
+        } elseif (is_object($value)) {
+            if (!$this->_visitObject($value, $visited, $encodingCallback)) {
+                return false;
+            }
         }
 
         if (is_string($value) && !is_null($encodingCallback)) {
             $value = call_user_func($encodingCallback, $value);
         }
+
+        return true;
     }
 
     // }}}
@@ -297,24 +288,31 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
      *
      * @param mixed $value            the value to be visited.
      * @param array $visited          the array of objects which have been visited.
-     * @param mixed $encodingCallback the callback fundtion to convert the charset.
+     * @param mixed $encodingCallback the callback fundtion to convert the
+     *                                charset.
+     * @return boolean
      */
     function _visitArray(&$value, &$visited, $encodingCallback = null)
     {
-        foreach(array_keys($value) as $key) {
-            $next =& $value[$key];
-            
+        foreach (array_keys($value) as $key) {
+            $next = &$value[$key];
+
             if ($this->_wasVisited($next, $visited)) {
-                Piece_Unity_Error::push(
-                    PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                    "a circular refrence detected in an array at the key {$key}",
-                    'exception'
-                );
-                return;
+                Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_UNEXPECTED_VALUE,
+                                        "a circular refrence detected in an array at the key {$key}",
+                                        'warning'
+                                        );
+                Piece_Unity_Error::popCallback();
+                return false;
             }
-            
-            $this->_visit($next, $visited, $encodingCallback);
+
+            if (!$this->_visit($next, $visited, $encodingCallback)) {
+                return false;
+            }
         }
+
+        return true;
     }
 
     // }}}
@@ -325,26 +323,33 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
      *
      * @param mixed $value            the value to be visited.
      * @param array $visited          the array of objects which have been visited.
-     * @param mixed $encodingCallback the callback fundtion to convert the charset.
+     * @param mixed $encodingCallback the callback fundtion to convert the
+     *                                charset.
+     * @return boolean
      */
     function _visitObject(&$value, &$visited, $encodingCallback = null)
     {
         $keys = array_keys(get_object_vars($value));
-        foreach($keys as $key) {
-            $next =& $value->$key;
-            
+        foreach ($keys as $key) {
+            $next = &$value->$key;
+
             if ($this->_wasVisited($next, $visited)) {
                 $class = get_class($value);
-                Piece_Unity_Error::push(
-                    PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                    "a circular refrence detected at the property {$key}, class {$class}.",
-                    'exception'
-                );
-                return;
+                Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_UNEXPECTED_VALUE,
+                                        "a circular refrence detected at the property {$key}, class {$class}.",
+                                        'warning'
+                                        );
+                Piece_Unity_Error::popCallback();
+                return false;
             }
-            
-            $this->_visit($next, $visited, $encodingCallback);
+
+            if (!$this->_visit($next, $visited, $encodingCallback)) {
+                return false;
+            }
         }
+
+        return true;
     }
 
     // }}}
@@ -353,28 +358,28 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
     /**
      * Check whether a given object was visited.
      *
-     * @param  mixed $value
-     * @param  array $visited
+     * @param mixed $value
+     * @param array $visited
      * @return boolean
      */
     function _wasVisited(&$value, &$visited)
     {
         static $php5;
-        
+
         if (is_null($php5)) {
             $php5 = version_compare(phpversion(), '5.0.0', '>=');
         }
-    
+
         if (!($isObj = is_object($value)) && !is_array($value)) {
             return false;
         }
-        
+
         $result = false;
         if ($php5 && $isObj) {
             $result = in_array($value, $visited, true);
         } else {
-            for($i = 0; $i < count($visited); $i++) {
-                $sentinel =& $visited[$i];
+            for ($i = 0; $i < count($visited); ++$i) {
+                $sentinel = &$visited[$i];
                 if ($this->_isReference($value, $sentinel)) {
                     $result = true;
                     break;
@@ -382,8 +387,8 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
             }
         }
 
-        $visited[] =& $value;
-        
+        $visited[] = &$value;
+
         return $result;
     }
 
@@ -414,8 +419,6 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
 
     /**
      * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
      */
     function _initialize()
     {

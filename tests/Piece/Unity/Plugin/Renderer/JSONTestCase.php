@@ -77,14 +77,9 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    /**#@-*/
-
-    /**#@+
-     * @access private
-     */
-
     function setUp()
     {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $_SERVER['REQUEST_METHOD'] = 'GET';
     }
 
@@ -92,6 +87,7 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
     {
         Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
+        Piece_Unity_Error::popCallback();
         unset($GLOBALS['PIECE_UNITY_Plugin_Instances']['Renderer_JSON']);
         unset($_SERVER['REQUEST_METHOD']);
     }
@@ -102,13 +98,13 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         $context->setView(null);
         $config = &new Piece_Unity_Config();
         $config->setExtension('View', 'renderer', 'Renderer_JSON');
-        foreach($settings as $key => $value) {
+        foreach ($settings as $key => $value) {
             $config->setConfiguration('Renderer_JSON', $key, $value);
         }
 
         $viewElement = &$context->getViewElement();
-        foreach(array_keys($viewElements) as $key) {
-            $value =& $viewElements[$key];
+        foreach (array_keys($viewElements) as $key) {
+            $value = &$viewElements[$key];
             $viewElement->setElementByRef($key, $value);
         }
 
@@ -140,7 +136,7 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
 
     function testEncodeWithPHPJSON()
     {
-        $value = array('content'=>'hello world');
+        $value = array('content' => 'hello world');
         $view = &$this->getView($value,
                                 array(),
                                 'Piece_Unity_Plugin_View'
@@ -158,11 +154,11 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         $this->assertNotNull($result->__basePath);
     }
     
-    function testEncodeWithHTTPAJAX()
+    function testEncodeWithHTMLAJAX()
     {
-        $value = array('content'=>'hello world');
+        $value = array('content' => 'hello world');
         $view = &$this->getView($value);
-        $view->_useHTTPAJAX = true;
+        $view->_useHTMLAJAX = true;
 
         ob_start();
         $view->invoke();
@@ -222,9 +218,7 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
 
     function testInclude()
     {
-        $value = array(
-                    '_content' => 'hello world'
-                );
+        $value = array('_content' => 'hello world');
         $view = &$this->getView($value,
                                 array('include' => array('_content')),
                                 'Piece_Unity_Plugin_View'
@@ -241,7 +235,7 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
 
     function testContentType()
     {
-        $value = array('content'=>'hello world');
+        $value = array('content' => 'hello world');
         $view = &$this->getView($value,
                                 array('contentType' => 'text/json',
                                       'include'     => array(),
@@ -258,7 +252,7 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
 
     function testJSONP()
     {
-        $value = array('content'=>'hello world');
+        $value = array('content' => 'hello world');
         $view = &$this->getView($value,
                                 array('contentType'   => 'text/javascript',
                                       'include'       => array(),
@@ -283,7 +277,7 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
     {
         $a = array();
         $b = array(&$a);
-        $a[] =& $b;
+        $a[] = &$b;
         $value = array($a, $b);
         $view = &$this->getView($value, array());
 
@@ -345,32 +339,48 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
 
     function testDetectCicularReferenceInArray()
     {
-        $r = &new Piece_Unity_Plugin_Renderer_Json();
-        
         $b = array(false, 2, 3.0, '4');
         $a = array(1, 2, 'spam', &$b);
-        $b[] =& $a;
+        $b[] = &$a;
+        $view = &$this->getView(array('foo', $a));
+        $view->invoke();
 
-        $visited = array();
-        $r->_visit($a, $visited);
+        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_UNEXPECTED_VALUE, $error['code']);
+        $this->assertEquals(strtolower('_visitArray'),
+                            strtolower($error['context']['function'])
+                            );
     }
     
     function testDetectCicularReferenceInObject()
     {
-        $r = &new Piece_Unity_Plugin_Renderer_Json();
+        $foo = &new stdClass();
+        $bar = &new stdClass();
+        $baz = &new stdClass();
+        $foo->bar = &$bar;
+        $bar->baz = &$baz;
+        $baz->foo = &$foo;
+        $view = &$this->getView(array('foo', &$foo));
+        $view->invoke();
 
-        $arr = array(1, 2, 3, 4);
-        $obj = &new stdClass();
-        $obj->prop1 =& $arr;
-        $arr[] =& $obj;
+        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
 
-        $visited = array();
-        $r->_visit($obj, $visited);
+        $error = Piece_Unity_Error::pop();
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+        $this->assertEquals(PIECE_UNITY_ERROR_UNEXPECTED_VALUE, $error['code']);
+        $this->assertEquals(strtolower('_visitObject'),
+                            strtolower($error['context']['function'])
+                            );
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
 
     /**#@-*/
 
