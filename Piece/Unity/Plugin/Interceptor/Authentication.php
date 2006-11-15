@@ -38,6 +38,7 @@
  */
 
 require_once 'Piece/Unity/Plugin/Common.php';
+require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_Plugin_Interceptor_Authentication
 
@@ -67,8 +68,6 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
     /**#@+
      * @access private
      */
-    var $_useCallback = false;
-    var $_callbackKey = 'callback';
 
     /**#@-*/
 
@@ -88,71 +87,59 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
      */
     function invoke()
     {
-        $scriptName = $this->_context->getScriptName();
         foreach ($this->getConfiguration('services') as $service) {
-            if (in_array($scriptName, $this->_listResource($service))) {
-                $guardDirectory = $this->getConfiguration('guardDirectory');
-                if (is_null($guardDirectory)) {
-                    Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                            'The guard directory not specified.'
-                                            );
+            if (!$this->_isProtectedResource(@$service['resources'])) {
+                continue;
+            }
 
-                    return;
-                }
+            $guardDirectory = $this->getConfiguration('guardDirectory');
+            if (is_null($guardDirectory)) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                        'The guard directory was not specified.'
+                                        );
 
-                $found = $this->_load($service['guard']['class'], $guardDirectory);
-                if (!$found) {
-                    Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                            "The gaurd [ {$service['guard']['class']} ] not found in the directory [ $guardDirectory ]."
-                                            );
-                    return;
+                return;
+            }
 
-                }
+            $guardClass = @$service['guard']['class'];
+            if (is_null($guardClass) || !strlen($guardClass)) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                        'The guard class was not specified.'
+                                        );
+                return;
+            }
 
-                $guard = &new $service['guard']['class']();
-                if (!method_exists($guard, $service['guard']['method'])) {
-                    Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                            "The guard method [ {$service['guard']['class']}::{$service['guard']['method']} ] not found."
-                                            );
-                    return;
-                }
+            $guardMethod = @$service['guard']['method'];
+            if (is_null($guardMethod) || !strlen($guardMethod)) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                        'The guard method was not specified.'
+                                        );
+                return;
+            }
 
-                if (!$guard->$service['guard']['method']($this->_context)) {
-                    if (isset($service['useCallback'])) {
-                        $useCallback = $service['useCallback'];
-                    } else {
-                        $useCallback = $this->_useCallback;
-                    }
+            $found = $this->_load($guardClass, $guardDirectory);
+            if (!$found) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                        "The gaurd [ $guardClass ] not found in the directory [ $guardDirectory ]."
+                                        );
+                return;
 
-                    if (isset($service['callbackKey'])) {
-                        $callbackKey = $service['callbackKey'];
-                    } else {
-                        $callbackKey = $this->_callbackKey;
-                    }
-                    
-                    if ($useCallback === true) {
+            }
 
-                        $query = '';
-                        if (isset($_SERVER['QUERY_STRING'])
-                            && $_SERVER['QUERY_STRING'] !== ''
-                            ) {
-                            $query = "?{$_SERVER['QUERY_STRING']}";
-                        }
+            $guard = &new $guardClass();
+            if (!method_exists($guard, $guardMethod)) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                        "The guard method [ $guardClass::$guardMethod ] not found."
+                                        );
+                return;
+            }
 
-                        $pathInfo = '';
-                        if (isset($_SERVER['PATH_INFO'])) {
-                            $pathInfo = $_SERVER['PATH_INFO'];
-                        }
-
-                        $requestCallback = urlencode("{$scriptName}{$pathInfo}{$query}");
-                        $url = "{$service['url']}?{$callbackKey}={$requestCallback}";
-                    } else {
-                        $url = $service['url'];
-                    }
-
-                    $this->_context->setView($url);
-                    return false;
-                }
+            if (!$guard->$guardMethod($this->_context)) {
+                $this->_context->setView($this->_getServiceURL(@$service['url'],
+                                                               @$service['useCallback'],
+                                                               @$service['callbackKey'])
+                                         );
+                return false;
             }
         }
 
@@ -232,31 +219,70 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
     }
  
     // }}}
-    // {{{ _listResource()
+    // {{{ _isProtectedResource()
 
     /**
-     * list services resource. (for proxy path)
+     * Returns whether the current resource is protected or not.
      *
-     * @param array $service
-     * @return array
+     * @param array $resources
+     * @return boolean
      */
-    function _listResource($service)
+    function _isProtectedResource($resources)
     {
-        if (!$this->_context->usingProxy()) {
-            return $service['resources'];
+        if (!is_array($resources)) {
+            return false;
         }
 
-        $path = $this->_context->getProxyPath();
-        if (is_null($path)) {
-            return $service['resources'];
-        }
-               
-        $resources = array();
-        foreach ($service['resources'] as $resource) {
-            $resources[] = str_replace('//', '/', $path . $resource);
+        if ($this->_context->usingProxy()) {
+            $path = $this->_context->getProxyPath();
+            if (!is_null($path)) {
+                for ($i = 0; $i < count($resources); ++$i) {
+                    $resources[$i] = str_replace('//', '/', $path . $resources[$i]);
+                }
+            }
         }
 
-        return $resources;
+        return in_array($this->_context->getScriptName(), $resources);
+    }
+
+    // }}}
+    // {{{ _getServiceURL()
+
+    /**
+     * Gets the appropriate URL for an authentication service.
+     *
+     * @param string  $url
+     * @param boolean $useCallback
+     * @param string  $callbackKey
+     * @return string
+     */
+    function _getServiceURL($url, $useCallback, $callbackKey)
+    {
+        if (is_null($useCallback)) {
+            $useCallback = false;
+        }
+
+        if (!$useCallback) {
+            return $url;
+        }
+
+        if (!(array_key_exists('QUERY_STRING', $_SERVER) && strlen($_SERVER['QUERY_STRING']))) {
+            $query = '';
+        } else {
+            $query = "?{$_SERVER['QUERY_STRING']}";
+        }
+
+        if (!array_key_exists('PATH_INFO', $_SERVER)) {
+            $pathInfo = '';
+        } else {
+            $pathInfo = $_SERVER['PATH_INFO'];
+        }
+
+        if (is_null($callbackKey)) {
+            $callbackKey = 'callback';
+        }
+                    
+        return "$url?$callbackKey=" . urlencode($this->_context->getScriptName() . "$pathInfo$query");
     }
 
     /**#@-*/
