@@ -89,7 +89,7 @@ class AuthenticationAction extends Piece_Flow_Action
                 if ($callbackUrl = $this->_flow->getAttribute('callbackUrl')) {
                     $url = 'http://' . $_SERVER['HTTP_HOST'] . $callbackUrl;
                     $config = &$this->_payload->getConfiguration();
-                    $config->setConfiguration('View', 'forceView', $url);
+                    $config->setConfiguration('View', 'forcedView', $url);
                 }
 
                 return 'goDisplayLogined';
