@@ -17,6 +17,7 @@
 
       <form name="Form">
         <input type="hidden" name="{__flowExecutionTicketKey}" value="{__flowExecutionTicket}" />
+        <input type="hidden" name="callback" />
         <p class="error" flexy:if="__AuthenticationResults.isError(#username#)">{__AuthenticationResults.getErrorMessage(#username#)}</p>
         <p>
           Username: <input type="text" name="username" />

@@ -86,10 +86,14 @@ class AuthenticationAction extends Piece_Flow_Action
                 $session = &$this->_payload->getSession();
                 $session->setAttribute('isAuthenticated', true);
 
-                if ($callbackUrl = $this->_flow->getAttribute('callbackUrl')) {
-                    $url = 'http://' . $_SERVER['HTTP_HOST'] . $callbackUrl;
-                    $config = &$this->_payload->getConfiguration();
-                    $config->setConfiguration('View', 'forcedView', $url);
+                $request = &$this->_payload->getRequest();
+                if ($request->hasParameter('callback')) {
+                    $callback = $request->getParameter('callback');
+                    if (!is_null($callback) && $callback !== '') {
+                        $url = 'http://' . $_SERVER['HTTP_HOST'] . $callback;
+                        $config = &$this->_payload->getConfiguration();
+                        $config->setConfiguration('View', 'forcedView', $url);
+                    }
                 }
 
                 return 'goDisplayLogined';
@@ -115,28 +119,24 @@ class AuthenticationAction extends Piece_Flow_Action
     {
         $this->_setupFormAttributes();
 
-        $request = new StdClass();
-        $validation = &$this->_payload->getValidation();
-        if ($validation->validate('AuthenticationCallback', $request)
-            && isset($request->callback)
-            ) {
-            $this->_flow->setAttribute('callbackUrl',
-                                       $request->callback
-                                       );
-        }
-
         $viewElement = &$this->_payload->getViewElement();
+        $elements = $this->_getFormElements();
+
+        $request = &$this->_payload->getRequest();
+        if ($request->hasParameter('callback')) {
+            $elements['callback']['_value'] = $request->getParameter('callback');
+            $elements['callback']['_attributes']['type'] = 'hidden';
+        }
 
         if ($this->_flow->hasAttribute('user')) {
             $user = &$this->_flow->getAttribute('user');
             $fields = $this->_getFormFields();
-            $elements = $this->_getFormElements();
             foreach ($fields as $field) {
                 $elements[$field]['_value'] = $user->$field;
             }
-
-            $viewElement->setElement('_elements', $elements);
         }
+
+        $viewElement->setElement('_elements', $elements);
     }
 
     function setupLogined()
