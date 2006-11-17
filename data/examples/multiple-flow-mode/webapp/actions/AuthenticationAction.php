@@ -123,10 +123,7 @@ class AuthenticationAction extends Piece_Flow_Action
         $elements = $this->_getFormElements();
 
         $request = &$this->_payload->getRequest();
-        if ($request->hasParameter('callback')) {
-            $elements['callback']['_value'] = $request->getParameter('callback');
-            $elements['callback']['_attributes']['type'] = 'hidden';
-        }
+        $viewElement->setElement('callback', @$request->getParameter('callback'));
 
         if ($this->_flow->hasAttribute('user')) {
             $user = &$this->_flow->getAttribute('user');
