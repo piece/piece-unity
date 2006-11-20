@@ -131,7 +131,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         Piece_Unity_Context::clear();
         $_GET['_event'] = 'increase';
         $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
-        unset($_GET['_flow']);
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
@@ -179,7 +178,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     function testFailreToInvoke()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-        $_GET['_flow'] = 'Counter';
 
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
@@ -201,7 +199,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         Piece_Unity_Context::clear();
         $_GET['_event'] = 'increase';
         $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
-        unset($_GET['_flow']);
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
@@ -288,19 +285,24 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'ContinuationValidation', 'file' => dirname(__FILE__) . '/ContinuationValidation.yaml', 'isExclusive' => true)));
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
-
-        $validation = &$context->getValidation();
-        $validation->setConfigDirectory(dirname(__FILE__));
-        $validation->setCacheDirectory(dirname(__FILE__));
-
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
 
         $this->assertEquals('Form', $dispatcher->invoke());
 
-        unset($_GET['_flow']);
+        $session = &$context->getSession();
+        $continuation = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_Session_Key']);
+        $flowExecutionTicket = $continuation->getCurrentFlowExecutionTicket();
 
-        $context->setEventName('validate');
+        Piece_Unity_Context::clear();
+        $_GET['_event'] = 'validate';
+        $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
+        $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
+        $session = &$context->getSession();
+        $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_Session_Key'], $continuation);
+        $validation = &$context->getValidation();
+        $validation->setConfigDirectory(dirname(__FILE__));
+        $validation->setCacheDirectory(dirname(__FILE__));
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
 
         $this->assertEquals('Success', $dispatcher->invoke());
