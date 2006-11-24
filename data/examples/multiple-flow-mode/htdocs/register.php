@@ -52,7 +52,7 @@ Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); ret
 
 $base = dirname(__FILE__) . '/../webapp';
 
-ini_set('session.cookie_path', dirname($_SERVER['SCRIPT_NAME']));
+ini_set('session.cookie_path', str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])));
 session_name('MultipleFlowMode');
 
 $flowName = 'Registration';
