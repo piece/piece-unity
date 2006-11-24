@@ -205,50 +205,11 @@ class Piece_Unity_Context
     function getEventName()
     {
         if (!$this->_eventNameImported) {
-            $found = false;
-            $suspectedImageInputType = false;
-            $xFound = false;
-            $yFound = false;
-            foreach ($this->_request->getParameters() as $key => $value) {
-                if (preg_match("/^{$this->_eventNameKey}_(.+)$/", $key, $matches)) {
-                    if (substr($matches[1], -2) == '_x') {
-                        $suspectedImageInputType = true;
-                        $xFound = true;
-                        $eventName = $matches[1];
-                        $xEventName = substr($matches[1], 0, -2);
-                        if ($yFound) {
-                            break;
-                        }
-                    } elseif (substr($matches[1], -2) == '_y') {
-                        $suspectedImageInputType = true;
-                        $yFound = true;
-                        $eventName = $matches[1];
-                        $yEventName = substr($matches[1], 0, -2);
-                        if ($xFound) {
-                            break;
-                        }
-                    } else {
-                        $found = true;
-                        $eventName = $matches[1];
-                        break;
-                    }
-                }
-            }
+            $this->_importEventNameFromSubmit();
+        }
 
-            if (!$found) {
-                if ($suspectedImageInputType) {
-                    $found = true;
-                    if ($xFound && $yFound && $xEventName == $yEventName) {
-                        $eventName = $xEventName;
-                    }
-                }
-
-                if (!$found) {
-                    $eventName = $this->_request->hasParameter($this->_eventNameKey) ? $this->_request->getParameter($this->_eventNameKey) : null;
-                }
-            }
-
-            $this->setEventName($eventName);
+        if (!$this->_eventNameImported) {
+            $this->_importEventNameFromRequest();
         }
 
         return $this->_eventName;
@@ -585,6 +546,64 @@ class Piece_Unity_Context
         }
 
         $this->_validation = &new Piece_Unity_Validation();
+    }
+
+    // }}}
+    // {{{ _importEventNameFromSubmit()
+
+    /**
+     * Imports an event name from the submit by a submit or a image.
+     *
+     * @since Method available since Release 0.9.0
+     */
+    function _importEventNameFromSubmit()
+    {
+        $xFound = false;
+        $yFound = false;
+        foreach ($this->_request->getParameters() as $key => $value) {
+            if (preg_match("/^{$this->_eventNameKey}_(.+)$/", $key, $matches)) {
+                $eventName = $matches[1];
+                $lastTwoBytes = substr($matches[1], -2);
+                if ($lastTwoBytes == '_x') {
+                    $xFound = true;
+                    $xEventName = substr($matches[1], 0, -2);
+                    if ($yFound) {
+                        break;
+                    }
+                } elseif ($lastTwoBytes == '_y') {
+                    $yFound = true;
+                    $yEventName = substr($matches[1], 0, -2);
+                    if ($xFound) {
+                        break;
+                    }
+                } else {
+                    $this->setEventName($eventName);
+                    return;
+                }
+            }
+        }
+
+        if ($xFound || $yFound) {
+            if ($xFound && $yFound && $xEventName == $yEventName) {
+                $this->setEventName($xEventName);
+            } else {
+                $this->setEventName($eventName);
+            }
+        }
+    }
+
+    // }}}
+    // {{{ _importEventNameFromRequest()
+
+    /**
+     * Imports an event name from the request parameters.
+     *
+     * @since Method available since Release 0.9.0
+     */
+    function _importEventNameFromRequest()
+    {
+        $eventName = $this->_request->hasParameter($this->_eventNameKey) ? $this->_request->getParameter($this->_eventNameKey) : null;
+        $this->setEventName($eventName);
     }
 
     /**#@-*/
