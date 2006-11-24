@@ -300,6 +300,44 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $this->assertFalse($context->hasAttribute('bar'));
     }
 
+    /**
+     * @since Method available since Release 0.9.0
+     */
+    function testImageInputType()
+    {
+        unset($_GET['_event']);
+
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_POST['_event_foo_x'] = '19';
+        $_POST['_event_foo_y'] = '99';
+
+        $context = &Piece_Unity_Context::singleton();
+
+        $this->assertEquals('foo', $context->getEventName());
+
+        unset($_POST['_event_foo_x']);
+        unset($_POST['_event_foo_y']);
+    }
+
+    /**
+     * @since Method available since Release 0.9.0
+     */
+    function testBrokenImageInputType()
+    {
+        unset($_GET['_event']);
+
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_POST['_event_foo_x'] = '19';
+        $_POST['_event_foo_z'] = '99';
+
+        $context = &Piece_Unity_Context::singleton();
+
+        $this->assertEquals('foo_z', $context->getEventName());
+
+        unset($_POST['_event_foo_x']);
+        unset($_POST['_event_foo_z']);
+    }
+
     /**#@-*/
 
     /**#@+

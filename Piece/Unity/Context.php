@@ -206,17 +206,46 @@ class Piece_Unity_Context
     {
         if (!$this->_eventNameImported) {
             $found = false;
+            $suspectedImageInputType = false;
+            $xFound = false;
+            $yFound = false;
             foreach ($this->_request->getParameters() as $key => $value) {
                 if (preg_match("/^{$this->_eventNameKey}_(.+)$/", $key, $matches)) {
-                    $found = true;
-                    break;
+                    if (substr($matches[1], -2) == '_x') {
+                        $suspectedImageInputType = true;
+                        $xFound = true;
+                        $eventName = $matches[1];
+                        $xEventName = substr($matches[1], 0, -2);
+                        if ($yFound) {
+                            break;
+                        }
+                    } elseif (substr($matches[1], -2) == '_y') {
+                        $suspectedImageInputType = true;
+                        $yFound = true;
+                        $eventName = $matches[1];
+                        $yEventName = substr($matches[1], 0, -2);
+                        if ($xFound) {
+                            break;
+                        }
+                    } else {
+                        $found = true;
+                        $eventName = $matches[1];
+                        break;
+                    }
                 }
             }
 
-            if ($found) {
-                $eventName = $matches[1];
-            } else {
-                $eventName = $this->_request->hasParameter($this->_eventNameKey) ? $this->_request->getParameter($this->_eventNameKey) : null;
+            if (!$found) {
+                if ($suspectedImageInputType) {
+                    $found = true;
+                    if ($xFound && $yFound && $xEventName == $yEventName) {
+                        $eventName = $xEventName;
+                    }
+                }
+
+                if (!$found) {
+                    $eventName = $this->_request->hasParameter($this->_eventNameKey) ? $this->_request->getParameter($this->_eventNameKey) : null;
+                }
             }
 
             $this->setEventName($eventName);
