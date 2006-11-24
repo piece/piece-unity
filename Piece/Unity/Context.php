@@ -205,15 +205,21 @@ class Piece_Unity_Context
     function getEventName()
     {
         if (!$this->_eventNameImported) {
-            $this->_eventNameImported = true;
+            $found = false;
             foreach ($this->_request->getParameters() as $key => $value) {
                 if (preg_match("/^{$this->_eventNameKey}_(.+)$/", $key, $matches)) {
-                    $this->_eventName = $matches[1];
+                    $found = true;
+                    break;
                 }
             }
-            if (is_null($this->_eventName)) {
-                $this->_eventName = $this->_request->hasParameter($this->_eventNameKey) ? $this->_request->getParameter($this->_eventNameKey) : null;
+
+            if ($found) {
+                $eventName = $matches[1];
+            } else {
+                $eventName = $this->_request->hasParameter($this->_eventNameKey) ? $this->_request->getParameter($this->_eventNameKey) : null;
             }
+
+            $this->setEventName($eventName);
         }
 
         return $this->_eventName;
