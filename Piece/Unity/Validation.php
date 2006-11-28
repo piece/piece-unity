@@ -137,11 +137,11 @@ class Piece_Unity_Validation
                                                      );
 
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-        $this->_results = $script->run($validationSet,
-                                       $container,
-                                       $this->_config,
-                                       $keepOriginalFieldValue
-                                       );
+        $this->_results = &$script->run($validationSet,
+                                        $container,
+                                        $this->_config,
+                                        $keepOriginalFieldValue
+                                        );
         Piece_Unity_Error::popCallback();
         if (Piece_Right_Error::hasErrors('exception')) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
@@ -225,22 +225,22 @@ class Piece_Unity_Validation
      * attribute.
      *
      * @param string              $validationSet
-     * @param Piece_Right_Results $results
+     * @param Piece_Right_Results &$results
      * @static
      */
-    function setResultsAsViewElementAndFlowAttribute($validationSet, $results)
+    function setResultsAsViewElementAndFlowAttribute($validationSet, &$results)
     {
         $context = &Piece_Unity_Context::singleton();
         $viewElement = &$context->getViewElement();
-        $viewElement->setElement(!is_null($validationSet) ? "__{$validationSet}Results" : '__results',
-                                 $results
-                                 );
+        $viewElement->setElementByRef(!is_null($validationSet) ? "__{$validationSet}Results" : '__results',
+                                      $results
+                                      );
 
         $continuation = &$context->getContinuation();
         if (!is_null($continuation)) {
-            $continuation->setAttribute(!is_null($validationSet) ? "__{$validationSet}Results" : '__results',
-                                        $results
-                                        );
+            $continuation->setAttributeByRef(!is_null($validationSet) ? "__{$validationSet}Results" : '__results',
+                                             $results
+                                             );
         }
     }
 

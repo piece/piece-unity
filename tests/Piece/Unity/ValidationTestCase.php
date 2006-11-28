@@ -178,6 +178,40 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
         unset($_SERVER['REQUEST_METHOD']);
     }
 
+    /**
+     * @since Method available since Release 0.9.0
+     */
+    function testResultsByReference()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_POST['foo'] = 'bar';
+
+        $validation = &new Piece_Unity_Validation();
+        $validation->setConfigDirectory(dirname(__FILE__));
+        $validation->setCacheDirectory(dirname(__FILE__));
+        $config = &$validation->getConfiguration();
+        $config->setRequired('foo');
+        $container = &new stdClass();
+
+        $this->assertTrue($validation->validate(null, $container));
+        $this->assertEquals($_POST['foo'], $container->foo);
+
+        $results = &$validation->getResults();
+        $results->bar = 'baz';
+
+        $this->assertTrue(is_a($results, 'Piece_Right_Results'));
+
+        $context = &Piece_Unity_Context::singleton();
+        $viewElement = &$context->getViewElement();
+        $resultsViaViewElement = &$viewElement->getElement('__results');
+
+        $this->assertTrue(array_key_exists('bar', $resultsViaViewElement));
+        $this->assertEquals($results->bar, $resultsViaViewElement->bar);
+
+        unset($_POST['foo']);
+        unset($_SERVER['REQUEST_METHOD']);
+    }
+
     /**#@-*/
 
     /**#@+
