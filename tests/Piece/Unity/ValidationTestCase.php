@@ -79,10 +79,15 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
     function setUp()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+        $_SERVER['REQUEST_METHOD'] = 'POST';
     }
 
     function tearDown()
     {
+        foreach (array_keys($_POST) as $field) {
+            unset($_POST[$field]);
+        }
+        unset($_SERVER['REQUEST_METHOD']);
         $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
                                             'masterFile' => '',
                                             'automaticSerialization' => true,
@@ -94,9 +99,8 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
         Piece_Unity_Error::popCallback();
     }
 
-    function testValidation()
+    function testValidationSuccess()
     {
-        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_POST['login_name'] = 'iteman';
         $_POST['password'] = 'iteman30';
         $_POST['email'] = 'iteman@users.sourceforge.net';
@@ -115,18 +119,12 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
         $this->assertEquals($_POST['password'], $container->password);
         $this->assertEquals($_POST['email'], $container->email);
         $this->assertTrue(is_a($validation->getResults(), 'Piece_Right_Results'));
-
-        unset($_POST['email']);
-        unset($_POST['password']);
-        unset($_POST['login_name']);
-        unset($_SERVER['REQUEST_METHOD']);
     }
 
-    function testFailureToValidation()
+    function testValidationFailure()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
 
-        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_POST['foo'] = 'bar';
 
         $validation = &new Piece_Unity_Validation();
@@ -144,15 +142,11 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
         $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
         $this->assertEquals(PIECE_RIGHT_ERROR_NOT_FOUND, $error['repackage']['code']);
 
-        unset($_POST['foo']);
-        unset($_SERVER['REQUEST_METHOD']);
-
         Piece_Unity_Error::popCallback();
     }
 
-    function testNotKeepingOriginalFieldValue()
+    function testNotKeepOriginalFieldValue()
     {
-        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_POST['login_name'] = ' iteman ';
         $_POST['password'] = 'itema';
         $_POST['email'] = 'iteman@users.sourceforge.net';
@@ -171,11 +165,6 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
         $this->assertEquals(trim($_POST['login_name']), $container->login_name);
         $this->assertEquals($_POST['password'], $container->password);
         $this->assertEquals($_POST['email'], $container->email);
-
-        unset($_POST['email']);
-        unset($_POST['password']);
-        unset($_POST['login_name']);
-        unset($_SERVER['REQUEST_METHOD']);
     }
 
     /**
@@ -183,7 +172,6 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
      */
     function testResultsByReference()
     {
-        $_SERVER['REQUEST_METHOD'] = 'POST';
         $_POST['foo'] = 'bar';
 
         $validation = &new Piece_Unity_Validation();
@@ -207,9 +195,6 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
 
         $this->assertTrue(array_key_exists('bar', $resultsViaViewElement));
         $this->assertEquals($results->bar, $resultsViaViewElement->bar);
-
-        unset($_POST['foo']);
-        unset($_SERVER['REQUEST_METHOD']);
     }
 
     /**#@-*/
