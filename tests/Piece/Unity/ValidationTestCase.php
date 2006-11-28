@@ -197,6 +197,31 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
         $this->assertEquals($results->bar, $resultsViaViewElement->bar);
     }
 
+    /**
+     * @since Method available since Release 0.9.0
+     */
+    function testPayload()
+    {
+        $_POST['foo'] = 'bar';
+
+        $validation = &new Piece_Unity_Validation();
+        $validation->setConfigDirectory(dirname(__FILE__));
+        $validation->setCacheDirectory(dirname(__FILE__));
+        $validation->addValidatorDirectory(dirname(__FILE__));
+        $config = &$validation->getConfiguration();
+        $config->setRequired('foo');
+        $config->addValidation('foo', 'PayloadTest');
+        $container = &new stdClass();
+
+        $this->assertTrue($validation->validate(null, $container));
+        $this->assertEquals($_POST['foo'], $container->foo);
+
+        $context = &Piece_Unity_Context::singleton();
+
+        $this->assertTrue($context->hasAttribute('bar'));
+        $this->assertEquals('baz', $context->getAttribute('bar'));
+    }
+
     /**#@-*/
 
     /**#@+

@@ -135,7 +135,8 @@ class Piece_Unity_Validation
                                                      array(__CLASS__, 'getFieldValueFromContext'),
                                                      array(__CLASS__, 'setResultsAsViewElementAndFlowAttribute')
                                                      );
-
+        $context = &Piece_Unity_Context::singleton();
+        $script->setPayload($context);
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $this->_results = &$script->run($validationSet,
                                         $container,
