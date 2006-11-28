@@ -85,7 +85,7 @@ class Piece_Unity_Context
     var $_eventNameKey = '_event';
     var $_scriptName;
     var $_basePath = '';
-    var $_attributes;
+    var $_attributes = array();
     var $_proxyPath;
     var $_continuation;
     var $_validation;

@@ -69,7 +69,7 @@ class Piece_Unity_Session
      * @access private
      */
 
-    var $_attributes;
+    var $_attributes = array();
 
     /**#@-*/
 
