@@ -43,6 +43,8 @@ require_once 'Piece/Unity/Plugin/KernelConfigurator.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/Plugin/Dispatcher/Simple.php';
+require_once 'Piece/Right/Filter/Factory.php';
+require_once 'Piece/Right/Filter/Factory.php';
 
 // {{{ Piece_Unity_Plugin_KernelConfiguratorTestCase
 
@@ -226,8 +228,8 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $_POST['password'] = 'iteman30';
         $_POST['email'] = 'iteman@users.sourceforge.net';
         $_POST['greeting'] = 'Hello World';
-        $oldValidatorDirectories = $GLOBALS['PIECE_RIGHT_Validator_Directories'];
-        $oldFilterDirectories = $GLOBALS['PIECE_RIGHT_Filter_Directories'];
+        $oldValidatorDirectories = Piece_Right_Validator_Factory::getValidatorDirectories();
+        $oldFilterDirectories = Piece_Right_Filter_Factory::getFilterDirectories();
 
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('KernelConfigurator', 'validationConfigDirectory', dirname(__FILE__) . '/..');
@@ -255,10 +257,10 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $this->assertEquals($_POST['password'], $container->password);
         $this->assertEquals($_POST['email'], $container->email);
 
-        $GLOBALS['PIECE_RIGHT_Filter_Instances'] = array();
-        $GLOBALS['PIECE_RIGHT_Filter_Directories'] = $oldValidatorDirectories;
-        $GLOBALS['PIECE_RIGHT_Validator_Instances'] = array();
-        $GLOBALS['PIECE_RIGHT_Validator_Directories'] = $oldValidatorDirectories;
+        Piece_Right_Filter_Factory::clearInstances();
+        Piece_Right_Filter_Factory::setFilterDirectories($oldFilterDirectories);
+        Piece_Right_Validator_Factory::clearInstances();
+        Piece_Right_Validator_Factory::setValidatorDirectories($oldValidatorDirectories);
         unset($_POST['greeting']);
         unset($_POST['email']);
         unset($_POST['password']);
