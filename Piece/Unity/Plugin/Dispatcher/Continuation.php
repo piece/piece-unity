@@ -44,8 +44,8 @@ require_once 'Piece/Flow/Action/Factory.php';
 
 // {{{ GLOBALS
 
-$GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key'] = null;
-$GLOBALS['PIECE_UNITY_Continuation_FlowName_Key'] = null;
+$GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey'] = null;
+$GLOBALS['PIECE_UNITY_Continuation_FlowNameKey'] = null;
 $GLOBALS['PIECE_UNITY_Continuation_FlowName'] = null;
 
 // }}}
@@ -179,7 +179,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     {
         $context = &Piece_Unity_Context::singleton();
         $request = &$context->getRequest();
-        return $request->hasParameter($GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key']) ? $request->getParameter($GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key']) : null;
+        return $request->hasParameter($GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey']) ? $request->getParameter($GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey']) : null;
     }
 
     // }}}
@@ -199,7 +199,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
 
         $context = &Piece_Unity_Context::singleton();
         $request = &$context->getRequest();
-        return $request->hasParameter($GLOBALS['PIECE_UNITY_Continuation_FlowName_Key']) ? $request->getParameter($GLOBALS['PIECE_UNITY_Continuation_FlowName_Key']) : null;
+        return $request->hasParameter($GLOBALS['PIECE_UNITY_Continuation_FlowNameKey']) ? $request->getParameter($GLOBALS['PIECE_UNITY_Continuation_FlowNameKey']) : null;
     }
 
     // }}}
@@ -216,7 +216,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     function loadAction($class, $flowName)
     {
         if ($flowName == Piece_Unity_Plugin_Dispatcher_Continuation::getFlowName()) {
-            error_log("Loading $class for the flow [$flowName]");
             Piece_Flow_Action_Factory::load($class);
         }
     }
@@ -294,8 +293,8 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     {
         $viewElement = &$this->_context->getViewElement();
         $viewElement->setElementByRef('__continuation', $continuation);
-        $viewElement->setElement('__flowExecutionTicketKey', $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key']);
-        $viewElement->setElement('__flowNameKey', $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key']);
+        $viewElement->setElement('__flowExecutionTicketKey', $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey']);
+        $viewElement->setElement('__flowNameKey', $GLOBALS['PIECE_UNITY_Continuation_FlowNameKey']);
         $viewElement->setElement('__flowExecutionTicket', $continuation->getCurrentFlowExecutionTicket());
     }
 
@@ -318,8 +317,8 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->_addConfigurationPoint('flowName');
         $this->_addConfigurationPoint('bindActionsWithFlowExecution', false);
 
-        $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key'] = $this->getConfiguration('flowExecutionTicketKey');
-        $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key'] = $this->getConfiguration('flowNameKey');
+        $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey'] = $this->getConfiguration('flowExecutionTicketKey');
+        $GLOBALS['PIECE_UNITY_Continuation_FlowNameKey'] = $this->getConfiguration('flowNameKey');
         $GLOBALS['PIECE_UNITY_Continuation_FlowName'] = $this->getConfiguration('flowName');
         Piece_Flow_Action_Factory::setActionDirectory($this->getConfiguration('actionDirectory'));
     }
