@@ -123,7 +123,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
         $this->assertEquals('Counter', $dispatcher->invoke());
 
-        $continuation = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_Session_Key']);
+        $continuation = &$session->getAttribute(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey());
         $flowExecutionTicket = $continuation->getCurrentFlowExecutionTicket();
 
         $this->assertTrue(is_a($continuation, 'Piece_Flow_Continuation'));
@@ -138,7 +138,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $session = &$context->getSession();
         $session->start();
-        $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_Session_Key'], $continuation);
+        $session->setAttributeByRef(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey(), $continuation);
         $dispatcher->invoke();
 
         $this->assertEquals(1, $continuation->getAttribute('counter'));
@@ -201,7 +201,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals('Counter', $dispatcher->invoke());
 
         $session = &$context->getSession();
-        $continuation = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_Session_Key']);
+        $continuation = &$session->getAttribute(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey());
         $flowExecutionTicket = $continuation->getCurrentFlowExecutionTicket();
         Piece_Unity_Context::clear();
         $_GET['_event'] = 'increase';
@@ -212,7 +212,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $session->start();
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $session = &$context->getSession();
-        $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_Session_Key'], $continuation);
+        $session->setAttributeByRef(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey(), $continuation);
         $dispatcher->invoke();
         $dispatcher->invoke();
         $dispatcher->invoke();
@@ -305,7 +305,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals('Form', $dispatcher->invoke());
 
         $session = &$context->getSession();
-        $continuation = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_Session_Key']);
+        $continuation = &$session->getAttribute(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey());
         $flowExecutionTicket = $continuation->getCurrentFlowExecutionTicket();
 
         Piece_Unity_Context::clear();
@@ -315,7 +315,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context->setConfiguration($config);
         $session = &$context->getSession();
         $session->start();
-        $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_Session_Key'], $continuation);
+        $session->setAttributeByRef(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey(), $continuation);
         $validation = &$context->getValidation();
         $validation->setConfigDirectory(dirname(__FILE__));
         $validation->setCacheDirectory(dirname(__FILE__));
