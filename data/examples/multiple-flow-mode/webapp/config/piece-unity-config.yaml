@@ -1,23 +1,4 @@
 # $Id$
-
-- name: Interceptor_Authentication
-  point:
-    - name: services
-      type: configuration
-      value:
-        - name: Example
-          guard:
-            class: AuthenticationAction
-            method: isAuthenticated
-          url: "http://example.com/multiple-flow-mode/htdocs/authenticate.php"
-          resources:
-            - /multiple-flow-mode/htdocs/user-contents.php
-          useCallback: true
-          callbackKey: callback
-    - name: guardDirectory
-      type: configuration
-      value: ../webapp/actions
-
 - name: Dispatcher_Continuation
   point:
     - name: actionDirectory
@@ -44,16 +25,22 @@
         - name: UserContentOne
           file: ../webapp/config/flows/UserContentOne.yaml
           isExclusive: false
+    - name: bindActionsWithFlowExecution
+      type: configuration
+      value: true
+
 - name: Dispatcher_Simple
   point:
     - name: actionDirectory
       type: configuration
       value: ../webapp/actions
+
 - name: View
   point:
     - name: renderer
       type: extension
       value: Renderer_Flexy
+
 - name: Renderer_Flexy
   point:
     - name: templateDir
@@ -62,6 +49,7 @@
     - name: compileDir
       type: configuration
       value: ../webapp/compiled-templates
+
 - name: InterceptorChain
   point:
     - name: interceptors
@@ -69,6 +57,7 @@
       value:
         - Interceptor_SessionStart
         - Interceptor_Authentication
+
 - name: KernelConfigurator
   point:
     - name: validationConfigDirectory
@@ -77,3 +66,21 @@
     - name: validationCacheDirectory
       type: configuration
       value: ../webapp/cache
+
+- name: Interceptor_Authentication
+  point:
+    - name: services
+      type: configuration
+      value:
+        - name: Example
+          guard:
+            class: AuthenticationAction
+            method: isAuthenticated
+          url: "http://example.com/multiple-flow-mode/htdocs/authenticate.php"
+          resources:
+            - /multiple-flow-mode/htdocs/user-contents.php
+          useCallback: true
+          callbackKey: callback
+    - name: guardDirectory
+      type: configuration
+      value: ../webapp/actions
