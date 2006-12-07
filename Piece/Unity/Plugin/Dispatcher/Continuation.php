@@ -44,7 +44,6 @@ require_once 'Piece/Flow/Action/Factory.php';
 
 // {{{ GLOBALS
 
-$GLOBALS['PIECE_UNITY_Continuation_Session_Key'] = null;
 $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key'] = null;
 $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key'] = null;
 $GLOBALS['PIECE_UNITY_Continuation_FlowName'] = null;
@@ -102,14 +101,14 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     function invoke()
     {
         $session = &$this->_context->getSession();
-        $continuation = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_Session_Key']);
+        $continuation = &$session->getAttribute(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey());
         if (is_null($continuation)) {
             $continuation = &$this->_createContinuation();
             if (Piece_Unity_Error::hasErrors('exception')) {
                 return;
             }
 
-            $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_Session_Key'], $continuation);
+            $session->setAttributeByRef(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey(), $continuation);
         }
 
         $this->_context->setContinuation($continuation);
@@ -222,6 +221,20 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         }
     }
 
+    // }}}
+    // {{{ getContinuationSessionKey()
+
+    /**
+     * Gets the session key for a continuation object.
+     *
+     * @return string
+     * @static
+     */
+    function getContinuationSessionKey()
+    {
+        return '_continuation';
+    }
+
     /**#@-*/
 
     /**#@+
@@ -300,13 +313,11 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->_addConfigurationPoint('enableSingleFlowMode', false);
         $this->_addConfigurationPoint('cacheDirectory');
         $this->_addConfigurationPoint('flowDefinitions', array());
-        $this->_addConfigurationPoint('sessionKey', strtolower(__CLASS__));
         $this->_addConfigurationPoint('flowExecutionTicketKey', '_flowExecutionTicket');
         $this->_addConfigurationPoint('flowNameKey', '_flow');
         $this->_addConfigurationPoint('flowName');
         $this->_addConfigurationPoint('bindActionsWithFlowExecution', false);
 
-        $GLOBALS['PIECE_UNITY_Continuation_Session_Key'] = $this->getConfiguration('sessionKey');
         $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key'] = $this->getConfiguration('flowExecutionTicketKey');
         $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key'] = $this->getConfiguration('flowNameKey');
         $GLOBALS['PIECE_UNITY_Continuation_FlowName'] = $this->getConfiguration('flowName');
