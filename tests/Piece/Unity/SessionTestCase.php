@@ -40,6 +40,7 @@
 
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Session.php';
+require_once dirname(__FILE__) . '/SessionTestCase/Loader.php';
 
 // {{{ Piece_Unity_SessionTestCase
 
@@ -81,6 +82,7 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
     function setUp()
     {
         $this->_session = &new Piece_Unity_Session();
+        $_SESSION = array();
     }
 
     function tearDown()
@@ -127,8 +129,7 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
                 $oldIncludePath
                 );
         Piece_Unity_Session::addAutoloadClass($class);
-        $session = &new Piece_Unity_Session();
-        $session->start();
+        $this->_session->start();
 
         if (version_compare(phpversion(), '5.0.0', '<')) {
             $found = class_exists($class);
@@ -164,6 +165,42 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
 
         $this->assertFalse($this->_session->hasAttribute('foo'));
         $this->assertFalse($this->_session->hasAttribute('bar'));
+    }
+
+    /**
+     * @since Method available since Release 0.9.0
+     */
+    function testPreload()
+    {
+        $GLOBALS['loadCount'] = 0;
+        $this->_session->start();
+
+        if (version_compare(phpversion(), '5.0.0', '<')) {
+            $this->assertFalse(class_exists('Piece_Unity_SessionTestCase_Foo'));
+        } else {
+            $this->assertFalse(class_exists('Piece_Unity_SessionTestCase_Foo', false));
+        }
+
+        $service = 'Piece_Unity_SessionTestCase_Loader';
+        $callback = array($service, 'load');
+        $preload = &new Piece_Unity_Session_Preload();
+        $preload->setCallback($service, $callback);
+        $preload->addClass($service, 'Piece_Unity_SessionTestCase_Foo', array('foo' => 'bar'));
+        $preload->addClass($service, 'Piece_Unity_SessionTestCase_Foo', array('foo' => 'bar'));
+        unserialize(serialize($preload));
+        $foo = unserialize('O:31:"Piece_Unity_SessionTestCase_Foo":0:{}');
+
+        if (version_compare(phpversion(), '5.0.0', '<')) {
+            $this->assertTrue(class_exists('Piece_Unity_SessionTestCase_Foo'));
+        } else {
+            $this->assertTrue(class_exists('Piece_Unity_SessionTestCase_Foo', false));
+        }
+
+        $this->assertTrue(is_object($foo));
+        $this->assertEquals(strtolower('Piece_Unity_SessionTestCase_Foo'), strtolower(get_class($foo)));
+        $this->assertEquals(1, $GLOBALS['loadCount']);
+
+        unset($GLOBALS['loadCount']);
     }
 
     /**#@-*/

@@ -37,10 +37,13 @@
  * @since      File available since Release 0.2.0
  */
 
+require_once 'Piece/Unity/Session/Preload.php';
+
 // {{{ GLOBALS
 
 $GLOBALS['PIECE_UNITY_Session_Autoload_Classes'] = array();
 
+// }}}
 // {{{ Piece_Unity_Session
 
 /**
@@ -70,6 +73,7 @@ class Piece_Unity_Session
      */
 
     var $_attributes = array();
+    var $_preload;
 
     /**#@-*/
 
@@ -184,6 +188,13 @@ class Piece_Unity_Session
 
         @session_start();
         $this->_attributes = &$_SESSION;
+
+        if ($this->hasAttribute('_Piece_Unity_Session_Preload')) {
+            $this->_preload = &$this->getAttribute('_Piece_Unity_Session_Preload');
+        } else {
+            $this->_preload = &new Piece_Unity_Session_Preload();
+            $this->setAttributeByRef('_Piece_Unity_Session_Preload', $this->_preload);
+        }
     }
 
     // }}}
@@ -208,6 +219,35 @@ class Piece_Unity_Session
     function clearAttributes()
     {
         $this->_attributes = array();
+    }
+
+    // }}}
+    // {{{ addPreloadClass()
+
+    /**
+     * Adds a class for preload to the given service.
+     *
+     * @param string $service
+     * @param string $class
+     * @param mixed  $payload
+     */
+    function addPreloadClass($service, $class, $payload = null)
+    {
+        $this->_preload->addClass($service, $class, $payload);
+    }
+
+    // }}}
+    // {{{ setPreloadCallback()
+
+    /**
+     * Sets a callback for preload to the given service.
+     *
+     * @param string   $service
+     * @param callback $callback
+     */
+    function setPreloadCallback($service, $callback)
+    {
+        $this->_preload->setCallback($service, $callback);
     }
 
     /**#@-*/
