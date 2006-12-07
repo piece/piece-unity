@@ -168,6 +168,12 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
                                     );
             Piece_Unity_Error::popCallback();
         }
+
+        /*
+         * Preloads Dispatcher_Continuation plug-in for restoring
+         * action instances in session.
+         */
+        Piece_Unity_Plugin_Factory::factory('Dispatcher_Continuation');
     }
 
     /**#@-*/
