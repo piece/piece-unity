@@ -107,7 +107,7 @@ class Piece_Unity_Session_Preload
     // {{{ setCallback()
 
     /**
-     * Sets a callback to the given service.
+     * Sets a callback for preload to the given service.
      *
      * @param string   $service
      * @param callback $callback
