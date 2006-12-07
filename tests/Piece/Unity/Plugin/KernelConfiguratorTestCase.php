@@ -101,6 +101,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
 
     function testSettingAutoloadClasses()
     {
+        $_SESSION = array();
         $class = 'Piece_Unity_Plugin_AutoloadClass';
         $oldIncludePath = ini_get('include_path');
         ini_set('include_path',
