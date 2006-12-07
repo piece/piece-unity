@@ -85,6 +85,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SESSION = array();
     }
 
     function tearDown()
@@ -115,12 +116,13 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'Counter', 'file' => dirname(__FILE__) . '/Counter.yaml', 'isExclusive' => true)));
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
+        $session = &$context->getSession();
+        $session->start();
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
 
         $this->assertEquals('Counter', $dispatcher->invoke());
 
-        $session = &$context->getSession();
         $continuation = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_Session_Key']);
         $flowExecutionTicket = $continuation->getCurrentFlowExecutionTicket();
 
@@ -135,6 +137,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context->setConfiguration($config);
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $session = &$context->getSession();
+        $session->start();
         $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_Session_Key'], $continuation);
         $dispatcher->invoke();
 
@@ -162,6 +165,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
                                   );
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
+        $session = &$context->getSession();
+        $session->start();
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $dispatcher->invoke();
@@ -188,6 +193,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
                                   );
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
+        $session = &$context->getSession();
+        $session->start();
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
 
@@ -201,6 +208,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
+        $session = &$context->getSession();
+        $session->start();
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $session = &$context->getSession();
         $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_Session_Key'], $continuation);
@@ -231,6 +240,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $config->setConfiguration('Renderer_PHP', 'templateDirectory', dirname(__FILE__));
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
+        $session = &$context->getSession();
+        $session->start();
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $context->setView($dispatcher->invoke());
@@ -256,6 +267,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $config->setConfiguration('Dispatcher_Continuation', 'flowName', 'Counter');
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
+        $session = &$context->getSession();
+        $session->start();
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
 
@@ -285,6 +298,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'ContinuationValidation', 'file' => dirname(__FILE__) . '/ContinuationValidation.yaml', 'isExclusive' => true)));
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
+        $session = &$context->getSession();
+        $session->start();
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
 
         $this->assertEquals('Form', $dispatcher->invoke());
@@ -299,6 +314,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $session = &$context->getSession();
+        $session->start();
         $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_Session_Key'], $continuation);
         $validation = &$context->getValidation();
         $validation->setConfigDirectory(dirname(__FILE__));

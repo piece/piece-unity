@@ -40,6 +40,7 @@
 
 require_once 'Piece/Unity/Plugin/Common.php';
 require_once 'Piece/Flow/Continuation.php';
+require_once 'Piece/Flow/Action/Factory.php';
 
 // {{{ GLOBALS
 
@@ -113,7 +114,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
 
         $this->_context->setContinuation($continuation);
 
-        $continuation->invoke($this->_context);
+        $continuation->invoke($this->_context, $this->getConfiguration('bindActionsWithFlowExecution'));
         if (Piece_Flow_Error::hasErrors('exception')) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
                                     'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
@@ -138,6 +139,15 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         }
 
         $this->_setViewElements($continuation);
+
+        $session->setPreloadCallback('_Dispatcher_Continuation_ActionLoader', array(__CLASS__, 'loadAction'));
+        $actionInstances = Piece_Flow_Action_Factory::getInstances();
+        foreach (array_keys($actionInstances) as $actionClass) {
+            $session->addPreloadClass('_Dispatcher_Continuation_ActionLoader',
+                                      $actionClass,
+                                      Piece_Unity_Plugin_Dispatcher_Continuation::getFlowName()
+                                      );
+        }
 
         return $view;
     }
@@ -191,6 +201,25 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $context = &Piece_Unity_Context::singleton();
         $request = &$context->getRequest();
         return $request->hasParameter($GLOBALS['PIECE_UNITY_Continuation_FlowName_Key']) ? $request->getParameter($GLOBALS['PIECE_UNITY_Continuation_FlowName_Key']) : null;
+    }
+
+    // }}}
+    // {{{ loadAction()
+
+    /**
+     * Loads an action for preventing that the action become an
+     * incomplete class.
+     *
+     * @param string $class
+     * @param string $flowName
+     * @static
+     */
+    function loadAction($class, $flowName)
+    {
+        if ($flowName == Piece_Unity_Plugin_Dispatcher_Continuation::getFlowName()) {
+            error_log("Loading $class for the flow [$flowName]");
+            Piece_Flow_Action_Factory::load($class);
+        }
     }
 
     /**#@-*/
@@ -275,12 +304,13 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->_addConfigurationPoint('flowExecutionTicketKey', '_flowExecutionTicket');
         $this->_addConfigurationPoint('flowNameKey', '_flow');
         $this->_addConfigurationPoint('flowName');
+        $this->_addConfigurationPoint('bindActionsWithFlowExecution', false);
 
         $GLOBALS['PIECE_UNITY_Continuation_Session_Key'] = $this->getConfiguration('sessionKey');
         $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicket_Key'] = $this->getConfiguration('flowExecutionTicketKey');
         $GLOBALS['PIECE_UNITY_Continuation_FlowName_Key'] = $this->getConfiguration('flowNameKey');
         $GLOBALS['PIECE_UNITY_Continuation_FlowName'] = $this->getConfiguration('flowName');
-        Piece_Flow_Continuation::setActionDirectory($this->getConfiguration('actionDirectory'));
+        Piece_Flow_Action_Factory::setActionDirectory($this->getConfiguration('actionDirectory'));
     }
 
     /**#@-*/
