@@ -222,6 +222,71 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
         $this->assertEquals('baz', $context->getAttribute('bar'));
     }
 
+    /**
+     * @since Method available since Release 0.9.0
+     */
+    function testSingleFileUpload()
+    {
+        $size = filesize(__FILE__);
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_FILES['userfile'] = array('tmp_name' => __FILE__,
+                                    'name'     => __FILE__,
+                                    'size'     => $size,
+                                    'type'     => 'text/plain',
+                                    'error'    => 0
+                                    );
+
+        $validation = &new Piece_Unity_Validation();
+        $validation->setConfigDirectory(dirname(__FILE__));
+        $validation->setCacheDirectory(dirname(__FILE__));
+        $config = &$validation->getConfiguration();
+        $config->setRequired('userfile');
+        $config->addValidation('userfile',
+                               'File',
+                               array('maxSize'  => $size,
+                                     'minSize'  => $size,
+                                     'mimetype' => 'text')
+                               );
+        $container = &new stdClass();
+
+        $this->assertTrue($validation->validate(null, $container));
+
+        unset($_FILES['userfile']);
+    }
+
+    /**
+     * @since Method available since Release 0.9.0
+     */
+    function testMultipleFileUpload()
+    {
+        $size = filesize(__FILE__);
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        for ($i = 0; $i < 5; ++$i) {
+            $_FILES['userfile']['tmp_name'][$i] = __FILE__;
+            $_FILES['userfile']['name'][$i] = __FILE__;
+            $_FILES['userfile']['type'][$i] = 'text/plain';
+            $_FILES['userfile']['size'][$i] = $size;
+            $_FILES['userfile']['error'][$i] = 0;
+        }
+
+        $validation = &new Piece_Unity_Validation();
+        $validation->setConfigDirectory(dirname(__FILE__));
+        $validation->setCacheDirectory(dirname(__FILE__));
+        $config = &$validation->getConfiguration();
+        $config->setRequired('userfile');
+        $config->addValidation('userfile',
+                               'File',
+                               array('maxSize'  => $size,
+                                     'minSize'  => $size,
+                                     'mimetype' => 'text')
+                               );
+        $container = &new stdClass();
+
+        $this->assertTrue($validation->validate(null, $container));
+
+        unset($_FILES['userfile']);
+    }
+
     /**#@-*/
 
     /**#@+

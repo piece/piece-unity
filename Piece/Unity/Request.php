@@ -85,6 +85,10 @@ class Piece_Unity_Request
             $this->_parameters = $_GET;
         } elseif (@$_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->_parameters = $_POST;
+
+            foreach ($_FILES as $name => $value) {
+                $this->setParameter($name, $value);
+            }
         }
     }
 
