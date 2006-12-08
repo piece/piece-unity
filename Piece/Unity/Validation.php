@@ -162,7 +162,7 @@ class Piece_Unity_Validation
 
     /**
      * Gets the value of the given field name from the current application
-     * context.This method is used as a callback for Piece_Right package.
+     * context. This method is used as a callback for Piece_Right package.
      *
      * @param string $fieldName
      * @return mixed
