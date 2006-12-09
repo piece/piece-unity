@@ -38,11 +38,7 @@
  */
 
 error_reporting(E_ALL);
-
-ini_set('include_path',
-        dirname(__FILE__) . '/../../../..' . PATH_SEPARATOR .
-        ini_get('include_path')
-        );
+set_include_path(dirname(__FILE__) . '/../../../..' . PATH_SEPARATOR . get_include_path());
 
 require_once 'Piece/Unity.php';
 require_once 'Piece/Unity/Error.php';

@@ -103,11 +103,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
     {
         $_SESSION = array();
         $class = 'Piece_Unity_Plugin_AutoloadClass';
-        $oldIncludePath = ini_get('include_path');
-        ini_set('include_path',
-                dirname(__FILE__) . '/../../..' . PATH_SEPARATOR .
-                $oldIncludePath
-                );
+        $oldIncludePath = set_include_path(dirname(__FILE__) . '/../../..' . PATH_SEPARATOR . get_include_path());
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('KernelConfigurator', 'autoloadClasses', array($class));
         $context = &Piece_Unity_Context::singleton();
@@ -126,7 +122,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
 
         $this->assertTrue($found);
 
-        ini_set('include_path', $oldIncludePath);
+        set_include_path($oldIncludePath);
         unset($_SESSION);
     }
 
