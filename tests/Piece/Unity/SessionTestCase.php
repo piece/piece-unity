@@ -122,7 +122,7 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
 
     function testAutoloaingClass()
     {
-        $class = 'Piece_Unity_AutoloadClass';
+        $class = 'Piece_Unity_SessionTestCase_AutoloadClass';
         $oldIncludePath = ini_get('include_path');
         ini_set('include_path',
                 dirname(__FILE__) . '/../..' . PATH_SEPARATOR .
