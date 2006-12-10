@@ -40,6 +40,8 @@
  */
 
 require_once 'Piece/Unity/Plugin/Common.php';
+require_once 'Piece/Unity/Plugin/Renderer/HTML.php';
+require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_Smarty
 
@@ -56,7 +58,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @see        Smarty
  * @since      Class available since Release 0.2.0
  */
-class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTML
 {
 
     // {{{ properties
@@ -82,51 +84,6 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
     /**#@+
      * @access public
      */
-
-    // }}}
-    // {{{ invoke()
-
-    /**
-     * Invokes the plugin specific code.
-     *
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
-     */
-    function invoke()
-    {
-        $this->_load();
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            return;
-        }
-
-        $smarty = &new Smarty();
-
-        foreach (array_keys($this->_smartyClassVariables) as $point) {
-            $$point = $this->getConfiguration($point);
-            if (!is_null($$point)) {
-                $smarty->$point = $this->_adjustEndingSlash($$point);
-            }
-        }
-
-        $viewElement = &$this->_context->getViewElement();
-        $viewElements = $viewElement->getElements();
-        foreach (array_keys($viewElements) as $elementName) {
-            $smarty->assign_by_ref($elementName, $viewElements[$elementName]);
-        }
-
-        set_error_handler(array('Piece_Unity_Error', 'pushPHPError'));
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-        $smarty->display(str_replace('_', '/', str_replace('.', '', $this->_context->getView())) . $this->getConfiguration('templateExtension'));
-        Piece_Unity_Error::popCallback();
-        restore_error_handler();
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
-                                    'exception',
-                                    array('plugin' => __CLASS__),
-                                    Piece_Unity_Error::pop()
-                                    );
-        }
-    }
 
     /**#@-*/
 
@@ -162,6 +119,10 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
      */
     function _load()
     {
+        if ($this->_loaded()) {
+            return;
+        }
+
         if (!defined('SMARTY_DIR')) {
             $SMARTY_DIR = $this->getConfiguration('SMARTY_DIR');
             if (!is_null($SMARTY_DIR)) {
@@ -185,13 +146,7 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
             return;
         }
 
-        if (version_compare(phpversion(), '5.0.0', '<')) {
-            $found = class_exists('Smarty');
-        } else {
-            $found = class_exists('Smarty', false);
-        }
-
-        if (!$found) {
+        if (!$this->_loaded()) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                     'The class [ Smarty ] not defined in the class file [ Smarty.class.php ].'
                                     );
@@ -208,10 +163,81 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Common
      */
     function _initialize()
     {
+        parent::_initialize();
         $this->_addConfigurationPoint('templateExtension', '.tpl');
         $this->_addConfigurationPoint('SMARTY_DIR');
         foreach ($this->_smartyClassVariables as $point => $default) {
             $this->_addConfigurationPoint($point, $default);
+        }
+    }
+
+    // }}}
+    // {{{ _render()
+
+    /**
+     * Renders a HTML.
+     *
+     * @param string $layoutView
+     * @param string $layoutDirectory
+     */
+    function _render($layoutView = null, $layoutDirectory = null)
+    {
+        $this->_load();
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
+
+        $smarty = &new Smarty();
+
+        foreach (array_keys($this->_smartyClassVariables) as $point) {
+            $$point = $this->getConfiguration($point);
+            if (!is_null($$point)) {
+                $smarty->$point = $this->_adjustEndingSlash($$point);
+            }
+        }
+
+        if (is_null($layoutView)) {
+            $view = $this->_context->getView();
+        } else {
+            $smarty->template_dir = $layoutDirectory;
+            $view = $layoutView;
+        }
+
+        $viewElement = &$this->_context->getViewElement();
+        $viewElements = $viewElement->getElements();
+        foreach (array_keys($viewElements) as $elementName) {
+            $smarty->assign_by_ref($elementName, $viewElements[$elementName]);
+        }
+
+        set_error_handler(array('Piece_Unity_Error', 'pushPHPError'));
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        $smarty->display(str_replace('_', '/', str_replace('.', '', $view)) . $this->getConfiguration('templateExtension'));
+        Piece_Unity_Error::popCallback();
+        restore_error_handler();
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                    'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
+                                    'exception',
+                                    array('plugin' => __CLASS__),
+                                    Piece_Unity_Error::pop()
+                                    );
+        }
+    }
+
+    // }}}
+    // {{{ _loaded()
+
+    /**
+     * Returns whether the Smarty has already been loaded or not.
+     *
+     * @return boolean
+     */
+    function _loaded()
+    {
+        if (version_compare(phpversion(), '5.0.0', '<')) {
+            return class_exists('Smarty');
+        } else {
+            return class_exists('Smarty', false);
         }
     }
 

@@ -34,16 +34,16 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://piece-framework.com/piece-unity/
- * @since      File available since Release 0.1.0
+ * @since      File available since Release 0.9.0
  */
 
-require_once 'Piece/Unity/Plugin/Renderer/HTML.php';
+require_once 'Piece/Unity/Plugin/Common.php';
 require_once 'Piece/Unity/Error.php';
 
-// {{{ Piece_Unity_Plugin_Renderer_PHP
+// {{{ Piece_Unity_Plugin_Renderer_HTML
 
 /**
- * A renderer which uses PHP itself as a template engine.
+ * An abstract renderer which is used to render HTML.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
@@ -51,9 +51,10 @@ require_once 'Piece/Unity/Error.php';
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://piece-framework.com/piece-unity/
- * @since      Class available since Release 0.1.0
+ * @since      Class available since Release 0.9.0
+ * @abstract
  */
-class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
+class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
@@ -74,6 +75,32 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
      * @access public
      */
 
+    // }}}
+    // {{{ invoke()
+
+    /**
+     * Invokes the plugin specific code.
+     */
+    function invoke()
+    {
+        $layoutView = $this->getConfiguration('layoutView');
+        if (is_null($layoutView)) {
+            $this->_render();
+            if (Piece_Unity_Error::hasErrors('exception')) {
+                return;
+            }
+        } else {
+            $viewElement = &$this->_context->getViewElement();
+            ob_start();
+            $this->_render();
+            $content = ob_get_contents();
+            ob_end_clean();
+            $viewElement->setElement('__content', $content);
+
+            $this->_render($layoutView, $this->getConfiguration('layoutDirectory'));
+        }
+    }
+
     /**#@-*/
 
     /**#@+
@@ -85,14 +112,11 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
 
     /**
      * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
      */
     function _initialize()
     {
-        parent::_initialize();
-        $this->_addConfigurationPoint('templateDirectory');
-        $this->_addConfigurationPoint('templateExtension', '.php');
+        $this->_addConfigurationPoint('layoutView');
+        $this->_addConfigurationPoint('layoutDirectory');
     }
 
     // }}}
@@ -103,58 +127,9 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
      *
      * @param string $layoutView
      * @param string $layoutDirectory
+     * @abstract
      */
-    function _render($layoutView = null, $layoutDirectory = null)
-    {
-        if (is_null($layoutView)) {
-            $templateDirectory = $this->getConfiguration('templateDirectory');
-            $view = $this->_context->getView();
-        } else {
-            $templateDirectory = $layoutDirectory;
-            $view = $layoutView;
-        }
-
-        if (is_null($templateDirectory)) {
-            return;
-        }
-
-        $file = "$templateDirectory/" . str_replace('_', '/', str_replace('.', '', $view)) . $this->getConfiguration('templateExtension');
-
-        if (!file_exists($file)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                   "The HTML template file [ $file ] not found.",
-                                    'warning',
-                                    array('plugin' => __CLASS__)
-                                   );
-            Piece_Unity_Error::popCallback();
-            return;
-        }
-
-        if (!is_readable($file)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_READABLE,
-                                   "The HTML template file [ $file ] was not readable.",
-                                    'warning',
-                                    array('plugin' => __CLASS__)
-                                   );
-            Piece_Unity_Error::popCallback();
-            return;
-        }
-
-        $viewElement = &$this->_context->getViewElement();
-        extract($viewElement->getElements(), EXTR_OVERWRITE | EXTR_REFS);
-
-        if (!include_once $file) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    'The HTML template file [ $file ] not found or was not readable.',
-                                    'warning',
-                                    array('plugin' => __CLASS__)
-                                    );
-            Piece_Unity_Error::popCallback();
-        }
-    }
+    function _render($layoutView = null, $layoutDirectory = null) {}
  
     /**#@-*/
 

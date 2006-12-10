@@ -39,10 +39,11 @@
  * @since      File available since Release 0.2.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
 require_once 'HTML/Template/Flexy.php';
 require_once 'HTML/Template/Flexy/Element.php';
 require_once 'PEAR.php';
+require_once 'Piece/Unity/Plugin/Renderer/HTML.php';
+require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_Flexy
 
@@ -59,7 +60,7 @@ require_once 'PEAR.php';
  * @see        HTML_Template_Flexy
  * @since      Class available since Release 0.2.0
  */
-class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
 {
 
     // {{{ properties
@@ -84,63 +85,6 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
     /**#@+
      * @access public
      */
-
-    // }}}
-    // {{{ invoke()
-
-    /**
-     * Invokes the plugin specific code.
-     *
-     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
-     */
-    function invoke()
-    {
-        $flexy = &new HTML_Template_Flexy($this->_getOptions());
-        $file = str_replace('_', '/', str_replace('.', '', $this->_context->getView())) . $this->getConfiguration('templateExtension');
-        $resultOfCompile = $flexy->compile($file);
-        if (PEAR::isError($resultOfCompile)) {
-            if ($flexy->currentTemplate === false) {
-                Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-                Piece_Unity_Error::pushPEARError($resultOfCompile,
-                                                 PIECE_UNITY_ERROR_NOT_FOUND,
-                                                 "The HTML template file [ $file ] not found.",
-                                                 'warning',
-                                                 array('plugin' => __CLASS__)
-                                                 );
-                Piece_Unity_Error::popCallback();
-                return;
-            }
-
-            Piece_Unity_Error::pushPEARError($resultOfCompile,
-                                             PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                             'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
-                                             'exception',
-                                             array('plugin' => __CLASS__)
-                                             );
-            return;
-        }
-
-        $viewElement = &$this->_context->getViewElement();
-        $viewElements = $viewElement->getElements();
-
-        $formElements = array();
-        $formElementsKey = $this->getConfiguration('formElementsKey');
-        if (array_key_exists($formElementsKey, $viewElements)) {
-            $formElements = $this->_createFormElements($viewElements[$formElementsKey]);
-            unset($viewElements[$formElementsKey]);
-        }
-
-        $controller = (object)$viewElements;
-        $resultOfOutputObject = $flexy->outputObject($controller, $formElements);
-        if (PEAR::isError($resultOfOutputObject)) {
-            Piece_Unity_Error::pushPEARError($resultOfOutputObject,
-                                             PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                             'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
-                                             'exception',
-                                             array('plugin' => __CLASS__)
-                                             );
-        }
-    }
 
     /**#@-*/
 
@@ -227,6 +171,7 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
      */
     function _initialize()
     {
+        parent::_initialize();
         $this->_addConfigurationPoint('templateExtension', '.html');
         $this->_addConfigurationPoint('formElementsKey', '_elements');
         $this->_addConfigurationPoint('formElementValueKey', '_value');
@@ -234,6 +179,72 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Common
         $this->_addConfigurationPoint('formElementAttributesKey', '_attributes');
         foreach ($this->_configurationOptions as $point => $default) {
             $this->_addConfigurationPoint($point, $default);
+        }
+    }
+
+    // }}}
+    // {{{ _render()
+
+    /**
+     * Renders a HTML.
+     *
+     * @param string $layoutView
+     * @param string $layoutDirectory
+     */
+    function _render($layoutView = null, $layoutDirectory = null)
+    {
+        $options = $this->_getOptions();
+        if (is_null($layoutView)) {
+            $view = $this->_context->getView();
+        } else {
+            $options['templateDir'] = $layoutDirectory;
+            $view = $layoutView;
+        }
+
+        $flexy = &new HTML_Template_Flexy($options);
+        $file = str_replace('_', '/', str_replace('.', '', $view)) . $this->getConfiguration('templateExtension');
+        $resultOfCompile = $flexy->compile($file);
+        if (PEAR::isError($resultOfCompile)) {
+            if ($flexy->currentTemplate === false) {
+                Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+                Piece_Unity_Error::pushPEARError($resultOfCompile,
+                                                 PIECE_UNITY_ERROR_NOT_FOUND,
+                                                 "The HTML template file [ $file ] not found.",
+                                                 'warning',
+                                                 array('plugin' => __CLASS__)
+                                                 );
+                Piece_Unity_Error::popCallback();
+                return;
+            }
+
+            Piece_Unity_Error::pushPEARError($resultOfCompile,
+                                             PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                             'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
+                                             'exception',
+                                             array('plugin' => __CLASS__)
+                                             );
+            return;
+        }
+
+        $viewElement = &$this->_context->getViewElement();
+        $viewElements = $viewElement->getElements();
+
+        $formElements = array();
+        $formElementsKey = $this->getConfiguration('formElementsKey');
+        if (array_key_exists($formElementsKey, $viewElements)) {
+            $formElements = $this->_createFormElements($viewElements[$formElementsKey]);
+            unset($viewElements[$formElementsKey]);
+        }
+
+        $controller = (object)$viewElements;
+        $resultOfOutputObject = $flexy->outputObject($controller, $formElements);
+        if (PEAR::isError($resultOfOutputObject)) {
+            Piece_Unity_Error::pushPEARError($resultOfOutputObject,
+                                             PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                             'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
+                                             'exception',
+                                             array('plugin' => __CLASS__)
+                                             );
         }
     }
 

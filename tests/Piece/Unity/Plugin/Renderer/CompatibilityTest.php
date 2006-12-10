@@ -43,6 +43,7 @@ require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/Plugin/Dispatcher/Simple.php';
 require_once 'Piece/Unity/Plugin/View.php';
+require_once 'Piece/Unity/Plugin/Factory.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_CompatibilityTest
 
@@ -91,6 +92,7 @@ class Piece_Unity_Plugin_Renderer_CompatibilityTest extends PHPUnit_TestCase
 
     function tearDown()
     {
+        Piece_Unity_Plugin_Factory::clearInstances();
         Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
         Piece_Unity_Error::popCallback();
@@ -160,7 +162,6 @@ class Piece_Unity_Plugin_Renderer_CompatibilityTest extends PHPUnit_TestCase
         ob_end_clean();
 
         $this->assertEquals('OK', $buffer);
-
         $this->_clear($viewString);
     }
 
@@ -188,6 +189,41 @@ class Piece_Unity_Plugin_Renderer_CompatibilityTest extends PHPUnit_TestCase
         $this->_clear($viewString);
 
         Piece_Unity_Error::popCallback();
+    }
+
+    function testLayout()
+    {
+        $viewString = "{$this->_target}LayoutContent";
+        $layoutViewString = "{$this->_target}Layout";
+        $context = &Piece_Unity_Context::singleton();
+
+        $config = &$this->_getConfig();
+        $config->setConfiguration("Renderer_{$this->_target}", 'layoutView', $layoutViewString);
+        $config->setConfiguration("Renderer_{$this->_target}", 'layoutDirectory', dirname(__FILE__));
+        $context->setConfiguration($config);
+
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('foo', 'This is an element for the content.');
+        $viewElement->setElement('bar', 'This is an element for the layout.');
+        $context->setView($viewString);
+
+        $view = &new Piece_Unity_Plugin_View();
+        ob_start();
+        $view->invoke();
+        $buffer = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals('<html>
+  <body>
+    <h1>This is an element for the layout.</h1>
+    <div>
+  <h2>This is an element for the content.</h2>
+</div>
+  </body>
+</html>', rtrim($buffer));
+
+        $this->_clear($viewString);
+        $this->_clear($layoutViewString);
     }
 
     /**#@-*/
