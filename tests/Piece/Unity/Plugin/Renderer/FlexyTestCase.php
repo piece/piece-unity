@@ -39,7 +39,7 @@
  */
 
 require_once 'Piece/Unity/Plugin/Renderer/Flexy.php';
-require_once dirname(__FILE__) . '/CompatibilityTest.php';
+require_once dirname(__FILE__) . '/HTMLCompatibilityTest.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_FlexyTestCase
 
@@ -55,7 +55,7 @@ require_once dirname(__FILE__) . '/CompatibilityTest.php';
  * @see        Piece_Unity_Plugin_Renderer_Flexy
  * @since      Class available since Release 0.2.0
  */
-class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Renderer_CompatibilityTest
+class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest
 {
 
     // {{{ properties

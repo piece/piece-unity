@@ -40,7 +40,7 @@
 
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
-require_once dirname(__FILE__) . '/CompatibilityTest.php';
+require_once dirname(__FILE__) . '/HTMLCompatibilityTest.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_PHPTestCase
 
@@ -56,7 +56,7 @@ require_once dirname(__FILE__) . '/CompatibilityTest.php';
  * @see        Piece_Unity_Plugin_Renderer_PHP
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Renderer_CompatibilityTest
+class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest
 {
 
     // {{{ properties

@@ -46,7 +46,7 @@ require_once 'Piece/Unity/Plugin/View.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
 require_once 'Piece/Unity/Error.php';
 
-// {{{ Piece_Unity_Plugin_Renderer_CompatibilityTest
+// {{{ Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest
 
 /**
  * The base class for compatibility test of Piece_Unity_Plugin_View's
@@ -61,7 +61,7 @@ require_once 'Piece/Unity/Error.php';
  * @see        Piece_Unity_Plugin_View
  * @since      Class available since Release 0.2.0
  */
-class Piece_Unity_Plugin_Renderer_CompatibilityTest extends PHPUnit_TestCase
+class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
 {
 
     // {{{ properties
