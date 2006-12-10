@@ -101,17 +101,16 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
     /**
      * Renders a HTML.
      *
-     * @param string $layoutView
-     * @param string $layoutDirectory
+     * @param boolean $isLayout
      */
-    function _render($layoutView = null, $layoutDirectory = null)
+    function _render($isLayout)
     {
-        if (is_null($layoutView)) {
+        if (!$isLayout) {
             $templateDirectory = $this->getConfiguration('templateDirectory');
             $view = $this->_context->getView();
         } else {
-            $templateDirectory = $layoutDirectory;
-            $view = $layoutView;
+            $templateDirectory = $this->getConfiguration('layoutDirectory');
+            $view = $this->getConfiguration('layoutView');
         }
 
         if (is_null($templateDirectory)) {

@@ -188,17 +188,17 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
     /**
      * Renders a HTML.
      *
-     * @param string $layoutView
-     * @param string $layoutDirectory
+     * @param boolean $isLayout
      */
-    function _render($layoutView = null, $layoutDirectory = null)
+    function _render($isLayout)
     {
         $options = $this->_getOptions();
-        if (is_null($layoutView)) {
+        if (!$isLayout) {
             $view = $this->_context->getView();
         } else {
-            $options['templateDir'] = $layoutDirectory;
-            $view = $layoutView;
+            $options['templateDir'] = $this->getConfiguration('layoutDirectory');
+            $options['compileDir'] = $this->getConfiguration('layoutCompileDirectory');
+            $view = $this->getConfiguration('layoutView');
         }
 
         $flexy = &new HTML_Template_Flexy($options);

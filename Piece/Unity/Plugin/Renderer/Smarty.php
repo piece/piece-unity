@@ -177,10 +177,9 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
     /**
      * Renders a HTML.
      *
-     * @param string $layoutView
-     * @param string $layoutDirectory
+     * @param boolean $isLayout
      */
-    function _render($layoutView = null, $layoutDirectory = null)
+    function _render($isLayout)
     {
         $this->_load();
         if (Piece_Unity_Error::hasErrors('exception')) {
@@ -196,11 +195,12 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
             }
         }
 
-        if (is_null($layoutView)) {
+        if (!$isLayout) {
             $view = $this->_context->getView();
         } else {
-            $smarty->template_dir = $layoutDirectory;
-            $view = $layoutView;
+            $smarty->template_dir = $this->getConfiguration('layoutDirectory');
+            $smarty->compile_dir = $this->getConfiguration('layoutCompileDirectory');
+            $view = $this->getConfiguration('layoutView');
         }
 
         $viewElement = &$this->_context->getViewElement();
