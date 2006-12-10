@@ -83,21 +83,22 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $layoutView = $this->getConfiguration('layoutView');
-        if (is_null($layoutView)) {
-            $this->_render();
-            if (Piece_Unity_Error::hasErrors('exception')) {
-                return;
-            }
+        $useLayout = $this->getConfiguration('useLayout');
+        if (!$useLayout) {
+            $this->_render(false);
         } else {
             $viewElement = &$this->_context->getViewElement();
             ob_start();
-            $this->_render();
+            $this->_render(false);
+            if (Piece_Unity_Error::hasErrors('exception')) {
+                ob_end_clean();
+                return;
+            }
             $content = ob_get_contents();
             ob_end_clean();
             $viewElement->setElement('__content', $content);
 
-            $this->_render($layoutView, $this->getConfiguration('layoutDirectory'));
+            $this->_render(true);
         }
     }
 
@@ -115,8 +116,10 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
      */
     function _initialize()
     {
+        $this->_addConfigurationPoint('useLayout');
         $this->_addConfigurationPoint('layoutView');
         $this->_addConfigurationPoint('layoutDirectory');
+        $this->_addConfigurationPoint('layoutCompileDirectory');
     }
 
     // }}}
@@ -125,11 +128,10 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
     /**
      * Renders a HTML.
      *
-     * @param string $layoutView
-     * @param string $layoutDirectory
+     * @param boolean $isLayout
      * @abstract
      */
-    function _render($layoutView = null, $layoutDirectory = null) {}
+    function _render($isLayout) {}
  
     /**#@-*/
 
