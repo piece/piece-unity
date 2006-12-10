@@ -44,6 +44,7 @@ require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/Plugin/Dispatcher/Simple.php';
 require_once 'Piece/Unity/Plugin/View.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
+require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_CompatibilityTest
 
@@ -198,8 +199,10 @@ class Piece_Unity_Plugin_Renderer_CompatibilityTest extends PHPUnit_TestCase
         $context = &Piece_Unity_Context::singleton();
 
         $config = &$this->_getConfig();
+        $config->setConfiguration("Renderer_{$this->_target}", 'useLayout', true);
         $config->setConfiguration("Renderer_{$this->_target}", 'layoutView', $layoutViewString);
-        $config->setConfiguration("Renderer_{$this->_target}", 'layoutDirectory', dirname(__FILE__));
+        $config->setConfiguration("Renderer_{$this->_target}", 'layoutDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/templates/Layout");
+        $config->setConfiguration("Renderer_{$this->_target}", 'layoutCompileDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Layout");
         $context->setConfiguration($config);
 
         $viewElement = &$context->getViewElement();

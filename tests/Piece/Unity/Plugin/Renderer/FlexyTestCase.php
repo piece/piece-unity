@@ -156,9 +156,12 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
 
     function _clear($view)
     {
-        $files = array(dirname(__FILE__) . "/$view.html.en.php",
-                       dirname(__FILE__) . "/$view.html.gettext.serial",
-                       dirname(__FILE__) . "/$view.html.elements.serial"
+        $files = array(dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Content/$view.html.en.php",
+                       dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Content/$view.html.gettext.serial",
+                       dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Content/$view.html.elements.serial",
+                       dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Layout/$view.html.en.php",
+                       dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Layout/$view.html.gettext.serial",
+                       dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Layout/$view.html.elements.serial"
                        );
         foreach ($files as $file) {
             if (file_exists($file)) {
@@ -170,9 +173,9 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
     function &_getConfig()
     {
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', dirname(__FILE__));
-        $config->setConfiguration('Renderer_Flexy', 'templateDir', dirname(__FILE__));
-        $config->setConfiguration('Renderer_Flexy', 'compileDir', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/actions");
+        $config->setConfiguration('Renderer_Flexy', 'templateDir', dirname(__FILE__) . "/{$this->_target}TestCase/templates/Content");
+        $config->setConfiguration('Renderer_Flexy', 'compileDir', dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Content");
         $config->setExtension('View', 'renderer', 'Renderer_Flexy');
 
         return $config;

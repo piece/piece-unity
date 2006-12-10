@@ -87,17 +87,19 @@ class Piece_Unity_Plugin_Renderer_SmartyTestCase extends Piece_Unity_Plugin_Rend
 
     function _clear($view)
     {
-        $smarty = &new Smarty();
-        $smarty->compile_dir = dirname(__FILE__) . '/';
-        $smarty->clear_compiled_tpl("$view.tpl");
+        foreach (array('Content', 'Layout') as $directory) {
+            $smarty = &new Smarty();
+            $smarty->compile_dir = dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/$directory";
+            $smarty->clear_compiled_tpl("$view.tpl");
+        }
     }
 
     function &_getConfig()
     {
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', dirname(__FILE__));
-        $config->setConfiguration('Renderer_Smarty', 'template_dir', dirname(__FILE__));
-        $config->setConfiguration('Renderer_Smarty', 'compile_dir', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/actions");
+        $config->setConfiguration('Renderer_Smarty', 'template_dir', dirname(__FILE__) . "/{$this->_target}TestCase/templates/Content");
+        $config->setConfiguration('Renderer_Smarty', 'compile_dir', dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Content");
         $config->setExtension('View', 'renderer', 'Renderer_Smarty');
 
         return $config;
