@@ -178,32 +178,6 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
         return $config;
     }
 
-    function testNonExistingTemplate()
-    {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_DIE . ';'));
-
-        $viewString = "{$this->_target}NonExistingTemplate";
-        $context = &Piece_Unity_Context::singleton();
-
-        $config = &$this->_getConfig();
-        $context->setConfiguration($config);
-        $context->setView($viewString);
-
-        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
-        $renderer = &new $class();
-        $renderer->invoke();
-
-        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals($this->_errorCodeWhenTemplateNotExists, $error['code']);
-
-        $this->_clear($viewString);
-
-        Piece_Unity_Error::popCallback();
-    }
-
     /**#@-*/
 
     // }}}
