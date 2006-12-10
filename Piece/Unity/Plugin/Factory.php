@@ -133,30 +133,14 @@ class Piece_Unity_Plugin_Factory
     }
 
     // }}}
-    // {{{ _load()
+    // {{{ clearInstances()
 
     /**
-     * Loads a plugin from the plugin directories.
-     *
-     * @param string $plugin
-     * @return boolean
+     * Clears the plug-in instances.
      */
-    function _load($plugin)
+    function clearInstances()
     {
-        $pluginClass = "Piece_Unity_Plugin_$plugin";
-        if (Piece_Unity_Plugin_Factory::_loaded($pluginClass)) {
-            return true;
-        }
-
-        $loaded = false;
-        foreach ($GLOBALS['PIECE_UNITY_Plugin_Directories'] as $pluginDirectory) {
-            $loaded = Piece_Unity_Plugin_Factory::_loadFromDirectory($pluginClass, $pluginDirectory);
-            if ($loaded) {
-                break;
-            }
-        }
-
-        return $loaded;
+        $GLOBALS['PIECE_UNITY_Plugin_Instances'] = array();
     }
 
     /**#@-*/
@@ -230,6 +214,33 @@ class Piece_Unity_Plugin_Factory
         } else {
             return class_exists($plugin, false);
         }
+    }
+
+    // }}}
+    // {{{ _load()
+
+    /**
+     * Loads a plugin from the plugin directories.
+     *
+     * @param string $plugin
+     * @return boolean
+     */
+    function _load($plugin)
+    {
+        $pluginClass = "Piece_Unity_Plugin_$plugin";
+        if (Piece_Unity_Plugin_Factory::_loaded($pluginClass)) {
+            return true;
+        }
+
+        $loaded = false;
+        foreach ($GLOBALS['PIECE_UNITY_Plugin_Directories'] as $pluginDirectory) {
+            $loaded = Piece_Unity_Plugin_Factory::_loadFromDirectory($pluginClass, $pluginDirectory);
+            if ($loaded) {
+                break;
+            }
+        }
+
+        return $loaded;
     }
 
     /**#@-*/
