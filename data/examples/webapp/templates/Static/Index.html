@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="css/default.css" media="screen,projection" />
+<script type="text/javascript" src="js/window_operation.js"></script>
+<title>Index | Piece_Unity Examples</title>
+</head>
+<body>
+<div id="page">
+  <div id="header">
+    <h1>Piece_Unity Examples</h1>
+  </div><!-- close #header -->
+  <div id="content">
+    <h1>A.&nbsp;Continuation Server in Single Flow Mode</h1>
+      <ol>
+        <li><a href="single-flow-mode/htdocs/" onclick="w1=window.open(this,'newWindow01'); w1.focus(); return(false)">Registration application in single flow mode.</a></li>
+        <li><a href="single-flow-mode/htdocs/static.php?_event=ImmediateDisplay" onclick="w1=window.open(this,'newWindow02'); w1.focus(); return(false)">A static page in single flow mode. This approach requires only one template in the template directory.</a></li>
+        <li><a href="single-flow-mode/htdocs/static.php?_event=ActionAndDisplay" onclick="w1=window.open(this,'newWindow03'); w1.focus(); return(false)">A static page with a simple action in single flow mode. This approach requires a template in the template directory and an action in the action directory.</a></li>
+      </ol>
+
+    <h1>B.&nbsp;Continuation Server in Multiple Flow Mode</h1>
+      <ol>
+        <li><a href="multiple-flow-mode/htdocs/register.php" onclick="w1=window.open(this,'newWindow04'); w1.focus(); return(false)">Registration application in multiple flow mode and flow in non-exclusive mode.</a></li>
+        <li><a href="multiple-flow-mode/htdocs/counter.php" onclick="w1=window.open(this,'newWindow05'); w1.focus(); return(false)">Counter application in multiple flow mode and flow in exclusive mode.</a></li>
+        <li><a href="multiple-flow-mode/htdocs/static.php?_event=ImmediateDisplay" onclick="w1=window.open(this,'newWindow06'); w1.focus(); return(false)">A static page in multiple flow mode. This approach requires only one template in the template directory.</a></li>
+        <li><a href="multiple-flow-mode/htdocs/static.php?_event=ActionAndDisplay" onclick="w1=window.open(this,'newWindow07'); w1.focus(); return(false)">A static page with a simple action in multiple flow mode. This approach requires a template in the template directory and an action in the action directory.</a></li>
+      </ol>
+
+    <h1>C.&nbsp;Flow of Authentication and Contents</h1>
+      <ol>
+        <li><a href="multiple-flow-mode/htdocs/authenticate.php" onclick="w1=window.open(this,'newWindowC1'); w1.focus(); return(false)">Flow of Authentication.</a></li>
+        <li><a href="multiple-flow-mode/htdocs/user-contents.php" onclick="w1=window.open(this,'newWindowC2'); w1.focus(); return(false)">Authenticated user's Contents. This contents are provided to the authenticated user.</a></li>
+      </ol>
+
+  </div><!-- close #content -->
+  <div id="footer">
+    <p>Copyright &copy; 2006 KUBO Atsuhiro &lt;iteman at users dot sourceforge dot net&gt;, All rights reserved.</p>
+  </div><!-- close #footer -->
+</div><!-- close #page -->
+</body>
+</html>
