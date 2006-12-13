@@ -41,6 +41,9 @@
 require_once 'Piece/Unity/Plugin/Common.php';
 require_once 'Piece/Flow/Continuation.php';
 require_once 'Piece/Flow/Action/Factory.php';
+require_once 'Piece/Unity/Context.php';
+require_once 'Piece/Flow/Error.php';
+require_once 'Piece/Unity/Error.php';
 
 // {{{ GLOBALS
 
@@ -243,6 +246,8 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     /**
      * Publishes the Piece_Flow_Continuation object as a view element if it
      * exists.
+     *
+     * @since Method available since Release 0.9.0
      */
     function publish()
     {
