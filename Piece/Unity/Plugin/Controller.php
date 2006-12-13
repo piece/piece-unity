@@ -102,7 +102,14 @@ class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
         }
 
         $dispatcherContinuation = &Piece_Unity_Plugin_Factory::factory('Dispatcher_Continuation');
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
+
         $dispatcherContinuation->publish();
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
 
         $view = &$this->getExtension('view');
         if (Piece_Unity_Error::hasErrors('exception')) {
