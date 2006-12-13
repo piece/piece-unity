@@ -38,10 +38,14 @@
  */
 
 require_once 'Piece/Unity/Plugin/Common.php';
+require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_Plugin_View
 
 /**
+ * A view handler which creates built-in view elements and renders view
+ * elements with an appropriate renderer.
+ *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
@@ -76,6 +80,8 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
 
     /**
      * Invokes the plugin specific code.
+     *
+     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
     function invoke()
     {
