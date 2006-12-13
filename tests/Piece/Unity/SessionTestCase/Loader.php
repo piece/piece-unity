@@ -54,7 +54,7 @@
  */
 class Piece_Unity_SessionTestCase_Loader
 {
-    function load($class, $payload)
+    function load($class, $id)
     {
         ++$GLOBALS['loadCount'];
         include_once dirname(__FILE__) . '/' . substr(strrchr($class, '_'), 1) . '.php';
