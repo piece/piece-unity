@@ -181,8 +181,8 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
         $callback = array($service, 'load');
         $preload = &new Piece_Unity_Session_Preload();
         $preload->setCallback($service, $callback);
-        $preload->addClass($service, 'Piece_Unity_SessionTestCase_Foo', array('foo' => 'bar'));
-        $preload->addClass($service, 'Piece_Unity_SessionTestCase_Foo', array('foo' => 'bar'));
+        $preload->addClass($service, 'Piece_Unity_SessionTestCase_Foo');
+        $preload->addClass($service, 'Piece_Unity_SessionTestCase_Foo');
         unserialize(serialize($preload));
         $foo = unserialize('O:31:"Piece_Unity_SessionTestCase_Foo":0:{}');
 
