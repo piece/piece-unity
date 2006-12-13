@@ -245,6 +245,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $context->setView($dispatcher->invoke());
+        $dispatcher->publish();
 
         $renderer = &new Piece_Unity_Plugin_Renderer_PHP();
         ob_start();

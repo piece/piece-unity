@@ -82,6 +82,8 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      * @access private
      */
 
+    var $_continuation;
+
     /**#@-*/
 
     /**#@+
@@ -103,20 +105,12 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      */
     function invoke()
     {
-        $session = &$this->_context->getSession();
-        $continuation = &$session->getAttribute(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey());
-        if (is_null($continuation)) {
-            $continuation = &$this->_createContinuation();
-            if (Piece_Unity_Error::hasErrors('exception')) {
-                return;
-            }
-
-            $session->setAttributeByRef(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey(), $continuation);
+        $this->_prepareContinuation();
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
         }
 
-        $this->_context->setContinuation($continuation);
-
-        $continuation->invoke($this->_context, $this->getConfiguration('bindActionsWithFlowExecution'));
+        $this->_continuation->invoke($this->_context, $this->getConfiguration('bindActionsWithFlowExecution'));
         if (Piece_Flow_Error::hasErrors('exception')) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
                                     'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
@@ -128,7 +122,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         }
 
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-        $view = $continuation->getView();
+        $view = $this->_continuation->getView();
         Piece_Unity_Error::popCallback();
         if (Piece_Flow_Error::hasErrors('exception')) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
@@ -141,8 +135,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         }
 
         $viewElement = &$this->_context->getViewElement();
-        $viewElement->setElementByRef('__continuation', $continuation);
-        $viewElement->setElement('__flowExecutionTicket', $continuation->getCurrentFlowExecutionTicket());
+        $viewElement->setElement('__flowExecutionTicket', $this->_continuation->getCurrentFlowExecutionTicket());
 
         $session = &$this->_context->getSession();
         $session->setPreloadCallback('_Dispatcher_Continuation_ActionLoader', array(__CLASS__, 'loadAction'));
@@ -248,17 +241,19 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      * exists.
      *
      * @since Method available since Release 0.9.0
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      */
     function publish()
     {
-        $viewElement = &$this->_context->getViewElement();
-        if (!$viewElement->hasElement('__continuation')) {
-            $session = &$this->_context->getSession();
-            $continuation = &$session->getAttribute(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey());
-            if (!is_null($continuation)) {
-                $viewElement->setElementByRef('__continuation', $continuation);
+        if (is_null($this->_continuation)) {
+            $this->_prepareContinuation();
+            if (Piece_Unity_Error::hasErrors('exception')) {
+                return;
             }
         }
+
+        $viewElement = &$this->_context->getViewElement();
+        $viewElement->setElementByRef('__continuation', $this->_continuation);
     }
 
     /**#@-*/
@@ -333,6 +328,33 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $viewElement = &$this->_context->getViewElement();
         $viewElement->setElement('__flowExecutionTicketKey', $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey']);
         $viewElement->setElement('__flowNameKey', $GLOBALS['PIECE_UNITY_Continuation_FlowNameKey']);
+    }
+
+    // }}}
+    // {{{ _prepareContinuation()
+
+    /**
+     * Sets the Piece_Flow_Continuation object to $_continuation property and
+     * the context.
+     *
+     * @since Method available since Release 0.9.0
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     */
+    function _prepareContinuation()
+    {
+        $session = &$this->_context->getSession();
+        $continuation = &$session->getAttribute(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey());
+        if (is_null($continuation)) {
+            $continuation = &$this->_createContinuation();
+            if (Piece_Unity_Error::hasErrors('exception')) {
+                return;
+            }
+
+            $session->setAttributeByRef(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey(), $continuation);
+        }
+
+        $this->_context->setContinuation($continuation);
+        $this->_continuation = &$continuation;
     }
 
     /**#@-*/
