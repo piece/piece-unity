@@ -82,8 +82,8 @@ class Piece_Unity_Session_Preload
     function __wakeup()
     {
         foreach (array_keys($this->_services) as $service) {
-            foreach ($this->_services[$service]['classes'] as $class => $payload) {
-                call_user_func($this->_services[$service]['callback'], $class, $payload);
+            foreach ($this->_services[$service]['classes'] as $id => $class) {
+                call_user_func($this->_services[$service]['callback'], $class, $id);
             }
         }
     }
@@ -96,11 +96,15 @@ class Piece_Unity_Session_Preload
      *
      * @param string $service
      * @param string $class
-     * @param mixed  $payload
+     * @param string $id
      */
-    function addClass($service, $class, $payload = null)
+    function addClass($service, $class, $id = null)
     {
-        $this->_services[$service]['classes'][$class] = $payload;
+        if (is_null($id)) {
+            $id = $service;
+        }
+
+        $this->_services[$service]['classes'][$id] = $class;
     }
 
     // }}}
