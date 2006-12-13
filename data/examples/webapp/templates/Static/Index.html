@@ -1,26 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" type="text/css" href="{__basePath}/css/default.css" media="screen,projection" />
-<script type="text/javascript" src="js/window_operation.js"></script>
-<title>Index | Piece_Unity Examples</title>
-</head>
-<body>
-<div id="page">
-  <div id="header">
-    <h1>Piece_Unity Examples</h1>
-  </div><!-- close #header -->
-  <div id="content">
-    <h1>A.&nbsp;Registration Application</h1>
-    <ol>
-      <li><a href="{__basePath}/register-with-non-exclusive-mode.php" onclick="w1=window.open(this,'newWindow04'); w1.focus(); return(false)">Registration Application with <strong>Non-Exclusive</strong> Mode.</a></li>
-      <li><a href="{__basePath}/register-with-exclusive-mode.php?{__flowExecutionTicketKey}={__continuation.getFlowExecutionTicketByFlowName(#RegistrationWithExclusiveMode#)}" onclick="w1=window.open(this,'newWindow04'); w1.focus(); return(false)" flexy:if="__continuation">Registration Application with <strong>Exclusive</strong> Mode.</a><a href="{__basePath}/register-with-exclusive-mode.php" onclick="w1=window.open(this,'newWindow04'); w1.focus(); return(false)" flexy:if="!__continuation">Registration Application with <strong>Exclusive</strong> Mode.</a></li>
-    </ol>
-  </div><!-- close #content -->
-  <div id="footer">
-    <p>Copyright &copy; 2006 KUBO Atsuhiro &lt;iteman at users dot sourceforge dot net&gt;, All rights reserved.</p>
-  </div><!-- close #footer -->
-</div><!-- close #page -->
-</body>
-</html>
+<h1>A.&nbsp;Registration Application</h1>
+  <ol>
+    <li><a href="{__basePath}/register-with-non-exclusive-mode.php" onclick="w1=window.open(this,'newWindow04'); w1.focus(); return(false)">Registration Application with <strong>Non-Exclusive</strong> Mode.</a></li>
+    <li><a href="{__basePath}/register-with-exclusive-mode.php?{__flowExecutionTicketKey}={__continuation.getFlowExecutionTicketByFlowName(#RegistrationWithExclusiveMode#)}" onclick="w1=window.open(this,'newWindow04'); w1.focus(); return(false)" flexy:if="__continuation">Registration Application with <strong>Exclusive</strong> Mode.</a><a href="{__basePath}/register-with-exclusive-mode.php" onclick="w1=window.open(this,'newWindow04'); w1.focus(); return(false)" flexy:if="!__continuation">Registration Application with <strong>Exclusive</strong> Mode.</a></li>
+  </ol>

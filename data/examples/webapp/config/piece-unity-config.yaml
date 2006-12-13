@@ -51,6 +51,21 @@
       type: configuration
       value: ../webapp/cache/validations
 
+- name: Renderer_Flexy
+  point:
+    - name: useLayout
+      type: configuration
+      value: true
+    - name: layoutView
+      type: configuration
+      value: Layout
+    - name: layoutDirectory
+      type: configuration
+      value: ../webapp/templates/Layout
+    - name: layoutCompileDirectory
+      type: configuration
+      value: ../webapp/compiled-templates/Layout
+
 # Local Variables:
 # mode: conf-colon
 # coding: iso-8859-1
