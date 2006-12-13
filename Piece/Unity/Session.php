@@ -229,11 +229,11 @@ class Piece_Unity_Session
      *
      * @param string $service
      * @param string $class
-     * @param mixed  $payload
+     * @param string $id
      */
-    function addPreloadClass($service, $class, $payload = null)
+    function addPreloadClass($service, $class, $id = null)
     {
-        $this->_preload->addClass($service, $class, $payload);
+        $this->_preload->addClass($service, $class, $id);
     }
 
     // }}}
