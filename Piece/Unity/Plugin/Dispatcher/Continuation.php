@@ -137,8 +137,11 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             return;
         }
 
-        $this->_setViewElements($continuation);
+        $viewElement = &$this->_context->getViewElement();
+        $viewElement->setElementByRef('__continuation', $continuation);
+        $viewElement->setElement('__flowExecutionTicket', $continuation->getCurrentFlowExecutionTicket());
 
+        $session = &$this->_context->getSession();
         $session->setPreloadCallback('_Dispatcher_Continuation_ActionLoader', array(__CLASS__, 'loadAction'));
         $actionInstances = Piece_Flow_Action_Factory::getInstances();
         foreach (array_keys($actionInstances) as $actionClass) {
@@ -234,6 +237,25 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         return '_continuation';
     }
 
+    // }}}
+    // {{{ publish()
+
+    /**
+     * Publishes the Piece_Flow_Continuation object as a view element if it
+     * exists.
+     */
+    function publish()
+    {
+        $viewElement = &$this->_context->getViewElement();
+        if (!$viewElement->hasElement('__continuation')) {
+            $session = &$this->_context->getSession();
+            $continuation = &$session->getAttribute(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey());
+            if (!is_null($continuation)) {
+                $viewElement->setElementByRef('__continuation', $continuation);
+            }
+        }
+    }
+
     /**#@-*/
 
     /**#@+
@@ -280,25 +302,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     }
 
     // }}}
-    // {{{ _setViewElements()
-
-    /**
-     * Sets the Piece_Flow_Continuation object, the flow execution ticket
-     * key, the flow name key, and the current flow execution ticket as a
-     * built-in view elements.
-     *
-     * @param Piece_Flow_Continuation &$continuation
-     */
-    function _setViewElements(&$continuation)
-    {
-        $viewElement = &$this->_context->getViewElement();
-        $viewElement->setElementByRef('__continuation', $continuation);
-        $viewElement->setElement('__flowExecutionTicketKey', $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey']);
-        $viewElement->setElement('__flowNameKey', $GLOBALS['PIECE_UNITY_Continuation_FlowNameKey']);
-        $viewElement->setElement('__flowExecutionTicket', $continuation->getCurrentFlowExecutionTicket());
-    }
-
-    // }}}
     // {{{ _initialize()
 
     /**
@@ -321,6 +324,10 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $GLOBALS['PIECE_UNITY_Continuation_FlowNameKey'] = $this->getConfiguration('flowNameKey');
         $GLOBALS['PIECE_UNITY_Continuation_FlowName'] = $this->getConfiguration('flowName');
         Piece_Flow_Action_Factory::setActionDirectory($this->getConfiguration('actionDirectory'));
+
+        $viewElement = &$this->_context->getViewElement();
+        $viewElement->setElement('__flowExecutionTicketKey', $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey']);
+        $viewElement->setElement('__flowNameKey', $GLOBALS['PIECE_UNITY_Continuation_FlowNameKey']);
     }
 
     /**#@-*/
