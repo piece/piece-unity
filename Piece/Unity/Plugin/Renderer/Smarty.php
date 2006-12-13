@@ -178,6 +178,7 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
      * Renders a HTML.
      *
      * @param boolean $isLayout
+     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
     function _render($isLayout)
     {

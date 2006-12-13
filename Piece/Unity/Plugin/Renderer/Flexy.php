@@ -189,6 +189,7 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
      * Renders a HTML.
      *
      * @param boolean $isLayout
+     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
     function _render($isLayout)
     {

@@ -80,6 +80,8 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
 
     /**
      * Invokes the plugin specific code.
+     *
+     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
     function invoke()
     {
@@ -88,6 +90,7 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
             $this->_render(false);
         } else {
             $viewElement = &$this->_context->getViewElement();
+
             ob_start();
             $this->_render(false);
             if (Piece_Unity_Error::hasErrors('exception')) {
@@ -96,6 +99,7 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
             }
             $content = ob_get_contents();
             ob_end_clean();
+
             $viewElement->setElement('__content', $content);
 
             $this->_render(true);
