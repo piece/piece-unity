@@ -1,0 +1,52 @@
+# $Id$
+
+firstState: DisplayForm
+
+lastState:
+  name: DisplayFinish
+  view: Finish
+  activity:
+    method: setupFinish
+
+viewState:
+  - name: DisplayForm
+    view: Form
+    activity:
+      method: setupForm
+    transition:
+      - event: confirmForm
+        nextState: ProcessConfirmForm
+        action:
+          method: validate
+
+  - name: DisplayConfirmation
+    view: Confirmation
+    activity:
+      method: setupConfirmation
+    transition:
+      - event: register
+        nextState: ProcessRegister
+        action:
+          method: register
+      - event: goDisplayFormFromDisplayConfirmation
+        nextState: DisplayForm
+
+actionState:
+  - name: ProcessConfirmForm
+    transition:
+      - event: goDisplayConfirmationFromProcessConfirmForm
+        nextState: DisplayConfirmation
+      - event: goDisplayFormFromProcessConfirmForm
+        nextState: DisplayForm
+
+  - name: ProcessRegister
+    transition:
+      - event: goDisplayFinishFromProcessRegister
+        nextState: DisplayFinish
+
+# Local Variables:
+# mode: conf-colon
+# coding: iso-8859-1
+# tab-width: 4
+# indent-tabs-mode: nil
+# End:

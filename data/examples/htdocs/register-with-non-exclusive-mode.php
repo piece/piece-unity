@@ -51,11 +51,11 @@ $base = dirname(__FILE__) . '/../webapp';
 ini_set('session.cookie_path', str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'])));
 session_save_path("$base/sessions");
 
+$flowName = 'Registration';
 $config = &new Piece_Unity_Config();
-$config->setConfiguration('KernelConfigurator', 'eventName', 'Index');
-$config->setExtension('Controller', 'dispatcher', 'Dispatcher_Simple');
-$config->setConfiguration('Renderer_Flexy', 'templateDir', "$base/templates/Static");
-$config->setConfiguration('Renderer_Flexy', 'compileDir', "$base/compiled-templates/Static");
+$config->setConfiguration('Dispatcher_Continuation', 'flowName', "{$flowName}WithNonExclusiveMode");
+$config->setConfiguration('Renderer_Flexy', 'templateDir', "$base/templates/$flowName");
+$config->setConfiguration('Renderer_Flexy', 'compileDir', "$base/compiled-templates/$flowName");
 $unity = &new Piece_Unity("$base/config", "$base/cache", $config);
 $unity->dispatch();
 

@@ -1,5 +1,32 @@
 # $Id$
 
+- name: Dispatcher_Continuation
+  point:
+    - name: actionDirectory
+      type: configuration
+      value: ../webapp/actions
+    - name: cacheDirectory
+      type: configuration
+      value: ../webapp/cache/flows
+    - name: flowDefinitions
+      type: configuration
+      value:
+        - name: RegistrationWithNonExclusiveMode
+          file: ../webapp/config/flows/Registration.yaml
+          isExclusive: false
+        - name: RegistrationWithExclusiveMode
+          file: ../webapp/config/flows/Registration.yaml
+          isExclusive: true
+    - name: bindActionsWithFlowExecution
+      type: configuration
+      value: true
+
+- name: Dispatcher_Simple
+  point:
+    - name: actionDirectory
+      type: configuration
+      value: ../webapp/actions
+
 - name: View
   point:
     - name: renderer

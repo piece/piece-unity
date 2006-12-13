@@ -1,0 +1,30 @@
+# $Id$
+
+- name: first_name
+  description: First Name
+  required:
+    message: %_description% is required
+  validator:
+    - name: Length
+      rule:
+        min: 1
+        max: 255
+      message: The length of %_description% must be less than 255 characters
+
+- name: last_name
+  description: Last Name
+  required:
+    message: %_description% is required
+  validator:
+    - name: Length
+      rule:
+        min: 1
+        max: 255
+      message: The length of %_description% must be less than 255 characters
+
+# Local Variables:
+# mode: conf-colon
+# coding: iso-8859-1
+# tab-width: 4
+# indent-tabs-mode: nil
+# End:
