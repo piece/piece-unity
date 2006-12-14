@@ -11,7 +11,11 @@
 {if:GLOBALS.isset(__sessionName)}
 {if:GLOBALS.is_string(__sessionName)}
 {if:GLOBALS.isset(__sessionID)}
-{if:GLOBALS.is_string(__sessionID)}OK{end:}
+{if:GLOBALS.is_string(__sessionID)}
+{if:GLOBALS.isset(__url)}
+{if:GLOBALS.is_a(__url,#Piece_Unity_URL#)}OK{end:}
+{end:}
+{end:}
 {end:}
 {end:}
 {end:}

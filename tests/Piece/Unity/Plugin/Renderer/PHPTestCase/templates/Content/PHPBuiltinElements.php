@@ -6,6 +6,7 @@ if (isset($__request) && is_a($__request, 'Piece_Unity_Request')
     && isset($__basePath) && is_string($__basePath)
     && isset($__sessionName) && is_string($__sessionName)
     && isset($__sessionID) && is_string($__sessionID)
+    && isset($__url) && is_a($__url, 'Piece_Unity_URL')
     ) {
     print 'OK';
 }

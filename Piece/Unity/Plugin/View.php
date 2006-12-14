@@ -39,6 +39,7 @@
 
 require_once 'Piece/Unity/Plugin/Common.php';
 require_once 'Piece/Unity/Error.php';
+require_once 'Piece/Unity/URL.php';
 
 // {{{ Piece_Unity_Plugin_View
 
@@ -100,6 +101,8 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
         $viewElement->setElement('__basePath', $this->_context->getBasePath());
         $viewElement->setElement('__sessionName', session_name());
         $viewElement->setElement('__sessionID', session_id());
+        $url = &new Piece_Unity_URL();
+        $viewElement->setElement('__url', $url);
 
         /*
          * Overwrites the current view with another one which is specified by
