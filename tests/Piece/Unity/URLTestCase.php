@@ -155,6 +155,55 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
         unset($_SERVER['SERVER_NAME']);
     }
 
+    function testCreateDirectly()
+    {
+        $this->assertEquals('https://example.org/foo/bar/baz.php',
+                            Piece_Unity_URL::createURL('http://example.org/foo/bar/baz.php', true, true)
+                            );
+
+        $_SERVER['SERVER_NAME'] = 'example.org';
+        $_SERVER['SERVER_PORT'] = '80';
+
+        $this->assertEquals('https://example.org/foo/bar/baz.php',
+                            Piece_Unity_URL::createURL('http://example.com/foo/bar/baz.php', false, true)
+                            );
+
+        $url = &new Piece_Unity_URL();
+
+        $this->assertEquals('https://example.org/foo/bar/baz.php',
+                            $url->createURL('http://example.com/foo/bar/baz.php', false, true)
+                            );
+
+        unset($_SERVER['SERVER_PORT']);
+        unset($_SERVER['SERVER_NAME']);
+    }
+
+    function testInvalidOperations()
+    {
+        $url = &new Piece_Unity_URL();
+        $url->getQueryString();
+        $url->addQueryString('foo', 'bar');
+        $url->getURL();
+
+        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_INVALID_OPERATION, $error['code']);
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_INVALID_OPERATION, $error['code']);
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_INVALID_OPERATION, $error['code']);
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertNull($error);
+    }
+
     /**#@-*/
 
     /**#@+

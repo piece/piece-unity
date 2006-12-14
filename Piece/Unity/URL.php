@@ -39,6 +39,7 @@
 
 require_once 'Net/URL.php';
 require_once 'Piece/Unity/Context.php';
+require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_URL
 
@@ -81,13 +82,130 @@ class Piece_Unity_URL
     // {{{ constructor
 
     /**
+     * Initializes a Net_URL object if the path is given.
+     *
+     * @param string  $path
+     * @param boolean $isExternal
+     */
+    function Piece_Unity_URL($path = null, $isExternal = false)
+    {
+        if (!is_null($path)) {
+            $this->initialize($path, $isExternal);
+        }
+    }
+
+    // }}}
+    // {{{ getQueryString()
+
+    /**
+     * Gets the query string of a URL.
+     *
+     * @return boolean
+     */
+    function getQueryString()
+    {
+        if (is_null($this->_url)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
+                                    __FUNCTION__ . ' method must be called after initializing.',
+                                    'warning'
+                                    );
+            Piece_Unity_Error::popCallback();
+            return;
+        }
+
+        return $this->_url->querystring;
+    }
+
+    // }}}
+    // {{{ addQueryString()
+
+    /**
+     * Adds a name/value pair to the query string.
+     *
+     * @param string $name
+     * @param string $value
+     */
+    function addQueryString($name, $value)
+    {
+        if (is_null($this->_url)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
+                                    __FUNCTION__ . ' method must be called after initializing.',
+                                    'warning'
+                                    );
+            Piece_Unity_Error::popCallback();
+            return;
+        }
+
+        $this->_url->addQueryString($name, $value);
+    }
+
+    // }}}
+    // {{{ getURL()
+
+    /**
+     * Gets the absolute URL.
+     *
+     * @param boolean $useSSL
+     * @return string
+     */
+    function getURL($useSSL = false)
+    {
+        if (is_null($this->_url)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
+                                    __FUNCTION__ . ' method must be called after initializing.',
+                                    'warning'
+                                    );
+            Piece_Unity_Error::popCallback();
+            return;
+        }
+
+        if (!$useSSL) {
+            return $this->_url->getURL();
+        } else {
+            if (version_compare(phpversion(), '5.0.0', '<')) {
+                $url = $this->_url;
+            } else {
+                $url = clone($this->_url);
+            }
+
+            $url->protocol = 'https';
+            $url->port= '443';
+
+            return $url->getURL();
+        }
+    }
+
+    // }}}
+    // {{{ createURL()
+
+    /**
+     * A utility to get the appropriate absolute URL immediately.
+     *
+     * @param string  $path
+     * @param boolean $isExternal
+     * @param boolean $useSSL
+     * @return string
+     */
+    function createURL($path, $isExternal = false, $useSSL = false)
+    {
+        $url = &new Piece_Unity_URL($path, $isExternal);
+        return $url->getURL($useSSL);
+    }
+
+    // }}}
+    // {{{ initialize()
+
+    /**
      * Creates a Net_URL object with the given path, and replaces some pieces
      * of a URL when the URL is not external.
      *
-     * @param string $path
+     * @param string  $path
      * @param boolean $isExternal
      */
-    function Piece_Unity_URL($path, $isExternal = false)
+    function initialize($path, $isExternal)
     {
         $this->_url = &new Net_URL($path);
 
@@ -108,60 +226,6 @@ class Piece_Unity_URL
                 $this->_url->port = $_SERVER['SERVER_PORT'];
                 $this->_url->path = preg_replace('!^' . $context->getProxyPath() . '!', '', $this->_url->path);
             }
-        }
-    }
-
-    // }}}
-    // {{{ getQueryString()
-
-    /**
-     * Gets the query string of a URL.
-     *
-     * @return boolean
-     */
-    function getQueryString()
-    {
-        return $this->_url->querystring;
-    }
-
-    // }}}
-    // {{{ addQueryString()
-
-    /**
-     * Adds a name/value pair to the query string.
-     *
-     * @param string $name
-     * @param string $value
-     */
-    function addQueryString($name, $value)
-    {
-        $this->_url->addQueryString($name, $value);
-    }
-
-    // }}}
-    // {{{ getURL()
-
-    /**
-     * Gets the absolute URL.
-     *
-     * @param boolean $useSSL
-     * @return string
-     */
-    function getURL($useSSL = false)
-    {
-        if (!$useSSL) {
-            return $this->_url->getURL();
-        } else {
-            if (version_compare(phpversion(), '5.0.0', '<')) {
-                $url = $this->_url;
-            } else {
-                $url = clone($this->_url);
-            }
-
-            $url->protocol = 'https';
-            $url->port= '443';
-
-            return $url->getURL();
         }
     }
 
