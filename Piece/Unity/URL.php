@@ -34,17 +34,17 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://piece-framework.com/piece-unity/
- * @since      File available since Release 0.6.0
+ * @since      File available since Release 0.9.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-// require_once 'Net/URL.php';
-require_once 'Piece/Unity/URL.php';
+require_once 'Net/URL.php';
+require_once 'Piece/Unity/Context.php';
 
-// {{{ Piece_Unity_Plugin_Renderer_Redirection
+// {{{ Piece_Unity_URL
 
 /**
- * A renderer which is used to redirect requests.
+ * A utility which is used to create the appropriate absolute URL from a
+ * relative/absolute URL.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
@@ -52,9 +52,9 @@ require_once 'Piece/Unity/URL.php';
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://piece-framework.com/piece-unity/
- * @since      Class available since Release 0.6.0
+ * @since      Class available since Release 0.9.0
  */
-class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
+class Piece_Unity_URL
 {
 
     // {{{ properties
@@ -78,63 +78,91 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ invoke()
+    // {{{ constructor
 
     /**
-     * Invokes the plugin specific code.
+     * Creates a Net_URL object with the given path, and replaces some pieces
+     * of a URL when the URL is not external.
+     *
+     * @param string $path
+     * @param boolean $isExternal
      */
-    function invoke()
+    function Piece_Unity_URL($path, $isExternal = false)
     {
-        $isExternal = $this->getConfiguration('isExternal');
-        $url = &new Piece_Unity_URL($this->_context->getView(), $isExternal);
-
-        $viewElement = &$this->_context->getViewElement();
-        $viewElements = $viewElement->getElements();
-        $queryString = $url->getQueryString();
-        foreach (array_keys($queryString) as $elementName) {
-            if (array_key_exists($elementName, $viewElements)
-                && is_scalar($viewElements[$elementName])
-                ) {
-                $url->addQueryString($elementName,
-                                     $viewElements[$elementName]
-                                     );
-            }
-        }
+        $this->_url = &new Net_URL($path);
 
         if (!$isExternal) {
-            if ($this->getConfiguration('addSessionID')) {
-                $url->addQueryString($viewElements['__sessionName'],
-                                     $viewElements['__sessionID']
-                                     );
-            }
-
-            if ($this->getConfiguration('addFlowExecutionTicket')) {
-                if (array_key_exists('__flowExecutionTicketKey', $viewElements)) {
-                    $url->addQueryString($viewElements['__flowExecutionTicketKey'],
-                                         $viewElements['__flowExecutionTicket']
-                                         );
+            $context = &Piece_Unity_Context::singleton();
+            if ($context->usingProxy()) {
+                if ($this->_url->host != $_SERVER['HTTP_X_FORWARDED_SERVER']) {
+                    $this->_url->host = $_SERVER['HTTP_X_FORWARDED_SERVER'];
+                    $this->_url->protocol = 'http';
+                    $this->_url->port = 80;
                 }
+            } else {
+                if ($_SERVER['SERVER_PORT'] != 443) {
+                    $this->_url->protocol = 'http';
+                }
+
+                $this->_url->host = $_SERVER['SERVER_NAME'];
+                $this->_url->port = $_SERVER['SERVER_PORT'];
+                $this->_url->path = preg_replace('!^' . $context->getProxyPath() . '!', '', $this->_url->path);
             }
         }
+    }
 
-        $this->_url = $url->getURL();
+    // }}}
+    // {{{ getQueryString()
 
-        if (!headers_sent()) {
-            header("Location: {$this->_url}");
-        }
+    /**
+     * Gets the query string of a URL.
+     *
+     * @return boolean
+     */
+    function getQueryString()
+    {
+        return $this->_url->querystring;
+    }
+
+    // }}}
+    // {{{ addQueryString()
+
+    /**
+     * Adds a name/value pair to the query string.
+     *
+     * @param string $name
+     * @param string $value
+     */
+    function addQueryString($name, $value)
+    {
+        $this->_url->addQueryString($name, $value);
     }
 
     // }}}
     // {{{ getURL()
 
     /**
-     * Gets the url to redirect user's browser to.
+     * Gets the absolute URL.
      *
+     * @param boolean $useSSL
      * @return string
      */
-    function getURL()
+    function getURL($useSSL = false)
     {
-        return $this->_url;
+        if (!$useSSL) {
+            return $this->_url->getURL();
+        } else {
+            if (version_compare(phpversion(), '5.0.0', '<')) {
+                $url = $this->_url;
+            } else {
+                $url = clone($this->_url);
+            }
+
+            $url->protocol = 'https';
+            $url->port= '443';
+
+            return $url->getURL();
+        }
     }
 
     /**#@-*/
@@ -143,21 +171,6 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
      * @access private
      */
 
-    // }}}
-    // {{{ _initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
-     */
-    function _initialize()
-    {
-        $this->_addConfigurationPoint('addSessionID', false);
-        $this->_addConfigurationPoint('isExternal', false);
-        $this->_addConfigurationPoint('addFlowExecutionTicket', false);
-    }
- 
     /**#@-*/
 
     // }}}
