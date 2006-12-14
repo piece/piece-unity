@@ -38,7 +38,6 @@
  */
 
 require_once 'Piece/Unity/Plugin/Common.php';
-// require_once 'Net/URL.php';
 require_once 'Piece/Unity/URL.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_Redirection
