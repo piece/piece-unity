@@ -98,8 +98,6 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
 
     function testRedirection()
     {
-        $previousScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = '/foo.php';
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
         $expectedURL = 'http://example.org/foo.php';
@@ -115,20 +113,16 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
 
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
-        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
 
     function testRedirectionWithDirectAccessToBackendServer()
     {
-        $previousScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = '/bar.php';
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
         $expectedURL = 'http://foo.example.org:8201/bar.php';
         $context = &Piece_Unity_Context::singleton();
         $context->setView('http://example.org/foo/bar.php');
         $context->setProxyPath('/foo');
-        $context = &Piece_Unity_Context::singleton();
         $config = &new Piece_Unity_Config();
         $context->setConfiguration($config);
         $view = &new Piece_Unity_Plugin_View();
@@ -139,13 +133,10 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
 
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
-        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
 
     function testRedirectionWithProxy()
     {
-        $previousScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = '/bar.php';
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
         $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'example.org';
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
@@ -154,7 +145,6 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $context = &Piece_Unity_Context::singleton();
         $context->setView('http://example.org/foo/bar.php');
         $context->setProxyPath('/foo');
-        $context = &Piece_Unity_Context::singleton();
         $config = &new Piece_Unity_Config();
         $context->setConfiguration($config);
         $view = &new Piece_Unity_Plugin_View();
@@ -166,20 +156,16 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['HTTP_X_FORWARDED_FOR']);
-        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
 
     function testRedirectionWithDirectAccessToBackendServerWhenHTTPSProtocolIsGiven()
     {
-        $previousScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = '/bar.php';
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
         $expectedURL = 'http://foo.example.org:8201/bar.php';
         $context = &Piece_Unity_Context::singleton();
         $context->setView('https://example.org/foo/bar.php');
         $context->setProxyPath('/foo');
-        $context = &Piece_Unity_Context::singleton();
         $config = &new Piece_Unity_Config();
         $context->setConfiguration($config);
         $view = &new Piece_Unity_Plugin_View();
@@ -190,13 +176,10 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
 
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
-        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
 
     function testRedirectionWithOtherProxy()
     {
-        $previousScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = '/bar.php';
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
         $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'test.example.org';
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
@@ -205,7 +188,6 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $context = &Piece_Unity_Context::singleton();
         $context->setView('http://example.org/foo/bar.php');
         $context->setProxyPath('/foo');
-        $context = &Piece_Unity_Context::singleton();
         $config = &new Piece_Unity_Config();
         $context->setConfiguration($config);
         $view = &new Piece_Unity_Plugin_View();
@@ -217,7 +199,6 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['HTTP_X_FORWARDED_FOR']);
-        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
 
     /**#@-*/
