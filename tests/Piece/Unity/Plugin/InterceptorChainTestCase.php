@@ -94,7 +94,7 @@ class Piece_Unity_Plugin_InterceptorChainTestCase extends PHPUnit_TestCase
     {
         unset($_SERVER['REQUEST_METHOD']);
         Piece_Unity_Context::clear();
-        $GLOBALS['PIECE_UNITY_Plugin_Instances'] = array();
+        Piece_Unity_Plugin_Factory::clearInstances();
         $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $this->_oldPluginDirectories;
         Piece_Unity_Error::clearErrors();
         Piece_Unity_Error::popCallback();

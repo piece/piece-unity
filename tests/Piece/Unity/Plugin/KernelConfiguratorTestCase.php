@@ -211,7 +211,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
 
         $this->assertTrue(array_key_exists('baz', $fooPlugin));
 
-        $GLOBALS['PIECE_UNITY_Plugin_Instances'] = array();
+        Piece_Unity_Plugin_Factory::clearInstances();
         $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $oldPluginDirectories;
     }
 

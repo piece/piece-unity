@@ -90,7 +90,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
     function tearDown()
     {
         Piece_Unity_Context::clear();
-        unset($GLOBALS['PIECE_UNITY_Plugin_Instances']['Renderer_Redirection']);
+        Piece_Unity_Plugin_Factory::clearInstances();
         unset($_GET['_event']);
         unset($_SERVER['REQUEST_METHOD']);
         Piece_Unity_Error::popCallback();
