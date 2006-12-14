@@ -184,13 +184,14 @@ class Piece_Unity_URL
     /**
      * A utility to get the appropriate absolute URL immediately.
      *
-     * @param string  $path
-     * @param boolean $isExternal
+     * This method cannot use to create external URLs.
+     *
+     * @param string $path
      * @return string
      */
-    function create($path, $isExternal = false)
+    function create($path)
     {
-        $url = &new Piece_Unity_URL($path, $isExternal);
+        $url = &new Piece_Unity_URL($path);
         return $url->getURL();
     }
 
@@ -235,13 +236,14 @@ class Piece_Unity_URL
     /**
      * A utility to get the appropriate HTTPS URL immediately.
      *
-     * @param string  $path
-     * @param boolean $isExternal
+     * This method cannot use to create external URLs.
+     *
+     * @param string $path
      * @return string
      */
-    function createSSL($path, $isExternal = false)
+    function createSSL($path)
     {
-        $url = &new Piece_Unity_URL($path, $isExternal);
+        $url = &new Piece_Unity_URL($path);
         return $url->getURL(true);
     }
 
