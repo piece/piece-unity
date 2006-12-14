@@ -179,20 +179,19 @@ class Piece_Unity_URL
     }
 
     // }}}
-    // {{{ createURL()
+    // {{{ create()
 
     /**
      * A utility to get the appropriate absolute URL immediately.
      *
      * @param string  $path
      * @param boolean $isExternal
-     * @param boolean $useSSL
      * @return string
      */
-    function createURL($path, $isExternal = false, $useSSL = false)
+    function create($path, $isExternal = false)
     {
         $url = &new Piece_Unity_URL($path, $isExternal);
-        return $url->getURL($useSSL);
+        return $url->getURL();
     }
 
     // }}}
@@ -215,8 +214,9 @@ class Piece_Unity_URL
                 if ($this->_url->host != $_SERVER['HTTP_X_FORWARDED_SERVER']) {
                     $this->_url->host = $_SERVER['HTTP_X_FORWARDED_SERVER'];
                     $this->_url->protocol = 'http';
-                    $this->_url->port = 80;
                 }
+
+                $this->_url->port = 80;
             } else {
                 if ($_SERVER['SERVER_PORT'] != 443) {
                     $this->_url->protocol = 'http';
@@ -227,6 +227,22 @@ class Piece_Unity_URL
                 $this->_url->path = preg_replace('!^' . $context->getProxyPath() . '!', '', $this->_url->path);
             }
         }
+    }
+
+    // }}}
+    // {{{ createSSL()
+
+    /**
+     * A utility to get the appropriate HTTPS URL immediately.
+     *
+     * @param string  $path
+     * @param boolean $isExternal
+     * @return string
+     */
+    function createSSL($path, $isExternal = false)
+    {
+        $url = &new Piece_Unity_URL($path, $isExternal);
+        return $url->getURL(true);
     }
 
     /**#@-*/

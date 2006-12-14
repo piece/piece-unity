@@ -158,20 +158,20 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
     function testCreateDirectly()
     {
         $this->assertEquals('https://example.org/foo/bar/baz.php',
-                            Piece_Unity_URL::createURL('http://example.org/foo/bar/baz.php', true, true)
+                            Piece_Unity_URL::createSSL('http://example.org/foo/bar/baz.php', true)
                             );
 
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
 
         $this->assertEquals('https://example.org/foo/bar/baz.php',
-                            Piece_Unity_URL::createURL('http://example.com/foo/bar/baz.php', false, true)
+                            Piece_Unity_URL::createSSL('http://example.com/foo/bar/baz.php', false)
                             );
 
         $url = &new Piece_Unity_URL();
 
         $this->assertEquals('https://example.org/foo/bar/baz.php',
-                            $url->createURL('http://example.com/foo/bar/baz.php', false, true)
+                            $url->createSSL('http://example.com/foo/bar/baz.php', false)
                             );
 
         unset($_SERVER['SERVER_PORT']);
