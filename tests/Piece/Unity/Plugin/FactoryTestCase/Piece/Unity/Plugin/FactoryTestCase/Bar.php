@@ -34,18 +34,16 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Factory
+ * @see        Piece_Unity_Plugin_FactoryTestCase
+ * @since      File available since Release 0.9.0
  */
 
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/Context.php';
+require_once 'Piece/Unity/Plugin/Common.php';
 
-// {{{ Piece_Unity_Plugin_FactoryTestCase
+// {{{ Piece_Unity_Plugin_FactoryTestCase_Bar
 
 /**
- * TestCase for Piece_Unity_Plugin_Factory
+ * A class for unit tests.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
@@ -53,9 +51,10 @@ require_once 'Piece/Unity/Context.php';
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Factory
+ * @see        Piece_Unity_Plugin_FactoryTestCase
+ * @since      Class available since Release 0.9.0
  */
-class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
+class Piece_Unity_Plugin_FactoryTestCase_Bar extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
@@ -70,74 +69,26 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
      * @access private
      */
 
-    var $_oldPluginDirectories;
-
     /**#@-*/
 
     /**#@+
      * @access public
      */
 
-    function setUp()
+    function Piece_Unity_Plugin_Bar()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
-        $this->_oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
-        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/FactoryTestCase');
+        parent::Piece_Unity_Plugin_Common();
+        $this->_addExtensionPoint('bar');
+        $this->_addExtensionPoint('baz');
     }
 
-    function tearDown()
+    function invoke()
     {
-        Piece_Unity_Plugin_Factory::clearInstances();
-        $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $this->_oldPluginDirectories;
-        Piece_Unity_Error::clearErrors();
-        Piece_Unity_Error::popCallback();
-    }
-
-    function testFailureToCreateByNonExistingFile()
-    {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
-        Piece_Unity_Plugin_Factory::factory('NonExisting');
-
-        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
-
-        Piece_Unity_Error::popCallback();
-    }
-
-    function testFailureToCreateByInvalidPlugin()
-    {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
-        Piece_Unity_Plugin_Factory::factory('FactoryTestCase_Invalid');
-
-        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_INVALID_PLUGIN, $error['code']);
-
-        Piece_Unity_Error::popCallback();
-    }
-
-    function testFactory()
-    {
-        $fooPlugin = &Piece_Unity_Plugin_Factory::factory('FactoryTestCase_Foo');
-
-        $this->assertTrue(is_a($fooPlugin, 'Piece_Unity_Plugin_FactoryTestCase_Foo'));
-
-        $barPlugin = &Piece_Unity_Plugin_Factory::factory('FactoryTestCase_Bar');
-
-        $this->assertTrue(is_a($barPlugin, 'Piece_Unity_Plugin_FactoryTestCase_Bar'));
-
-        $fooPlugin->baz = 'qux';
-
-        $plugin = &Piece_Unity_Plugin_Factory::factory('FactoryTestCase_Foo');
-
-        $this->assertTrue(array_key_exists('baz', $fooPlugin));
+        ++$GLOBALS[strtolower(__CLASS__) . strtolower(__FUNCTION__) . 'Called'];
+        $bar = &$this->getExtension('bar');
+        $bar->invoke();
+        $baz = &$this->getExtension('baz');
+        $baz->invoke();
     }
 
     /**#@-*/

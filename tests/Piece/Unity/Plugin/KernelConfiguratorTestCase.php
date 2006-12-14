@@ -88,7 +88,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
 
     function tearDown()
     {
-        $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
+        $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/KernelConfiguratorTestCase/',
                                             'masterFile' => '',
                                             'automaticSerialization' => true,
                                             'errorHandlingAPIBreak' => true)
@@ -102,7 +102,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
     function testSettingAutoloadClasses()
     {
         $_SESSION = array();
-        $class = 'Piece_Unity_Plugin_AutoloadClass';
+        $class = 'Piece_Unity_Plugin_KernelConfiguratorTestCase_AutoloadClass';
         $oldIncludePath = set_include_path(dirname(__FILE__) . '/../../..' . PATH_SEPARATOR . get_include_path());
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('KernelConfigurator', 'autoloadClasses', array($class));
@@ -190,24 +190,24 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
     {
         $oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('KernelConfigurator', 'pluginDirectories', array(dirname(__FILE__) . '/../../..'));
+        $config->setConfiguration('KernelConfigurator', 'pluginDirectories', array(dirname(__FILE__) . '/KernelConfiguratorTestCase'));
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
         $configurator = &new Piece_Unity_Plugin_KernelConfigurator();
         $configurator->invoke();
 
-        $fooPlugin = &Piece_Unity_Plugin_Factory::factory('Foo');
+        $fooPlugin = &Piece_Unity_Plugin_Factory::factory('KernelConfiguratorTestCase_Foo');
 
-        $this->assertTrue(is_a($fooPlugin, 'Piece_Unity_Plugin_Foo'));
+        $this->assertTrue(is_a($fooPlugin, 'Piece_Unity_Plugin_KernelConfiguratorTestCase_Foo'));
 
-        $barPlugin = &Piece_Unity_Plugin_Factory::factory('Bar');
+        $barPlugin = &Piece_Unity_Plugin_Factory::factory('KernelConfiguratorTestCase_Bar');
 
-        $this->assertTrue(is_a($barPlugin, 'Piece_Unity_Plugin_Bar'));
+        $this->assertTrue(is_a($barPlugin, 'Piece_Unity_Plugin_KernelConfiguratorTestCase_Bar'));
 
         $fooPlugin->baz = 'qux';
 
-        $plugin = &Piece_Unity_Plugin_Factory::factory('Foo');
+        $plugin = &Piece_Unity_Plugin_Factory::factory('KernelConfiguratorTestCase_Foo');
 
         $this->assertTrue(array_key_exists('baz', $fooPlugin));
 
@@ -229,10 +229,10 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $oldFilterDirectories = Piece_Right_Filter_Factory::getFilterDirectories();
 
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('KernelConfigurator', 'validationConfigDirectory', dirname(__FILE__) . '/..');
-        $config->setConfiguration('KernelConfigurator', 'validationCacheDirectory', dirname(__FILE__));
-        $config->setConfiguration('KernelConfigurator', 'validationValidatorDirectories', array(dirname(__FILE__) . '/KernelConfigurator'));
-        $config->setConfiguration('KernelConfigurator', 'validationFilterDirectories', array(dirname(__FILE__) . '/KernelConfigurator'));
+        $config->setConfiguration('KernelConfigurator', 'validationConfigDirectory', dirname(__FILE__) . '/KernelConfiguratorTestCase');
+        $config->setConfiguration('KernelConfigurator', 'validationCacheDirectory', dirname(__FILE__) . '/KernelConfiguratorTestCase');
+        $config->setConfiguration('KernelConfigurator', 'validationValidatorDirectories', array(dirname(__FILE__) . '/KernelConfiguratorTestCase'));
+        $config->setConfiguration('KernelConfigurator', 'validationFilterDirectories', array(dirname(__FILE__) . '/KernelConfiguratorTestCase'));
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 

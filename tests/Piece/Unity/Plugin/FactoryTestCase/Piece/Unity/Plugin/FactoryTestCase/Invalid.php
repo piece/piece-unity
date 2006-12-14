@@ -34,12 +34,13 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Factory
+ * @see        Piece_Unity_Plugin_FactoryTestCase
+ * @since      File available since Release 0.9.0
  */
 
 require_once 'Piece/Unity/Plugin/Common.php';
 
-// {{{ Piece_Unity_Plugin_Invalid
+// {{{ Piece_Unity_Plugin_FactoryTestCase_Invalid
 
 /**
  * A class for unit tests.
@@ -50,9 +51,10 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Factory
+ * @see        Piece_Unity_Plugin_FactoryTestCase
+ * @since      Class available since Release 0.9.0
  */
-class Piece_Unity_Plugin_Invalid
+class Piece_Unity_Plugin_FactoryTestCase_Invalid
 {
 
     // {{{ properties

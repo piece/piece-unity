@@ -34,11 +34,13 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_KernelConfiguratorTestCase
- * @since      File available since Release 0.2.0
+ * @see        Piece_Unity_Plugin_FactoryTestCase
+ * @since      File available since Release 0.9.0
  */
 
-// {{{ Piece_Unity_Plugin_AutoloadClass
+require_once 'Piece/Unity/Plugin/Common.php';
+
+// {{{ Piece_Unity_Plugin_FactoryTestCase_Foo
 
 /**
  * A class for unit tests.
@@ -49,10 +51,53 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_KernelConfiguratorTestCase
- * @since      Class available since Release 0.2.0
+ * @see        Piece_Unity_Plugin_FactoryTestCase
+ * @since      Class available since Release 0.9.0
  */
-class Piece_Unity_Plugin_AutoloadClass {}
+class Piece_Unity_Plugin_FactoryTestCase_Foo extends Piece_Unity_Plugin_Common
+{
+
+    // {{{ properties
+
+    /**#@+
+     * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access public
+     */
+
+    function Piece_Unity_Plugin_Foo()
+    {
+        parent::Piece_Unity_Plugin_Common();
+        $this->_addExtensionPoint('bar');
+    }
+
+    function invoke()
+    {
+        ++$GLOBALS[strtolower(__CLASS__) . strtolower(__FUNCTION__) . 'Called'];
+        $bar = &$this->getExtension('bar');
+        $bar->invoke();
+    }
+
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
+
+    /**#@-*/
+
+    // }}}
+}
 
 // }}}
 
