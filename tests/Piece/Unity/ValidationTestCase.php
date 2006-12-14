@@ -88,7 +88,7 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
             unset($_POST[$field]);
         }
         unset($_SERVER['REQUEST_METHOD']);
-        $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
+        $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/ValidationTestCase/',
                                             'masterFile' => '',
                                             'automaticSerialization' => true,
                                             'errorHandlingAPIBreak' => true)
@@ -106,8 +106,8 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
         $_POST['email'] = 'iteman@users.sourceforge.net';
 
         $validation = &new Piece_Unity_Validation();
-        $validation->setConfigDirectory(dirname(__FILE__));
-        $validation->setCacheDirectory(dirname(__FILE__));
+        $validation->setConfigDirectory(dirname(__FILE__) . '/ValidationTestCase');
+        $validation->setCacheDirectory(dirname(__FILE__) . '/ValidationTestCase');
         $config = &$validation->getConfiguration();
         $config->setRequired('email');
         $config->addValidation('email', 'Email');
@@ -152,8 +152,8 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
         $_POST['email'] = 'iteman@users.sourceforge.net';
 
         $validation = &new Piece_Unity_Validation();
-        $validation->setConfigDirectory(dirname(__FILE__));
-        $validation->setCacheDirectory(dirname(__FILE__));
+        $validation->setConfigDirectory(dirname(__FILE__) . '/ValidationTestCase');
+        $validation->setCacheDirectory(dirname(__FILE__) . '/ValidationTestCase');
         $config = &$validation->getConfiguration();
         $config->setRequired('email');
         $config->addValidation('email', 'Email');
@@ -205,9 +205,9 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
         $_POST['foo'] = 'bar';
 
         $validation = &new Piece_Unity_Validation();
-        $validation->setConfigDirectory(dirname(__FILE__));
-        $validation->setCacheDirectory(dirname(__FILE__));
-        $validation->addValidatorDirectory(dirname(__FILE__));
+        $validation->setConfigDirectory(dirname(__FILE__) . '/ValidationTestCase');
+        $validation->setCacheDirectory(dirname(__FILE__) . '/ValidationTestCase');
+        $validation->addValidatorDirectory(dirname(__FILE__) . '/ValidationTestCase');
         $config = &$validation->getConfiguration();
         $config->setRequired('foo');
         $config->addValidation('foo', 'PayloadTest');
@@ -237,8 +237,8 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
                                     );
 
         $validation = &new Piece_Unity_Validation();
-        $validation->setConfigDirectory(dirname(__FILE__));
-        $validation->setCacheDirectory(dirname(__FILE__));
+        $validation->setConfigDirectory(dirname(__FILE__) . '/ValidationTestCase');
+        $validation->setCacheDirectory(dirname(__FILE__) . '/ValidationTestCase');
         $config = &$validation->getConfiguration();
         $config->setRequired('userfile');
         $config->addValidation('userfile',
@@ -270,8 +270,8 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
         }
 
         $validation = &new Piece_Unity_Validation();
-        $validation->setConfigDirectory(dirname(__FILE__));
-        $validation->setCacheDirectory(dirname(__FILE__));
+        $validation->setConfigDirectory(dirname(__FILE__) . '/ValidationTestCase');
+        $validation->setCacheDirectory(dirname(__FILE__) . '/ValidationTestCase');
         $config = &$validation->getConfiguration();
         $config->setRequired('userfile');
         $config->addValidation('userfile',
