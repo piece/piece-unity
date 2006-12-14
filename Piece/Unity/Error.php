@@ -53,6 +53,7 @@ define('PIECE_UNITY_ERROR_INVALID_CONFIGURATION', -6);
 define('PIECE_UNITY_ERROR_INVOCATION_FAILED',     -7);
 define('PIECE_UNITY_ERROR_PHP_ERROR',             -8);
 define('PIECE_UNITY_ERROR_UNEXPECTED_VALUE',      -9);
+define('PIECE_UNITY_ERROR_INVALID_OPERATION',    -10);
 
 // }}}
 // {{{ Piece_Unity_Error
