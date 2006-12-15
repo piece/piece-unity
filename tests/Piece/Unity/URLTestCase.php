@@ -148,6 +148,7 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
 
         $url = &new Piece_Unity_URL('http://example.com/foo/bar/baz.php', false);
 
+        $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $url->getURL(true));
         $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $url->getURL(false));
         $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $url->getURL());
 
@@ -162,6 +163,12 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
 
         $this->assertEquals('https://example.org/foo/bar/baz.php',
                             Piece_Unity_URL::createSSL('http://example.com/foo/bar/baz.php')
+                            );
+        $this->assertEquals('https://example.org/foo/bar/baz.php',
+                            Piece_Unity_URL::createSSL('/foo/bar/baz.php')
+                            );
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            Piece_Unity_URL::create('http://example.com/foo/bar/baz.php')
                             );
         $this->assertEquals('http://example.org/foo/bar/baz.php',
                             Piece_Unity_URL::create('/foo/bar/baz.php')

@@ -71,6 +71,7 @@ class Piece_Unity_URL
      */
 
     var $_url;
+    var $_isExternal;
 
     /**#@-*/
 
@@ -89,8 +90,9 @@ class Piece_Unity_URL
      */
     function Piece_Unity_URL($path = null, $isExternal = false)
     {
+        $this->_isExternal = $isExternal;
         if (!is_null($path)) {
-            $this->initialize($path, $isExternal);
+            $this->initialize($path);
         }
     }
 
@@ -165,6 +167,15 @@ class Piece_Unity_URL
         if (!$useSSL) {
             return $this->_url->getURL();
         } else {
+            if (!$this->_isExternal) {
+                $context = &Piece_Unity_Context::singleton();
+                if (!$context->usingProxy()) {
+                    if ($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
+                        return $this->_url->getURL();
+                    }
+                }
+            }
+
             if (version_compare(phpversion(), '5.0.0', '<')) {
                 $url = $this->_url;
             } else {
@@ -203,13 +214,12 @@ class Piece_Unity_URL
      * of a URL when the URL is not external.
      *
      * @param string  $path
-     * @param boolean $isExternal
      */
-    function initialize($path, $isExternal)
+    function initialize($path)
     {
         $this->_url = &new Net_URL($path);
 
-        if (!$isExternal) {
+        if (!$this->_isExternal) {
             $context = &Piece_Unity_Context::singleton();
             if ($context->usingProxy()) {
                 if ($this->_url->host != $_SERVER['HTTP_X_FORWARDED_SERVER']) {
