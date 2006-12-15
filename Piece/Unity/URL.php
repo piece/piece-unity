@@ -41,6 +41,11 @@ require_once 'Net/URL.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Error.php';
 
+// {{{ GLOBALS
+
+$GLOBALS['PIECE_UNITY_URL_NonSSLableServers'] = array();
+
+// }}}
 // {{{ Piece_Unity_URL
 
 /**
@@ -164,29 +169,35 @@ class Piece_Unity_URL
             return;
         }
 
-        if (!$useSSL) {
-            return $this->_url->getURL();
-        } else {
-            if (!$this->_isExternal) {
-                $context = &Piece_Unity_Context::singleton();
-                if (!$context->usingProxy()) {
-                    if ($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
-                        return $this->_url->getURL();
-                    }
+        if (!$this->_isExternal) {
+            $context = &Piece_Unity_Context::singleton();
+            if (!$context->usingProxy()) {
+                if ($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
+                    return $this->_url->getURL();
                 }
             }
-
-            if (version_compare(phpversion(), '5.0.0', '<')) {
-                $url = $this->_url;
-            } else {
-                $url = clone($this->_url);
-            }
-
-            $url->protocol = 'https';
-            $url->port= '443';
-
-            return $url->getURL();
         }
+
+        if (version_compare(phpversion(), '5.0.0', '<')) {
+            $url = $this->_url;
+        } else {
+            $url = clone($this->_url);
+        }
+
+        if (!$useSSL) {
+            $url->protocol = 'http';
+            $url->port= '80';
+        } else {
+            if (!in_array($url->host, $GLOBALS['PIECE_UNITY_URL_NonSSLableServers'])) {
+                $url->protocol = 'https';
+                $url->port= '443';
+            } else {
+                $url->protocol = 'http';
+                $url->port= '80';
+            }
+        }
+
+        return $url->getURL();
     }
 
     // }}}
@@ -231,6 +242,8 @@ class Piece_Unity_URL
             } else {
                 if ($_SERVER['SERVER_PORT'] != 443) {
                     $this->_url->protocol = 'http';
+                } else {
+                    $this->_url->protocol = 'https';
                 }
 
                 $this->_url->host = $_SERVER['SERVER_NAME'];
@@ -255,6 +268,33 @@ class Piece_Unity_URL
     {
         $url = &new Piece_Unity_URL($path);
         return $url->getURL(true);
+    }
+
+    // }}}
+    // {{{ addNonSSLableServer()
+
+    /**
+     * Adds a server name which is forced to be non-SSL request.
+     *
+     * @param string $serverName
+     * @static
+     */
+    function addNonSSLableServer($serverName)
+    {
+        $GLOBALS['PIECE_UNITY_URL_NonSSLableServers'][] = $serverName;
+    }
+
+    // }}}
+    // {{{ clearNonSSLableServers()
+
+    /**
+     * Clears the list of non-SSLable servers.
+     *
+     * @static
+     */
+    function clearNonSSLableServers()
+    {
+        $GLOBALS['PIECE_UNITY_URL_NonSSLableServers'] = array();
     }
 
     /**#@-*/

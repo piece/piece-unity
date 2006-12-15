@@ -101,6 +101,13 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
         $this->assertEquals('http://example.org/foo/bar/baz.php', $url->getURL(false));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $url->getURL());
 
+        $_SERVER['SERVER_PORT'] = '443';
+        $url = &new Piece_Unity_URL('http://example.com/foo/bar/baz.php', false);
+
+        $this->assertEquals('https://example.org/foo/bar/baz.php', $url->getURL(true));
+        $this->assertEquals('http://example.org/foo/bar/baz.php', $url->getURL(false));
+        $this->assertEquals('http://example.org/foo/bar/baz.php', $url->getURL());
+
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
     }
@@ -109,6 +116,13 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
+        $url = &new Piece_Unity_URL('/foo/bar/baz.php', false);
+
+        $this->assertEquals('https://example.org/foo/bar/baz.php', $url->getURL(true));
+        $this->assertEquals('http://example.org/foo/bar/baz.php', $url->getURL(false));
+        $this->assertEquals('http://example.org/foo/bar/baz.php', $url->getURL());
+
+        $_SERVER['SERVER_PORT'] = '443';
         $url = &new Piece_Unity_URL('/foo/bar/baz.php', false);
 
         $this->assertEquals('https://example.org/foo/bar/baz.php', $url->getURL(true));
@@ -133,6 +147,12 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
         $this->assertEquals('http://example.org/foo/bar/baz.php', $url->getURL(false));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $url->getURL());
 
+        $url = &new Piece_Unity_URL('https://example.com/foo/bar/baz.php', false);
+
+        $this->assertEquals('https://example.org/foo/bar/baz.php', $url->getURL(true));
+        $this->assertEquals('http://example.org/foo/bar/baz.php', $url->getURL(false));
+        $this->assertEquals('http://example.org/foo/bar/baz.php', $url->getURL());
+
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['HTTP_X_FORWARDED_FOR']);
@@ -147,6 +167,12 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
         $context->setProxyPath('/foo');
 
         $url = &new Piece_Unity_URL('http://example.com/foo/bar/baz.php', false);
+
+        $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $url->getURL(true));
+        $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $url->getURL(false));
+        $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $url->getURL());
+
+        $url = &new Piece_Unity_URL('https://example.com/foo/bar/baz.php', false);
 
         $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $url->getURL(true));
         $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $url->getURL(false));
@@ -208,6 +234,63 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
         $error = Piece_Unity_Error::pop();
 
         $this->assertNull($error);
+    }
+
+    function testNonSSLableServers()
+    {
+        $_SERVER['SERVER_NAME'] = 'example.org';
+        $_SERVER['SERVER_PORT'] = '80';
+        Piece_Unity_URL::addNonSSLableServer('example.org');
+
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            Piece_Unity_URL::createSSL('http://example.com/foo/bar/baz.php')
+                            );
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            Piece_Unity_URL::createSSL('/foo/bar/baz.php')
+                            );
+
+        $_SERVER['SERVER_PORT'] = '443';
+
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            Piece_Unity_URL::create('https://example.com/foo/bar/baz.php')
+                            );
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            Piece_Unity_URL::create('/foo/bar/baz.php')
+                            );
+
+        Piece_Unity_URL::clearNonSSLableServers();
+        unset($_SERVER['SERVER_PORT']);
+        unset($_SERVER['SERVER_NAME']);
+    }
+
+    function testNonSSLableServersWithProxy()
+    {
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
+        $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'example.org';
+        $_SERVER['SERVER_NAME'] = 'foo.example.org';
+        $_SERVER['SERVER_PORT'] = '8201';
+        $context = &Piece_Unity_Context::singleton();
+        $context->setProxyPath('/foo');
+        Piece_Unity_URL::addNonSSLableServer('example.org');
+
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            Piece_Unity_URL::createSSL('http://example.com/foo/bar/baz.php')
+                            );
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            Piece_Unity_URL::createSSL('/foo/bar/baz.php')
+                            );
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            Piece_Unity_URL::create('https://example.com/foo/bar/baz.php')
+                            );
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            Piece_Unity_URL::create('/foo/bar/baz.php')
+                            );
+
+        Piece_Unity_URL::clearNonSSLableServers();
+        unset($_SERVER['SERVER_PORT']);
+        unset($_SERVER['SERVER_NAME']);
+        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
+        unset($_SERVER['HTTP_X_FORWARDED_SERVER']);
     }
 
     /**#@-*/
