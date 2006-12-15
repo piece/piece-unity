@@ -42,6 +42,7 @@ require_once 'Piece/Unity/Session.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'Piece/Unity/Validation.php';
+require_once 'Piece/Unity/URL.php';
 
 // {{{ Piece_Unity_Plugin_KernelConfigurator
 
@@ -174,6 +175,13 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
          * action instances in session.
          */
         Piece_Unity_Plugin_Factory::factory('Dispatcher_Continuation');
+
+        /*
+         * Makes a list of non-SSLable servers.
+         */
+        foreach ($this->getConfiguration('nonSSLableServers') as $nonSSLableServer) {
+            Piece_Unity_URL::addNonSSLableServer($nonSSLableServer);
+        }
     }
 
     /**#@-*/
@@ -202,6 +210,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         $this->_addConfigurationPoint('validationCacheDirectory');
         $this->_addConfigurationPoint('validationValidatorDirectories', array());
         $this->_addConfigurationPoint('validationFilterDirectories', array());
+        $this->_addConfigurationPoint('nonSSLableServers', array());
     }
  
     /**#@-*/

@@ -44,7 +44,10 @@ require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/Plugin/Dispatcher/Simple.php';
 require_once 'Piece/Right/Filter/Factory.php';
-require_once 'Piece/Right/Filter/Factory.php';
+require_once 'Piece/Right/Validator/Factory.php';
+require_once 'Piece/Unity/Error.php';
+require_once 'Piece/Unity/Plugin/Factory.php';
+require_once 'Piece/Unity/URL.php';
 
 // {{{ Piece_Unity_Plugin_KernelConfiguratorTestCase
 
@@ -263,6 +266,42 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         unset($_POST['password']);
         unset($_POST['login_name']);
         unset($_SERVER['REQUEST_METHOD']);
+    }
+
+    /**
+     * @since Method available since Release 0.9.0
+     */
+    function testNonSSLableServers()
+    {
+        $_SERVER['SERVER_NAME'] = 'example.org';
+        $_SERVER['SERVER_PORT'] = '80';
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('KernelConfigurator', 'NonSSLableServers', array('example.org'));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $configurator = &new Piece_Unity_Plugin_KernelConfigurator();
+        $configurator->invoke();
+
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            Piece_Unity_URL::createSSL('http://example.com/foo/bar/baz.php')
+                            );
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            Piece_Unity_URL::createSSL('/foo/bar/baz.php')
+                            );
+
+        $_SERVER['SERVER_PORT'] = '443';
+
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            Piece_Unity_URL::create('https://example.com/foo/bar/baz.php')
+                            );
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            Piece_Unity_URL::create('/foo/bar/baz.php')
+                            );
+
+        Piece_Unity_URL::clearNonSSLableServers();
+        unset($_SERVER['SERVER_PORT']);
+        unset($_SERVER['SERVER_NAME']);
     }
 
     /**#@-*/
