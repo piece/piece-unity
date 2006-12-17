@@ -1,14 +1,16 @@
-<form name="Form">
-  <input type="hidden" name="{__flowExecutionTicketKey}" value="{__flowExecutionTicket}" />
+<h4 class="date-header">{title}</h4>
+<form name="Form" id="Form">
+  <input type="hidden" name="{__flowExecutionTicketKey}" value="{__flowExecutionTicket}" id="flowExecutionTicket" />
   <p class="error" flexy:if="__RegistrationResults.isError(#first_name#)">{__RegistrationResults.getErrorMessage(#first_name#)}</p>
   <p>
-    First Name: <input type="text" name="first_name" />
+    First Name: <input type="text" name="first_name" id="first_name" />
   </p>
   <p class="error" flexy:if="__RegistrationResults.isError(#last_name#)">{__RegistrationResults.getErrorMessage(#last_name#)}</p>
   <p>
-    Last Name: <input type="text" name="last_name" />
+    Last Name: <input type="text" name="last_name" id="last_name" />
   </p>
   <p>
-    <input type="submit" name="{__eventNameKey}_confirmForm" value="confirm" />
+    <input type="submit" name="{__eventNameKey}_confirmForm" value="confirm" flexy:if="!useAHAH" />
+    <input type="button" value="confirm" onclick="ahah('{__scriptName}?{__flowExecutionTicketKey}={__flowExecutionTicket}&{__eventNameKey}=confirmForm' + '&first_name=' + escape(document.getElementById('first_name').value) + '&last_name=' + escape(document.getElementById('last_name').value), 'content');" flexy:if="useAHAH" />
   </p>
 </form>

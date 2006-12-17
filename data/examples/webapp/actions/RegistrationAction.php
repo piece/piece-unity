@@ -68,6 +68,9 @@ class RegistrationAction extends Piece_Flow_Action
      */
 
     var $_user;
+    var $_flowName;
+    var $_useAHAH = false;
+    var $_renderedLayout = false;
 
     /**#@-*/
 
@@ -107,7 +110,9 @@ class RegistrationAction extends Piece_Flow_Action
 
         $viewElement = &$this->_payload->getViewElement();
         $viewElement->setElement('_elements', $elements);
+        $viewElement->setElement('useAHAH', $this->_useAHAH);
 
+        $this->_configureLayout();
         $this->_setTitle();
     }
 
@@ -117,13 +122,28 @@ class RegistrationAction extends Piece_Flow_Action
 
         $viewElement = &$this->_payload->getViewElement();
         $viewElement->setElementByRef('user', $this->_user);
+        $viewElement->setElement('useAHAH', $this->_useAHAH);
 
+        $this->_configureLayout();
         $this->_setTitle();
     }
 
     function setupFinish()
     {
+        $viewElement = &$this->_payload->getViewElement();
+        $viewElement->setElement('useAHAH', $this->_useAHAH);
+
+        $this->_configureLayout();
         $this->_setTitle();
+    }
+
+    function prepare()
+    {
+        $continuation = &$this->_payload->getContinuation();
+        $this->_flowName = $continuation->getCurrentFlowName();
+        if ($this->_flowName == 'RegistrationWithExclusiveModeAndAHAH') {
+            $this->_useAHAH = true;
+        }
     }
 
     /**#@-*/
@@ -162,15 +182,39 @@ class RegistrationAction extends Piece_Flow_Action
 
     function _setTitle()
     {
-        $continuation = &$this->_payload->getContinuation();
-        if (!$continuation->isExclusive()) {
+        if ($this->_flowName == 'RegistrationWithNonExclusiveMode') {
             $title = 'A.1. Registration Application with Non-Exclusive Mode.';
-        } else {
+        } elseif ($this->_flowName == 'RegistrationWithExclusiveMode') {
             $title = 'A.2. Registration Application with Exclusive Mode.';
+        } elseif ($this->_flowName == 'RegistrationWithExclusiveModeAndAHAH') {
+            $title = 'A.3. Registration Application with Exclusive Mode and AHAH.';
         }
 
         $viewElement = &$this->_payload->getViewElement();
         $viewElement->setElement('title', $title);
+    }
+
+    function _configureLayout()
+    {
+        $request = &$this->_payload->getRequest();
+        if ($request->hasParameter('useLayout')) {
+            if (!$request->getParameter('useLayout')) {
+                $config = &$this->_payload->getConfiguration();
+                $config->setConfiguration('Renderer_Flexy', 'useLayout', false);
+            }
+
+            $this->_renderedLayout = true;
+            return;
+        }
+
+        if ($this->_useAHAH) {
+            if ($this->_renderedLayout) {
+                $config = &$this->_payload->getConfiguration();
+                $config->setConfiguration('Renderer_Flexy', 'useLayout', false);
+            } else {
+                $this->_renderedLayout = true;
+            }
+        }
     }
 
     /**#@-*/

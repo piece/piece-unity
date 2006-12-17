@@ -1,7 +1,10 @@
+<h4 class="date-header">{title}</h4>
 <p>First Name: {user.first_name}</p>
 <p>Last Name: {user.last_name}</p>
 <form name="Confirmation">
   <input type="hidden" name="{__flowExecutionTicketKey}" value="{__flowExecutionTicket}" />
-  <input type="submit" name="{__eventNameKey}_goDisplayFormFromDisplayConfirmation" value="reedit" />
-  <input type="submit" name="{__eventNameKey}_register" value="register" />
+  <input type="submit" name="{__eventNameKey}_goDisplayFormFromDisplayConfirmation" value="reedit" flexy:if="!useAHAH" />
+  <input type="button" value="reedit" onclick="ahah('{__scriptName}?{__flowExecutionTicketKey}={__flowExecutionTicket}&{__eventNameKey}=goDisplayFormFromDisplayConfirmation', 'content');" flexy:if="useAHAH" />
+  <input type="submit" name="{__eventNameKey}_register" value="register" flexy:if="!useAHAH" />
+  <input type="button" value="register" onclick="ahah('{__scriptName}?{__flowExecutionTicketKey}={__flowExecutionTicket}&{__eventNameKey}=register', 'content');" flexy:if="useAHAH" />
 </form>

@@ -1,2 +1,4 @@
+<h4 class="date-header">{title}</h4>
 <h3>Registration finished!</h3>
-<a href="{__scriptName}">Restart Registration.</a><p>
+<a href="{__scriptName}" flexy:if="!useAHAH">Restart Registration.</a>
+<a href="{__scriptName}" onclick="ahah('{__scriptName}?useLayout=0', 'content'); return false;" flexy:if="useAHAH">Restart Registration.</a>

@@ -17,6 +17,9 @@
         - name: RegistrationWithExclusiveMode
           file: ../webapp/config/flows/Registration.yaml
           isExclusive: true
+        - name: RegistrationWithExclusiveModeAndAHAH
+          file: ../webapp/config/flows/Registration.yaml
+          isExclusive: true
     - name: bindActionsWithFlowExecution
       type: configuration
       value: true
