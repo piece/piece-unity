@@ -259,7 +259,7 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
     function _getServiceURL($url, $useCallback, $callbackKey)
     {
         if (is_null($useCallback)) {
-            $useCallback = false;
+            return $url;
         }
 
         if (!$useCallback) {
@@ -281,8 +281,8 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
         if (is_null($callbackKey)) {
             $callbackKey = 'callback';
         }
-                    
-        return "$url?$callbackKey=" . urlencode($this->_context->getScriptName() . "$pathInfo$query");
+
+        return "$url?$callbackKey=" . htmlentities(rawurlencode($this->_context->getScriptName() . "$pathInfo$query"));
     }
 
     /**#@-*/
