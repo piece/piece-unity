@@ -1,0 +1,4 @@
+# $Id$
+
+- name: callback
+  description: Callback Url

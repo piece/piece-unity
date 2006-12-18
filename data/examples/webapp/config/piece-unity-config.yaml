@@ -20,6 +20,12 @@
         - name: RegistrationWithExclusiveModeAndAHAH
           file: ../webapp/config/flows/Registration.yaml
           isExclusive: true
+        - name: Authentication
+          file: ../webapp/config/flows/Authentication.yaml
+          isExclusive: true
+        - name: ProtectedResource
+          file: ../webapp/config/flows/ProtectedResource.yaml
+          isExclusive: false
     - name: bindActionsWithFlowExecution
       type: configuration
       value: true
@@ -69,9 +75,27 @@
       type: configuration
       value: ../webapp/compiled-templates/Layout
 
+- name: Interceptor_Authentication
+  point:
+    - name: services
+      type: configuration
+      value:
+        - name: Example
+          guard:
+            class: AuthenticationAction
+            method: isAuthenticated
+          url: "http://example.org/authenticate.php"
+          resources:
+            - /protected-resource.php
+          useCallback: true
+          callbackKey: callback
+    - name: guardDirectory
+      type: configuration
+      value: ../webapp/actions
+
 # Local Variables:
 # mode: conf-colon
 # coding: iso-8859-1
-# tab-width: 4
+# tab-width: 2
 # indent-tabs-mode: nil
 # End:

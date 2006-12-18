@@ -1,0 +1,50 @@
+# $Id$
+
+firstState: DisplayForm
+
+lastState:
+  name: DisplayFinish
+  view: Finish
+  activity:
+    method: setupFinish
+
+viewState:
+  - name: DisplayForm
+    view: Form
+    activity:
+      method: setupForm
+    transition:
+      - event: login
+        nextState: ProcessLogin
+        action:
+          method: login
+
+  - name: DisplayHome
+    view: Home
+    activity:
+      method: setupHome
+    transition:
+      - event: logout
+        nextState: ProcessLogout
+        action:
+          method: logout
+
+actionState:
+  - name: ProcessLogin
+    transition:
+      - event: goDisplayHomeFromProcessLogin
+        nextState: DisplayHome
+      - event: goDisplayFormFromProcessLogin
+        nextState: DisplayForm
+
+  - name: ProcessLogout
+    transition:
+      - event: goDisplayFinishFromProcessLogout
+        nextState: DisplayFinish
+
+# Local Variables:
+# mode: conf-colon
+# coding: iso-8859-1
+# tab-width: 2
+# indent-tabs-mode: nil
+# End:

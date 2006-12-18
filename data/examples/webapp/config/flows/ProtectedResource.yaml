@@ -1,0 +1,37 @@
+# $Id$
+
+firstState: DisplayA
+
+viewState:
+  - name: DisplayA
+    view: A
+    activity:
+      method: setupDisplayA
+    transition:
+      - event: goDisplayBFromDisplayA
+        nextState: DisplayB
+
+  - name: DisplayB
+    view: B
+    activity:
+      method: setupDisplayB
+    transition:
+      - event: goDisplayCFromDisplayB
+        nextState: DisplayC
+      - event: goDisplayAFromDisplayB
+        nextState: DisplayA
+
+  - name: DisplayC
+    view: C
+    activity:
+      method: setupDisplayC
+    transition:
+      - event: goDisplayBFromDisplayC
+        nextState: DisplayB
+
+# Local Variables:
+# mode: conf-colon
+# coding: iso-8859-1
+# tab-width: 2
+# indent-tabs-mode: nil
+# End:

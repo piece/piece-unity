@@ -1,7 +1,7 @@
 # $Id$
 
-- name: first_name
-  description: First Name
+- name: login_name
+  description: Login Name
   required:
     message: %_description% is required
   validator:
@@ -11,8 +11,8 @@
         max: 255
       message: The length of %_description% must be less than 255 characters
 
-- name: last_name
-  description: Last Name
+- name: password
+  description: Password
   required:
     message: %_description% is required
   validator:

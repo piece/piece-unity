@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @author     KUMAKURA Yousuke <kumatch@users.sourceforge.net>
  * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
@@ -39,20 +39,20 @@
 
 require_once 'Piece/Flow/Action.php';
 
-// {{{ RegistrationAction
+// {{{ AuthenticationAction
 
 /**
- * Action class for the flow Registration.
+ * Action class for the flow AuthenticationAction.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @author     KUMAKURA Yousuke <kumatch@users.sourceforge.net>
  * @copyright  2006 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.9.0
  */
-class RegistrationAction extends Piece_Flow_Action
+class AuthenticationAction extends Piece_Flow_Action
 {
 
     // {{{ properties
@@ -68,9 +68,6 @@ class RegistrationAction extends Piece_Flow_Action
      */
 
     var $_user;
-    var $_flowName;
-    var $_useAHAH = false;
-    var $_renderedLayout = false;
 
     /**#@-*/
 
@@ -78,24 +75,46 @@ class RegistrationAction extends Piece_Flow_Action
      * @access public
      */
 
-    function RegistrationAction()
+    function AuthenticationAction()
     {
         $this->_user = &new stdClass();
     }
 
-    function validate()
+    function login()
     {
         $validation = &$this->_payload->getValidation();
-        if ($validation->validate('Registration', $this->_user)) {
-            return 'goDisplayConfirmationFromProcessConfirmForm';
+        if ($validation->validate('Authentication', $this->_user)) {
+            if ($this->_user->login_name === 'guest' && $this->_user->password === 'guest') {
+                $session = &$this->_payload->getSession();
+                $session->setAttribute('isAuthenticated', true);
+
+                $request = &$this->_payload->getRequest();
+                if ($request->hasParameter('callback')) {
+                    $callback = $request->getParameter('callback');
+                    if (!is_null($callback) && $callback !== '') {
+                        $config = &$this->_payload->getConfiguration();
+                        $config->setConfiguration('View',
+                                                  'forcedView',
+                                                  Piece_Unity_URL::create('http://example.org' . rawurldecode(html_entity_decode($callback))));
+                    }
+                }
+
+                return 'goDisplayHomeFromProcessLogin';
+            } else {
+                $viewElement = &$this->_payload->getViewElement();
+                $viewElement->setElement('message', 'Login Failed!');
+                return 'goDisplayFormFromProcessLogin';
+            }
         } else {
-            return 'goDisplayFormFromProcessConfirmForm';
+            return 'goDisplayFormFromProcessLogin';
         }
     }
 
-    function register()
+    function logout()
     {
-        return 'goDisplayFinishFromProcessRegister';
+        $session = &$this->_payload->getSession();
+        $session->setAttribute('isAuthenticated', false);
+        return 'goDisplayFinishFromProcessLogout';
     }
 
     function setupForm()
@@ -110,40 +129,34 @@ class RegistrationAction extends Piece_Flow_Action
 
         $viewElement = &$this->_payload->getViewElement();
         $viewElement->setElement('_elements', $elements);
-        $viewElement->setElement('useAHAH', $this->_useAHAH);
+        $request = &$this->_payload->getRequest();
+        $viewElement->setElement('callback', @$request->getParameter('callback'));
 
-        $this->_configureLayout();
         $this->_setTitle();
     }
 
-    function setupConfirmation()
+    function setupHome()
     {
-        $this->_setupFormAttributes();
-
         $viewElement = &$this->_payload->getViewElement();
-        $viewElement->setElementByRef('user', $this->_user);
-        $viewElement->setElement('useAHAH', $this->_useAHAH);
+        $viewElement->setElement('user', $this->_user);
 
-        $this->_configureLayout();
         $this->_setTitle();
+    }
+
+    function isAuthenticated()
+    {
+        $context = &Piece_Unity_Context::singleton();
+        $session = &$context->getSession();
+        if ($session->hasAttribute('isAuthenticated')) {
+            return $session->getAttribute('isAuthenticated');
+        } else {
+            return false;
+        }
     }
 
     function setupFinish()
     {
-        $viewElement = &$this->_payload->getViewElement();
-        $viewElement->setElement('useAHAH', $this->_useAHAH);
-
-        $this->_configureLayout();
         $this->_setTitle();
-    }
-
-    function prepare()
-    {
-        $continuation = &$this->_payload->getContinuation();
-        $this->_flowName = $continuation->getCurrentFlowName();
-        if ($this->_flowName == 'RegistrationWithExclusiveModeAndAHAH') {
-            $this->_useAHAH = true;
-        }
     }
 
     /**#@-*/
@@ -154,7 +167,7 @@ class RegistrationAction extends Piece_Flow_Action
 
     function _getFormFields()
     {
-        $fields = array('first_name', 'last_name');
+        $fields = array('login_name');
         return $fields;
     }
 
@@ -182,39 +195,8 @@ class RegistrationAction extends Piece_Flow_Action
 
     function _setTitle()
     {
-        if ($this->_flowName == 'RegistrationWithNonExclusiveMode') {
-            $title = 'A.1. A Registration Application with Non-Exclusive Mode.';
-        } elseif ($this->_flowName == 'RegistrationWithExclusiveMode') {
-            $title = 'A.2. A Registration Application with Exclusive Mode.';
-        } elseif ($this->_flowName == 'RegistrationWithExclusiveModeAndAHAH') {
-            $title = 'A.3. A Registration Application with Exclusive Mode and AHAH.';
-        }
-
         $viewElement = &$this->_payload->getViewElement();
-        $viewElement->setElement('title', $title);
-    }
-
-    function _configureLayout()
-    {
-        $request = &$this->_payload->getRequest();
-        if ($request->hasParameter('useLayout')) {
-            if (!$request->getParameter('useLayout')) {
-                $config = &$this->_payload->getConfiguration();
-                $config->setConfiguration('Renderer_Flexy', 'useLayout', false);
-            }
-
-            $this->_renderedLayout = true;
-            return;
-        }
-
-        if ($this->_useAHAH) {
-            if ($this->_renderedLayout) {
-                $config = &$this->_payload->getConfiguration();
-                $config->setConfiguration('Renderer_Flexy', 'useLayout', false);
-            } else {
-                $this->_renderedLayout = true;
-            }
-        }
+        $viewElement->setElement('title', 'B.1. An Authentication Service.');
     }
 
     /**#@-*/
