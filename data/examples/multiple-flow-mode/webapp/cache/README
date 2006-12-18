@@ -1,4 +1,0 @@
-$Id$
-
-All cache files will be stored in this directory. This directory should be
-readable/writable by the web server.
