@@ -76,7 +76,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
      */
 
     /**
-     * @var boolean the flag to use HTML_AJAX instead of php-json.
+     * @var boolean the flag to use HTML_AJAX instead of json extension.
      *              this property is only for testing.
      */
     var $_useHTMLAJAX = false;
@@ -100,35 +100,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $include = $this->getConfiguration('include');
-        if (!is_array($include)) {
-            $include = array();
-        }
-
-        $exclude = $this->getConfiguration('exclude');
-        if (!is_array($exclude)) {
-            $exclude = array();
-        }
-
-        $viewElement = &$this->_context->getViewElement();
-        $viewElements = $viewElement->getElements();
-
-        // data to be encoded as json.
-        $data = array();
-        foreach (array_keys($viewElements) as $key) {
-            if (in_array($key, $exclude)) {
-                // discard an element which is listed explicitly.
-                continue;
-            }
-
-            if (in_array($key, $include) || substr($key, 0, 1) != '_') {
-                /*
-                 * accept an element which is listed explicitly
-                 * or whose first letter is not underscore.
-                 */
-                $data[$key] = $viewElements[$key];
-            }
-        }
+        $data = $this->_createData();
 
         /*
          * walk the data recusively to determine whether
@@ -140,7 +112,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
             return;
         }
 
-        // finally encode the data as json.
+        // finally encode the data as JSON.
         $json = call_user_func($this->_encoderCallback, $data);
         if (Piece_Unity_Error::hasErrors('exception')) {
             return;
@@ -170,7 +142,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
      * Encode a given value with PEAR::HTML_AJAX.
      *
      * @param mixed $value
-     * @return string json string representation of a given value
+     * @return string JSON string representation of a given value
      *                or false if error ocurrs.
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      * @static
@@ -206,8 +178,8 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
     /**
      * Traverse the given value recursively.
      *
-     * @param mixed $value   the value to be visited.
-     * @param array $visited the array of objects which have been visited.
+     * @param mixed &$value   the value to be visited.
+     * @param array &$visited the array of objects which have been visited.
      * @return boolean
      * @throws PIECE_UNITY_ERROR_UNEXPECTED_VALUE
      */
@@ -226,8 +198,8 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
     /**
      * Visit an array.
      *
-     * @param mixed $value   the value to be visited.
-     * @param array $visited the array of objects which have been visited.
+     * @param mixed &$value   the value to be visited.
+     * @param array &$visited the array of objects which have been visited.
      * @return boolean
      * @throws PIECE_UNITY_ERROR_UNEXPECTED_VALUE
      */
@@ -256,8 +228,8 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
     /**
      * Visit an object.
      *
-     * @param mixed $value   the value to be visited.
-     * @param array $visited the array of objects which have been visited.
+     * @param mixed &$value   the value to be visited.
+     * @param array &$visited the array of objects which have been visited.
      * @return boolean
      * @throws PIECE_UNITY_ERROR_UNEXPECTED_VALUE
      */
@@ -288,8 +260,8 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
     /**
      * Check whether a given object was visited.
      *
-     * @param mixed $value
-     * @param array $visited
+     * @param mixed &$value
+     * @param array &$visited
      * @return boolean
      */
     function _wasVisited(&$value, &$visited)
@@ -330,8 +302,8 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
      * Note that this function is not necessary for PHP5 objects
      * since the operator === does the same job much better.
      *
-     * @param mixed $x the some reference
-     * @param mixed $y the antoher reference to be compared
+     * @param mixed &$x the some reference
+     * @param mixed &$y the antoher reference to be compared
      * @return boolean
      * @static
      */
@@ -405,6 +377,48 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
 
             $this->_encoderCallback = array(__CLASS__, 'encodeWithHTMLAJAX');
         }
+    }
+
+    // }}}
+    // {{{ _createData()
+
+    /**
+     * Creates data to be encoded as JSON.
+     *
+     * @return string
+     */
+    function _createData()
+    {
+        $include = $this->getConfiguration('include');
+        if (!is_array($include)) {
+            $include = array();
+        }
+
+        $exclude = $this->getConfiguration('exclude');
+        if (!is_array($exclude)) {
+            $exclude = array();
+        }
+
+        $viewElement = &$this->_context->getViewElement();
+        $viewElements = $viewElement->getElements();
+
+        $data = array();
+        foreach (array_keys($viewElements) as $key) {
+            if (in_array($key, $exclude)) {
+                // discard an element which is listed explicitly.
+                continue;
+            }
+
+            if (in_array($key, $include) || substr($key, 0, 1) != '_') {
+                /*
+                 * accept an element which is listed explicitly
+                 * or whose first letter is not underscore.
+                 */
+                $data[$key] = $viewElements[$key];
+            }
+        }
+
+        return $data;
     }
 
     /**#@-*/
