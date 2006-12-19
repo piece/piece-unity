@@ -41,6 +41,10 @@
 require_once 'PHPUnit.php';
 require_once 'HTML/AJAX/JSON.php';
 require_once 'Piece/Unity/Plugin/Renderer/JSON.php';
+require_once 'Piece/Unity/Context.php';
+require_once 'Piece/Unity/Config.php';
+require_once 'Piece/Unity/Error.php';
+require_once 'Piece/Unity/Plugin/Factory.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_JSONTestCase
 
@@ -85,11 +89,11 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
 
     function tearDown()
     {
+        unset($_SERVER['REQUEST_METHOD']);
         Piece_Unity_Context::clear();
+        Piece_Unity_Plugin_Factory::clearInstances();
         Piece_Unity_Error::clearErrors();
         Piece_Unity_Error::popCallback();
-        Piece_Unity_Plugin_Factory::clearInstances();
-        unset($_SERVER['REQUEST_METHOD']);
     }
 
     function &getView($viewElements, $settings = array(), $class = 'Piece_Unity_Plugin_Renderer_JSON')
@@ -116,7 +120,7 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
 
     function jsonEncode($value)
     {
-        if (function_exists('json_decode')) {
+        if (extension_loaded('json')) {
             return json_encode($value);
         } else {
             $encoder = &new HTML_AJAX_JSON();
@@ -126,7 +130,7 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
 
     function jsonDecode($json)
     {
-        if (function_exists('json_decode')) {
+        if (extension_loaded('json')) {
             return json_decode($json);
         } else {
             $encoder = &new HTML_AJAX_JSON();
@@ -148,6 +152,7 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         ob_end_clean();
 
         $result = $this->jsonDecode($json);
+
         $this->assertEquals('hello world', $result->content);
         $this->assertNotNull($result->__eventNameKey);
         $this->assertNotNull($result->__scriptName);
@@ -157,8 +162,7 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
     function testEncodeWithHTMLAJAX()
     {
         $value = array('content' => 'hello world');
-        $view = &$this->getView($value);
-        $view->_useHTMLAJAX = true;
+        $view = &$this->getView($value, array('useHTMLAJAX' => true));
 
         ob_start();
         $view->invoke();
@@ -166,11 +170,14 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         ob_end_clean();
 
         $result = $this->jsonDecode($json);
+
         $this->assertEquals('hello world', $result->content);
     }
 
     function testEncodeFailure()
     {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+
         /*
          * test a view element which contains circular references.
          */
@@ -186,11 +193,15 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
 
         ob_start();
         $view->invoke();
-        $json = ob_get_contents();
         ob_end_clean();
 
-        $this->assertEquals('', $json);
-        $this->assertEquals('HTTP/1.0 500 Internal Server Error', $view->_header);
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_UNEXPECTED_VALUE, $error['code']);
+
+        Piece_Unity_Error::popCallback();
     }
 
     function testExclude()
@@ -210,8 +221,11 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         ob_end_clean();
 
         $result = $this->jsonDecode($json);
+
         $this->assertEquals('hello world', $result->content);
+
         $vars = get_object_vars($result);
+
         $this->assertTrue(array_key_exists('content', $vars));
         $this->assertFalse(array_key_exists('spam', $vars));
     }
@@ -230,6 +244,7 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         ob_end_clean();
 
         $result = $this->jsonDecode($json);
+
         $this->assertEquals('hello world', $result->_content);
     }
 
@@ -247,20 +262,20 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         $json = ob_get_contents();
         ob_end_clean();
 
-        $this->assertEquals('text/json', $view->_header);
+        $this->assertEquals('text/json', $view->_contentType);
     }
 
     function testJSONP()
     {
+        $_GET['callback'] = 'callback';
         $value = array('content' => 'hello world');
         $view = &$this->getView($value,
                                 array('contentType'   => 'text/javascript',
                                       'include'       => array(),
                                       'exclude'       => array(),
                                       'useJSONP'      => true,
-                                      'callbackField' => 'callback')
-                               );
-        $_GET['callback'] = 'callback';
+                                      'callbackKey' => 'callback')
+                                );
 
         ob_start();
         $view->invoke();
@@ -268,84 +283,22 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         ob_end_clean();
 
         $this->assertEquals('callback({"content":"hello world"});', $json);
-        $this->assertEquals('text/javascript', $view->_header);
+        $this->assertEquals('text/javascript', $view->_contentType);
         
         unset($_GET['callback']);
     }
 
-    function testInternalServerError()
-    {
-        $a = array();
-        $b = array(&$a);
-        $a[] = &$b;
-        $value = array($a, $b);
-        $view = &$this->getView($value, array());
-
-        ob_start();
-        $view->invoke();
-        $json = ob_get_contents();
-        ob_end_clean();
-
-        $this->assertEquals('', $json);
-        $this->assertEquals('HTTP/1.0 500 Internal Server Error', $view->_header);
-    }
-
-    function testUnicodeWithMulitByteString()
-    {
-        $tmp = mb_internal_encoding();
-
-        $obj = &new stdClass();
-        $obj->favorite = '¼ò';
-        $value = array($obj);
-        $view = &$this->getView($value,
-                                array('include'          => array(),
-                                      'exclude'          => array(),
-                                      'internalEncoding' => 'EUC-JP')
-                                );
-
-        ob_start();
-        $view->invoke();
-        $json = ob_get_contents();
-        ob_end_clean();
-
-        $this->assertEquals('[{"favorite":"\u9152"}]', $json);
-        
-        mb_internal_encoding($tmp);
-    }
-
-    function testUnicodeWithIconv()
-    {
-        $tmp = iconv_get_encoding('internal_encoding');
-
-        $obj = &new stdClass();
-        $obj->favorite = '¼ò';
-        $value = array($obj);
-        $view = &$this->getView($value,
-                                array('include'          => array(),
-                                      'exclude'          => array(),
-                                      'internalEncoding' => 'EUC-JP')
-                                );
-        $view->_useIconv = true;
-
-        ob_start();
-        $view->invoke();
-        $json = ob_get_contents();
-        ob_end_clean();
-        
-        $this->assertEquals('[{"favorite":"\u9152"}]', $json);
-
-        iconv_set_encoding('internal_encoding', $tmp);
-    }
-
     function testDetectCicularReferenceInArray()
     {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+
         $b = array(false, 2, 3.0, '4');
         $a = array(1, 2, 'spam', &$b);
         $b[] = &$a;
         $view = &$this->getView(array('foo', $a));
         $view->invoke();
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
 
         $error = Piece_Unity_Error::pop();
 
@@ -353,10 +306,14 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         $this->assertEquals(strtolower('_visitArray'),
                             strtolower($error['context']['function'])
                             );
+
+        Piece_Unity_Error::popCallback();
     }
     
     function testDetectCicularReferenceInObject()
     {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+
         $foo = &new stdClass();
         $bar = &new stdClass();
         $baz = &new stdClass();
@@ -366,7 +323,7 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         $view = &$this->getView(array('foo', &$foo));
         $view->invoke();
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
 
         $error = Piece_Unity_Error::pop();
 
@@ -374,6 +331,7 @@ class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase
         $this->assertEquals(strtolower('_visitObject'),
                             strtolower($error['context']['function'])
                             );
+        Piece_Unity_Error::popCallback();
     }
 
     /**#@-*/
