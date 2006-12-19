@@ -109,7 +109,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $view->invoke();
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
 
-        $this->assertEquals($expectedURL, $redirection->getURL());
+        $this->assertEquals($expectedURL, $redirection->_url);
 
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
@@ -129,7 +129,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $view->invoke();
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
 
-        $this->assertEquals($expectedURL, $redirection->getURL());
+        $this->assertEquals($expectedURL, $redirection->_url);
 
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
@@ -151,7 +151,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $view->invoke();
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
 
-        $this->assertEquals($expectedURL, $redirection->getURL());
+        $this->assertEquals($expectedURL, $redirection->_url);
 
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
@@ -172,7 +172,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $view->invoke();
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
 
-        $this->assertEquals($expectedURL, $redirection->getURL());
+        $this->assertEquals($expectedURL, $redirection->_url);
 
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
@@ -194,7 +194,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $view->invoke();
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
 
-        $this->assertEquals($expectedURL, $redirection->getURL());
+        $this->assertEquals($expectedURL, $redirection->_url);
 
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);

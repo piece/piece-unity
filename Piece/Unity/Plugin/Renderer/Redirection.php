@@ -123,19 +123,6 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
         }
     }
 
-    // }}}
-    // {{{ getURL()
-
-    /**
-     * Gets the url to redirect user's browser to.
-     *
-     * @return string
-     */
-    function getURL()
-    {
-        return $this->_url;
-    }
-
     /**#@-*/
 
     /**#@+
