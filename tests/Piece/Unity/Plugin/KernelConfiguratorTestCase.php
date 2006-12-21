@@ -42,12 +42,12 @@ require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/KernelConfigurator.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/Plugin/Dispatcher/Simple.php';
 require_once 'Piece/Right/Filter/Factory.php';
 require_once 'Piece/Right/Validator/Factory.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
 require_once 'Piece/Unity/URL.php';
+require_once 'Cache/Lite/File.php';
 
 // {{{ Piece_Unity_Plugin_KernelConfiguratorTestCase
 
