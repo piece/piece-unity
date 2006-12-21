@@ -42,6 +42,7 @@ require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Interceptor/Authentication.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Config.php';
+require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_Plugin_Interceptor_AuthenticationTestCase
 
