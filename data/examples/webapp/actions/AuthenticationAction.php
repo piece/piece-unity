@@ -196,7 +196,7 @@ class AuthenticationAction extends Piece_Flow_Action
     function _setTitle()
     {
         $viewElement = &$this->_payload->getViewElement();
-        $viewElement->setElement('title', 'B.1. An Authentication Service.');
+        $viewElement->setElement('title', 'B.1. An authentication service. *exclusive*');
     }
 
     /**#@-*/

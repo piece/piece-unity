@@ -183,11 +183,11 @@ class RegistrationAction extends Piece_Flow_Action
     function _setTitle()
     {
         if ($this->_flowName == 'RegistrationWithNonExclusiveMode') {
-            $title = 'A.1. A Registration Application with Non-Exclusive Mode.';
+            $title = 'A.1. A registration application. *non-exclusive*';
         } elseif ($this->_flowName == 'RegistrationWithExclusiveMode') {
-            $title = 'A.2. A Registration Application with Exclusive Mode.';
+            $title = 'A.2. A Registration Application. *exclusive*';
         } elseif ($this->_flowName == 'RegistrationWithExclusiveModeAndAHAH') {
-            $title = 'A.3. A Registration Application with Exclusive Mode and AHAH.';
+            $title = 'A.3. A Registration Application with AHAH. *exclusive*';
         }
 
         $viewElement = &$this->_payload->getViewElement();

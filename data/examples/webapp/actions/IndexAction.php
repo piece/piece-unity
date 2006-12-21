@@ -74,7 +74,7 @@ class IndexAction
     function invoke(&$context)
     {
         $viewElement = &$context->getViewElement();
-        $viewElement->setElement('title', 'Piece_Unity Examples Index');
+        $viewElement->setElement('title', 'Piece_Unity examples index');
     }
 
     /**#@-*/

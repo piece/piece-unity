@@ -97,7 +97,7 @@ class ProtectedResourceAction extends Piece_Flow_Action
     function _setTitle()
     {
         $viewElement = &$this->_payload->getViewElement();
-        $viewElement->setElement('title', 'B.2. A Protected Resource.');
+        $viewElement->setElement('title', 'B.2. A protected resource. *non-exclusive*');
     }
 
     /**#@-*/
