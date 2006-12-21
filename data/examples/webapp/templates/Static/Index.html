@@ -12,5 +12,5 @@
 <h1>B.&nbsp;Authentication</h1>
   <ol>
     <li><a href="{__basePath}/authenticate.php?{__flowExecutionTicketKey}={__continuation.getFlowExecutionTicketByFlowName(#Authentication#)}" onclick="w1=window.open(this,'newWindow04'); w1.focus(); return(false)" flexy:if="__continuation.getFlowExecutionTicketByFlowName(#Authentication#)">An authentication service. <strong>*exclusive*</strong></a> <a href="{__basePath}/authenticate.php" onclick="w1=window.open(this,'newWindow04'); w1.focus(); return(false)" flexy:if="!__continuation.getFlowExecutionTicketByFlowName(#Authentication#)">An authentication service. <strong>*exclusive*</strong></a></li>
-    <li><a href="{__basePath}/protected-resource.php" onclick="w1=window.open(this,'newWindow04'); w1.focus(); return(false)">A protected resource. <strong>*non-exclusive*</strong></a></li>
+    <li><a href="{__basePath}/protected-resource.php" onclick="w1=window.open(this,'newWindow04'); w1.focus(); return(false)">A resource which is protected by the above authentication service. <strong>*non-exclusive*</strong></a></li>
   </ol>
