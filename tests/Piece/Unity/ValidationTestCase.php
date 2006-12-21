@@ -40,6 +40,8 @@
 
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Validation.php';
+require_once 'Piece/Unity/Error.php';
+require_once 'Cache/Lite/File.php';
 
 // {{{ Piece_Unity_ValidationTestCase
 
