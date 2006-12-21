@@ -40,6 +40,7 @@
 
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Session.php';
+require_once 'Piece/Unity/Session/Preload.php';
 require_once dirname(__FILE__) . '/SessionTestCase/Loader.php';
 
 // {{{ Piece_Unity_SessionTestCase
