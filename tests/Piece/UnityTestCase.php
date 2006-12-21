@@ -43,6 +43,7 @@ require_once 'Piece/Unity.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Cache/Lite/File.php';
 require_once 'Piece/Unity/Config.php';
+require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_UnityTestCase
 
