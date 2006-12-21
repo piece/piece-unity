@@ -40,6 +40,8 @@
 
 require_once 'Piece/Unity/Plugin/Renderer/Flexy.php';
 require_once dirname(__FILE__) . '/HTMLCompatibilityTest.php';
+require_once 'Piece/Unity/Config.php';
+require_once 'Piece/Unity/Context.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_FlexyTestCase
 

@@ -41,6 +41,8 @@
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
 require_once dirname(__FILE__) . '/HTMLCompatibilityTest.php';
+require_once 'Piece/Unity/Error.php';
+require_once 'Piece/Unity/Config.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_PHPTestCase
 
