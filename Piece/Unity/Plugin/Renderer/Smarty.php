@@ -119,10 +119,6 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
      */
     function _load()
     {
-        if ($this->_loaded()) {
-            return;
-        }
-
         if (!defined('SMARTY_DIR')) {
             $SMARTY_DIR = $this->getConfiguration('SMARTY_DIR');
             if (!is_null($SMARTY_DIR)) {
@@ -146,7 +142,13 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
             return;
         }
 
-        if (!$this->_loaded()) {
+        if (version_compare(phpversion(), '5.0.0', '<')) {
+            $loaded = class_exists('Smarty');
+        } else {
+            $loaded = class_exists('Smarty', false);
+        }
+
+        if (!$loaded) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                     'The class [ Smarty ] not defined in the class file [ Smarty.class.php ].'
                                     );
@@ -159,6 +161,7 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
     /**
      * Defines and initializes extension points and configuration points.
      *
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
      * @since Method available since Release 0.6.0
      */
     function _initialize()
@@ -169,6 +172,8 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
         foreach ($this->_smartyClassVariables as $point => $default) {
             $this->_addConfigurationPoint($point, $default);
         }
+
+        $this->_load();
     }
 
     // }}}
@@ -182,11 +187,6 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
      */
     function _render($isLayout)
     {
-        $this->_load();
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            return;
-        }
-
         $smarty = &new Smarty();
 
         foreach (array_keys($this->_smartyClassVariables) as $point) {
@@ -222,23 +222,6 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
                                     array('plugin' => __CLASS__),
                                     Piece_Unity_Error::pop()
                                     );
-        }
-    }
-
-    // }}}
-    // {{{ _loaded()
-
-    /**
-     * Returns whether the Smarty has already been loaded or not.
-     *
-     * @return boolean
-     */
-    function _loaded()
-    {
-        if (version_compare(phpversion(), '5.0.0', '<')) {
-            return class_exists('Smarty');
-        } else {
-            return class_exists('Smarty', false);
         }
     }
 
