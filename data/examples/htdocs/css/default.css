@@ -12,7 +12,7 @@ body {
   font-family: Verdana, Helvetica, Arial, sans-serif;
   text-align: left;
   color: #333333;
-  font-size: 0.9em;
+  font-size: 12px;
   background: #f4f4f4 url(../images/bg.gif) top center repeat-y;
 }
 
@@ -22,7 +22,6 @@ body {
 #page {
   width: 780px;
   margin: 0 auto;
-  text-align: left;
 }
 
 .hide {
@@ -64,6 +63,22 @@ form {
   text-align: left;
 }
 
+#content ol {
+  margin: 0 0 10px 40px;
+  padding: 0;
+}
+
+#content ol li,
+#content ol li a {
+  margin: 0 0 8px 0;
+  padding: 0 0 0 0;
+  list-style: decimal;
+  letter-spacing: 1px;
+}
+
+/***************************************************
+  Special text formatting 
+ ***************************************************/
 #content h1 {
   clear: both;
   font-size: 1.8em;
@@ -99,25 +114,12 @@ form {
   padding: 0 0 0 18px;
   font-size: 1.2em;
   color: #ff9933;
+  letter-spacing: 1px;
   background: url(../images/date_icon.gif) no-repeat 0 15%;
 }
 
-#content ol {
-  margin: 0 0 10px 40px;
-  padding: 0;
-}
-
-#content ol li,
-#content ol li a {
-  margin: 0 0 8px 0;
-  padding: 0 0 0 0;
-  list-style: decimal;
-}
-
-/***************************************************
-  Special text formatting 
- ***************************************************/
 #content p {
+  font-size: 0.9em;
   margin: 0 0 10px 20px;
 }
 
@@ -142,28 +144,24 @@ form {
 }
 
 #content a, a:link { 
-  font-size: 0.9em;
   color: #6699cc;
   border-bottom: 1px dotted #6699cc;
   text-decoration: none;
 }
 
-#content a:visited {
-  font-size: 0.9em;
-  color: #666699;
-  border-bottom: 1px dotted #666699;
-}
-
 #content a:hover {
-  font-size: 0.9em;
   color: #669933;
   border-bottom: 1px dotted #669933;
 }
 
 #content a:active {
-  font-size: 0.9em;
   color: #cc3333;
   border-bottom: 1px dotted #cc3333;
+}
+
+#content a:visited {
+  color: #666699;
+  border-bottom: 1px dotted #666699;
 }
 
 #content a img, img {
@@ -178,13 +176,13 @@ form {
   width: 780px;
   margin: 0 auto;
   padding: 0 0 9px 0;
-  font-size: 85%;
+  font-size: 0.8em;
   color: #333333;
   background: url(../images/piece_footer.jpg) no-repeat bottom left;
 }
 
 #footer p {
-  padding: 15px 0 15px 0;
+  padding: 15px 0;
   text-align: center;
 }
 
