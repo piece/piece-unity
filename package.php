@@ -42,28 +42,128 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$version = '0.8.0';
+$version = '0.9.0';
 $apiVersion = '0.7.0';
 $releaseStability = 'beta';
-$notes = 'This is the first release of Piece_Unity with the new PEAR Channel Server pear.piece-framework.com.
+$notes = 'Hi all,
 
-This release includes a few enhancements of the validation system. See the following release notes for details.
+A new release of Piece_Unity is now available.
+For Piece_Unity, this will be a big release because this release includes a very important feature named "Action Continuation" and several powerful enhancements as follows.
+
+"Action Continuation" is a very important feature for developers. This feature allows developers to write stateful action code via the properties without using flow attributes. In fact it allows stateful programming without thinking sessions. This means that the programming be nearer natural continuation programming, although it is limited the scope in the action.
+
+Interceptor_Authentication plug-in provides a smart and simple solution for authentication.
+
+Renderer_Flexy, Renderer_Smarty, and Renderer_PHP plug-ins provide a simple and useful layout system to reuse shared html layout across multiple pages.
+
+Renderer_JSON plug-in allows to output view elements as JSON.
+
+Also the example applications was restructured with new features as follows. (Sorry there are no JSON examples yet.)
+
+A. Registration Applications
+
+   1. A registration application. *non-exclusive*
+   2. A registration application. *exclusive*
+   3. A registration application with AHAH. *exclusive*
+
+B. Authentication
+
+   1. An authentication service. *exclusive*
+   2. A resource which is protected by the above authentication service. *non-exclusive*
+
+These examples will be available on the web one of these days.
+
+And also other enhancements are included.
+
+See the following release notes for details.
 
 ## Enhancements ##
 
 ### Kernel ###
 
+##### Piece_Unity_URL #####
+
+- A utility which is used to create the appropriate absolute URL from a relative/absolute URL. (Ticket #4)
+
+##### Piece_Unity_Request #####
+
+- Added support for accessing $_FILES contents as each parameter to support validation of files and images. (Ticket #10)
+
+##### Piece_Unity_Context #####
+
+- Added support for image input type. (Ticket #18)
+
 ##### Piece_Unity_Validation #####
-- Added getResults() method for getting the Piece_Right_Results object of the latest validation.
-- Added setting the Piece_Right_Results object to the current flow scope when the continuation server is running.
-- Refactored validate() method using Piece_Right_Validation_Script class.
-- Added addValidatorDirectory()/addFilterDirectory() methods.
+
+- Changed so as to handle a Piece_Right_Results object by reference. (Ticket #20)
+- Updated validate() to set a Piece_Unity_Context object as a payload to Piece_Right. (Ticket #19)
+
+##### Piece_Unity_Session_Preload #####
+
+- A class *pre*loader for restoring objects in session.
+
+##### Piece_Unity_Session #####
+
+- Added a feature to preload for restoring objects.
+
+##### Piece_Unity_Plugin_Factory #####
+
+- Added clearInstances() to clear the plug-in instances.
+
+##### Piece_Unity_Error #####
+
+- Added a constant PIECE_UNITY_ERROR_UNEXPECTED_VALUE.
+- Added a constant PIECE_UNITY_ERROR_INVALID_OPERATION.
 
 ### Plug-ins ###
 
+##### Interceptor_Authentication #####
+
+- An interceptor to control the access to protected resources on Piece_Unity applications.
+
+##### Renderer_JSON #####
+
+- A renderer to output view elements as JSON.
+
+##### Controller #####
+
+- Changed to skip dispatcher when context has already view contents.
+
+##### View #####
+
+- Added a feature to replace the current view with a view which is given by a new configuration point forcedView.
+- Added a built-in view element __url which is a Piece_Unity_URL object.
+
 ##### KernelConfigurator #####
-- Added Piece_Right_Results class to the array for autoloading.
-- Added missing two configuration points validationValidatorDirectories and validationFilterDirectories, and their processes, which had existed in Interceptor_PieceRight plug-in.';
+
+- Added to preload Dispatcher_Continuation plug-in for restoring action instances in session.
+- Added a configuration point nonSSLableServers to make a list of non-SSLable servers.
+
+##### Dispatcher_Continuation #####
+
+- Added a feature to store the action instances as a flow attribute in a flow execution, and restore the action instances when continuing the flow execution.
+- Removed the configuration point sessionKey.
+- Added getContinuationSessionKey() to get the session key for a continuation object.
+
+##### Renderer_HTML #####
+
+- An abstract renderer which is used to render HTML.
+
+##### Renderer_Flexy, Renderer_PHP, Renderer_Smarty #####
+
+- Added a feature to reuse shared html layout across multiple pages. (Ticket #2)
+
+##### Controller, Dispatcher_Continuation #####
+
+- Updated to publish the Piece_Flow_Continuation object as a view element if it exists even though what the specified dispatcher is. And the flow execution ticket key and the flow name key have always been available as each view element. (Ticket #26)
+
+##### Renderer_Redirection #####
+
+- Removed getURL().
+
+### Example Applications ###
+
+- Restructured applications with new features.';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
@@ -79,8 +179,12 @@ $package->setOptions(array('filelistgenerator' => 'svn',
 
 $package->setPackage('Piece_Unity');
 $package->setPackageType('php');
-$package->setSummary('A stateful and secure MVC framework for PHP');
-$package->setDescription('Piece_Unity is a stateful and secure MVC framework for PHP. Piece_Unity has two major features. The first one is flow control and storing/restoring states with a technology known as continuation server - It based on Piece_Flow web flow engine. The second one is an Eclipse like plug-in system using extension points and configuration points.');
+$package->setSummary('A stateful and secure web application framework for PHP');
+$package->setDescription('Piece_Unity is a stateful and secure web application framework for PHP.
+
+Piece_Unity is a framework against the background of layered architecture, as of now, focuses on the presentation layer.
+
+Piece_Unity allows stateful programming without thinking about sessions by storing and restoring states with a technology known as continuation server. It also provides high security and eases the burden of implementing security measures for applications by application flow control.');
 $package->setChannel('pear.piece-framework.com');
 $package->setLicense('BSD License (revised)',
                      'http://www.opensource.org/licenses/bsd-license.php'
@@ -92,6 +196,16 @@ $package->setReleaseStability($releaseStability);
 $package->setNotes($notes);
 $package->setPhpDep('4.3.0');
 $package->setPearinstallerDep('1.4.3');
+$package->addPackageDepWithChannel('required', 'Piece_Flow', 'pear.piece-framework.com', '1.8.0');
+$package->addPackageDepWithChannel('required', 'Cache_Lite', 'pear.php.net', '1.7.0');
+$package->addPackageDepWithChannel('required', 'PEAR', 'pear.php.net', '1.4.3');
+$package->addPackageDepWithChannel('required', 'Net_URL', 'pear.php.net', '1.0.14');
+$package->addPackageDepWithChannel('required', 'Piece_Right', 'pear.piece-framework.com', '1.4.0');
+$package->addPackageDepWithChannel('optional', 'Stagehand_TestRunner', 'pear.piece-framework.com', '0.4.0');
+$package->addPackageDepWithChannel('optional', 'HTML_Template_Flexy', 'pear.php.net', '1.2.4');
+$package->addPackageDepWithChannel('optional', 'Smarty', 'pearified.com', '1.6.8');
+$package->addPackageDepWithChannel('optional', 'HTML_AJAX', 'pear.php.net', '0.5.0');
+$package->addExtensionDep('optional', 'json');
 $package->addMaintainer('lead', 'iteman', 'KUBO Atsuhiro', 'iteman@users.sourceforge.net');
 $package->addIgnore(array('package.php', 'package.xml', 'package2.xml'));
 $package->addGlobalReplacement('package-info', '@package_version@', 'version');
