@@ -27,32 +27,6 @@ body {
   display: none;
 }
 
-a, a:link { 
-  color: #6699cc;
-  border-bottom: 1px dotted #6699cc;
-  text-decoration: none;
-}
-
-a:visited {
-  color: #666699;
-  border-color: #666699;
-}
-
-a:hover {
-  color: #669933;
-  border-color: #669933;
-  text-decoration: none;
-}
-
-a:active {
-  color: #cc3333;
-  border-color: #cc3333;
-}
-
-a img, img {
-  border: none;
-}
-
 form {
   margin: 0;
   padding: 0;
@@ -138,7 +112,6 @@ form {
   list-style: decimal;
 }
 
-
 /***************************************************
   Special text formatting 
  ***************************************************/
@@ -162,12 +135,37 @@ form {
   border: 1px solid #3f880a;
 }
 
-#content a {
-  margin: 0 0 10px 20px;
-}
-
 #content u {
   text-decoration: underline;
+}
+
+#content a, a:link { 
+  font-size: 0.9em;
+  color: #6699cc;
+  border-bottom: 1px dotted #6699cc;
+  text-decoration: none;
+}
+
+#content a:visited {
+  font-size: 0.9em;
+  color: #666699;
+  border-bottom: 1px dotted #666699;
+}
+
+#content a:hover {
+  font-size: 0.9em;
+  color: #669933;
+  border-bottom: 1px dotted #669933;
+}
+
+#content a:active {
+  font-size: 0.9em;
+  color: #cc3333;
+  border-bottom: 1px dotted #cc3333;
+}
+
+#content a img, img {
+  border: 0;
 }
 
 /***************************************************
