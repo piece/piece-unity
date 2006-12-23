@@ -67,7 +67,7 @@ form {
   background: #eeeeee url(../images/piece_header.jpg) top center no-repeat;
   position: relative;
   width: 780px;
-  height: 100px;
+  height: 108px;
 }
 
 #header h1 {
@@ -177,7 +177,7 @@ form {
   margin: 0 auto;
   padding: 0 0 9px 0;
   font-size: 85%;
-  color: #ffffff;
+  color: #333333;
   background: url(../images/piece_footer.jpg) no-repeat bottom left;
 }
 
@@ -189,7 +189,7 @@ form {
 #footer a,
 #footer a:hover {
   border-bottom: none;
-  color: #ffffff;
-  border-bottom: 1px dotted #ffffff;
+  color: #333333;
+  border-bottom: 1px dotted #333333;
 }
 
