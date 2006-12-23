@@ -170,6 +170,10 @@ form {
   text-decoration: underline;
 }
 
+#content span.blink{
+  text-decoration: blink;
+}
+
 /***************************************************
  Footer
  ***************************************************/
