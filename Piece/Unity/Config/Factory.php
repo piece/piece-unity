@@ -108,6 +108,7 @@ class Piece_Unity_Config_Factory
                                     'warning'
                                     );
             Piece_Unity_Error::popCallback();
+
             $config = &new Piece_Unity_Config();
             return $config;
         }
@@ -121,6 +122,7 @@ class Piece_Unity_Config_Factory
                                     'warning'
                                     );
             Piece_Unity_Error::popCallback();
+
             $config = &new Piece_Unity_Config();
             return $config;
         }
@@ -132,6 +134,7 @@ class Piece_Unity_Config_Factory
                                     'warning'
                                     );
             Piece_Unity_Error::popCallback();
+
             $config = &new Piece_Unity_Config();
             return $config;
         }
@@ -147,27 +150,24 @@ class Piece_Unity_Config_Factory
                                     'warning'
                                     );
             Piece_Unity_Error::popCallback();
-            $config = &Piece_Unity_Config_Factory::_parseFile($configFile);
+
+            $config = &Piece_Unity_Config_Factory::_getConfigurationFromFile($configFile);
             return $config;
         }
 
-        if (!is_readable($cacheDirectory)
-            || !is_writable($cacheDirectory)
-            ) {
+        if (!is_readable($cacheDirectory) || !is_writable($cacheDirectory)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_READABLE,
                                     "The cache directory [ $cacheDirectory ] was not readable or writable.",
                                     'warning'
                                     );
             Piece_Unity_Error::popCallback();
-            $config = &Piece_Unity_Config_Factory::_parseFile($configFile);
+
+            $config = &Piece_Unity_Config_Factory::_getConfigurationFromFile($configFile);
             return $config;
         }
 
-        $config = &Piece_Unity_Config_Factory::_getConfiguration($cacheDirectory,
-                                                                 $configFile
-                                                                 );
-
+        $config = &Piece_Unity_Config_Factory::_getConfiguration($configFile, $cacheDirectory);
         return $config;
     }
 
@@ -175,6 +175,7 @@ class Piece_Unity_Config_Factory
 
     /**#@+
      * @access private
+     * @static
      */
 
     // }}}
@@ -183,12 +184,11 @@ class Piece_Unity_Config_Factory
     /**
      * Gets a Piece_Unity_Config object from a configuration file or a cache.
      *
-     * @param string $cacheDirectory
      * @param string $masterFile
+     * @param string $cacheDirectory
      * @return Piece_Unity_Config
-     * @static
      */
-    function &_getConfiguration($cacheDirectory, $masterFile)
+    function &_getConfiguration($masterFile, $cacheDirectory)
     {
         $cache = &new Cache_Lite_File(array('cacheDir' => "$cacheDirectory/",
                                             'masterFile' => $masterFile,
@@ -208,12 +208,13 @@ class Piece_Unity_Config_Factory
                                     'warning'
                                     );
             Piece_Unity_Error::popCallback();
-            $config = &Piece_Unity_Config_Factory::_parseFile($masterFile);
+
+            $config = &Piece_Unity_Config_Factory::_getConfigurationFromFile($masterFile);
             return $config;
         }
 
         if (!$config) {
-            $config = &Piece_Unity_Config_Factory::_parseFile($masterFile);
+            $config = &Piece_Unity_Config_Factory::_getConfigurationFromFile($masterFile);
             $result = $cache->save($config);
             if (PEAR::isError($result)) {
                 Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
@@ -229,16 +230,15 @@ class Piece_Unity_Config_Factory
     }
 
     // }}}
-    // {{{ _parseFile()
+    // {{{ _getConfigurationFromFile()
 
     /**
      * Parses the given file and returns a Piece_Unity_Config object.
      *
      * @param string $file
      * @return Piece_Unity_Config
-     * @static
      */
-    function &_parseFile($file)
+    function &_getConfigurationFromFile($file)
     {
         $config = &new Piece_Unity_Config();
         $yaml = Spyc::YAMLLoad($file);
