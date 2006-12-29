@@ -228,6 +228,25 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
         $this->_clear($layoutViewString);
     }
 
+    function testTurnOffLayoutByHTTPAcceptSuccess()
+    {
+        $this->_assertTurnOffLayoutByHTTPAccept(true, '<div>
+  <h2>This is an element for the content.</h2>
+</div>');
+    }
+
+    function testTurnOffLayoutByHTTPAcceptFailure()
+    {
+        $this->_assertTurnOffLayoutByHTTPAccept(false, '<html>
+  <body>
+    <h1>This is an element for the layout.</h1>
+    <div>
+  <h2>This is an element for the content.</h2>
+</div>
+  </body>
+</html>');
+    }
+
     /**#@-*/
 
     /**#@+
@@ -257,6 +276,45 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
     function _clear($view) {}
 
     function _getConfig() {}
+
+    function _assertTurnOffLayoutByHTTPAccept($turnOffLayoutByHTTPAccept, $result)
+    {
+        if ($this->_target == 'PHP') {
+            return;
+        }
+    
+        $viewString = "{$this->_target}LayoutContent";
+        $layoutViewString = "{$this->_target}Layout";
+        $context = &Piece_Unity_Context::singleton();
+
+        $_SERVER['HTTP_ACCEPT'] = 'application/x-piece-html-fragment';
+
+        $config = &$this->_getConfig();
+        $config->setConfiguration("Renderer_{$this->_target}", 'turnOffLayoutByHTTPAccept', $turnOffLayoutByHTTPAccept);
+        $config->setConfiguration("Renderer_{$this->_target}", 'useLayout', true);
+        $config->setConfiguration("Renderer_{$this->_target}", 'layoutView', $layoutViewString);
+        $config->setConfiguration("Renderer_{$this->_target}", 'layoutDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/templates/Layout");
+        $config->setConfiguration("Renderer_{$this->_target}", 'layoutCompileDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Layout");
+        $context->setConfiguration($config);
+
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('foo', 'This is an element for the content.');
+        $viewElement->setElement('bar', 'This is an element for the layout.');
+        $context->setView($viewString);
+
+        $view = &new Piece_Unity_Plugin_View();
+        ob_start();
+        $view->invoke();
+        $buffer = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals($result, rtrim($buffer));
+
+        $this->_clear($viewString);
+        $this->_clear($layoutViewString);
+        
+        unset($_SERVER['HTTP_ACCEPT']);
+    }
 
     /**#@-*/
 

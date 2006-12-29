@@ -1,6 +1,6 @@
 // $Id$
 
-function ahah(url, target, delay) {
+function ahah(url, target, delay, content) {
     if (window.XMLHttpRequest) {
         req = new XMLHttpRequest();
     } else if (window.ActiveXObject) {
@@ -9,8 +9,10 @@ function ahah(url, target, delay) {
 
     if (req != undefined) {
         req.onreadystatechange = function() { ahahDone(url, target, delay); };
-        req.open('GET', url, true);
-        req.send(null);
+        req.open('POST', url, true);
+        req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+        req.setRequestHeader('Accept','application/x-piece-html-fragment');
+        req.send(content);
     }
 }  
 
@@ -27,4 +29,28 @@ function ahahDone(url, target, delay) {
             //server should ALSO delay before responding
         }
     }
+}
+
+function sendAHAHReqeust(sender, target, delay) {
+    if (sender.form) {
+        var form = sender.form;
+        var data = [
+            escape(sender.name) + '=' + escape(sender.value)
+        ];
+        
+        for (var i=0; i < form.length; i++) {
+            var el = form[i];
+            if (el.type == 'submit' || el.type == 'button' || el.type == 'reset') {
+                continue;
+            }
+            
+            data[data.length] = escape(el.name) + '=' + escape(el.value);
+        }
+        
+        var content = data.join('&');
+        ahah(form.action, target, delay, content);
+    } else if (sender.href) {
+        ahah(sender.href, target, delay);
+    }
+    return false;
 }

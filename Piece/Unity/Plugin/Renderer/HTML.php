@@ -86,6 +86,14 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
     function invoke()
     {
         $useLayout = $this->getConfiguration('useLayout');
+        if ($this->getConfiguration('turnOffLayoutByHTTPAccept')) {
+            if (array_key_exists('HTTP_ACCEPT', $_SERVER)) {
+                if ($_SERVER['HTTP_ACCEPT'] == 'application/x-piece-html-fragment') {
+                    $useLayout = false;
+                }
+            }
+        }
+
         if (!$useLayout) {
             $this->_render(false);
         } else {
@@ -124,6 +132,7 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
         $this->_addConfigurationPoint('layoutView');
         $this->_addConfigurationPoint('layoutDirectory');
         $this->_addConfigurationPoint('layoutCompileDirectory');
+        $this->_addConfigurationPoint('turnOffLayoutByHTTPAccept', false);
     }
 
     // }}}

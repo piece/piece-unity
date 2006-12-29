@@ -11,6 +11,6 @@
   </p>
   <p>
     <input type="submit" name="{__eventNameKey}_confirmForm" value="confirm" flexy:if="!useAHAH" />
-    <input type="button" value="confirm" onclick="ahah('{__scriptName}?{__flowExecutionTicketKey}={__flowExecutionTicket}&{__eventNameKey}=confirmForm' + '&first_name=' + escape(document.getElementById('first_name').value) + '&last_name=' + escape(document.getElementById('last_name').value), 'content');" flexy:if="useAHAH" />
+    <input type="submit" value="confirm" name="{__eventNameKey}_confirmForm" onclick="sendAHAHReqeust(this, 'content');return false;" flexy:if="useAHAH" />
   </p>
 </form>
