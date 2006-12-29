@@ -26,9 +26,6 @@
         - name: ProtectedResource
           file: ../webapp/config/flows/ProtectedResource.yaml
           isExclusive: false
-    - name: bindActionsWithFlowExecution
-      type: configuration
-      value: true
 
 - name: Dispatcher_Simple
   point:
