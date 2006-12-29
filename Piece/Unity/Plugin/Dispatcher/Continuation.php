@@ -318,7 +318,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->_addConfigurationPoint('flowExecutionTicketKey', '_flowExecutionTicket');
         $this->_addConfigurationPoint('flowNameKey', '_flow');
         $this->_addConfigurationPoint('flowName');
-        $this->_addConfigurationPoint('bindActionsWithFlowExecution', false);
+        $this->_addConfigurationPoint('bindActionsWithFlowExecution', true);
 
         $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey'] = $this->getConfiguration('flowExecutionTicketKey');
         $GLOBALS['PIECE_UNITY_Continuation_FlowNameKey'] = $this->getConfiguration('flowNameKey');
