@@ -139,8 +139,6 @@ class RegistrationAction extends Piece_Flow_Action
         $this->_flowName = $continuation->getCurrentFlowName();
         if ($this->_flowName == 'RegistrationWithExclusiveModeAndAHAH') {
             $this->_useAHAH = true;
-            $config = &$this->_payload->getConfiguration();
-            $config->setConfiguration('Renderer_Flexy', 'turnOffLayoutByHTTPAccept', true);
         }
     }
 

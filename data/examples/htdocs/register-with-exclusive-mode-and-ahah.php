@@ -56,7 +56,7 @@ $config = &new Piece_Unity_Config();
 $config->setConfiguration('Dispatcher_Continuation', 'flowName', "{$flowName}WithExclusiveModeAndAHAH");
 $config->setConfiguration('Renderer_Flexy', 'templateDir', "$base/templates/$flowName");
 $config->setConfiguration('Renderer_Flexy', 'compileDir', "$base/compiled-templates/$flowName");
-$config->setConfiguration('Renderer_Flexy', 'checkHTTPAcceptForLayout', true);
+$config->setConfiguration('Renderer_Flexy', 'turnOffLayoutByHTTPAccept', true);
 $unity = &new Piece_Unity("$base/config", "$base/cache", $config);
 $unity->dispatch();
 
