@@ -86,8 +86,8 @@ class Piece_Unity_Config_Factory
     // {{{ factory()
 
     /**
-     * Creates a Piece_Unity_Config object from a configuration file or a
-     * cache.
+     * Creates a Piece_Unity_Config object from a configuration file or
+     * a cache.
      *
      * @param string $configDirectory
      * @param string $cacheDirectory
