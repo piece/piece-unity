@@ -1,4 +1,5 @@
 # $Id$
+
 - name: Controller
   point:
     - name: dispatcher
@@ -7,6 +8,7 @@
     - name: view
       type: extension
       value: View
+
 - name: Dispatcher_Continuation
   point:
     - name: actionDirectory
@@ -24,18 +26,28 @@
         - name: Registration
           file: ../webapp/config/Registration.yaml
           isExclusive: false
+
 - name: Dispatcher_Simple
   point:
     - name: actionDirectory
       type: configuration
       value: ../webapp/actions
+
 - name: View
   point:
     - name: renderer
       type: extension
       value: Renderer_PHP
+
 - name: Renderer_PHP
   point:
     - name: templateDirectory
       type: configuration
       value: ../webapp/templates
+
+# Local Variables:
+# mode: conf-colon
+# coding: iso-8859-1
+# tab-width: 2
+# indent-tabs-mode: nil
+# End:

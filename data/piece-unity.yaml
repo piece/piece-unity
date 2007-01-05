@@ -1,4 +1,5 @@
 # $Id$
+
 name: config
 desc: the definition of Piece_Unity configuration file.
 type: seq
@@ -17,3 +18,10 @@ sequence:
                "name": { type: str, required: yes }
                "type": { type: str, required: yes, enum: [ extension, configuration ] }
                "value": { type: any }
+
+# Local Variables:
+# mode: conf-colon
+# coding: iso-8859-1
+# tab-width: 2
+# indent-tabs-mode: nil
+# End:
