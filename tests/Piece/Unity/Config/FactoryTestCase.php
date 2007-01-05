@@ -72,6 +72,8 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
      * @access private
      */
 
+    var $_cacheDirectory;
+
     /**#@-*/
 
     /**#@+
@@ -81,11 +83,12 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
     function setUp()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+        $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 
     function tearDown()
     {
-        $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
+        $cache = &new Cache_Lite_File(array('cacheDir' => "{$this->_cacheDirectory}/",
                                             'masterFile' => '',
                                             'automaticSerialization' => true,
                                             'errorHandlingAPIBreak' => true)
@@ -95,19 +98,52 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
         Piece_Unity_Error::popCallback();
     }
 
-    function testCreating()
+    function testFactoryWithoutConfigurationFile()
     {
-        $this->assertTrue(is_a(Piece_Unity_Config_Factory::factory(),
-                               'Piece_Unity_Config')
-                          );
+        $this->assertEquals(strtolower('Piece_Unity_Config'), strtolower(get_class(Piece_Unity_Config_Factory::factory())));
     }
 
-    function testCreatingUsingConfigurationFile()
+    function testConfigurationDirectoryNotFound()
     {
-        $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__) . '/../../../../data',
-                                                       dirname(__FILE__)
-                                                       );
-        $this->assertTrue(is_a($config, 'Piece_Unity_Config'));
+        $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__) . '/foo', $this->_cacheDirectory);
+
+        $this->assertEquals(strtolower('Piece_Unity_Config'), strtolower(get_class($config)));
+        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
+    }
+
+    function testConfigurationFileNotFound()
+    {
+        $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__), $this->_cacheDirectory);
+
+        $this->assertEquals(strtolower('Piece_Unity_Config'), strtolower(get_class($config)));
+        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
+    }
+
+    function testNoCachingIfCacheDirectoryNotFound()
+    {
+        $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__), dirname(__FILE__) . '/foo');
+
+        $this->assertEquals(strtolower('Piece_Unity_Config'), strtolower(get_class($config)));
+        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
+    }
+
+    function testFactoryWithConfigurationFile()
+    {
+        $config = &Piece_Unity_Config_Factory::factory($this->_cacheDirectory, $this->_cacheDirectory);
+
+        $this->assertEquals(strtolower('Piece_Unity_Config'), strtolower(get_class($config)));
         $this->assertEquals('View', $config->getExtension('Controller', 'view'));
         $this->assertEquals('Dispatcher_Simple', $config->getExtension('Controller', 'dispatcher'));
         $this->assertEquals('../webapp/actions', $config->getConfiguration('Dispatcher_Continuation', 'actionDirectory'));
@@ -122,56 +158,6 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
         $this->assertEquals('../webapp/actions', $config->getConfiguration('Dispatcher_Simple', 'actionDirectory'));
         $this->assertEquals('../webapp/templates', $config->getConfiguration('Renderer_PHP', 'templateDirectory'));
         $this->assertEquals('Renderer_PHP', $config->getExtension('View', 'renderer'));
-    }
-
-    function testCreatingIfConfigurationDirectoryNotFound()
-    {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
-        $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__) . '/foo',
-                                                       dirname(__FILE__)
-                                                       );
-        $this->assertTrue(is_a($config, 'Piece_Unity_Config'));
-        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
-
-        Piece_Unity_Error::popCallback();
-    }
-
-    function testCreatingIfConfigurationFileNotFound()
-    {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
-        $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__) . '/../../../../tests',
-                                                       dirname(__FILE__)
-                                                       );
-        $this->assertTrue(is_a($config, 'Piece_Unity_Config'));
-        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
-
-        Piece_Unity_Error::popCallback();
-    }
-
-    function testNoCachingIfCacheDirectoryNotFound()
-    {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
-        $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__) . '/../../../../data');
-
-        $this->assertTrue(is_a($config, 'Piece_Unity_Config'));
-        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
-
-        Piece_Unity_Error::popCallback();
     }
 
     /**#@-*/
