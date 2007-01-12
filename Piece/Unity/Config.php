@@ -119,11 +119,11 @@ class Piece_Unity_Config
         $plugin = strtolower($plugin);
         $extensionPoint = strtolower($extensionPoint);
         if (!array_key_exists($plugin, $this->_extensions)) {
-            return null;
+            return;
         }
 
         if (!array_key_exists($extensionPoint, $this->_extensions[$plugin])) {
-            return null;
+            return;
         }
 
         return $this->_extensions[$plugin][$extensionPoint];
@@ -144,11 +144,11 @@ class Piece_Unity_Config
         $plugin = strtolower($plugin);
         $configurationPoint = strtolower($configurationPoint);
         if (!array_key_exists($plugin, $this->_configurations)) {
-            return null;
+            return;
         }
 
         if (!array_key_exists($configurationPoint, $this->_configurations[$plugin])) {
-            return null;
+            return;
         }
 
         return $this->_configurations[$plugin][$configurationPoint];
