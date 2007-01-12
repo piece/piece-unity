@@ -114,7 +114,6 @@ class Piece_Unity_Config_Factory
         }
 
         $configFile = "$configDirectory/piece-unity-config.yaml";
-
         if (!file_exists($configFile)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
