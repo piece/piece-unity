@@ -128,11 +128,15 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
      */
     function _initialize()
     {
-        $this->_addConfigurationPoint('useLayout');
+        $this->_addConfigurationPoint('useLayout', false);
         $this->_addConfigurationPoint('layoutView');
         $this->_addConfigurationPoint('layoutDirectory');
         $this->_addConfigurationPoint('layoutCompileDirectory');
         $this->_addConfigurationPoint('turnOffLayoutByHTTPAccept', false);
+        $this->_addConfigurationPoint('useFallback', false);
+        $this->_addConfigurationPoint('fallbackView');
+        $this->_addConfigurationPoint('fallbackDirectory');
+        $this->_addConfigurationPoint('fallbackCompileDirectory');
     }
 
     // }}}
@@ -140,12 +144,57 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
 
     /**
      * Renders a HTML.
+     * If an error occured while rendering with a specified view and
+     * useFallback is true, a fallback view will be rendered.
      *
      * @param boolean $isLayout
+     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     */
+    function _render($isLayout)
+    {
+        $useFallback = $this->getConfiguration('useFallback');
+
+        if ($useFallback) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        }
+
+        $this->_doRender($isLayout);
+
+        if ($useFallback) {
+            Piece_Unity_Error::popCallback();
+        }
+
+        if ($useFallback) {
+            if (Piece_Unity_Error::hasErrors()) {
+                $this->_context->setView($this->getConfiguration('fallbackView'));
+                $this->_prepareFallback();
+                $this->_doRender($isLayout);
+            }
+        }
+    }
+
+    // }}}
+    // {{{ _doRender()
+
+    /**
+     * Renders a HTML.
+     *
+     * @param boolean $isLayout
+     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      * @abstract
      */
-    function _render($isLayout) {}
- 
+    function _doRender($isLayout) {}
+
+    // }}}
+    // {{{ _prepareFallback()
+
+    /**
+     * Prepares another view as a fallback.
+     *
+     * @abstract
+     */
+    function _prepareFallback() {}
+
     /**#@-*/
 
     // }}}

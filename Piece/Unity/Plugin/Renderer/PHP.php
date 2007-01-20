@@ -96,14 +96,14 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
     }
 
     // }}}
-    // {{{ _render()
+    // {{{ _doRender()
 
     /**
      * Renders a HTML.
      *
      * @param boolean $isLayout
      */
-    function _render($isLayout)
+    function _doRender($isLayout)
     {
         if (!$isLayout) {
             $templateDirectory = $this->getConfiguration('templateDirectory');
@@ -153,6 +153,18 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
                                     );
             Piece_Unity_Error::popCallback();
         }
+    }
+
+    // }}}
+    // {{{ _prepareFallback()
+
+    /**
+     * Prepares another view as a fallback.
+     */
+    function _prepareFallback()
+    {
+        $config = &$this->_context->getConfiguration();
+        $config->setConfiguration('Renderer_PHP', 'templateDirectory', $this->getConfiguration('fallbackDirectory'));
     }
  
     /**#@-*/

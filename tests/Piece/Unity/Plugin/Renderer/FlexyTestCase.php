@@ -163,7 +163,10 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
                        dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Content/$view.html.elements.serial",
                        dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Layout/$view.html.en.php",
                        dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Layout/$view.html.gettext.serial",
-                       dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Layout/$view.html.elements.serial"
+                       dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Layout/$view.html.elements.serial",
+                       dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Fallback/$view.html.en.php",
+                       dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Fallback/$view.html.gettext.serial",
+                       dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Fallback/$view.html.elements.serial"
                        );
         foreach ($files as $file) {
             if (file_exists($file)) {

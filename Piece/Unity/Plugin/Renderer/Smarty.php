@@ -177,7 +177,7 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
     }
 
     // }}}
-    // {{{ _render()
+    // {{{ _doRender()
 
     /**
      * Renders a HTML.
@@ -185,7 +185,7 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
      * @param boolean $isLayout
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
-    function _render($isLayout)
+    function _doRender($isLayout)
     {
         $smarty = &new Smarty();
 
@@ -223,6 +223,19 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
                                     Piece_Unity_Error::pop()
                                     );
         }
+    }
+
+    // }}}
+    // {{{ _prepareFallback()
+
+    /**
+     * Prepares another view as a fallback.
+     */
+    function _prepareFallback()
+    {
+        $config = &$this->_context->getConfiguration();
+        $config->setConfiguration('Renderer_Smarty', 'template_dir', $this->getConfiguration('fallbackDirectory'));
+        $config->setConfiguration('Renderer_Smarty', 'compile_dir', $this->getConfiguration('fallbackCompileDirectory'));
     }
 
     /**#@-*/

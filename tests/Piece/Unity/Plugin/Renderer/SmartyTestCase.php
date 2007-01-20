@@ -89,7 +89,7 @@ class Piece_Unity_Plugin_Renderer_SmartyTestCase extends Piece_Unity_Plugin_Rend
 
     function _clear($view)
     {
-        foreach (array('Content', 'Layout') as $directory) {
+        foreach (array('Content', 'Layout', 'Fallback') as $directory) {
             $smarty = &new Smarty();
             $smarty->compile_dir = dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/$directory";
             $smarty->clear_compiled_tpl("$view.tpl");

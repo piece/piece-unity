@@ -169,7 +169,7 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_DIE . ';'));
 
-        $viewString = "{$this->_target}NonExistingTemplate";
+        $viewString = "{$this->_target}NonExistingView";
         $context = &Piece_Unity_Context::singleton();
 
         $config = &$this->_getConfig();
@@ -245,6 +245,41 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
 </div>
   </body>
 </html>');
+    }
+
+    function testFallback()
+    {
+        $viewString = 'NonExistingView';
+        $context = &Piece_Unity_Context::singleton();
+
+        $config = &$this->_getConfig();
+        $config->setConfiguration("Renderer_{$this->_target}", 'useFallback', true);
+        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackView', 'Fallback');
+        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/templates/Fallback");
+        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackCompileDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Fallback");
+        $context->setConfiguration($config);
+        $context->setView($viewString);
+
+        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
+        $renderer = &new $class();
+        ob_start();
+        $renderer->invoke();
+        $buffer = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals('<html>
+  <body>
+    <p>This is a test for fallback.</p>
+  </body>
+</html>', rtrim($buffer));
+
+        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals($this->_errorCodeWhenTemplateNotExists, $error['code']);
+
+        $this->_clear('Fallback');
     }
 
     /**#@-*/

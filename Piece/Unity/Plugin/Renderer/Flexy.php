@@ -183,7 +183,7 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
     }
 
     // }}}
-    // {{{ _render()
+    // {{{ _doRender()
 
     /**
      * Renders a HTML.
@@ -191,7 +191,7 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
      * @param boolean $isLayout
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
-    function _render($isLayout)
+    function _doRender($isLayout)
     {
         $options = $this->_getOptions();
         if (!$isLayout) {
@@ -247,6 +247,19 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
                                              array('plugin' => __CLASS__)
                                              );
         }
+    }
+
+    // }}}
+    // {{{ _prepareFallback()
+
+    /**
+     * Prepares another view as a fallback.
+     */
+    function _prepareFallback()
+    {
+        $config = &$this->_context->getConfiguration();
+        $config->setConfiguration('Renderer_Flexy', 'templateDir', $this->getConfiguration('fallbackDirectory'));
+        $config->setConfiguration('Renderer_Flexy', 'compileDir', $this->getConfiguration('fallbackCompileDirectory'));
     }
 
     /**#@-*/
