@@ -196,7 +196,7 @@ class Piece_Unity_Config
      * method.
      *
      * @param string $configurations
-     * @param string $key
+     * @param string $plugin
      */
     function mergeConfigurations($configurations, $plugin)
     {
