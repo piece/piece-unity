@@ -140,7 +140,7 @@ class Piece_Unity_Plugin_Common
      * @param string $configurationPoint
      * @return string
      */
-    function &getConfiguration($configurationPoint)
+    function getConfiguration($configurationPoint)
     {
         $config = &$this->_context->getConfiguration();
         $configuration = $config->getConfiguration(str_replace('piece_unity_plugin_', '', strtolower(get_class($this))),
