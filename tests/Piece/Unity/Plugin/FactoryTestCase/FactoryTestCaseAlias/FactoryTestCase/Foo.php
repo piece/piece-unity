@@ -40,7 +40,7 @@
 
 require_once 'Piece/Unity/Plugin/Common.php';
 
-// {{{ Alias_FactoryTestCase_Foo
+// {{{ FactoryTestCaseAlias_FactoryTestCase_Foo
 
 /**
  * A class for unit tests.
@@ -54,7 +54,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @see        Piece_Unity_Plugin_FactoryTestCase
  * @since      Class available since Release 0.11.0
  */
-class Alias_FactoryTestCase_Foo extends Piece_Unity_Plugin_Common
+class FactoryTestCaseAlias_FactoryTestCase_Foo extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
@@ -75,7 +75,7 @@ class Alias_FactoryTestCase_Foo extends Piece_Unity_Plugin_Common
      * @access public
      */
 
-    function Alias_FactoryTestCase_Foo()
+    function FactoryTestCaseAlias_FactoryTestCase_Foo()
     {
         parent::Piece_Unity_Plugin_Common();
         $this->_addExtensionPoint('bar');

@@ -147,11 +147,11 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
      */
     function testAlias()
     {
-        Piece_Unity_Plugin_Factory::addPluginPrefix('Alias');
+        Piece_Unity_Plugin_Factory::addPluginPrefix('FactoryTestCaseAlias');
         $foo = &Piece_Unity_Plugin_Factory::factory('Foo');
 
         $this->assertTrue(is_object($foo));
-        $this->assertTrue(is_a($foo, 'Alias_Foo'));
+        $this->assertTrue(is_a($foo, 'FactoryTestCaseAlias_Foo'));
     }
 
     /**
@@ -171,11 +171,11 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
      */
     function testCreateExistingClass()
     {
-        Piece_Unity_Plugin_Factory::addPluginPrefix('Alias');
+        Piece_Unity_Plugin_Factory::addPluginPrefix('FactoryTestCaseAlias');
         $foo = &Piece_Unity_Plugin_Factory::factory('FactoryTestCase_Foo');
 
         $this->assertTrue(is_object($foo));
-        $this->assertFalse(is_a($foo, 'Alias_FactoryTestCase_Foo'));
+        $this->assertFalse(is_a($foo, 'FactoryTestCaseAlias_FactoryTestCase_Foo'));
         $this->assertTrue(is_a($foo, 'Piece_Unity_Plugin_FactoryTestCase_Foo'));
     }
 
