@@ -145,14 +145,14 @@ class Piece_Unity_Plugin_Factory
     }
 
     // }}}
-    // {{{ addPrefix()
+    // {{{ addPluginPrefix()
 
     /**
      * Adds a prefix for a plug-in.
      *
      * @param string $prefix
      */
-    function addPrefix($prefix)
+    function addPluginPrefix($prefix)
     {
         array_unshift($GLOBALS['PIECE_UNITY_Plugin_Prefixes'], $prefix);
     }
