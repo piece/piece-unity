@@ -182,6 +182,25 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         foreach ($this->getConfiguration('nonSSLableServers') as $nonSSLableServer) {
             Piece_Unity_URL::addNonSSLableServer($nonSSLableServer);
         }
+
+        /*
+         * Sets plug-in prefixes.
+         */
+        $pluginPrefixes = $this->getConfiguration('pluginPrefixes');
+        if (!is_array($pluginPrefixes)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    'Failed to configure the configuration point [ pluginPrefixes ] at the plugin [ ' . __CLASS__ . ' ].',
+                                    'warning',
+                                    array('plugin' => __CLASS__)
+                                    );
+            Piece_Unity_Error::popCallback();
+            return;
+        }
+
+        foreach (array_reverse($pluginPrefixes) as $pluginPrefix) {
+            Piece_Unity_Plugin_Factory::addPluginPrefix($pluginPrefix);
+        }
     }
 
     /**#@-*/
@@ -211,6 +230,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         $this->_addConfigurationPoint('validationValidatorDirectories', array());
         $this->_addConfigurationPoint('validationFilterDirectories', array());
         $this->_addConfigurationPoint('nonSSLableServers', array());
+        $this->_addConfigurationPoint('pluginPrefixes', array());
     }
  
     /**#@-*/

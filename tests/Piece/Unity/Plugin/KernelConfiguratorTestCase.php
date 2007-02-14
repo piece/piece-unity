@@ -304,6 +304,32 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         unset($_SERVER['SERVER_NAME']);
     }
 
+    /**
+     * @since Method available since Release 0.11.0
+     */
+    function testPluginPrefixes()
+    {
+        $oldPluginPrefixes = $GLOBALS['PIECE_UNITY_Plugin_Prefixes'];
+        $oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('KernelConfigurator', 'pluginPrefixes', array('KernelConfiguratorTestCaseAlias'));
+        $config->setConfiguration('KernelConfigurator', 'pluginDirectories', array(dirname(__FILE__) . '/KernelConfiguratorTestCase'));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $configurator = &new Piece_Unity_Plugin_KernelConfigurator();
+        $configurator->invoke();
+
+        $foo = &Piece_Unity_Plugin_Factory::factory('Foo');
+
+        $this->assertTrue(is_object($foo));
+        $this->assertTrue(is_a($foo, 'KernelConfiguratorTestCaseAlias_Foo'));
+
+        Piece_Unity_Plugin_Factory::clearInstances();
+        $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $oldPluginDirectories;
+        $GLOBALS['PIECE_UNITY_Plugin_Prefixes'] = $oldPluginPrefixes;
+    }
+
     /**#@-*/
 
     /**#@+
