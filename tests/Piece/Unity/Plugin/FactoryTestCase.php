@@ -70,6 +70,7 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
      */
 
     var $_oldPluginDirectories;
+    var $_oldPrefixes;
 
     /**#@-*/
 
@@ -82,10 +83,12 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $this->_oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
         Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/FactoryTestCase');
+        $this->_oldPrefixes = $GLOBALS['PIECE_UNITY_Plugin_Prefixes'];
     }
 
     function tearDown()
     {
+        $GLOBALS['PIECE_UNITY_Plugin_Prefixes'] = $this->_oldPrefixes;
         Piece_Unity_Plugin_Factory::clearInstances();
         $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $this->_oldPluginDirectories;
         Piece_Unity_Error::clearErrors();
@@ -137,6 +140,43 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
         $plugin = &Piece_Unity_Plugin_Factory::factory('FactoryTestCase_Foo');
 
         $this->assertTrue(array_key_exists('baz', $fooPlugin));
+    }
+
+    /**
+     * @since Method available since Release 0.11.0
+     */
+    function testAlias()
+    {
+        Piece_Unity_Plugin_Factory::addPrefix('Alias');
+        $foo = &Piece_Unity_Plugin_Factory::factory('Foo');
+
+        $this->assertTrue(is_object($foo));
+        $this->assertTrue(is_a($foo, 'Alias_Foo'));
+    }
+
+    /**
+     * @since Method available since Release 0.11.0
+     */
+    function testAliasWithEmptyPrefix()
+    {
+        Piece_Unity_Plugin_Factory::addPrefix('');
+        $bar = &Piece_Unity_Plugin_Factory::factory('Bar');
+
+        $this->assertTrue(is_object($bar));
+        $this->assertTrue(is_a($bar, 'Bar'));
+    }
+
+    /**
+     * @since Method available since Release 0.11.0
+     */
+    function testCreateExistingClass()
+    {
+        Piece_Unity_Plugin_Factory::addPrefix('Alias');
+        $foo = &Piece_Unity_Plugin_Factory::factory('FactoryTestCase_Foo');
+
+        $this->assertTrue(is_object($foo));
+        $this->assertFalse(is_a($foo, 'Alias_FactoryTestCase_Foo'));
+        $this->assertTrue(is_a($foo, 'Piece_Unity_Plugin_FactoryTestCase_Foo'));
     }
 
     /**#@-*/
