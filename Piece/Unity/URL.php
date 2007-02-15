@@ -30,6 +30,7 @@
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @author     MATSUFUJI Hideharu <matsufuji@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
@@ -54,6 +55,7 @@ $GLOBALS['PIECE_UNITY_URL_NonSSLableServers'] = array();
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @author     MATSUFUJI Hideharu <matsufuji@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
@@ -304,6 +306,7 @@ class Piece_Unity_URL
      * Removes a name/value pair from the query string.
      *
      * @param string $name
+     * @since Method available since Release 0.11.0
      */
     function removeQueryString($name)
     {
