@@ -30,6 +30,7 @@
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @author     MATSUFUJI Hideharu <matsufuji@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
@@ -47,6 +48,7 @@ require_once 'Piece/Unity/URL.php';
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @author     MATSUFUJI Hideharu <matsufuji@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
@@ -113,6 +115,14 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
                                          $viewElements['__flowExecutionTicket']
                                          );
                 }
+            }
+
+            /*
+             * Replaces __eventNameKey with the event name key.
+             */
+            if (array_key_exists('__eventNameKey', $queryString)) {
+                $url->removeQueryString('__eventNameKey');
+                $url->addQueryString($this->_context->getEventNameKey(), $queryString['__eventNameKey']);
             }
         }
 
