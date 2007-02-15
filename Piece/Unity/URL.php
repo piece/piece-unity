@@ -297,6 +297,29 @@ class Piece_Unity_URL
         $GLOBALS['PIECE_UNITY_URL_NonSSLableServers'] = array();
     }
 
+    // }}}
+    // {{{ removeQueryString()
+
+    /**
+     * Removes a name/value pair from the query string.
+     *
+     * @param string $name
+     */
+    function removeQueryString($name)
+    {
+        if (is_null($this->_url)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
+                                    __FUNCTION__ . ' method must be called after initializing.',
+                                    'warning'
+                                    );
+            Piece_Unity_Error::popCallback();
+            return;
+        }
+
+        $this->_url->removeQueryString($name);
+    }
+
     /**#@-*/
 
     /**#@+
