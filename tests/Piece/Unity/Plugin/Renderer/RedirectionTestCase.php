@@ -225,6 +225,28 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         unset($_SERVER['SERVER_PORT']);
     }
 
+    /**
+     * @since Method available since Release 0.11.0
+     */
+    function testRedirectionToHTTPS()
+    {
+        $_SERVER['SERVER_NAME'] = 'example.org';
+        $_SERVER['SERVER_PORT'] = '80';
+        $expectedURL = 'https://example.org/foo.php';
+        $context = &Piece_Unity_Context::singleton();
+        $context->setView('https://example.org/foo.php');
+        $config = &new Piece_Unity_Config();
+        $context->setConfiguration($config);
+        $view = &new Piece_Unity_Plugin_View();
+        $view->invoke();
+        $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+
+        $this->assertEquals($expectedURL, $redirection->_url);
+
+        unset($_SERVER['SERVER_NAME']);
+        unset($_SERVER['SERVER_PORT']);
+    }
+
     /**#@-*/
 
     /**#@+

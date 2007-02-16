@@ -87,7 +87,8 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
     function invoke()
     {
         $isExternal = $this->getConfiguration('isExternal');
-        $url = &new Piece_Unity_URL($this->_context->getView(), $isExternal);
+        $viewString = $this->_context->getView();
+        $url = &new Piece_Unity_URL($viewString, $isExternal);
 
         $viewElement = &$this->_context->getViewElement();
         $viewElements = $viewElement->getElements();
@@ -126,9 +127,13 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
             }
         }
 
-        $this->_url = $url->getURL();
+        if (substr($viewString, 0, 7) == 'http://') {
+            $this->_url = $url->getURL();
+        } elseif (substr($viewString, 0, 8) == 'https://') {
+            $this->_url = $url->getURL(true);
+        }
 
-        if (!headers_sent()) {
+        if (!headers_sent() && !is_null($this->_url)) {
             header("Location: {$this->_url}");
         }
     }
