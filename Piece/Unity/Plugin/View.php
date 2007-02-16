@@ -117,9 +117,27 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
          * Overwrites the extension 'renderer' if the view string start with
          * http(s)://, since it is considered as a URL to redirect.
          */
-        if (preg_match('!^https?://!', $this->_context->getView())) {
+        $viewString = $this->_context->getView();
+        if (preg_match('!^https?://!', $viewString)) {
             $config = &$this->_context->getConfiguration();
             $config->setExtension('View', 'renderer', 'Renderer_Redirection');
+        }
+
+        /*
+         * Self Notation
+         *
+         * Overwrites the extension 'renderer' if the view string start with
+         * self:://, since it is considered as the URL of an entry point
+         * itself to redirect.
+         */
+        if (preg_match('!^selfs?://(.*)!', $viewString, $matches)) {
+            $config = &$this->_context->getConfiguration();
+            $config->setExtension('View', 'renderer', 'Renderer_Redirection');
+            if (substr($viewString, 0, 7) == 'self://') {
+                $this->_context->setView('http://example.org' . $this->_context->getScriptName() . '?' . $matches[1]);
+            } elseif (substr($viewString, 0, 8) == 'selfs://') {
+                $this->_context->setView('https://example.org' . $this->_context->getScriptName() . '?' . $matches[1]);
+            }
         }
 
         $renderer = &$this->getExtension('renderer');
