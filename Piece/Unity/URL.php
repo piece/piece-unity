@@ -226,7 +226,7 @@ class Piece_Unity_URL
      * Creates a Net_URL object with the given path, and replaces some pieces
      * of a URL when the URL is not external.
      *
-     * @param string  $path
+     * @param string $path
      */
     function initialize($path)
     {
