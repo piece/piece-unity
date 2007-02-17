@@ -233,7 +233,6 @@ class Piece_Unity_Plugin_Renderer_DownloadTestCase extends PHPUnit_TestCase
         $viewElement->setElement($keyword, $resource2);
 
         $renderer->setResource();
-        $params = $renderer->getParams();
 
         $this->assertTrue(is_resource($renderer->httpDownload->handle));
         $this->assertEquals('stream',
@@ -270,7 +269,6 @@ baz
         $viewElement->setElement($keyword, $data2);
 
         $renderer->setDataSource();
-        $params = $renderer->getParams();
 
         $this->assertEquals($renderer->httpDownload->data, $data2);
     }
@@ -304,7 +302,6 @@ baz
         $tsv = "\"foo\"\t\"red\"\t\"sun\"\r\n\"bar\"\t\"green\"\t\"forest\"\r\n\"baz\"\t\"blue\"\t\"sky\"\r\n";
 
         $renderer->setDataSource();
-        $params = $renderer->getParams();
 
         $this->assertEquals($renderer->httpDownload->data, $tsv);
     }
