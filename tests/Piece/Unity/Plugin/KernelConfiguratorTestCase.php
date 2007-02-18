@@ -259,7 +259,6 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
 
         Piece_Right_Filter_Factory::clearInstances();
         $GLOBALS['PIECE_RIGHT_Filter_Directories'] = $oldFilterDirectories;
-        Piece_Right_Filter_Factory::setFilterDirectories($oldFilterDirectories);
         Piece_Right_Validator_Factory::clearInstances();
         $GLOBALS['PIECE_RIGHT_Validator_Directories'] = $oldValidatorDirectories;
         unset($_POST['greeting']);
