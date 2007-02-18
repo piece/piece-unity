@@ -228,7 +228,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $_POST['password'] = 'iteman30';
         $_POST['email'] = 'iteman@users.sourceforge.net';
         $_POST['greeting'] = 'Hello World';
-        $oldValidatorDirectories = Piece_Right_Validator_Factory::getValidatorDirectories();
+        $oldValidatorDirectories = $GLOBALS['PIECE_RIGHT_Validator_Directories'];
         $oldFilterDirectories = Piece_Right_Filter_Factory::getFilterDirectories();
 
         $config = &new Piece_Unity_Config();
@@ -260,7 +260,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         Piece_Right_Filter_Factory::clearInstances();
         Piece_Right_Filter_Factory::setFilterDirectories($oldFilterDirectories);
         Piece_Right_Validator_Factory::clearInstances();
-        Piece_Right_Validator_Factory::setValidatorDirectories($oldValidatorDirectories);
+        $GLOBALS['PIECE_RIGHT_Validator_Directories'] = $oldValidatorDirectories;
         unset($_POST['greeting']);
         unset($_POST['email']);
         unset($_POST['password']);
