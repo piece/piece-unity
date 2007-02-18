@@ -229,7 +229,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $_POST['email'] = 'iteman@users.sourceforge.net';
         $_POST['greeting'] = 'Hello World';
         $oldValidatorDirectories = $GLOBALS['PIECE_RIGHT_Validator_Directories'];
-        $oldFilterDirectories = Piece_Right_Filter_Factory::getFilterDirectories();
+        $oldFilterDirectories = $GLOBALS['PIECE_RIGHT_Filter_Directories'];
 
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('KernelConfigurator', 'validationConfigDirectory', dirname(__FILE__) . '/KernelConfiguratorTestCase');
@@ -258,6 +258,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $this->assertEquals($_POST['email'], $container->email);
 
         Piece_Right_Filter_Factory::clearInstances();
+        $GLOBALS['PIECE_RIGHT_Filter_Directories'] = $oldFilterDirectories;
         Piece_Right_Filter_Factory::setFilterDirectories($oldFilterDirectories);
         Piece_Right_Validator_Factory::clearInstances();
         $GLOBALS['PIECE_RIGHT_Validator_Directories'] = $oldValidatorDirectories;
