@@ -70,7 +70,7 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
      */
 
     var $_oldPluginDirectories;
-    var $_oldPrefixes;
+    var $_oldPluginPrefixes;
 
     /**#@-*/
 
@@ -83,12 +83,12 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $this->_oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
         Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/FactoryTestCase');
-        $this->_oldPrefixes = $GLOBALS['PIECE_UNITY_Plugin_Prefixes'];
+        $this->_oldPluginPrefixes = $GLOBALS['PIECE_UNITY_Plugin_Prefixes'];
     }
 
     function tearDown()
     {
-        $GLOBALS['PIECE_UNITY_Plugin_Prefixes'] = $this->_oldPrefixes;
+        $GLOBALS['PIECE_UNITY_Plugin_Prefixes'] = $this->_oldPluginPrefixes;
         Piece_Unity_Plugin_Factory::clearInstances();
         $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $this->_oldPluginDirectories;
         Piece_Unity_Error::clearErrors();
