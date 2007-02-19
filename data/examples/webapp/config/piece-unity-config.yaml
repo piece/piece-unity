@@ -48,15 +48,6 @@
         - Interceptor_SessionStart
         - Interceptor_Authentication
 
-- name: KernelConfigurator
-  point:
-    - name: validationConfigDirectory
-      type: configuration
-      value: ../webapp/config/validations
-    - name: validationCacheDirectory
-      type: configuration
-      value: ../webapp/cache/validations
-
 - name: Renderer_Flexy
   point:
     - name: useLayout
@@ -89,6 +80,21 @@
     - name: guardDirectory
       type: configuration
       value: ../webapp/actions
+
+- name: Root
+  point:
+    - name: configurator
+      type: extension
+      value: ConfiguratorChain
+
+- name: Configurator_Validation
+  point:
+    - name: configDirectory
+      type: configuration
+      value: ../webapp/config/validations
+    - name: cacheDirectory
+      type: configuration
+      value: ../webapp/cache/validations
 
 # Local Variables:
 # mode: conf-colon

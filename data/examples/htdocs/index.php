@@ -52,7 +52,7 @@ ini_set('session.cookie_path', str_replace('\\', '/', dirname($_SERVER['SCRIPT_N
 session_save_path("$base/sessions");
 
 $config = &new Piece_Unity_Config();
-$config->setConfiguration('KernelConfigurator', 'eventName', 'Index');
+$config->setConfiguration('Configurator_Event', 'eventName', 'Index');
 $config->setExtension('Controller', 'dispatcher', 'Dispatcher_Simple');
 $config->setConfiguration('Renderer_Flexy', 'templateDir', "$base/templates/Static");
 $config->setConfiguration('Renderer_Flexy', 'compileDir', "$base/compiled-templates/Static");
