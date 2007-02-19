@@ -276,7 +276,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('KernelConfigurator', 'NonSSLableServers', array('example.org'));
+        $config->setConfiguration('KernelConfigurator', 'nonSSLableServers', array('example.org'));
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
