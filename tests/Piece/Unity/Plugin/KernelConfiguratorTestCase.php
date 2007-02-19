@@ -320,10 +320,10 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $configurator = &new Piece_Unity_Plugin_KernelConfigurator();
         $configurator->invoke();
 
-        $foo = &Piece_Unity_Plugin_Factory::factory('Foo');
+        $foo = &Piece_Unity_Plugin_Factory::factory('FooPlugin');
 
         $this->assertTrue(is_object($foo));
-        $this->assertTrue(is_a($foo, 'KernelConfiguratorTestCaseAlias_Foo'));
+        $this->assertTrue(is_a($foo, 'KernelConfiguratorTestCaseAlias_FooPlugin'));
 
         Piece_Unity_Plugin_Factory::clearInstances();
         $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $oldPluginDirectories;

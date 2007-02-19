@@ -40,7 +40,7 @@
 
 require_once 'Piece/Unity/Plugin/Common.php';
 
-// {{{ KernelConfiguratorTestCaseAlias_Foo
+// {{{ KernelConfiguratorTestCaseAlias_FooPlugin
 
 /**
  * A class for unit tests.
@@ -54,7 +54,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @see        Piece_Unity_Plugin_FactoryTestCase
  * @since      Class available since Release 0.11.0
  */
-class KernelConfiguratorTestCaseAlias_Foo extends Piece_Unity_Plugin_Common
+class KernelConfiguratorTestCaseAlias_FooPlugin extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
@@ -75,7 +75,7 @@ class KernelConfiguratorTestCaseAlias_Foo extends Piece_Unity_Plugin_Common
      * @access public
      */
 
-    function KernelConfiguratorTestCaseAlias_Foo()
+    function KernelConfiguratorTestCaseAlias_FooPlugin()
     {
         parent::Piece_Unity_Plugin_Common();
         $this->_addExtensionPoint('bar');
