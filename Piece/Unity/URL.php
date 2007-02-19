@@ -234,7 +234,7 @@ class Piece_Unity_URL
 
         if (!$this->_isExternal) {
             $context = &Piece_Unity_Context::singleton();
-            if ($context->usingProxy()) {
+            if ($context->usingProxy() && array_key_exists('HTTP_X_FORWARDED_SERVER', $_SERVER)) {
                 if ($this->_url->host != $_SERVER['HTTP_X_FORWARDED_SERVER']) {
                     $this->_url->host = $_SERVER['HTTP_X_FORWARDED_SERVER'];
                     $this->_url->protocol = 'http';

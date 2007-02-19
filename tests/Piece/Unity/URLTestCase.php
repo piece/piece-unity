@@ -294,6 +294,24 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
         unset($_SERVER['HTTP_X_FORWARDED_SERVER']);
     }
 
+    /**
+     * @since Method available since Release 0.11.0
+     */
+    function testCannotRedirectWithEZwebMobilePhone()
+    {
+        $_SERVER['HTTP_VIA'] = '1.2.3.4';
+        $_SERVER['SERVER_NAME'] = 'example.org';
+        $_SERVER['SERVER_PORT'] = '80';
+
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            Piece_Unity_URL::create('http://example.com/foo/bar/baz.php')
+                            );
+
+        unset($_SERVER['SERVER_PORT']);
+        unset($_SERVER['SERVER_NAME']);
+        unset($_SERVER['HTTP_VIA']);
+    }
+
     /**#@-*/
 
     /**#@+
