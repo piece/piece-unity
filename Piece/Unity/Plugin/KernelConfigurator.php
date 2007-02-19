@@ -88,87 +88,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
     function invoke()
     {
         $this->_context->setEventNameKey($this->getConfiguration('eventNameKey'));
-
-        $autoloadClasses = $this->getConfiguration('autoloadClasses');
-        if (!is_array($autoloadClasses)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    'Failed to configure the configuration point [ autoloadClasses ] at the plugin [ ' . __CLASS__ . ' ].',
-                                    'warning',
-                                    array('plugin' => __CLASS__)
-                                    );
-            Piece_Unity_Error::popCallback();
-            $autoloadClasses = array();
-        }
-
-        $autoloadClasses[] = 'Piece_Flow_Continuation';
-        $autoloadClasses[] = 'Piece_Right_Results';
-        foreach ($autoloadClasses as $autoloadClass) {
-            Piece_Unity_Session::addAutoloadClass($autoloadClass);
-        }
-
-        $eventName = $this->getConfiguration('eventName');
-        if (!is_null($eventName)) {
-            $this->_context->setEventName($eventName);
-        }
-
-        $importPathInfo = $this->getConfiguration('importPathInfo');
-        if ($importPathInfo) {
-            $request = &$this->_context->getRequest();
-            $request->importPathInfo();
-        }
-
-        $pluginDirectories = $this->getConfiguration('pluginDirectories');
-        if (!is_array($pluginDirectories)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    'Failed to configure the configuration point [ pluginDirectories ] at the plugin [ ' . __CLASS__ . ' ].',
-                                    'warning',
-                                    array('plugin' => __CLASS__)
-                                    );
-            Piece_Unity_Error::popCallback();
-            return;
-        }
-
-        foreach (array_reverse($pluginDirectories) as $pluginDirectory) {
-            Piece_Unity_Plugin_Factory::addPluginDirectory($pluginDirectory);
-        }
-
         $this->_context->setProxyPath($this->getConfiguration('proxyPath'));
-
-        $validation = &$this->_context->getValidation();
-        $validation->setConfigDirectory($this->getConfiguration('validationConfigDirectory'));
-        $validation->setCacheDirectory($this->getConfiguration('validationCacheDirectory'));
-
-        $validationValidatorDirectories = $this->getConfiguration('validationValidatorDirectories');
-        if (is_array($validationValidatorDirectories)) {
-            foreach (array_reverse($validationValidatorDirectories) as $validationValidatorDirectory) {
-                Piece_Unity_Validation::addValidatorDirectory($validationValidatorDirectory);
-            }
-        } else {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    'Failed to configure the configuration point [ validationValidatorDirectories ] at the plugin [ ' . __CLASS__ . ' ].',
-                                    'warning',
-                                    array('plugin' => __CLASS__)
-                                    );
-            Piece_Unity_Error::popCallback();
-        }
-
-        $validationFilterDirectories = $this->getConfiguration('validationFilterDirectories');
-        if (is_array($validationFilterDirectories)) {
-            foreach (array_reverse($validationFilterDirectories) as $validationFilterDirectory) {
-                Piece_Unity_Validation::addFilterDirectory($validationFilterDirectory);
-            }
-        } else {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    'Failed to configure the configuration point [ validationFilterDirectories ] at the plugin [ ' . __CLASS__ . ' ].',
-                                    'warning',
-                                    array('plugin' => __CLASS__)
-                                    );
-            Piece_Unity_Error::popCallback();
-        }
 
         /*
          * Preloads Dispatcher_Continuation plug-in for restoring
@@ -176,31 +96,13 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
          */
         Piece_Unity_Plugin_Factory::factory('Dispatcher_Continuation');
 
-        /*
-         * Makes a list of non-SSLable servers.
-         */
-        foreach ($this->getConfiguration('nonSSLableServers') as $nonSSLableServer) {
-            Piece_Unity_URL::addNonSSLableServer($nonSSLableServer);
-        }
-
-        /*
-         * Sets plug-in prefixes.
-         */
-        $pluginPrefixes = $this->getConfiguration('pluginPrefixes');
-        if (!is_array($pluginPrefixes)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    'Failed to configure the configuration point [ pluginPrefixes ] at the plugin [ ' . __CLASS__ . ' ].',
-                                    'warning',
-                                    array('plugin' => __CLASS__)
-                                    );
-            Piece_Unity_Error::popCallback();
-            return;
-        }
-
-        foreach (array_reverse($pluginPrefixes) as $pluginPrefix) {
-            Piece_Unity_Plugin_Factory::addPluginPrefix($pluginPrefix);
-        }
+        $this->_setAutoloadClasses();
+        $this->_setEventName();
+        $this->_importPathInfo();
+        $this->_setPluginDirectories();
+        $this->_configureValidation();
+        $this->_setNonSSLableServers();
+        $this->_setPluginPrefixes();
     }
 
     /**#@-*/
@@ -232,7 +134,221 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         $this->_addConfigurationPoint('nonSSLableServers', array());
         $this->_addConfigurationPoint('pluginPrefixes', array());
     }
- 
+
+    // }}}
+    // {{{ _setPluginPrefixes()
+
+    /**
+     * Sets plug-in prefixes.
+     *
+     * @since Method available since Release 0.11.0
+     */
+    function _setPluginPrefixes()
+    {
+        $pluginPrefixes = $this->getConfiguration('pluginPrefixes');
+        if (!is_array($pluginPrefixes)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    'Failed to configure the configuration point [ pluginPrefixes ] at the plugin [ ' . __CLASS__ . ' ].',
+                                    'warning',
+                                    array('plugin' => __CLASS__)
+                                    );
+            Piece_Unity_Error::popCallback();
+            return;
+        }
+
+        foreach (array_reverse($pluginPrefixes) as $pluginPrefix) {
+            Piece_Unity_Plugin_Factory::addPluginPrefix($pluginPrefix);
+        }
+    }
+
+    // }}}
+    // {{{ _setAutoloadClasses()
+
+    /**
+     * Sets autoload classes.
+     *
+     * @since Method available since Release 0.11.0
+     */
+    function _setAutoloadClasses()
+    {
+        $autoloadClasses = $this->getConfiguration('autoloadClasses');
+        if (!is_array($autoloadClasses)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    'Failed to configure the configuration point [ autoloadClasses ] at the plugin [ ' . __CLASS__ . ' ].',
+                                    'warning',
+                                    array('plugin' => __CLASS__)
+                                    );
+            Piece_Unity_Error::popCallback();
+            $autoloadClasses = array();
+        }
+
+        $autoloadClasses[] = 'Piece_Flow_Continuation';
+        $autoloadClasses[] = 'Piece_Right_Results';
+        foreach ($autoloadClasses as $autoloadClass) {
+            Piece_Unity_Session::addAutoloadClass($autoloadClass);
+        }
+    }
+
+    // }}}
+    // {{{ _setEventName()
+
+    /**
+     * Sets an event name for the current request.
+     *
+     * @since Method available since Release 0.11.0
+     */
+    function _setEventName()
+    {
+        $eventName = $this->getConfiguration('eventName');
+        if (!is_null($eventName)) {
+            $this->_context->setEventName($eventName);
+        }
+    }
+
+    // }}}
+    // {{{ _importPathInfo()
+
+    /**
+     * Imports PATH_INFO string as parameters.
+     *
+     * @since Method available since Release 0.11.0
+     */
+    function _importPathInfo()
+    {
+        if ($this->getConfiguration('importPathInfo')) {
+            $request = &$this->_context->getRequest();
+            $request->importPathInfo();
+        }
+    }
+
+    // }}}
+    // {{{ _setPluginDirectories()
+
+    /**
+     * Sets plug-in directories.
+     *
+     * @since Method available since Release 0.11.0
+     */
+    function _setPluginDirectories()
+    {
+        $pluginDirectories = $this->getConfiguration('pluginDirectories');
+        if (!is_array($pluginDirectories)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    'Failed to configure the configuration point [ pluginDirectories ] at the plugin [ ' . __CLASS__ . ' ].',
+                                    'warning',
+                                    array('plugin' => __CLASS__)
+                                    );
+            Piece_Unity_Error::popCallback();
+            return;
+        }
+
+        foreach (array_reverse($pluginDirectories) as $pluginDirectory) {
+            Piece_Unity_Plugin_Factory::addPluginDirectory($pluginDirectory);
+        }
+    }
+
+    // }}}
+    // {{{ _configureValidation()
+
+    /**
+     * Configures some validatoin stuff.
+     *
+     * @since Method available since Release 0.11.0
+     */
+    function _configureValidation()
+    {
+        $validation = &$this->_context->getValidation();
+        $validation->setConfigDirectory($this->getConfiguration('validationConfigDirectory'));
+        $validation->setCacheDirectory($this->getConfiguration('validationCacheDirectory'));
+
+        $this->_setValidatorDirectories();
+        $this->_setFilterDirectories();
+    }
+
+    // }}}
+    // {{{ _setValidatorDirectories()
+
+    /**
+     * Sets validator directories.
+     *
+     * @since Method available since Release 0.11.0
+     */
+    function _setValidatorDirectories()
+    {
+        $validatorDirectories = $this->getConfiguration('validationValidatorDirectories');
+        if (!is_array($validatorDirectories)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    'Failed to configure the configuration point [ validationValidatorDirectories ] at the plugin [ ' . __CLASS__ . ' ].',
+                                    'warning',
+                                    array('plugin' => __CLASS__)
+                                    );
+            Piece_Unity_Error::popCallback();
+            return;
+        }
+
+        foreach (array_reverse($validatorDirectories) as $validatorDirectory) {
+            Piece_Unity_Validation::addValidatorDirectory($validatorDirectory);
+        }
+    }
+
+    // }}}
+    // {{{ _setFilterDirectories()
+
+    /**
+     * Sets filter directories.
+     *
+     * @since Method available since Release 0.11.0
+     */
+    function _setFilterDirectories()
+    {
+        $filterDirectories = $this->getConfiguration('validationFilterDirectories');
+        if (!is_array($filterDirectories)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    'Failed to configure the configuration point [ validationFilterDirectories ] at the plugin [ ' . __CLASS__ . ' ].',
+                                    'warning',
+                                    array('plugin' => __CLASS__)
+                                    );
+            Piece_Unity_Error::popCallback();
+            return;
+        }
+
+        foreach (array_reverse($filterDirectories) as $filterDirectory) {
+            Piece_Unity_Validation::addFilterDirectory($filterDirectory);
+        }
+    }
+
+    // }}}
+    // {{{ _setNonSSLableServers()
+
+    /**
+     * Makes a list of non-SSLable servers.
+     *
+     * @since Method available since Release 0.11.0
+     */
+    function _setNonSSLableServers()
+    {
+        $nonSSLableServers = $this->getConfiguration('nonSSLableServers');
+        if (!is_array($nonSSLableServers)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    'Failed to configure the configuration point [ nonSSLableServers ] at the plugin [ ' . __CLASS__ . ' ].',
+                                    'warning',
+                                    array('plugin' => __CLASS__)
+                                    );
+            Piece_Unity_Error::popCallback();
+            return;
+        }
+
+        foreach ($nonSSLableServers as $nonSSLableServer) {
+            Piece_Unity_URL::addNonSSLableServer($nonSSLableServer);
+        }
+    }
+
     /**#@-*/
 
     // }}}
