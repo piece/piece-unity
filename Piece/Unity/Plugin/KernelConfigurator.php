@@ -103,8 +103,6 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         $this->_configureValidation();
         $this->_setNonSSLableServers();
         $this->_setPluginPrefixes();
-        $this->_setValidatorPrefixes();
-        $this->_setFilterPrefixes();
     }
 
     /**#@-*/
@@ -270,6 +268,8 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
 
         $this->_setValidatorDirectories();
         $this->_setFilterDirectories();
+        $this->_setValidatorPrefixes();
+        $this->_setFilterPrefixes();
     }
 
     // }}}
