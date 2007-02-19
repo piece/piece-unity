@@ -275,6 +275,32 @@ class Piece_Unity_Validation
         Piece_Right_Filter_Factory::addFilterDirectory($directory);
     }
 
+    // }}}
+    // {{{ addValidatorPrefix()
+
+    /**
+     * Adds a prefix for a validator.
+     *
+     * @param string $validatorPrefix
+     */
+    function addValidatorPrefix($validatorPrefix)
+    {
+        Piece_Right_Validator_Factory::addValidatorPrefix($validatorPrefix);
+    }
+
+    // }}}
+    // {{{ addFilterPrefix()
+
+    /**
+     * Adds a prefix for a filter.
+     *
+     * @param string $filterPrefix
+     */
+    function addFilterPrefix($filterPrefix)
+    {
+        Piece_Right_Filter_Factory::addFilterPrefix($filterPrefix);
+    }
+
     /**#@-*/
 
     /**#@+

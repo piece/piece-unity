@@ -330,6 +330,58 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $GLOBALS['PIECE_UNITY_Plugin_Prefixes'] = $oldPluginPrefixes;
     }
 
+    /**
+     * @since Method available since Release 0.11.0
+     */
+    function testValidatorPrefixes()
+    {
+        $oldValidatorPrefixes = $GLOBALS['PIECE_RIGHT_Validator_Prefixes'];
+        $oldValidatorDirectories = $GLOBALS['PIECE_RIGHT_Validator_Directories'];
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('KernelConfigurator', 'validationValidatorPrefixes', array('KernelConfiguratorTestCaseAlias'));
+        $config->setConfiguration('KernelConfigurator', 'validationValidatorDirectories', array(dirname(__FILE__) . '/KernelConfiguratorTestCase'));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $configurator = &new Piece_Unity_Plugin_KernelConfigurator();
+        $configurator->invoke();
+
+        $foo = &Piece_Right_Validator_Factory::factory('FooValidator');
+
+        $this->assertTrue(is_object($foo));
+        $this->assertTrue(is_a($foo, 'KernelConfiguratorTestCaseAlias_FooValidator'));
+
+        Piece_Right_Validator_Factory::clearInstances();
+        $GLOBALS['PIECE_RIGHT_Validator_Directories'] = $oldValidatorDirectories;
+        $GLOBALS['PIECE_RIGHT_Validator_Prefixes'] = $oldValidatorPrefixes;
+    }
+
+    /**
+     * @since Method available since Release 0.11.0
+     */
+    function testFilterPrefixes()
+    {
+        $oldFilterPrefixes = $GLOBALS['PIECE_RIGHT_Filter_Prefixes'];
+        $oldFilterDirectories = $GLOBALS['PIECE_RIGHT_Filter_Directories'];
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('KernelConfigurator', 'validationFilterPrefixes', array('KernelConfiguratorTestCaseAlias'));
+        $config->setConfiguration('KernelConfigurator', 'validationFilterDirectories', array(dirname(__FILE__) . '/KernelConfiguratorTestCase'));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $configurator = &new Piece_Unity_Plugin_KernelConfigurator();
+        $configurator->invoke();
+
+        $foo = &Piece_Right_Filter_Factory::factory('FooFilter');
+
+        $this->assertTrue(is_object($foo));
+        $this->assertTrue(is_a($foo, 'KernelConfiguratorTestCaseAlias_FooFilter'));
+
+        Piece_Right_Filter_Factory::clearInstances();
+        $GLOBALS['PIECE_RIGHT_Filter_Directories'] = $oldFilterDirectories;
+        $GLOBALS['PIECE_RIGHT_Filter_Prefixes'] = $oldFilterPrefixes;
+    }
+
     /**#@-*/
 
     /**#@+

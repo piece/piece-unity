@@ -103,6 +103,8 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         $this->_configureValidation();
         $this->_setNonSSLableServers();
         $this->_setPluginPrefixes();
+        $this->_setValidatorPrefixes();
+        $this->_setFilterPrefixes();
     }
 
     /**#@-*/
@@ -133,6 +135,8 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
         $this->_addConfigurationPoint('validationFilterDirectories', array());
         $this->_addConfigurationPoint('nonSSLableServers', array());
         $this->_addConfigurationPoint('pluginPrefixes', array());
+        $this->_addConfigurationPoint('validationValidatorPrefixes', array());
+        $this->_addConfigurationPoint('validationFilterPrefixes', array());
     }
 
     // }}}
@@ -346,6 +350,60 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
 
         foreach ($nonSSLableServers as $nonSSLableServer) {
             Piece_Unity_URL::addNonSSLableServer($nonSSLableServer);
+        }
+    }
+
+    // }}}
+    // {{{ _setValidatorPrefixes()
+
+    /**
+     * Sets validator prefixes.
+     *
+     * @since Method available since Release 0.11.0
+     */
+    function _setValidatorPrefixes()
+    {
+        $validatorPrefixes = $this->getConfiguration('validationValidatorPrefixes');
+        if (!is_array($validatorPrefixes)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    'Failed to configure the configuration point [ validationValidatorPrefixes ] at the plugin [ ' . __CLASS__ . ' ].',
+                                    'warning',
+                                    array('plugin' => __CLASS__)
+                                    );
+            Piece_Unity_Error::popCallback();
+            return;
+        }
+
+        foreach (array_reverse($validatorPrefixes) as $validatorPrefix) {
+            Piece_Unity_Validation::addValidatorPrefix($validatorPrefix);
+        }
+    }
+
+    // }}}
+    // {{{ _setFilterPrefixes()
+
+    /**
+     * Sets filter prefixes.
+     *
+     * @since Method available since Release 0.11.0
+     */
+    function _setFilterPrefixes()
+    {
+        $filterPrefixes = $this->getConfiguration('validationFilterPrefixes');
+        if (!is_array($filterPrefixes)) {
+            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    'Failed to configure the configuration point [ validationFilterPrefixes ] at the plugin [ ' . __CLASS__ . ' ].',
+                                    'warning',
+                                    array('plugin' => __CLASS__)
+                                    );
+            Piece_Unity_Error::popCallback();
+            return;
+        }
+
+        foreach (array_reverse($filterPrefixes) as $filterPrefix) {
+            Piece_Unity_Validation::addFilterPrefix($filterPrefix);
         }
     }
 
