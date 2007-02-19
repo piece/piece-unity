@@ -151,7 +151,7 @@ class Piece_Unity_Request
     // {{{ importPathInfo()
 
     /**
-     * Imports the PATH_INFO string as parameters.
+     * Imports PATH_INFO string as parameters.
      *
      * @param boolean $importPathInfo
      * @since Method available since Release 0.4.0
