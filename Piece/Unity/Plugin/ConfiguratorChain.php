@@ -68,6 +68,13 @@ class Piece_Unity_Plugin_ConfiguratorChain extends Piece_Unity_Plugin_Common
      * @access private
      */
 
+    var $_requiredConfigurators = array('Configurator_Plugin',
+                                        'Configurator_Env',
+                                        'Configurator_Event',
+                                        'Configurator_Request',
+                                        'Configurator_Validation'
+                                        );
+
     /**#@-*/
 
     /**#@+
@@ -91,10 +98,10 @@ class Piece_Unity_Plugin_ConfiguratorChain extends Piece_Unity_Plugin_Common
                                     array('plugin' => __CLASS__)
                                     );
             Piece_Unity_Error::popCallback();
-            return;
+            $configurators = array();
         }
 
-        foreach ($configurators as $extension) {
+        foreach (array_merge($this->_requiredConfigurators, $configurators) as $extension) {
             $configurator = &Piece_Unity_Plugin_Factory::factory($extension);
             if (Piece_Unity_Error::hasErrors('exception')) {
                 return;
