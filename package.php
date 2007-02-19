@@ -42,36 +42,73 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$version = '0.10.0';
+$version = '0.11.0';
 $apiVersion = '0.7.0';
 $releaseStability = 'beta';
 $notes = 'Hi all,
 
 A new release of Piece_Unity is now available.
-This release includes a nice feature for the layout system. It can turn off the use of the layout system by the HTTP Accept header. And also other enhancements are included.
 
-See the following release notes for details.
+This release includes a feature named "Fallback View" which can be used for rendering a fallback view if an error occured while rendering with a specified view, and a feature named "Plug-in Aliases" which can be used multiple aliases as the name of a plug-in class by setting multiple prefixes.
+
+Also this release includes a new plug-in "ConfiguratorChain" so that it can invoke multiple configurators. In the release after next, "ConfiguratorChain" will become the default configurator instead of "KernelConfigurator".
+
+And also other enhancements and two fixes are included. See the following release notes for details.
 
 ## Enhancements ##
 
+### Kernel ###
+
+##### Piece_Unity_Plugin_Factory #####
+
+- Added a feature named "Plug-in Aliases" so that this feature can be used multiple aliases as the name of a plug-in class by setting multiple prefixes. (Ticket #40)
+
+##### Piece_Unity_URL #####
+
+- Added removeQueryString() to remove a name/value pair from the query string.
+
 ### Plug-ins ###
 
-##### Renderer_HTML #####
+##### Renderer_Flexy, Renderer_HTML, Renderer_PHP, Renderer_Smarty #####
 
-- Added a new configuration point \'turnOffLayoutByHTTPAccept\' on Renderer_HTML.
-  If this option is true, the useLayout option is turned off by the HTTP Accept header.
+- Added a feature named "Fallback View". (Ticket #37)
+  If an error occured while rendering with a specified view and useFallback is true, a fallback view will be rendered.
 
-##### Dispatcher_Continuation #####
+##### KernelConfigurator #####
 
-- Changed the default value of bindActionsWithFlowExecution to true.
+- Added a configuration point "pluginPrefixes" for using "Plug-in Aliases".
+- Added two configuration point "validationValidatorPrefixes" and "validationFilterPrefixes" for using "Validator Aliases" and "Filter Aliases". (Ticket #43)
 
-##### Interceptor_SessionStart #####
+##### Renderer_Redirection #####
 
-- Added a feature to import a session ID from the request parameters when a new configuration point importSessionIDFromRequest is true. (Ticket #34)
+- Added a feature so that __eventNameKey is replaced with the event name key. (Ticket #38)
+
+##### View #####
+
+- Added a feature named "Self Notation" for redirection to an entry point itself. (Ticket #39)
+
+##### ConfiguratorChain, Configurator_Env, Configurator_Event, Configurator_Plugin, Configurator_Request, Configurator_Validation #####
+
+- Added a new plug-in "ConfiguratorChain" so that it can invoke multiple configurators. (Ticket #45)
+  In the release after next, "ConfiguratorChain" will become the default configurator instead of "KernelConfigurator".
 
 ### Example Applications ###
 
-- Updated templates and javascripts of the sample application.';
+- Changed so as to use of ConfigurationChain.
+
+## Defect Fixes ##
+
+### Kernel ###
+
+##### Piece_Unity_URL #####
+
+- Fixed the problem so that EZweb mobile phone cannot redirect with Renderer_Redirection plug-in. (Ticket #44)
+
+### Plug-ins ###
+
+##### Renderer_Redirection #####
+
+- Fixed the problem that the renderer cannot redirect to HTTPS URL.';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
@@ -108,7 +145,7 @@ $package->addPackageDepWithChannel('required', 'Piece_Flow', 'pear.piece-framewo
 $package->addPackageDepWithChannel('required', 'Cache_Lite', 'pear.php.net', '1.7.0');
 $package->addPackageDepWithChannel('required', 'PEAR', 'pear.php.net', '1.4.3');
 $package->addPackageDepWithChannel('required', 'Net_URL', 'pear.php.net', '1.0.14');
-$package->addPackageDepWithChannel('required', 'Piece_Right', 'pear.piece-framework.com', '1.4.0');
+$package->addPackageDepWithChannel('required', 'Piece_Right', 'pear.piece-framework.com', '1.5.0');
 $package->addPackageDepWithChannel('optional', 'Stagehand_TestRunner', 'pear.piece-framework.com', '0.4.0');
 $package->addPackageDepWithChannel('optional', 'HTML_Template_Flexy', 'pear.php.net', '1.2.4');
 $package->addPackageDepWithChannel('optional', 'Smarty', 'pearified.com', '1.6.8');

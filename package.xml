@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
 <!DOCTYPE package SYSTEM "http://pear.php.net/dtd/package-1.0">
-<package version="1.0" packagerversion="1.5.0RC3">
+<package version="1.0" packagerversion="1.5.0">
  <name>Piece_Unity</name>
  <summary>A stateful and secure web application framework for PHP</summary>
  <description>Piece_Unity is a stateful and secure web application framework for PHP.
@@ -31,37 +31,74 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
   </maintainer>
   </maintainers>
  <release>
-  <version>0.10.0</version>
-  <date>2007-01-12</date>
+  <version>0.11.0</version>
+  <date>2007-02-19</date>
   <license>BSD License (revised)</license>
   <state>beta</state>
   <notes>Hi all,
 
 A new release of Piece_Unity is now available.
-This release includes a nice feature for the layout system. It can turn off the use of the layout system by the HTTP Accept header. And also other enhancements are included.
 
-See the following release notes for details.
+This release includes a feature named &quot;Fallback View&quot; which can be used for rendering a fallback view if an error occured while rendering with a specified view, and a feature named &quot;Plug-in Aliases&quot; which can be used multiple aliases as the name of a plug-in class by setting multiple prefixes.
+
+Also this release includes a new plug-in &quot;ConfiguratorChain&quot; so that it can invoke multiple configurators. In the release after next, &quot;ConfiguratorChain&quot; will become the default configurator instead of &quot;KernelConfigurator&quot;.
+
+And also other enhancements and two fixes are included. See the following release notes for details.
 
 ## Enhancements ##
 
+### Kernel ###
+
+##### Piece_Unity_Plugin_Factory #####
+
+- Added a feature named &quot;Plug-in Aliases&quot; so that this feature can be used multiple aliases as the name of a plug-in class by setting multiple prefixes. (Ticket #40)
+
+##### Piece_Unity_URL #####
+
+- Added removeQueryString() to remove a name/value pair from the query string.
+
 ### Plug-ins ###
 
-##### Renderer_HTML #####
+##### Renderer_Flexy, Renderer_HTML, Renderer_PHP, Renderer_Smarty #####
 
-- Added a new configuration point &apos;turnOffLayoutByHTTPAccept&apos; on Renderer_HTML.
-  If this option is true, the useLayout option is turned off by the HTTP Accept header.
+- Added a feature named &quot;Fallback View&quot;. (Ticket #37)
+  If an error occured while rendering with a specified view and useFallback is true, a fallback view will be rendered.
 
-##### Dispatcher_Continuation #####
+##### KernelConfigurator #####
 
-- Changed the default value of bindActionsWithFlowExecution to true.
+- Added a configuration point &quot;pluginPrefixes&quot; for using &quot;Plug-in Aliases&quot;.
+- Added two configuration point &quot;validationValidatorPrefixes&quot; and &quot;validationFilterPrefixes&quot; for using &quot;Validator Aliases&quot; and &quot;Filter Aliases&quot;. (Ticket #43)
 
-##### Interceptor_SessionStart #####
+##### Renderer_Redirection #####
 
-- Added a feature to import a session ID from the request parameters when a new configuration point importSessionIDFromRequest is true. (Ticket #34)
+- Added a feature so that __eventNameKey is replaced with the event name key. (Ticket #38)
+
+##### View #####
+
+- Added a feature named &quot;Self Notation&quot; for redirection to an entry point itself. (Ticket #39)
+
+##### ConfiguratorChain, Configurator_Env, Configurator_Event, Configurator_Plugin, Configurator_Request, Configurator_Validation #####
+
+- Added a new plug-in &quot;ConfiguratorChain&quot; so that it can invoke multiple configurators. (Ticket #45)
+  In the release after next, &quot;ConfiguratorChain&quot; will become the default configurator instead of &quot;KernelConfigurator&quot;.
 
 ### Example Applications ###
 
-- Updated templates and javascripts of the sample application.
+- Changed so as to use of ConfigurationChain.
+
+## Defect Fixes ##
+
+### Kernel ###
+
+##### Piece_Unity_URL #####
+
+- Fixed the problem so that EZweb mobile phone cannot redirect with Renderer_Redirection plug-in. (Ticket #44)
+
+### Plug-ins ###
+
+##### Renderer_Redirection #####
+
+- Fixed the problem that the renderer cannot redirect to HTTPS URL.
   </notes>
   <deps>
    <dep type="php" rel="ge" version="4.3.0" optional="no"/>
@@ -69,7 +106,7 @@ See the following release notes for details.
    <dep type="pkg" rel="ge" version="1.7.0" optional="no">Cache_Lite</dep>
    <dep type="pkg" rel="ge" version="1.4.3" optional="no">PEAR</dep>
    <dep type="pkg" rel="ge" version="1.0.14" optional="no">Net_URL</dep>
-   <dep type="pkg" rel="ge" version="1.4.0" optional="no">Piece_Right</dep>
+   <dep type="pkg" rel="ge" version="1.5.0" optional="no">Piece_Right</dep>
    <dep type="pkg" rel="ge" version="0.4.0" optional="yes">Stagehand_TestRunner</dep>
    <dep type="pkg" rel="ge" version="1.2.4" optional="yes">HTML_Template_Flexy</dep>
    <dep type="pkg" rel="ge" version="1.6.8" optional="yes">Smarty</dep>
@@ -140,6 +177,26 @@ See the following release notes for details.
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
        </dir> <!-- /data/examples/webapp/actions -->
+       <dir name="cache">
+        <dir name="flows">
+         <file role="data" name="README">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+        </dir> <!-- /data/examples/webapp/cache/flows -->
+        <dir name="validations">
+         <file role="data" name="README">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+        </dir> <!-- /data/examples/webapp/cache/validations -->
+        <file role="data" name="README">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+       </dir> <!-- /data/examples/webapp/cache -->
+       <dir name="compiled-templates">
+        <file role="data" name="README">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+       </dir> <!-- /data/examples/webapp/compiled-templates -->
        <dir name="config">
         <dir name="flows">
          <file role="data" name="Authentication.yaml">
@@ -164,6 +221,11 @@ See the following release notes for details.
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
        </dir> <!-- /data/examples/webapp/config -->
+       <dir name="sessions">
+        <file role="data" name="README">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+       </dir> <!-- /data/examples/webapp/sessions -->
        <dir name="templates">
         <dir name="Authentication">
          <file role="data" name="Finish.html">
@@ -236,6 +298,23 @@ See the following release notes for details.
        </file>
       </dir> <!-- /Piece/Unity/Config -->
       <dir name="Plugin">
+       <dir name="Configurator">
+        <file role="php" name="Env.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+        <file role="php" name="Event.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+        <file role="php" name="Plugin.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+        <file role="php" name="Request.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+        <file role="php" name="Validation.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+       </dir> <!-- /Piece/Unity/Plugin/Configurator -->
        <dir name="Dispatcher">
         <file role="php" name="Continuation.php">
          <replace from="@package_version@" to="version" type="package-info"/>
@@ -287,6 +366,9 @@ See the following release notes for details.
         </file>
        </dir> <!-- /Piece/Unity/Plugin/Renderer -->
        <file role="php" name="Common.php">
+        <replace from="@package_version@" to="version" type="package-info"/>
+       </file>
+       <file role="php" name="ConfiguratorChain.php">
         <replace from="@package_version@" to="version" type="package-info"/>
        </file>
        <file role="php" name="Controller.php">
@@ -362,6 +444,57 @@ See the following release notes for details.
         </file>
        </dir> <!-- /tests/Piece/Unity/Config -->
        <dir name="Plugin">
+        <dir name="Configurator">
+         <dir name="PluginTestCase">
+          <dir name="PluginTestCaseAlias">
+           <file role="test" name="Bar.php">
+            <replace from="@package_version@" to="version" type="package-info"/>
+           </file>
+           <file role="test" name="Foo.php">
+            <replace from="@package_version@" to="version" type="package-info"/>
+           </file>
+          </dir> <!-- /tests/Piece/Unity/Plugin/Configurator/PluginTestCase/PluginTestCaseAlias -->
+         </dir> <!-- /tests/Piece/Unity/Plugin/Configurator/PluginTestCase -->
+         <dir name="ValidationTestCase">
+          <dir name="ValidationTestCaseAlias">
+           <file role="test" name="HelloWorld.php">
+            <replace from="@package_version@" to="version" type="package-info"/>
+           </file>
+           <file role="test" name="LowerCase.php">
+            <replace from="@package_version@" to="version" type="package-info"/>
+           </file>
+          </dir> <!-- /tests/Piece/Unity/Plugin/Configurator/ValidationTestCase/ValidationTestCaseAlias -->
+          <file role="test" name="Authentication.yaml">
+           <replace from="@package_version@" to="version" type="package-info"/>
+          </file>
+         </dir> <!-- /tests/Piece/Unity/Plugin/Configurator/ValidationTestCase -->
+         <file role="test" name="EnvTestCase.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+         <file role="test" name="EventTestCase.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+         <file role="test" name="PluginTestCase.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+         <file role="test" name="RequestTestCase.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+         <file role="test" name="TestRunner.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+         <file role="test" name="ValidationTestCase.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+        </dir> <!-- /tests/Piece/Unity/Plugin/Configurator -->
+        <dir name="ConfiguratorChainTestCase">
+         <file role="test" name="FirstConfigurator.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+         <file role="test" name="SecondConfigurator.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+        </dir> <!-- /tests/Piece/Unity/Plugin/ConfiguratorChainTestCase -->
         <dir name="Dispatcher">
          <file role="test" name="ContinuationTestCase.php">
           <replace from="@package_version@" to="version" type="package-info"/>
@@ -398,6 +531,19 @@ See the following release notes for details.
          </file>
         </dir> <!-- /tests/Piece/Unity/Plugin/Dispatcher -->
         <dir name="FactoryTestCase">
+         <dir name="FactoryTestCaseAlias">
+          <dir name="FactoryTestCase">
+           <file role="test" name="Foo.php">
+            <replace from="@package_version@" to="version" type="package-info"/>
+           </file>
+          </dir> <!-- /tests/Piece/Unity/Plugin/FactoryTestCase/FactoryTestCaseAlias/FactoryTestCase -->
+          <file role="test" name="Bar.php">
+           <replace from="@package_version@" to="version" type="package-info"/>
+          </file>
+          <file role="test" name="Foo.php">
+           <replace from="@package_version@" to="version" type="package-info"/>
+          </file>
+         </dir> <!-- /tests/Piece/Unity/Plugin/FactoryTestCase/FactoryTestCaseAlias -->
          <dir name="Piece">
           <dir name="Unity">
            <dir name="Plugin">
@@ -415,6 +561,9 @@ See the following release notes for details.
            </dir> <!-- /tests/Piece/Unity/Plugin/FactoryTestCase/Piece/Unity/Plugin -->
           </dir> <!-- /tests/Piece/Unity/Plugin/FactoryTestCase/Piece/Unity -->
          </dir> <!-- /tests/Piece/Unity/Plugin/FactoryTestCase/Piece -->
+         <file role="test" name="Bar.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
         </dir> <!-- /tests/Piece/Unity/Plugin/FactoryTestCase -->
         <dir name="Interceptor">
          <file role="test" name="AuthenticationCheckerOne.php">
@@ -449,6 +598,17 @@ See the following release notes for details.
          </file>
         </dir> <!-- /tests/Piece/Unity/Plugin/Interceptor -->
         <dir name="KernelConfiguratorTestCase">
+         <dir name="KernelConfiguratorTestCaseAlias">
+          <file role="test" name="FooFilter.php">
+           <replace from="@package_version@" to="version" type="package-info"/>
+          </file>
+          <file role="test" name="FooPlugin.php">
+           <replace from="@package_version@" to="version" type="package-info"/>
+          </file>
+          <file role="test" name="FooValidator.php">
+           <replace from="@package_version@" to="version" type="package-info"/>
+          </file>
+         </dir> <!-- /tests/Piece/Unity/Plugin/KernelConfiguratorTestCase/KernelConfiguratorTestCaseAlias -->
          <dir name="Piece">
           <dir name="Right">
            <dir name="Filter">
@@ -515,6 +675,11 @@ See the following release notes for details.
              <replace from="@package_version@" to="version" type="package-info"/>
             </file>
            </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/FlexyTestCase/templates/Content -->
+           <dir name="Fallback">
+            <file role="test" name="Fallback.html">
+             <replace from="@package_version@" to="version" type="package-info"/>
+            </file>
+           </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/FlexyTestCase/templates/Fallback -->
            <dir name="Layout">
             <file role="test" name="FlexyLayout.html">
              <replace from="@package_version@" to="version" type="package-info"/>
@@ -543,6 +708,11 @@ See the following release notes for details.
              <replace from="@package_version@" to="version" type="package-info"/>
             </file>
            </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/PHPTestCase/templates/Content -->
+           <dir name="Fallback">
+            <file role="test" name="Fallback.php">
+             <replace from="@package_version@" to="version" type="package-info"/>
+            </file>
+           </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/PHPTestCase/templates/Fallback -->
            <dir name="Layout">
             <file role="test" name="PHPLayout.php">
              <replace from="@package_version@" to="version" type="package-info"/>
@@ -571,6 +741,11 @@ See the following release notes for details.
              <replace from="@package_version@" to="version" type="package-info"/>
             </file>
            </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/SmartyTestCase/templates/Content -->
+           <dir name="Fallback">
+            <file role="test" name="Fallback.tpl">
+             <replace from="@package_version@" to="version" type="package-info"/>
+            </file>
+           </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/SmartyTestCase/templates/Fallback -->
            <dir name="Layout">
             <file role="test" name="SmartyLayout.tpl">
              <replace from="@package_version@" to="version" type="package-info"/>
@@ -600,6 +775,9 @@ See the following release notes for details.
           <replace from="@package_version@" to="version" type="package-info"/>
          </file>
         </dir> <!-- /tests/Piece/Unity/Plugin/Renderer -->
+        <file role="test" name="ConfiguratorChainTestCase.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
         <file role="test" name="FactoryTestCase.php">
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
@@ -619,6 +797,9 @@ See the following release notes for details.
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
         <file role="test" name="TestRunner.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+        <file role="test" name="ViewTestCase.php">
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
        </dir> <!-- /tests/Piece/Unity/Plugin -->
@@ -687,6 +868,77 @@ See the following release notes for details.
   </filelist>
  </release>
  <changelog>
+   <release>
+    <version>0.11.0</version>
+    <date>2007-02-19</date>
+    <license>BSD License (revised)</license>
+    <state>beta</state>
+    <notes>Hi all,
+
+A new release of Piece_Unity is now available.
+
+This release includes a feature named &quot;Fallback View&quot; which can be used for rendering a fallback view if an error occured while rendering with a specified view, and a feature named &quot;Plug-in Aliases&quot; which can be used multiple aliases as the name of a plug-in class by setting multiple prefixes.
+
+Also this release includes a new plug-in &quot;ConfiguratorChain&quot; so that it can invoke multiple configurators. In the release after next, &quot;ConfiguratorChain&quot; will become the default configurator instead of &quot;KernelConfigurator&quot;.
+
+And also other enhancements and two fixes are included. See the following release notes for details.
+
+## Enhancements ##
+
+### Kernel ###
+
+##### Piece_Unity_Plugin_Factory #####
+
+- Added a feature named &quot;Plug-in Aliases&quot; so that this feature can be used multiple aliases as the name of a plug-in class by setting multiple prefixes. (Ticket #40)
+
+##### Piece_Unity_URL #####
+
+- Added removeQueryString() to remove a name/value pair from the query string.
+
+### Plug-ins ###
+
+##### Renderer_Flexy, Renderer_HTML, Renderer_PHP, Renderer_Smarty #####
+
+- Added a feature named &quot;Fallback View&quot;. (Ticket #37)
+  If an error occured while rendering with a specified view and useFallback is true, a fallback view will be rendered.
+
+##### KernelConfigurator #####
+
+- Added a configuration point &quot;pluginPrefixes&quot; for using &quot;Plug-in Aliases&quot;.
+- Added two configuration point &quot;validationValidatorPrefixes&quot; and &quot;validationFilterPrefixes&quot; for using &quot;Validator Aliases&quot; and &quot;Filter Aliases&quot;. (Ticket #43)
+
+##### Renderer_Redirection #####
+
+- Added a feature so that __eventNameKey is replaced with the event name key. (Ticket #38)
+
+##### View #####
+
+- Added a feature named &quot;Self Notation&quot; for redirection to an entry point itself. (Ticket #39)
+
+##### ConfiguratorChain, Configurator_Env, Configurator_Event, Configurator_Plugin, Configurator_Request, Configurator_Validation #####
+
+- Added a new plug-in &quot;ConfiguratorChain&quot; so that it can invoke multiple configurators. (Ticket #45)
+  In the release after next, &quot;ConfiguratorChain&quot; will become the default configurator instead of &quot;KernelConfigurator&quot;.
+
+### Example Applications ###
+
+- Changed so as to use of ConfigurationChain.
+
+## Defect Fixes ##
+
+### Kernel ###
+
+##### Piece_Unity_URL #####
+
+- Fixed the problem so that EZweb mobile phone cannot redirect with Renderer_Redirection plug-in. (Ticket #44)
+
+### Plug-ins ###
+
+##### Renderer_Redirection #####
+
+- Fixed the problem that the renderer cannot redirect to HTTPS URL.
+    </notes>
+   </release>
    <release>
     <version>0.10.0</version>
     <date>2007-01-12</date>
