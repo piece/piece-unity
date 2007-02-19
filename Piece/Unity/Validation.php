@@ -45,6 +45,7 @@ require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Right/Validation/Script.php';
 require_once 'Piece/Right/Validator/Factory.php';
 require_once 'Piece/Right/Filter/Factory.php';
+require_once 'Piece/Right/Results.php';
 
 // {{{ Piece_Unity_Validation
 
