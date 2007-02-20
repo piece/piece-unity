@@ -552,7 +552,7 @@ class Piece_Unity_Context
     // {{{ _importEventNameFromSubmit()
 
     /**
-     * Imports an event name from the submit by a submit or a image.
+     * Imports an event name from the submit by a submit or an image.
      *
      * @since Method available since Release 0.9.0
      */
