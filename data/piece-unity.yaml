@@ -9,15 +9,15 @@ sequence:
     mapping:
       "name": { type: str, required: yes }
       "point":
-         type: seq
-         required: no
-         sequence:
-           - type: map
-             required: yes
-             mapping:
-               "name": { type: str, required: yes }
-               "type": { type: str, required: yes, enum: [ extension, configuration ] }
-               "value": { type: any }
+        type: seq
+        required: no
+        sequence:
+          - type: map
+            required: yes
+            mapping:
+              "name": { type: str, required: yes }
+              "type": { type: str, required: yes, enum: [ extension, configuration ] }
+              "value": { type: any }
 
 # Local Variables:
 # mode: conf-colon
