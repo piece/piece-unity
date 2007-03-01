@@ -44,8 +44,8 @@ require_once 'Piece/Unity/Plugin/Factory.php';
 // {{{ Piece_Unity_Plugin_OutputBufferStack
 
 /**
- * An output filter which turns output buffering on, and registers all output
- * handlers.
+ * An output filter which turns output buffering on, and registers each output
+ * filters as a PHP's output handler using ob_start().
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
