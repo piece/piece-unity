@@ -81,6 +81,27 @@ class Piece_Unity_Plugin_Renderer_SmartyTestCase extends Piece_Unity_Plugin_Rend
      * @access public
      */
 
+    function testLoadingPlugins()
+    {
+        $viewString = "{$this->_target}LoadingPlugins";
+        $context = &Piece_Unity_Context::singleton();
+        
+        $config = &$this->_getConfig();
+        $context->setConfiguration($config);
+        $context->setView($viewString);
+        
+        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
+        $renderer = &new $class();
+        ob_start();
+        $renderer->invoke();
+        $buffer = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals('Hello World', trim($buffer));
+
+        $this->_clear($viewString);
+    }
+
     /**#@-*/
 
     /**#@+
@@ -102,6 +123,7 @@ class Piece_Unity_Plugin_Renderer_SmartyTestCase extends Piece_Unity_Plugin_Rend
         $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/actions");
         $config->setConfiguration('Renderer_Smarty', 'template_dir', dirname(__FILE__) . "/{$this->_target}TestCase/templates/Content");
         $config->setConfiguration('Renderer_Smarty', 'compile_dir', dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Content");
+        $config->setConfiguration('Renderer_Smarty', 'plugins_dir', array(dirname(__FILE__) . "/{$this->_target}TestCase/plugins"));
         $config->setExtension('View', 'renderer', 'Renderer_Smarty');
 
         return $config;

@@ -76,7 +76,8 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
     var $_smartyClassVariables = array('template_dir' => null,
                                        'compile_dir'  => null,
                                        'config_dir'   => null,
-                                       'cache_dir'    => null
+                                       'cache_dir'    => null,
+                                       'plugins_dir'  => null
                                        );
 
     /**#@-*/
@@ -191,6 +192,12 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
 
         foreach (array_keys($this->_smartyClassVariables) as $point) {
             $$point = $this->getConfiguration($point);
+            if ($point == 'plugins_dir' && is_array($$point)) {
+                $oldPluginDirectories = $smarty->$point;
+                $smarty->$point = array_merge($$point, $oldPluginDirectories);
+                continue;
+            }
+
             if (!is_null($$point)) {
                 $smarty->$point = $this->_adjustEndingSlash($$point);
             }
