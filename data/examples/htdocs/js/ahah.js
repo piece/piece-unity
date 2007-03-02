@@ -35,18 +35,22 @@ function sendAHAHReqeust(sender, target, delay) {
     if (sender.form) {
         var form = sender.form;
         var data = [
-            escape(sender.name) + '=' + escape(sender.value)
+            encodeURIComponent(sender.name) + '=' + encodeURIComponent(sender.value)
         ];
-        
+
         for (var i=0; i < form.length; i++) {
             var el = form[i];
             if (el.type == 'submit' || el.type == 'button' || el.type == 'reset') {
                 continue;
             }
-            
-            data[data.length] = escape(el.name) + '=' + escape(el.value);
+
+            if (el.type == 'radio' && !el.checked) {
+                continue;
+            }
+
+            data[data.length] = encodeURIComponent(el.name) + '=' + encodeURIComponent(el.value);
         }
-        
+
         var content = data.join('&');
         ahah(form.action, target, delay, content);
     } else if (sender.href) {
