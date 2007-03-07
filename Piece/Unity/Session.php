@@ -186,7 +186,7 @@ class Piece_Unity_Session
             }
         }
 
-        @session_start();
+        session_start();
         $this->_attributes = &$_SESSION;
 
         if ($this->hasAttribute('_Piece_Unity_Session_Preload')) {
