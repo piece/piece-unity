@@ -42,7 +42,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
 // {{{ Piece_Unity_Plugin_OutputFilter_ContentLength
 
 /**
- * An output filter which outputs Content-Legnth header. This filter must be
+ * An output filter which sends a Content-Legnth header. This filter must be
  * added first.
  *
  * @package    Piece_Unity

@@ -42,7 +42,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
 // {{{ Piece_Unity_Plugin_OutputFilter_JapaneseZ2H
 
 /**
- * An output filter which can be used to converts Japanese JIS X0208 kana to
+ * An output filter which can be used to convert Japanese JIS X0208 kana to
  * JIS X0201 kana.
  *
  * @package    Piece_Unity
