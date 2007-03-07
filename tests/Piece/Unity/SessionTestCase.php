@@ -126,7 +126,7 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
         $class = 'Piece_Unity_SessionTestCase_AutoloadClass';
         $oldIncludePath = set_include_path(dirname(__FILE__) . '/../..' . PATH_SEPARATOR . get_include_path());
         Piece_Unity_Session::addAutoloadClass($class);
-        $this->_session->start();
+        @$this->_session->start();
 
         if (version_compare(phpversion(), '5.0.0', '<')) {
             $found = class_exists($class);
@@ -170,7 +170,7 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
     function testPreload()
     {
         $GLOBALS['loadCount'] = 0;
-        $this->_session->start();
+        @$this->_session->start();
 
         if (version_compare(phpversion(), '5.0.0', '<')) {
             $this->assertFalse(class_exists('Piece_Unity_SessionTestCase_Foo'));

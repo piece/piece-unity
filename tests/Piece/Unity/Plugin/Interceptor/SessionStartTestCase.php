@@ -109,7 +109,7 @@ class Piece_Unity_Plugin_Interceptor_SessionStartTestCase extends PHPUnit_TestCa
         $context->setConfiguration($config);
 
         $interceptor = &new Piece_Unity_Plugin_Interceptor_SessionStart();
-        $interceptor->invoke();
+        @$interceptor->invoke();
 
         $this->assertEquals('foo', session_id());
 
@@ -128,7 +128,7 @@ class Piece_Unity_Plugin_Interceptor_SessionStartTestCase extends PHPUnit_TestCa
         $context->setConfiguration($config);
 
         $interceptor = &new Piece_Unity_Plugin_Interceptor_SessionStart();
-        $interceptor->invoke();
+        @$interceptor->invoke();
 
         $this->assertEquals('bar', session_id());
 

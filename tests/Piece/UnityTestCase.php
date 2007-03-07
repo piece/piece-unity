@@ -179,7 +179,7 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
                                   dirname(__FILE__),
                                   $config
                                   );
-        $unity->dispatch();
+        @$unity->dispatch();
         $context = &Piece_Unity_Context::singleton();
 
         $this->assertEquals('foo', $context->getView());

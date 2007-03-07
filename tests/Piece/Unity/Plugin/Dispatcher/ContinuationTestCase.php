@@ -117,7 +117,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $session = &$context->getSession();
-        $session->start();
+        @$session->start();
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
 
@@ -137,7 +137,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context->setConfiguration($config);
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $session = &$context->getSession();
-        $session->start();
+        @$session->start();
         $session->setAttributeByRef(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey(), $continuation);
         $dispatcher->invoke();
 
@@ -166,7 +166,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $session = &$context->getSession();
-        $session->start();
+        @$session->start();
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $dispatcher->invoke();
@@ -194,7 +194,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $session = &$context->getSession();
-        $session->start();
+        @$session->start();
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
 
@@ -209,7 +209,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $session = &$context->getSession();
-        $session->start();
+        @$session->start();
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $session = &$context->getSession();
         $session->setAttributeByRef(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey(), $continuation);
@@ -241,7 +241,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $session = &$context->getSession();
-        $session->start();
+        @$session->start();
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $context->setView($dispatcher->invoke());
@@ -269,7 +269,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $session = &$context->getSession();
-        $session->start();
+        @$session->start();
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
 
@@ -300,7 +300,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $session = &$context->getSession();
-        $session->start();
+        @$session->start();
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
 
         $this->assertEquals('Form', $dispatcher->invoke());
@@ -315,7 +315,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $session = &$context->getSession();
-        $session->start();
+        @$session->start();
         $session->setAttributeByRef(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey(), $continuation);
         $validation = &$context->getValidation();
         $validation->setConfigDirectory(dirname(__FILE__));

@@ -115,7 +115,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
         $configurator = &new Piece_Unity_Plugin_KernelConfigurator();
         $configurator->invoke();
         $session = &$context->getSession();
-        $session->start();
+        @$session->start();
 
         if (version_compare(phpversion(), '5.0.0', '<')) {
             $found = class_exists($class);
