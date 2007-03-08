@@ -95,8 +95,9 @@ class Piece_Unity_Plugin_Factory
     function &factory($pluginName)
     {
         if (!array_key_exists($pluginName, $GLOBALS['PIECE_UNITY_Plugin_Instances'])) {
-            $pluginClass = Piece_Unity_Plugin_Factory::_findPluginClass($pluginName);
-            if (is_null($pluginClass)) {
+            $pluginClass = &Piece_Unity_Plugin_Factory::_findPluginClass($pluginName);
+            $pluginClassName = $pluginClass->className;
+            if (is_null($pluginClassName)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                         "The plugin [ $pluginName ] not found in the following directories:\n" .
                                         implode("\n", $GLOBALS['PIECE_UNITY_Plugin_Directories'])
@@ -105,7 +106,7 @@ class Piece_Unity_Plugin_Factory
                 return $return;
             }
 
-            $plugin = &new $pluginClass();
+            $plugin = &new $pluginClassName();
             if (!is_subclass_of($plugin, 'Piece_Unity_Plugin_Common')) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_PLUGIN,
                                         "The plugin [ $pluginName ] is invalid."
@@ -114,6 +115,7 @@ class Piece_Unity_Plugin_Factory
                 return $return;
             }
 
+            $plugin->setPrefixAlias($pluginClass->prefixAlias);
             $GLOBALS['PIECE_UNITY_Plugin_Instances'][$pluginName] = &$plugin;
         }
 
@@ -169,19 +171,19 @@ class Piece_Unity_Plugin_Factory
     /**
      * Loads a plugin from the given directory.
      *
-     * @param string $pluginClass
+     * @param string $pluginClassName
      * @param string $pluginDirectory
      * @return boolean
      * @static
      */
-    function _loadFromDirectory($pluginClass, $pluginDirectory)
+    function _loadFromDirectory($pluginClassName, $pluginDirectory)
     {
-        $file = "$pluginDirectory/" . str_replace('_', '/', $pluginClass) . '.php';
+        $file = "$pluginDirectory/" . str_replace('_', '/', $pluginClassName) . '.php';
 
         if (!file_exists($file)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The plugin file [ $file ] for the class [ $pluginClass ] not found.",
+                                    "The plugin file [ $file ] for the class [ $pluginClassName ] not found.",
                                     'warning'
                                     );
             Piece_Unity_Error::popCallback();
@@ -208,7 +210,7 @@ class Piece_Unity_Plugin_Factory
             return false;
         }
 
-        return Piece_Unity_Plugin_Factory::_loaded($pluginClass);
+        return Piece_Unity_Plugin_Factory::_loaded($pluginClassName);
     }
 
     // }}}
@@ -217,16 +219,16 @@ class Piece_Unity_Plugin_Factory
     /**
      * Returns whether the given plugin has already been loaded or not.
      *
-     * @param string $pluginClass
+     * @param string $pluginClassName
      * @return boolean
      * @static
      */
-    function _loaded($pluginClass)
+    function _loaded($pluginClassName)
     {
         if (version_compare(phpversion(), '5.0.0', '<')) {
-            return class_exists($pluginClass);
+            return class_exists($pluginClassName);
         } else {
-            return class_exists($pluginClass, false);
+            return class_exists($pluginClassName, false);
         }
     }
 
@@ -237,21 +239,21 @@ class Piece_Unity_Plugin_Factory
      * Finds a plugin class from the plugin directories and the prefixes.
      *
      * @param string $pluginName
-     * @return string
+     * @return object
      */
-    function _findPluginClass($pluginName)
+    function &_findPluginClass($pluginName)
     {
         foreach ($GLOBALS['PIECE_UNITY_Plugin_Prefixes'] as $prefixAlias) {
-            $pluginClass = Piece_Unity_Plugin_Factory::_getPluginClass($pluginName, $prefixAlias);
-            if (Piece_Unity_Plugin_Factory::_loaded($pluginClass)) {
+            $pluginClass = &Piece_Unity_Plugin_Factory::_getPluginClass($pluginName, $prefixAlias);
+            if (Piece_Unity_Plugin_Factory::_loaded($pluginClass->className)) {
                 return $pluginClass;
             }
         }
 
         foreach ($GLOBALS['PIECE_UNITY_Plugin_Directories'] as $pluginDirectory) {
             foreach ($GLOBALS['PIECE_UNITY_Plugin_Prefixes'] as $prefixAlias) {
-                $pluginClass = Piece_Unity_Plugin_Factory::_getPluginClass($pluginName, $prefixAlias);
-                if (Piece_Unity_Plugin_Factory::_loadFromDirectory($pluginClass, $pluginDirectory)) {
+                $pluginClass = &Piece_Unity_Plugin_Factory::_getPluginClass($pluginName, $prefixAlias);
+                if (Piece_Unity_Plugin_Factory::_loadFromDirectory($pluginClass->className, $pluginDirectory)) {
                     return $pluginClass;
                 }
             }
@@ -266,15 +268,19 @@ class Piece_Unity_Plugin_Factory
      *
      * @param string $pluginName
      * @param string $prefixAlias
-     * @return string
+     * @return object
      */
-    function _getPluginClass($pluginName, $prefixAlias)
+    function &_getPluginClass($pluginName, $prefixAlias)
     {
+        $pluginClass = &new StdClass();
+        $pluginClass->prefixAlias = $prefixAlias;
         if ($prefixAlias) {
-            return "{$prefixAlias}_{$pluginName}";
+            $pluginClass->className = "{$prefixAlias}_{$pluginName}";
         } else {
-            return $pluginName;
+            $pluginClass->className = $pluginName;
         }
+        
+        return $pluginClass;
     }
 
     /**#@-*/

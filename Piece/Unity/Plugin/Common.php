@@ -71,6 +71,7 @@ class Piece_Unity_Plugin_Common
     var $_context;
     var $_extensionPoints = array();
     var $_configurationPoints = array();
+    var $_prefixAlias = 'piece_unity_plugin';
 
     /**#@-*/
 
@@ -115,7 +116,7 @@ class Piece_Unity_Plugin_Common
     function &getExtension($extensionPoint)
     {
         $config = &$this->_context->getConfiguration();
-        $extension = $config->getExtension(str_replace('piece_unity_plugin_', '', strtolower(get_class($this))),
+        $extension = $config->getExtension(str_replace("{$this->_prefixAlias}_", '', strtolower(get_class($this))),
                                            strtolower($extensionPoint)
                                            );
 
@@ -143,7 +144,7 @@ class Piece_Unity_Plugin_Common
     function getConfiguration($configurationPoint)
     {
         $config = &$this->_context->getConfiguration();
-        $configuration = $config->getConfiguration(str_replace('piece_unity_plugin_', '', strtolower(get_class($this))),
+        $configuration = $config->getConfiguration(str_replace("{$this->_prefixAlias}_", '', strtolower(get_class($this))),
                                                    strtolower($configurationPoint)
                                                    );
 
@@ -152,6 +153,19 @@ class Piece_Unity_Plugin_Common
         }
 
         return $configuration;
+    }
+
+    // }}}
+    // {{{ setPrefixAlias()
+
+    /**
+     * Sets the prefix alias for plug-in name.
+     *
+     * @param string $prefixAlias
+     */
+    function setPrefixAlias($prefixAlias)
+    {
+        $this->_prefixAlias = strtolower($prefixAlias);
     }
 
     /**#@-*/
