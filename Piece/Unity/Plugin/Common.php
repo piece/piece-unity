@@ -71,7 +71,7 @@ class Piece_Unity_Plugin_Common
     var $_context;
     var $_extensionPoints = array();
     var $_configurationPoints = array();
-    var $_prefixAlias = 'piece_unity_plugin';
+    var $_name;
 
     /**#@-*/
 
@@ -85,9 +85,18 @@ class Piece_Unity_Plugin_Common
     /**
      * Sets a single instance of Piece_Unity_Context class to a plugin, and
      * defines extension points and configuration points for the plugin.
+     * And also the plug-in name is set.
+     *
+     * @param string $prefix
      */
-    function Piece_Unity_Plugin_Common()
+    function Piece_Unity_Plugin_Common($prefix = 'Piece_Unity_Plugin')
     {
+        if (strlen($prefix)) {
+            $this->_name = str_replace(strtolower("{$prefix}_"), '', strtolower(get_class($this)));
+        } else {
+            $this->_name = strtolower(get_class($this));
+        }
+
         $this->_context = &Piece_Unity_Context::singleton();
         $this->_initialize();
     }
@@ -116,10 +125,7 @@ class Piece_Unity_Plugin_Common
     function &getExtension($extensionPoint)
     {
         $config = &$this->_context->getConfiguration();
-        $extension = $config->getExtension(str_replace("{$this->_prefixAlias}_", '', strtolower(get_class($this))),
-                                           strtolower($extensionPoint)
-                                           );
-
+        $extension = $config->getExtension($this->_name, strtolower($extensionPoint));
         if (is_null($extension)) {
             $extension = $this->_extensionPoints[ strtolower($extensionPoint) ];
         }
@@ -144,28 +150,12 @@ class Piece_Unity_Plugin_Common
     function getConfiguration($configurationPoint)
     {
         $config = &$this->_context->getConfiguration();
-        $configuration = $config->getConfiguration(str_replace("{$this->_prefixAlias}_", '', strtolower(get_class($this))),
-                                                   strtolower($configurationPoint)
-                                                   );
-
+        $configuration = $config->getConfiguration($this->_name, strtolower($configurationPoint));
         if (is_null($configuration)) {
             $configuration = $this->_configurationPoints[ strtolower($configurationPoint) ];
         }
 
         return $configuration;
-    }
-
-    // }}}
-    // {{{ setPrefixAlias()
-
-    /**
-     * Sets the prefix alias for plug-in name.
-     *
-     * @param string $prefixAlias
-     */
-    function setPrefixAlias($prefixAlias)
-    {
-        $this->_prefixAlias = strtolower($prefixAlias);
     }
 
     /**#@-*/
