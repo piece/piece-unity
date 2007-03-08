@@ -75,13 +75,6 @@ class PluginTestCaseAlias_Bar extends Piece_Unity_Plugin_Common
      * @access public
      */
 
-    function PluginTestCaseAlias_Bar()
-    {
-        parent::Piece_Unity_Plugin_Common();
-        $this->_addExtensionPoint('bar');
-        $this->_addExtensionPoint('baz');
-    }
-
     function invoke()
     {
         ++$GLOBALS[strtolower(__CLASS__) . strtolower(__FUNCTION__) . 'Called'];
@@ -96,6 +89,12 @@ class PluginTestCaseAlias_Bar extends Piece_Unity_Plugin_Common
     /**#@+
      * @access private
      */
+
+    function _initialize()
+    {
+        $this->_addExtensionPoint('bar');
+        $this->_addExtensionPoint('baz');
+    }
 
     /**#@-*/
 

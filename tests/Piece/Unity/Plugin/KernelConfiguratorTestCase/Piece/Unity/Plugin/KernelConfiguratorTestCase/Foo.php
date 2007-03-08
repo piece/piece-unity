@@ -73,12 +73,6 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase_Foo extends Piece_Unity_Plug
      * @access public
      */
 
-    function Piece_Unity_Plugin_Foo()
-    {
-        parent::Piece_Unity_Plugin_Common();
-        $this->_addExtensionPoint('bar');
-    }
-
     function invoke()
     {
         ++$GLOBALS[strtolower(__CLASS__) . strtolower(__FUNCTION__) . 'Called'];
@@ -91,6 +85,11 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase_Foo extends Piece_Unity_Plug
     /**#@+
      * @access private
      */
+
+    function _initialize()
+    {
+        $this->_addExtensionPoint('bar');
+    }
 
     /**#@-*/
 
