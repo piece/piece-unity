@@ -133,6 +133,8 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
         if (preg_match('!^selfs?://(.*)!', $viewString, $matches)) {
             $config = &$this->_context->getConfiguration();
             $config->setExtension('View', 'renderer', 'Renderer_Redirection');
+            $config->setConfiguration('Renderer_Redirection', 'addFlowExecutionTicket', true);
+
             if (substr($viewString, 0, 7) == 'self://') {
                 $this->_context->setView('http://example.org' . $this->_context->getScriptName() . '?' . $matches[1]);
             } elseif (substr($viewString, 0, 8) == 'selfs://') {
