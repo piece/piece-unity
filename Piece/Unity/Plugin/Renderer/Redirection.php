@@ -156,7 +156,7 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
     {
         $this->_addConfigurationPoint('addSessionID', false);
         $this->_addConfigurationPoint('isExternal', false);
-        $this->_addConfigurationPoint('addFlowExecutionTicket', true);
+        $this->_addConfigurationPoint('addFlowExecutionTicket', false);
     }
  
     /**#@-*/
