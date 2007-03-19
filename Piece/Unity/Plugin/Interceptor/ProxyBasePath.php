@@ -44,19 +44,20 @@ require_once 'Piece/Unity/Plugin/Common.php';
 /**
  * An interceptor to adjust the base path and the script name of the current
  * request which are held in the Piece_Unity_Context object.
- * This interceptor is used and only works when your web servers are used as
- * reverse proxies.
+ * This interceptor is used and only works if the web servers where your
+ * application is running on are used as back-end servers for reverse proxy
+ * servers.
  *
  * The base path and the script name are both relative paths since they are
- * based on SCRIPT_NAME environment variable. The following is a example of a
- * context change when 'proxyPath' configuration point is set to '/foo' in
- * KernelConfigurator plug-in.
+ * based on SCRIPT_NAME environment variable. The following is a example of
+ * a context change when 'proxyPath' configuration point is set to '/foo' in
+ * Configurator_Env plug-in.
  *
  * <pre>
- * 'proxyPath' Configuration Point in KernelConfigurator plug-in: /foo
+ * Configuration Point 'proxyPath' in Configurator_Env plug-in: /foo
  *
- * Requested URL (frontend): http://example.org/foo/bar/baz.php
- * Requested URL (backend):  http://backend.example.org/bar/baz.php
+ * Requested URL (front-end): http://example.org/foo/bar/baz.php
+ * Requested URL (back-end):  http://back-end.example.org/bar/baz.php
  * Base Path (original):     /bar
  * Base Path (adjusted):     /foo/bar
  * Script Name (original):   /bar/baz.php

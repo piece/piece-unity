@@ -44,7 +44,7 @@ require_once 'Piece/Unity/Plugin/Factory.php';
 // {{{ Piece_Unity_Plugin_InterceptorChain
 
 /**
- * An interceptor which invokes all interceptors.
+ * An interceptor which invokes registerd interceptors successively.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
