@@ -78,9 +78,16 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
      * @access public
      */
 
+    function setUp()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+    }
+
     function tearDown()
     {
         Piece_Unity_Context::clear();
+        Piece_Unity_Error::clearErrors();
+        Piece_Unity_Error::popCallback();
     }
 
     function testExternalURL()
@@ -213,12 +220,13 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
 
     function testInvalidOperations()
     {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $url = &new Piece_Unity_URL();
         $url->getQueryString();
         $url->addQueryString('foo', 'bar');
         $url->getURL();
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
 
         $error = Piece_Unity_Error::pop();
 
@@ -235,6 +243,8 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
         $error = Piece_Unity_Error::pop();
 
         $this->assertNull($error);
+
+        Piece_Unity_Error::popCallback();
     }
 
     function testNonSSLableServers()

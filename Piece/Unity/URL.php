@@ -110,16 +110,14 @@ class Piece_Unity_URL
      * Gets the query string of a URL.
      *
      * @return boolean
+     * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      */
     function getQueryString()
     {
         if (is_null($this->_url)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
-                                    __FUNCTION__ . ' method must be called after initializing.',
-                                    'warning'
+                                    __FUNCTION__ . ' method must be called after initializing.'
                                     );
-            Piece_Unity_Error::popCallback();
             return;
         }
 
@@ -134,16 +132,14 @@ class Piece_Unity_URL
      *
      * @param string $name
      * @param string $value
+     * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      */
     function addQueryString($name, $value)
     {
         if (is_null($this->_url)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
-                                    __FUNCTION__ . ' method must be called after initializing.',
-                                    'warning'
+                                    __FUNCTION__ . ' method must be called after initializing.'
                                     );
-            Piece_Unity_Error::popCallback();
             return;
         }
 
@@ -158,16 +154,14 @@ class Piece_Unity_URL
      *
      * @param boolean $useSSL
      * @return string
+     * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      */
     function getURL($useSSL = false)
     {
         if (is_null($this->_url)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
-                                    __FUNCTION__ . ' method must be called after initializing.',
-                                    'warning'
+                                    __FUNCTION__ . ' method must be called after initializing.'
                                     );
-            Piece_Unity_Error::popCallback();
             return;
         }
 
@@ -307,16 +301,14 @@ class Piece_Unity_URL
      *
      * @param string $name
      * @since Method available since Release 0.11.0
+     * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      */
     function removeQueryString($name)
     {
         if (is_null($this->_url)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
-                                    __FUNCTION__ . ' method must be called after initializing.',
-                                    'warning'
+                                    __FUNCTION__ . ' method must be called after initializing.'
                                     );
-            Piece_Unity_Error::popCallback();
             return;
         }
 
