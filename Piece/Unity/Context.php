@@ -89,6 +89,14 @@ class Piece_Unity_Context
     var $_proxyPath;
     var $_continuation;
     var $_validation;
+    var $_proxyMeasures = array('HTTP_X_FORWARDED_FOR',
+                                'HTTP_X_FORWARDED',
+                                'HTTP_FORWARDED_FOR',
+                                'HTTP_FORWARDED',
+                                'HTTP_VIA',
+                                'HTTP_X_COMING_FROM',
+                                'HTTP_COMING_FROM'
+                                );
 
     /**#@-*/
 
@@ -393,8 +401,7 @@ class Piece_Unity_Context
      */
     function &getAttribute($name)
     {
-        $attribute = &$this->_attributes[$name];
-        return $attribute;
+        return $this->_attributes[$name];
     }
 
     // }}}
@@ -462,16 +469,8 @@ class Piece_Unity_Context
      */
     function usingProxy()
     {
-        $measures = array('HTTP_X_FORWARDED_FOR',
-                          'HTTP_X_FORWARDED',
-                          'HTTP_FORWARDED_FOR',
-                          'HTTP_FORWARDED',
-                          'HTTP_VIA',
-                          'HTTP_X_COMING_FROM',
-                          'HTTP_COMING_FROM'
-                          );
-        foreach ($measures as $measure) {
-            if (array_key_exists($measure, $_SERVER)) {
+        foreach ($this->_proxyMeasures as $proxyMeasure) {
+            if (array_key_exists($proxyMeasure, $_SERVER)) {
                 return true;
             }
         }
@@ -519,6 +518,28 @@ class Piece_Unity_Context
     function &getValidation()
     {
         return $this->_validation;
+    }
+
+    // }}}
+    // {{{ getRemoteAddr()
+
+    /**
+     * Gets an IP address (or IP addresses) of the client making the request.
+     *
+     * @return string
+     * @since Method available since Release 0.12.0
+     */
+    function getRemoteAddr()
+    {
+        if ($this->usingProxy()) {
+            foreach ($this->_proxyMeasures as $proxyMeasure) {
+                if (array_key_exists($proxyMeasure, $_SERVER)) {
+                    return $_SERVER[$proxyMeasure];
+                }
+            }
+        } else {
+            return $_SERVER['REMOTE_ADDR'];
+        }
     }
 
     /**#@-*/

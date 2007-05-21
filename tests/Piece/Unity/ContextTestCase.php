@@ -338,6 +338,25 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         unset($_POST['_event_foo_z']);
     }
 
+    /**
+     * @since Method available since Release 0.12.0
+     */
+    function testGetRemoteAddr()
+    {
+        $_SERVER['REMOTE_ADDR'] = '1.2.3.4';
+
+        $context = &Piece_Unity_Context::singleton();
+
+        $this->assertEquals('1.2.3.4', $context->getRemoteAddr());
+
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '5.6.7.8';
+
+        $this->assertEquals('5.6.7.8', $context->getRemoteAddr());
+
+        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
+        unset($_SERVER['REMOTE_ADDR']);
+    }
+
     /**#@-*/
 
     /**#@+
