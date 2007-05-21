@@ -134,8 +134,7 @@ class Piece_Unity_Plugin_Common
             return $extension;
         }
 
-        $plugin = &Piece_Unity_Plugin_Factory::factory($extension);
-        return $plugin;
+        return Piece_Unity_Plugin_Factory::factory($extension);
     }
 
     // }}}

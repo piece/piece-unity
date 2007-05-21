@@ -135,8 +135,7 @@ class Piece_Unity_Session
      */
     function &getAttribute($name)
     {
-        $attribute = &$this->_attributes[$name];
-        return $attribute;
+        return $this->_attributes[$name];
     }
 
     // }}}

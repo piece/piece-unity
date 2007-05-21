@@ -141,8 +141,7 @@ class Piece_Unity_ViewElement
      */
     function &getElement($name)
     {
-        $element = &$this->_elements[$name];
-        return $element;
+        return $this->_elements[$name];
     }
 
     /**#@-*/

@@ -166,8 +166,7 @@ class Piece_Unity_Config_Factory
             return $config;
         }
 
-        $config = &Piece_Unity_Config_Factory::_getConfiguration($configFile, $cacheDirectory);
-        return $config;
+        return Piece_Unity_Config_Factory::_getConfiguration($configFile, $cacheDirectory);
     }
 
     /**#@-*/
