@@ -91,7 +91,6 @@ class Piece_Unity_Plugin_Interceptor_NullByteAttackPreventation extends Piece_Un
         return true;
     }
 
-
     // }}}
     // {{{ removeNullByte()
 
