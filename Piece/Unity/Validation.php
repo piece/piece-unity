@@ -188,7 +188,7 @@ class Piece_Unity_Validation
     function &getConfiguration()
     {
         if (is_null($this->_config)) {
-            $this->_config = new Piece_Right_Config();
+            $this->_config = &new Piece_Right_Config();
         }
 
         return $this->_config;
