@@ -83,7 +83,11 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $this->_context->setProxyPath($this->getConfiguration('proxyPath'));
+        $proxyPath = $this->getConfiguration('proxyPath');
+        if (!is_null($proxyPath)) {
+            $this->_context->setProxyPath($proxyPath);
+        }
+
         $this->_setNonSSLableServers();
     }
 
