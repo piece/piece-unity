@@ -83,7 +83,7 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $proxyPath = $this->getConfiguration('proxyPath');
+        $proxyPath = $this->_getConfiguration('proxyPath');
         if (!is_null($proxyPath)) {
             $this->_context->setProxyPath($proxyPath);
         }
@@ -117,7 +117,7 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common
      */
     function _setNonSSLableServers()
     {
-        $nonSSLableServers = $this->getConfiguration('nonSSLableServers');
+        $nonSSLableServers = $this->_getConfiguration('nonSSLableServers');
         if (!is_array($nonSSLableServers)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,

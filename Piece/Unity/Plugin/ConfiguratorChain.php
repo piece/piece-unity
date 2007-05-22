@@ -90,7 +90,7 @@ class Piece_Unity_Plugin_ConfiguratorChain extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $configurators = &$this->getExtension('configurators');
+        $configurators = &$this->_getExtension('configurators');
         if (!is_array($configurators)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,

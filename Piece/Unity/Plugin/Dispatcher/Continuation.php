@@ -110,7 +110,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             return;
         }
 
-        $this->_continuation->invoke($this->_context, $this->getConfiguration('bindActionsWithFlowExecution'));
+        $this->_continuation->invoke($this->_context, $this->_getConfiguration('bindActionsWithFlowExecution'));
         if (Piece_Flow_Error::hasErrors('exception')) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
                                     'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
@@ -273,13 +273,13 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      */
     function &_createContinuation()
     {
-        $continuation = &new Piece_Flow_Continuation($this->getConfiguration('enableSingleFlowMode'));
-        $continuation->setCacheDirectory($this->getConfiguration('cacheDirectory'));
+        $continuation = &new Piece_Flow_Continuation($this->_getConfiguration('enableSingleFlowMode'));
+        $continuation->setCacheDirectory($this->_getConfiguration('cacheDirectory'));
         $continuation->setEventNameCallback(array(__CLASS__, 'getEventName'));
         $continuation->setFlowExecutionTicketCallback(array(__CLASS__, 'getFlowExecutionTicket'));
         $continuation->setFlowNameCallback(array(__CLASS__, 'getFlowName'));
 
-        foreach ($this->getConfiguration('flowDefinitions') as $flowDefinition) {
+        foreach ($this->_getConfiguration('flowDefinitions') as $flowDefinition) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             $continuation->addFlow($flowDefinition['name'],
                                    $flowDefinition['file'],
@@ -320,10 +320,10 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->_addConfigurationPoint('flowName');
         $this->_addConfigurationPoint('bindActionsWithFlowExecution', true);
 
-        $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey'] = $this->getConfiguration('flowExecutionTicketKey');
-        $GLOBALS['PIECE_UNITY_Continuation_FlowNameKey'] = $this->getConfiguration('flowNameKey');
-        $GLOBALS['PIECE_UNITY_Continuation_FlowName'] = $this->getConfiguration('flowName');
-        Piece_Flow_Action_Factory::setActionDirectory($this->getConfiguration('actionDirectory'));
+        $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey'] = $this->_getConfiguration('flowExecutionTicketKey');
+        $GLOBALS['PIECE_UNITY_Continuation_FlowNameKey'] = $this->_getConfiguration('flowNameKey');
+        $GLOBALS['PIECE_UNITY_Continuation_FlowName'] = $this->_getConfiguration('flowName');
+        Piece_Flow_Action_Factory::setActionDirectory($this->_getConfiguration('actionDirectory'));
 
         $viewElement = &$this->_context->getViewElement();
         $viewElement->setElement('__flowExecutionTicketKey', $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey']);

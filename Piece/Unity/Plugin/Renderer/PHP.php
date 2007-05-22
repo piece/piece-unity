@@ -106,18 +106,18 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
     function _doRender($isLayout)
     {
         if (!$isLayout) {
-            $templateDirectory = $this->getConfiguration('templateDirectory');
+            $templateDirectory = $this->_getConfiguration('templateDirectory');
             $view = $this->_context->getView();
         } else {
-            $templateDirectory = $this->getConfiguration('layoutDirectory');
-            $view = $this->getConfiguration('layoutView');
+            $templateDirectory = $this->_getConfiguration('layoutDirectory');
+            $view = $this->_getConfiguration('layoutView');
         }
 
         if (is_null($templateDirectory)) {
             return;
         }
 
-        $file = "$templateDirectory/" . str_replace('_', '/', str_replace('.', '', $view)) . $this->getConfiguration('templateExtension');
+        $file = "$templateDirectory/" . str_replace('_', '/', str_replace('.', '', $view)) . $this->_getConfiguration('templateExtension');
 
         if (!file_exists($file)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
@@ -164,7 +164,7 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
     function _prepareFallback()
     {
         $config = &$this->_context->getConfiguration();
-        $config->setConfiguration('Renderer_PHP', 'templateDirectory', $this->getConfiguration('fallbackDirectory'));
+        $config->setConfiguration('Renderer_PHP', 'templateDirectory', $this->_getConfiguration('fallbackDirectory'));
     }
  
     /**#@-*/

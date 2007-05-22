@@ -87,7 +87,7 @@ class Piece_Unity_Plugin_OutputFilter_JapaneseZ2H extends Piece_Unity_Plugin_Com
      */
     function invoke($buffer)
     {
-        if ($this->getConfiguration('enabled')) {
+        if ($this->_getConfiguration('enabled')) {
             return mb_convert_kana($buffer, 'k');
         }
 

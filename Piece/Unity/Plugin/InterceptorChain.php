@@ -83,7 +83,7 @@ class Piece_Unity_Plugin_InterceptorChain extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $interceptors = &$this->getExtension('interceptors');
+        $interceptors = &$this->_getExtension('interceptors');
         if (!is_array($interceptors)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,

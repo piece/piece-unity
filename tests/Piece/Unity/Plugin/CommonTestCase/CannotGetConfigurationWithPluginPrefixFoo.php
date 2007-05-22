@@ -80,8 +80,8 @@ class CannotGetConfigurationWithPluginPrefixFoo extends Piece_Unity_Plugin_Commo
 
     function invoke()
     {
-        $this->_bar = $this->getConfiguration('bar');
-        $this->_baz = &$this->getExtension('baz');
+        $this->_bar = $this->_getConfiguration('bar');
+        $this->_baz = &$this->_getExtension('baz');
     }
 
     /**#@-*/

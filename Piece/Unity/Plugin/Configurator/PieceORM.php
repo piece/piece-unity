@@ -84,7 +84,7 @@ class Piece_Unity_Plugin_Configurator_PieceORM extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $configDirectory = $this->getConfiguration('configDirectory');
+        $configDirectory = $this->_getConfiguration('configDirectory');
         if (is_null($configDirectory)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
                                     'The configuration point [ configDirectory ] was not specified.'
@@ -93,7 +93,7 @@ class Piece_Unity_Plugin_Configurator_PieceORM extends Piece_Unity_Plugin_Common
             return;
         }
 
-        $cacheDirectory = $this->getConfiguration('cacheDirectory');
+        $cacheDirectory = $this->_getConfiguration('cacheDirectory');
         if (is_null($cacheDirectory)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
                                     'The configuration point [ cacheDirectory ] was not specified.'
@@ -102,7 +102,7 @@ class Piece_Unity_Plugin_Configurator_PieceORM extends Piece_Unity_Plugin_Common
             return;
         }
 
-        $mapperConfigDirectory = $this->getConfiguration('mapperConfigDirectory');
+        $mapperConfigDirectory = $this->_getConfiguration('mapperConfigDirectory');
         if (is_null($mapperConfigDirectory)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
                                     'The configuration point [ mapperConfigDirectory ] was not specified.'

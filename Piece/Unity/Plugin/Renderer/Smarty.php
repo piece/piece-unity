@@ -121,7 +121,7 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
     function _load()
     {
         if (!defined('SMARTY_DIR')) {
-            $SMARTY_DIR = $this->getConfiguration('SMARTY_DIR');
+            $SMARTY_DIR = $this->_getConfiguration('SMARTY_DIR');
             if (!is_null($SMARTY_DIR)) {
                 define('SMARTY_DIR', Piece_Unity_Plugin_Renderer_Smarty::_adjustEndingSlash($SMARTY_DIR));
             }
@@ -191,7 +191,7 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
         $smarty = &new Smarty();
 
         foreach (array_keys($this->_smartyClassVariables) as $point) {
-            $$point = $this->getConfiguration($point);
+            $$point = $this->_getConfiguration($point);
             if ($point == 'plugins_dir' && is_array($$point)) {
                 $oldPluginDirectories = $smarty->$point;
                 $smarty->$point = array_merge($$point, $oldPluginDirectories);
@@ -206,9 +206,9 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
         if (!$isLayout) {
             $view = $this->_context->getView();
         } else {
-            $smarty->template_dir = $this->getConfiguration('layoutDirectory');
-            $smarty->compile_dir = $this->getConfiguration('layoutCompileDirectory');
-            $view = $this->getConfiguration('layoutView');
+            $smarty->template_dir = $this->_getConfiguration('layoutDirectory');
+            $smarty->compile_dir = $this->_getConfiguration('layoutCompileDirectory');
+            $view = $this->_getConfiguration('layoutView');
         }
 
         $viewElement = &$this->_context->getViewElement();
@@ -219,7 +219,7 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
 
         set_error_handler(array('Piece_Unity_Error', 'pushPHPError'));
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-        $smarty->display(str_replace('_', '/', str_replace('.', '', $view)) . $this->getConfiguration('templateExtension'));
+        $smarty->display(str_replace('_', '/', str_replace('.', '', $view)) . $this->_getConfiguration('templateExtension'));
         Piece_Unity_Error::popCallback();
         restore_error_handler();
         if (Piece_Unity_Error::hasErrors('exception')) {
@@ -241,8 +241,8 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
     function _prepareFallback()
     {
         $config = &$this->_context->getConfiguration();
-        $config->setConfiguration('Renderer_Smarty', 'template_dir', $this->getConfiguration('fallbackDirectory'));
-        $config->setConfiguration('Renderer_Smarty', 'compile_dir', $this->getConfiguration('fallbackCompileDirectory'));
+        $config->setConfiguration('Renderer_Smarty', 'template_dir', $this->_getConfiguration('fallbackDirectory'));
+        $config->setConfiguration('Renderer_Smarty', 'compile_dir', $this->_getConfiguration('fallbackCompileDirectory'));
     }
 
     /**#@-*/

@@ -84,7 +84,7 @@ class Piece_Unity_Plugin_OutputBufferStack extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $filters = &$this->getExtension('filters');
+        $filters = &$this->_getExtension('filters');
         if (!is_array($filters)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,

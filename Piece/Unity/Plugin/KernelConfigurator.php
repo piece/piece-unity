@@ -35,6 +35,7 @@
  * @version    SVN: $Id$
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.1.0
+ * @deprecated File deprecated in Release 0.12.0
  */
 
 require_once 'Piece/Unity/Plugin/Common.php';
@@ -57,6 +58,7 @@ require_once 'Piece/Unity/URL.php';
  * @version    Release: @package_version@
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.1.0
+ * @deprecated File deprecated in Release 0.12.0
  */
 class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
 {
@@ -87,8 +89,8 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $this->_context->setEventNameKey($this->getConfiguration('eventNameKey'));
-        $this->_context->setProxyPath($this->getConfiguration('proxyPath'));
+        $this->_context->setEventNameKey($this->_getConfiguration('eventNameKey'));
+        $this->_context->setProxyPath($this->_getConfiguration('proxyPath'));
 
         /*
          * Preloads Dispatcher_Continuation plug-in for restoring
@@ -147,7 +149,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
      */
     function _setPluginPrefixes()
     {
-        $pluginPrefixes = $this->getConfiguration('pluginPrefixes');
+        $pluginPrefixes = $this->_getConfiguration('pluginPrefixes');
         if (!is_array($pluginPrefixes)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
@@ -174,7 +176,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
      */
     function _setAutoloadClasses()
     {
-        $autoloadClasses = $this->getConfiguration('autoloadClasses');
+        $autoloadClasses = $this->_getConfiguration('autoloadClasses');
         if (!is_array($autoloadClasses)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
@@ -203,7 +205,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
      */
     function _setEventName()
     {
-        $eventName = $this->getConfiguration('eventName');
+        $eventName = $this->_getConfiguration('eventName');
         if (!is_null($eventName)) {
             $this->_context->setEventName($eventName);
         }
@@ -219,7 +221,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
      */
     function _importPathInfo()
     {
-        if ($this->getConfiguration('importPathInfo')) {
+        if ($this->_getConfiguration('importPathInfo')) {
             $request = &$this->_context->getRequest();
             $request->importPathInfo();
         }
@@ -235,7 +237,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
      */
     function _setPluginDirectories()
     {
-        $pluginDirectories = $this->getConfiguration('pluginDirectories');
+        $pluginDirectories = $this->_getConfiguration('pluginDirectories');
         if (!is_array($pluginDirectories)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
@@ -263,8 +265,8 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
     function _configureValidation()
     {
         $validation = &$this->_context->getValidation();
-        $validation->setConfigDirectory($this->getConfiguration('validationConfigDirectory'));
-        $validation->setCacheDirectory($this->getConfiguration('validationCacheDirectory'));
+        $validation->setConfigDirectory($this->_getConfiguration('validationConfigDirectory'));
+        $validation->setCacheDirectory($this->_getConfiguration('validationCacheDirectory'));
 
         $this->_setValidatorDirectories();
         $this->_setFilterDirectories();
@@ -282,7 +284,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
      */
     function _setValidatorDirectories()
     {
-        $validatorDirectories = $this->getConfiguration('validationValidatorDirectories');
+        $validatorDirectories = $this->_getConfiguration('validationValidatorDirectories');
         if (!is_array($validatorDirectories)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
@@ -309,7 +311,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
      */
     function _setFilterDirectories()
     {
-        $filterDirectories = $this->getConfiguration('validationFilterDirectories');
+        $filterDirectories = $this->_getConfiguration('validationFilterDirectories');
         if (!is_array($filterDirectories)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
@@ -336,7 +338,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
      */
     function _setNonSSLableServers()
     {
-        $nonSSLableServers = $this->getConfiguration('nonSSLableServers');
+        $nonSSLableServers = $this->_getConfiguration('nonSSLableServers');
         if (!is_array($nonSSLableServers)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
@@ -363,7 +365,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
      */
     function _setValidatorPrefixes()
     {
-        $validatorPrefixes = $this->getConfiguration('validationValidatorPrefixes');
+        $validatorPrefixes = $this->_getConfiguration('validationValidatorPrefixes');
         if (!is_array($validatorPrefixes)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
@@ -390,7 +392,7 @@ class Piece_Unity_Plugin_KernelConfigurator extends Piece_Unity_Plugin_Common
      */
     function _setFilterPrefixes()
     {
-        $filterPrefixes = $this->getConfiguration('validationFilterPrefixes');
+        $filterPrefixes = $this->_getConfiguration('validationFilterPrefixes');
         if (!is_array($filterPrefixes)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,

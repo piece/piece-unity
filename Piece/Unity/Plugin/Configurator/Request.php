@@ -109,7 +109,7 @@ class Piece_Unity_Plugin_Configurator_Request extends Piece_Unity_Plugin_Common
      */
     function _importPathInfo()
     {
-        if ($this->getConfiguration('importPathInfo')) {
+        if ($this->_getConfiguration('importPathInfo')) {
             $request = &$this->_context->getRequest();
             $request->importPathInfo();
         }

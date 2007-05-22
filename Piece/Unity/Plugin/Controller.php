@@ -90,7 +90,7 @@ class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
     function invoke()
     {
         if (is_null($this->_context->getView())) {
-            $dispatcher = &$this->getExtension('dispatcher');
+            $dispatcher = &$this->_getExtension('dispatcher');
             if (Piece_Unity_Error::hasErrors('exception')) {
                 return;
             }
@@ -113,7 +113,7 @@ class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
             return;
         }
 
-        $view = &$this->getExtension('view');
+        $view = &$this->_getExtension('view');
         if (Piece_Unity_Error::hasErrors('exception')) {
             return;
         }

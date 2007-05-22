@@ -86,7 +86,7 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $isExternal = $this->getConfiguration('isExternal');
+        $isExternal = $this->_getConfiguration('isExternal');
         $viewString = $this->_context->getView();
         $url = &new Piece_Unity_URL($viewString, $isExternal);
 
@@ -104,13 +104,13 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
         }
 
         if (!$isExternal) {
-            if ($this->getConfiguration('addSessionID')) {
+            if ($this->_getConfiguration('addSessionID')) {
                 $url->addQueryString($viewElements['__sessionName'],
                                      $viewElements['__sessionID']
                                      );
             }
 
-            if ($this->getConfiguration('addFlowExecutionTicket')) {
+            if ($this->_getConfiguration('addFlowExecutionTicket')) {
                 if (array_key_exists('__flowExecutionTicketKey', $viewElements)) {
                     $url->addQueryString($viewElements['__flowExecutionTicketKey'],
                                          $viewElements['__flowExecutionTicket']

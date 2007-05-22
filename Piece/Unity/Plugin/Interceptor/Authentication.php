@@ -87,12 +87,12 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
      */
     function invoke()
     {
-        foreach ($this->getConfiguration('services') as $service) {
+        foreach ($this->_getConfiguration('services') as $service) {
             if (!$this->_isProtectedResource(@$service['resources'])) {
                 continue;
             }
 
-            $guardDirectory = $this->getConfiguration('guardDirectory');
+            $guardDirectory = $this->_getConfiguration('guardDirectory');
             if (is_null($guardDirectory)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
                                         'The guard directory was not specified.'

@@ -119,7 +119,7 @@ class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common
      */
     function _setPluginDirectories()
     {
-        $pluginDirectories = $this->getConfiguration('pluginDirectories');
+        $pluginDirectories = $this->_getConfiguration('pluginDirectories');
         if (!is_array($pluginDirectories)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
@@ -144,7 +144,7 @@ class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common
      */
     function _setPluginPrefixes()
     {
-        $pluginPrefixes = $this->getConfiguration('pluginPrefixes');
+        $pluginPrefixes = $this->_getConfiguration('pluginPrefixes');
         if (!is_array($pluginPrefixes)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,

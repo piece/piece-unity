@@ -85,7 +85,7 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $appRoot = $this->getConfiguration('appRoot');
+        $appRoot = $this->_getConfiguration('appRoot');
         if (!is_null($appRoot)) {
             $result = chdir($appRoot);
             if (!$result) {
@@ -96,7 +96,7 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common
             }
         }
 
-        $appRootPath = $this->getConfiguration('appRootPath');
+        $appRootPath = $this->_getConfiguration('appRootPath');
         if (!is_null($appRootPath)) {
             $this->_context->setAppRootPath($appRootPath);
         }

@@ -109,7 +109,7 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
          * Overwrites the current view with another one which is specified by
          * forcedView configuration.
          */
-        $forcedView = $this->getConfiguration('forcedView');
+        $forcedView = $this->_getConfiguration('forcedView');
         if (!is_null($forcedView)) {
             $this->_context->setView($forcedView);
         }
@@ -143,7 +143,7 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
             }
         }
 
-        $renderer = &$this->getExtension('renderer');
+        $renderer = &$this->_getExtension('renderer');
         if (Piece_Unity_Error::hasErrors('exception')) {
             return;
         }

@@ -81,7 +81,7 @@ class Piece_Unity_Plugin_Configurator_Event extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $this->_context->setEventNameKey($this->getConfiguration('eventNameKey'));
+        $this->_context->setEventNameKey($this->_getConfiguration('eventNameKey'));
         $this->_setEventName();
     }
 
@@ -111,7 +111,7 @@ class Piece_Unity_Plugin_Configurator_Event extends Piece_Unity_Plugin_Common
      */
     function _setEventName()
     {
-        $eventName = $this->getConfiguration('eventName');
+        $eventName = $this->_getConfiguration('eventName');
         if (!is_null($eventName)) {
             $this->_context->setEventName($eventName);
         }

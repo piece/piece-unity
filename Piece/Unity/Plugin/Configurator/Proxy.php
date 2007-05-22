@@ -103,7 +103,7 @@ class Piece_Unity_Plugin_Configurator_Proxy extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $proxyPath = $this->getConfiguration('proxyPath');
+        $proxyPath = $this->_getConfiguration('proxyPath');
         $this->_context->setProxyPath($proxyPath);
 
         if (!$this->_context->usingProxy()) {
@@ -115,7 +115,7 @@ class Piece_Unity_Plugin_Configurator_Proxy extends Piece_Unity_Plugin_Common
             $this->_context->setScriptName($proxyPath . $this->_context->getScriptName());
             $this->_context->setAppRootPath($proxyPath . $this->_context->getAppRootPath());
 
-            $adjustSessionCookiePath = $this->getConfiguration('adjustSessionCookiePath');
+            $adjustSessionCookiePath = $this->_getConfiguration('adjustSessionCookiePath');
             if ($adjustSessionCookiePath) {
                 ini_set('session.cookie_path',
                         $proxyPath . str_replace('//', '/', ini_get('session.cookie_path'))

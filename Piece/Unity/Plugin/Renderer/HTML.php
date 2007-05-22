@@ -85,8 +85,8 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $useLayout = $this->getConfiguration('useLayout');
-        if ($this->getConfiguration('turnOffLayoutByHTTPAccept')) {
+        $useLayout = $this->_getConfiguration('useLayout');
+        if ($this->_getConfiguration('turnOffLayoutByHTTPAccept')) {
             if (array_key_exists('HTTP_ACCEPT', $_SERVER)) {
                 if ($_SERVER['HTTP_ACCEPT'] == 'application/x-piece-html-fragment') {
                     $useLayout = false;
@@ -152,7 +152,7 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
      */
     function _render($isLayout)
     {
-        $useFallback = $this->getConfiguration('useFallback');
+        $useFallback = $this->_getConfiguration('useFallback');
 
         if ($useFallback) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
@@ -166,7 +166,7 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
 
         if ($useFallback) {
             if (Piece_Unity_Error::hasErrors()) {
-                $this->_context->setView($this->getConfiguration('fallbackView'));
+                $this->_context->setView($this->_getConfiguration('fallbackView'));
                 $this->_prepareFallback();
                 $this->_doRender($isLayout);
             }

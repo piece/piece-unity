@@ -118,8 +118,8 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
             return;
         }
 
-        if ($this->getConfiguration('useJSONP')) {
-            $callbackKey = $this->getConfiguration('callbackKey');
+        if ($this->_getConfiguration('useJSONP')) {
+            $callbackKey = $this->_getConfiguration('callbackKey');
             if (!is_null($callbackKey)) {
                 $request = &$this->_context->getRequest();
                 if ($request->hasParameter($callbackKey)) {
@@ -341,7 +341,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
         $this->_addConfigurationPoint('useHTMLAJAX', false);
 
         $this->_setEncoderCallback();
-        $this->_contentType = $this->getConfiguration('contentType');
+        $this->_contentType = $this->_getConfiguration('contentType');
     }
 
     // }}}
@@ -354,7 +354,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
      */
     function _setEncoderCallback()
     {
-        if (!$this->getConfiguration('useHTMLAJAX')) {
+        if (!$this->_getConfiguration('useHTMLAJAX')) {
             if (!extension_loaded('json')) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                         'json extension not loaded. Please check PHP configuration.',
@@ -389,12 +389,12 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
      */
     function _createData()
     {
-        $include = $this->getConfiguration('include');
+        $include = $this->_getConfiguration('include');
         if (!is_array($include)) {
             $include = array();
         }
 
-        $exclude = $this->getConfiguration('exclude');
+        $exclude = $this->_getConfiguration('exclude');
         if (!is_array($exclude)) {
             $exclude = array();
         }

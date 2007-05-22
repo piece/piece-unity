@@ -91,7 +91,7 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
         $event = $this->_context->getEventName();
         $class = str_replace('.', '', "{$event}Action");
 
-        $actionDirectory = $this->getConfiguration('actionDirectory');
+        $actionDirectory = $this->_getConfiguration('actionDirectory');
         if (is_null($actionDirectory)) {
             return $event;
         }

@@ -105,9 +105,9 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
     function _createFormElements($elements)
     {
         $formElements = array();
-        $formElementValueKey      = $this->getConfiguration('formElementValueKey');
-        $formElementOptionsKey    = $this->getConfiguration('formElementOptionsKey');
-        $formElementAttributesKey = $this->getConfiguration('formElementAttributesKey');
+        $formElementValueKey      = $this->_getConfiguration('formElementValueKey');
+        $formElementOptionsKey    = $this->_getConfiguration('formElementOptionsKey');
+        $formElementAttributesKey = $this->_getConfiguration('formElementAttributesKey');
         foreach ($elements as $name => $type) {
             $formElements[$name] = &new HTML_Template_Flexy_Element();
             if (!is_array($type)) {
@@ -152,7 +152,7 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
                          );
 
         foreach (array_keys($this->_configurationOptions) as $point) {
-            $$point = $this->getConfiguration($point);
+            $$point = $this->_getConfiguration($point);
             if (!is_null($$point)) {
                 $options[$point] = $$point;
             }
@@ -197,13 +197,13 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
         if (!$isLayout) {
             $view = $this->_context->getView();
         } else {
-            $options['templateDir'] = $this->getConfiguration('layoutDirectory');
-            $options['compileDir'] = $this->getConfiguration('layoutCompileDirectory');
-            $view = $this->getConfiguration('layoutView');
+            $options['templateDir'] = $this->_getConfiguration('layoutDirectory');
+            $options['compileDir'] = $this->_getConfiguration('layoutCompileDirectory');
+            $view = $this->_getConfiguration('layoutView');
         }
 
         $flexy = &new HTML_Template_Flexy($options);
-        $file = str_replace('_', '/', str_replace('.', '', $view)) . $this->getConfiguration('templateExtension');
+        $file = str_replace('_', '/', str_replace('.', '', $view)) . $this->_getConfiguration('templateExtension');
         $resultOfCompile = $flexy->compile($file);
         if (PEAR::isError($resultOfCompile)) {
             if ($flexy->currentTemplate === false) {
@@ -231,7 +231,7 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
         $viewElements = $viewElement->getElements();
 
         $formElements = array();
-        $formElementsKey = $this->getConfiguration('formElementsKey');
+        $formElementsKey = $this->_getConfiguration('formElementsKey');
         if (array_key_exists($formElementsKey, $viewElements)) {
             $formElements = $this->_createFormElements($viewElements[$formElementsKey]);
             unset($viewElements[$formElementsKey]);
@@ -258,8 +258,8 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
     function _prepareFallback()
     {
         $config = &$this->_context->getConfiguration();
-        $config->setConfiguration('Renderer_Flexy', 'templateDir', $this->getConfiguration('fallbackDirectory'));
-        $config->setConfiguration('Renderer_Flexy', 'compileDir', $this->getConfiguration('fallbackCompileDirectory'));
+        $config->setConfiguration('Renderer_Flexy', 'templateDir', $this->_getConfiguration('fallbackDirectory'));
+        $config->setConfiguration('Renderer_Flexy', 'compileDir', $this->_getConfiguration('fallbackCompileDirectory'));
     }
 
     /**#@-*/

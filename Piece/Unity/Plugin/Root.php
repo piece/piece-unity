@@ -87,7 +87,7 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $configurator = &$this->getExtension('configurator');
+        $configurator = &$this->_getExtension('configurator');
         if (Piece_Unity_Error::hasErrors('exception')) {
             return;
         }
@@ -97,7 +97,7 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
             return;
         }
 
-        $outputFilter = &$this->getExtension('outputFilter');
+        $outputFilter = &$this->_getExtension('outputFilter');
         if (Piece_Unity_Error::hasErrors('exception')) {
             return;
         }
@@ -107,7 +107,7 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
             return;
         }
 
-        $interceptor = &$this->getExtension('interceptor');
+        $interceptor = &$this->_getExtension('interceptor');
         if (Piece_Unity_Error::hasErrors('exception')) {
             return;
         }
@@ -117,7 +117,7 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
             return;
         }
 
-        $controller = &$this->getExtension('controller');
+        $controller = &$this->_getExtension('controller');
         if (Piece_Unity_Error::hasErrors('exception')) {
             return;
         }
