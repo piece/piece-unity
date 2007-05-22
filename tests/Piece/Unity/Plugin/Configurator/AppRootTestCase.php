@@ -34,20 +34,20 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Configurator_Env
+ * @see        Piece_Unity_Plugin_Configurator_AppRoot
  * @since      File available since Release 0.12.0
  */
 
 require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Plugin/Configurator/Proxy.php';
+require_once 'Piece/Unity/Plugin/Configurator/AppRoot.php';
 require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Error.php';
+require_once 'Piece/Unity/Context.php';
 
-// {{{ Piece_Unity_Plugin_Configurator_ProxyTestCase
+// {{{ Piece_Unity_Plugin_Configurator_AppRootTestCase
 
 /**
- * TestCase for Piece_Unity_Plugin_Configurator_Proxy
+ * TestCase for Piece_Unity_Plugin_Configurator_AppRoot
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
@@ -55,10 +55,10 @@ require_once 'Piece/Unity/Error.php';
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Configurator_Proxy
+ * @see        Piece_Unity_Plugin_Configurator_AppRoot
  * @since      Class available since Release 0.12.0
  */
-class Piece_Unity_Plugin_Configurator_ProxyTestCase extends PHPUnit_TestCase
+class Piece_Unity_Plugin_Configurator_AppRootTestCase extends PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -79,6 +79,11 @@ class Piece_Unity_Plugin_Configurator_ProxyTestCase extends PHPUnit_TestCase
      * @access public
      */
 
+    function setUp()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+    }
+
     function tearDown()
     {
         Piece_Unity_Context::clear();
@@ -86,86 +91,51 @@ class Piece_Unity_Plugin_Configurator_ProxyTestCase extends PHPUnit_TestCase
         Piece_Unity_Error::popCallback();
     }
 
-    function testSetProxyPath()
+    function testAppRoot()
     {
+        $appRoot = realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..');
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_Proxy', 'proxyPath', '/foo/bar');
+        $config->setConfiguration('Configurator_AppRoot', 'appRoot', $appRoot);
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
-
-        $configurator = &new Piece_Unity_Plugin_Configurator_Proxy();
+        $configurator = &new Piece_Unity_Plugin_Configurator_AppRoot();
         $configurator->invoke();
 
-        $this->assertEquals('/foo/bar', $context->getProxyPath());
+        $this->assertEquals($appRoot, getcwd());
     }
 
-    function testProxy()
+    function testAppRootWithNonExistingDirectory()
     {
-        $previousScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = '/baz/qux.php';
-        $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
-        $previousSessionCookiePath = ini_get('session.cookie_path');
-        ini_set('session.cookie_path', '/baz');
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
 
+        $appRoot = '/foo/bar';
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_Proxy', 'proxyPath', '/bar');
+        $config->setConfiguration('Configurator_AppRoot', 'appRoot', $appRoot);
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
-        $context->setAppRootPath('/foo');
+        $configurator = &new Piece_Unity_Plugin_Configurator_AppRoot();
+        @$configurator->invoke();
 
-        $interceptor = &new Piece_Unity_Plugin_Configurator_Proxy();
-        $interceptor->invoke();
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
 
-        $this->assertEquals('/bar/baz', $context->getBasePath());
-        $this->assertEquals('/bar/baz/qux.php', $context->getScriptName());
-        $this->assertEquals('/bar/baz', ini_get('session.cookie_path'));
-        $this->assertEquals('/bar/foo', $context->getAppRootPath());
+        $error = Piece_Unity_Error::pop();
 
-        ini_set('session.cookie_path', $previousSessionCookiePath);
-        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
-        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
+        $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
+
+        Piece_Unity_Error::popCallback();
     }
 
-    function testNonProxy()
+    function testAppRootPath()
     {
-        $previousScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = '/baz/qux.php';
-
+        $appRootPath = '/foo/bar';
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_Proxy', 'proxyPath', '/bar');
+        $config->setConfiguration('Configurator_AppRoot', 'appRootPath', $appRootPath);
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
-        $context->setAppRootPath('/foo');
+        $configurator = &new Piece_Unity_Plugin_Configurator_AppRoot();
+        $configurator->invoke();
 
-        $interceptor = &new Piece_Unity_Plugin_Configurator_Proxy();
-        $interceptor->invoke();
-
-        $this->assertEquals('/baz', $context->getBasePath());
-        $this->assertEquals('/baz/qux.php', $context->getScriptName());
-        $this->assertEquals('/foo', $context->getAppRootPath());
-
-        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
-    }
-
-    function testAdjustingSessionCookiePathToOff()
-    {
-        $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
-        $previousSessionCookiePath = ini_get('session.cookie_path');
-        ini_set('session.cookie_path', '/bar');
-
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_Proxy', 'proxyPath', '/foo');
-        $config->setConfiguration('Configurator_Proxy', 'adjustSessionCookiePath', false);
-        $context = &Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-
-        $interceptor = &new Piece_Unity_Plugin_Configurator_Proxy();
-        $interceptor->invoke();
-
-        $this->assertEquals('/bar', ini_get('session.cookie_path'));
-
-        ini_set('session.cookie_path', $previousSessionCookiePath);
-        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
+        $this->assertEquals($appRootPath, $context->getAppRootPath());
     }
 
     /**#@-*/

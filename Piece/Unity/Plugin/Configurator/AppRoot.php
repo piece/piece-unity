@@ -38,33 +38,13 @@
  */
 
 require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/URL.php';
 require_once 'Piece/Unity/Error.php';
 
-// {{{ Piece_Unity_Plugin_Configurator_Proxy
+// {{{ Piece_Unity_Plugin_Configurator_AppRoot
 
 /**
- * An configurator to adjust the base path and the script name of the current
- * request which are held in the Piece_Unity_Context object.
- * This configurator is used and only works if the web servers where your
- * application is running on are used as back-end servers for reverse proxy
- * servers.
- *
- * The base path and the script name are both relative paths since they are
- * based on SCRIPT_NAME environment variable. The following is a example of
- * a context change when 'proxyPath' configuration point is set to '/foo' in
- * Configurator_Env plug-in.
- *
- * <pre>
- * Configuration Point 'proxyPath' in Configurator_Proxy plug-in: /foo
- *
- * Requested URL (front-end): http://example.org/foo/bar/baz.php
- * Requested URL (back-end):  http://back-end.example.org/bar/baz.php
- * Base Path (original):     /bar
- * Base Path (adjusted):     /foo/bar
- * Script Name (original):   /bar/baz.php
- * Script Name (adjusted):   /foo/bar/baz.php
- * </pre>
+ * A configurator for setting the directory and the URL path that form
+ * the top of the document tree of an application visible from the web.
  *
  * @package    Piece_Unity
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
@@ -74,7 +54,7 @@ require_once 'Piece/Unity/Error.php';
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.12.0
  */
-class Piece_Unity_Plugin_Configurator_Proxy extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
@@ -100,27 +80,25 @@ class Piece_Unity_Plugin_Configurator_Proxy extends Piece_Unity_Plugin_Common
 
     /**
      * Invokes the plugin specific code.
+     *
+     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
     function invoke()
     {
-        $proxyPath = $this->getConfiguration('proxyPath');
-        $this->_context->setProxyPath($proxyPath);
-
-        if (!$this->_context->usingProxy()) {
-            return;
+        $appRoot = $this->getConfiguration('appRoot');
+        if (!is_null($appRoot)) {
+            $result = chdir($appRoot);
+            if (!$result) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                        'Failed calling chdir() for the configuration point [ appRoot ] at the plugin [ ' . __CLASS__ . ' ].'
+                                        );
+                return;
+            }
         }
 
-        if (!is_null($proxyPath)) {
-            $this->_context->setBasePath($proxyPath . $this->_context->getBasePath());
-            $this->_context->setScriptName($proxyPath . $this->_context->getScriptName());
-            $this->_context->setAppRootPath($proxyPath . $this->_context->getAppRootPath());
-
-            $adjustSessionCookiePath = $this->getConfiguration('adjustSessionCookiePath');
-            if ($adjustSessionCookiePath) {
-                ini_set('session.cookie_path',
-                        $proxyPath . str_replace('//', '/', ini_get('session.cookie_path'))
-                        );
-            }
+        $appRootPath = $this->getConfiguration('appRootPath');
+        if (!is_null($appRootPath)) {
+            $this->_context->setAppRootPath($appRootPath);
         }
     }
 
@@ -138,8 +116,8 @@ class Piece_Unity_Plugin_Configurator_Proxy extends Piece_Unity_Plugin_Common
      */
     function _initialize()
     {
-        $this->_addConfigurationPoint('proxyPath');
-        $this->_addConfigurationPoint('adjustSessionCookiePath', true);
+        $this->_addConfigurationPoint('appRoot');
+        $this->_addConfigurationPoint('appRootPath');
     }
 
     /**#@-*/

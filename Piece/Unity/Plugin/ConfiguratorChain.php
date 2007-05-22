@@ -68,7 +68,8 @@ class Piece_Unity_Plugin_ConfiguratorChain extends Piece_Unity_Plugin_Common
      * @access private
      */
 
-    var $_requiredConfigurators = array('Configurator_Plugin',
+    var $_requiredConfigurators = array('Configurator_AppRoot',
+                                        'Configurator_Plugin',
                                         'Configurator_Env',
                                         'Configurator_Event',
                                         'Configurator_Request',

@@ -97,6 +97,7 @@ class Piece_Unity_Context
                                 'HTTP_X_COMING_FROM',
                                 'HTTP_COMING_FROM'
                                 );
+    var $_appRootPath = '';
 
     /**#@-*/
 
@@ -233,7 +234,6 @@ class Piece_Unity_Context
      */
     function clear()
     {
-        unset($GLOBALS['PIECE_UNITY_Context_Instance']);
         $GLOBALS['PIECE_UNITY_Context_Instance'] = null;
     }
 
@@ -540,6 +540,36 @@ class Piece_Unity_Context
         } else {
             return $_SERVER['REMOTE_ADDR'];
         }
+    }
+
+    // }}}
+    // {{{ setAppRootPath()
+
+    /**
+     * Sets the URL path that form the top of the document tree of
+     * an application visible from the web.
+     *
+     * @param string $appRootPath
+     * @since Method available since Release 0.12.0
+     */
+    function setAppRootPath($appRootPath)
+    {
+        $this->_appRootPath = $appRootPath;
+    }
+
+    // }}}
+    // {{{ getAppRootPath()
+
+    /**
+     * Gets the URL path that form the top of the document tree of
+     * an application visible from the web.
+     *
+     * @return string
+     * @since Method available since Release 0.12.0
+     */
+    function getAppRootPath()
+    {
+        return $this->_appRootPath;
     }
 
     /**#@-*/

@@ -35,6 +35,7 @@
  * @version    SVN: $Id$
  * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.5.0
+ * @deprecated File deprecated in Release 0.12.0
  */
 
 require_once 'Piece/Unity/Plugin/Common.php';
@@ -71,6 +72,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @version    Release: @package_version@
  * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.5.0
+ * @deprecated Class deprecated in Release 0.12.0
  */
 class Piece_Unity_Plugin_Interceptor_ProxyBasePath extends Piece_Unity_Plugin_Common
 {

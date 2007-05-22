@@ -101,6 +101,7 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
         $viewElement->setElement('__basePath', $this->_context->getBasePath());
         $viewElement->setElement('__sessionName', session_name());
         $viewElement->setElement('__sessionID', session_id());
+        $viewElement->setElement('__appRootPath', $this->_context->getAppRootPath());
         $url = &new Piece_Unity_URL();
         $viewElement->setElement('__url', $url);
 
