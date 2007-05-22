@@ -137,6 +137,30 @@ class Piece_Unity_Plugin_ViewTestCase extends PHPUnit_TestCase
         $_SERVER['SCRIPT_NAME'] = $oldScriptName;
     }
 
+    /**
+     * @since Method available since Release 0.12.0
+     */
+    function testBuiltinElements()
+    {
+        $config = &new Piece_Unity_Config();
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $view = &new Piece_Unity_Plugin_View();
+        $view->invoke();
+        $viewElement = &$context->getViewElement();
+        $elements = $viewElement->getElements();
+
+        $this->assertEquals(9, count($elements));
+        $this->assertTrue(array_key_exists('__request', $elements));
+        $this->assertTrue(array_key_exists('__session', $elements));
+        $this->assertTrue(array_key_exists('__eventNameKey', $elements));
+        $this->assertTrue(array_key_exists('__scriptName', $elements));
+        $this->assertTrue(array_key_exists('__basePath', $elements));
+        $this->assertTrue(array_key_exists('__sessionName', $elements));
+        $this->assertTrue(array_key_exists('__sessionID', $elements));
+        $this->assertTrue(array_key_exists('__appRootPath', $elements));
+    }
+
     /**#@-*/
 
     /**#@+

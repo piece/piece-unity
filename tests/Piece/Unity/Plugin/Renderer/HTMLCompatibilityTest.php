@@ -142,29 +142,6 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
         $this->_clear($viewString);
     }
 
-    function testBuiltinElements()
-    {
-        $viewString = "{$this->_target}BuiltinElements";
-        $context = &Piece_Unity_Context::singleton();
-
-        $config = &$this->_getConfig();
-        $context->setConfiguration($config);
-
-        $foo = &new stdClass();
-        $viewElement = &$context->getViewElement();
-        $viewElement->setElementByRef('foo', $foo);
-        $context->setView($viewString);
-
-        $view = &new Piece_Unity_Plugin_View();
-        ob_start();
-        $view->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
-
-        $this->assertEquals('OK', $buffer);
-        $this->_clear($viewString);
-    }
-
     function testNonExistingTemplate()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_DIE . ';'));
