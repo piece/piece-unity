@@ -121,20 +121,11 @@ class Piece_Unity_Plugin_Common
      * @return mixed
      * @throws PIECE_UNITY_ERROR_NOT_FOUND
      * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
+     * @deprecated Method deprecated in Release 0.12.0
      */
     function &getExtension($extensionPoint)
     {
-        $config = &$this->_context->getConfiguration();
-        $extension = $config->getExtension($this->_name, strtolower($extensionPoint));
-        if (is_null($extension)) {
-            $extension = $this->_extensionPoints[ strtolower($extensionPoint) ];
-        }
-
-        if (!$extension || is_array($extension)) {
-            return $extension;
-        }
-
-        return Piece_Unity_Plugin_Factory::factory($extension);
+        return $this->_getExtension($extensionPoint);
     }
 
     // }}}
@@ -145,16 +136,11 @@ class Piece_Unity_Plugin_Common
      *
      * @param string $configurationPoint
      * @return string
+     * @deprecated Method deprecated in Release 0.12.0
      */
     function getConfiguration($configurationPoint)
     {
-        $config = &$this->_context->getConfiguration();
-        $configuration = $config->getConfiguration($this->_name, strtolower($configurationPoint));
-        if (is_null($configuration)) {
-            $configuration = $this->_configurationPoints[ strtolower($configurationPoint) ];
-        }
-
-        return $configuration;
+        return $this->_getConfiguration($configurationPoint);
     }
 
     /**#@-*/
@@ -202,6 +188,54 @@ class Piece_Unity_Plugin_Common
      * @since Method available since Release 0.6.0
      */
     function _initialize() {}
+
+    // }}}
+    // {{{ _getExtension()
+
+    /**
+     * Gets the extension of the given extension point.
+     *
+     * @param string $extensionPoint
+     * @return mixed
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
+     * @since Method available since Release 0.12.0
+     */
+    function &_getExtension($extensionPoint)
+    {
+        $config = &$this->_context->getConfiguration();
+        $extension = $config->getExtension($this->_name, strtolower($extensionPoint));
+        if (is_null($extension)) {
+            $extension = $this->_extensionPoints[ strtolower($extensionPoint) ];
+        }
+
+        if (!$extension || is_array($extension)) {
+            return $extension;
+        }
+
+        return Piece_Unity_Plugin_Factory::factory($extension);
+    }
+
+    // }}}
+    // {{{ _getConfiguration()
+
+    /**
+     * Gets the configuration of the given configuration point.
+     *
+     * @param string $configurationPoint
+     * @return string
+     * @since Method available since Release 0.12.0
+     */
+    function _getConfiguration($configurationPoint)
+    {
+        $config = &$this->_context->getConfiguration();
+        $configuration = $config->getConfiguration($this->_name, strtolower($configurationPoint));
+        if (is_null($configuration)) {
+            $configuration = $this->_configurationPoints[ strtolower($configurationPoint) ];
+        }
+
+        return $configuration;
+    }
 
     /**#@-*/
 
