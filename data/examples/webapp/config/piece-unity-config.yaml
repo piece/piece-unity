@@ -107,12 +107,6 @@
       type: configuration
       value: ../webapp/actions
 
-- name: Root
-  point:
-    - name: configurator
-      type: extension
-      value: ConfiguratorChain
-
 - name: Configurator_Validation
   point:
     - name: configDirectory
