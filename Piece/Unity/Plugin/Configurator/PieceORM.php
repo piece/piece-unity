@@ -89,7 +89,6 @@ class Piece_Unity_Plugin_Configurator_PieceORM extends Piece_Unity_Plugin_Common
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
                                     'The configuration point [ configDirectory ] was not specified.'
                                     );
-
             return;
         }
 
@@ -98,7 +97,6 @@ class Piece_Unity_Plugin_Configurator_PieceORM extends Piece_Unity_Plugin_Common
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
                                     'The configuration point [ cacheDirectory ] was not specified.'
                                     );
-
             return;
         }
 
@@ -107,7 +105,6 @@ class Piece_Unity_Plugin_Configurator_PieceORM extends Piece_Unity_Plugin_Common
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
                                     'The configuration point [ mapperConfigDirectory ] was not specified.'
                                     );
-
             return;
         }
 
