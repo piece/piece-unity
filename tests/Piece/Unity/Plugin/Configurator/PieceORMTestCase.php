@@ -43,10 +43,7 @@ require_once 'Piece/Unity/Plugin/Configurator/PieceORM.php';
 require_once 'Piece/ORM/Context.php';
 require_once 'Cache/Lite.php';
 require_once 'Piece/Unity/Config.php';
-require_once 'Piece/ORM/Metadata/Factory.php';
-require_once 'Piece/ORM/Mapper/Factory.php';
 require_once 'Piece/ORM/Context.php';
-require_once 'Piece/ORM/Error.php';
 require_once 'Piece/Unity/Context.php';
 
 if (version_compare(phpversion(), '5.0.0', '<')) {
@@ -100,16 +97,12 @@ class Piece_Unity_Plugin_Configurator_PieceORMTestCase extends PHPUnit_TestCase
     function tearDown()
     {
         $GLOBALS['PIECE_ORM_Configured'] = false;
-        Piece_ORM_Metadata_Factory::clearInstances();
-        Piece_ORM_Mapper_Factory::clearInstances();
         Piece_ORM_Context::clear();
         $cache = &new Cache_Lite(array('cacheDir' => "{$this->_cacheDirectory}/",
                                        'automaticSerialization' => true,
                                        'errorHandlingAPIBreak' => true)
                                  );
         $cache->clean();
-        Piece_ORM_Error::clearErrors();
-        Piece_ORM_Error::popCallback();
         Piece_Unity_Context::clear();
     }
 
