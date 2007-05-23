@@ -219,16 +219,30 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
 
         set_error_handler(array('Piece_Unity_Error', 'pushPHPError'));
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-        $smarty->display(str_replace('_', '/', str_replace('.', '', $view)) . $this->_getConfiguration('templateExtension'));
+        $file = str_replace('_', '/', str_replace('.', '', $view)) . $this->_getConfiguration('templateExtension');
+        $smarty->display($file);
         Piece_Unity_Error::popCallback();
         restore_error_handler();
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
-                                    'exception',
-                                    array('plugin' => __CLASS__),
-                                    Piece_Unity_Error::pop()
-                                    );
+        if (Piece_Unity_Error::hasErrors()) {
+            $error = Piece_Unity_Error::pop();
+            if ($error['code'] == PIECE_UNITY_ERROR_PHP_ERROR
+                && array_key_exists('repackage', $error)
+                && preg_match('/^Smarty error: unable to read resource:/', $error['repackage']['message'])
+                ) {
+                Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
+                                        "The HTML template file [ $file ] not found.",
+                                        'exception',
+                                        array('plugin' => __CLASS__),
+                                        $error
+                                        );
+            } else {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                        'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
+                                        $error['level'],
+                                        array('plugin' => __CLASS__),
+                                        $error
+                                        );
+            }
         }
     }
 

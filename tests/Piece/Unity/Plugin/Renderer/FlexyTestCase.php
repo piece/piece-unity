@@ -86,7 +86,6 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
   </form>
 </body>
 ';
-    var $_errorCodeWhenTemplateNotExists = PIECE_UNITY_ERROR_NOT_FOUND;
 
     /**#@-*/
 

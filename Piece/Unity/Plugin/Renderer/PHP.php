@@ -120,38 +120,32 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
         $file = "$templateDirectory/" . str_replace('_', '/', str_replace('.', '', $view)) . $this->_getConfiguration('templateExtension');
 
         if (!file_exists($file)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+            Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
                                    "The HTML template file [ $file ] not found.",
-                                    'warning',
+                                    'exception',
                                     array('plugin' => __CLASS__)
                                    );
-            Piece_Unity_Error::popCallback();
             return;
         }
 
         if (!is_readable($file)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_READABLE,
+            Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
                                    "The HTML template file [ $file ] was not readable.",
-                                    'warning',
+                                    'exception',
                                     array('plugin' => __CLASS__)
                                    );
-            Piece_Unity_Error::popCallback();
             return;
         }
 
         $viewElement = &$this->_context->getViewElement();
         extract($viewElement->getElements(), EXTR_OVERWRITE | EXTR_REFS);
 
-        if (!include_once $file) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+        if (!include $file) {
+            Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
                                     'The HTML template file [ $file ] not found or was not readable.',
-                                    'warning',
+                                    'exception',
                                     array('plugin' => __CLASS__)
                                     );
-            Piece_Unity_Error::popCallback();
         }
     }
 

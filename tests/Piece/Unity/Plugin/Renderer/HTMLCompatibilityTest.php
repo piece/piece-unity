@@ -76,7 +76,6 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
      */
 
     var $_target;
-    var $_errorCodeWhenTemplateNotExists;
 
     /**#@-*/
 
@@ -161,7 +160,7 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
 
         $error = Piece_Unity_Error::pop();
 
-        $this->assertEquals($this->_errorCodeWhenTemplateNotExists, $error['code']);
+        $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
 
         $this->_clear($viewString);
 
@@ -250,13 +249,41 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
   </body>
 </html>', rtrim($buffer));
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals($this->_errorCodeWhenTemplateNotExists, $error['code']);
+        $this->assertFalse(Piece_Unity_Error::hasErrors());
 
         $this->_clear('Fallback');
+    }
+
+    function testRenderWithWarnings()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND, false, 'warning');
+        Piece_Unity_Error::popCallback();
+        $viewString = "{$this->_target}Example";
+        $_GET['_event'] = $viewString;
+
+        $context = &Piece_Unity_Context::singleton();
+
+        $config = &$this->_getConfig();
+        $config->setConfiguration("Renderer_{$this->_target}", 'useFallback', true);
+        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackView', 'Fallback');
+        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/templates/Fallback");
+        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackCompileDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Fallback");
+        $context->setConfiguration($config);
+        $context->setView($viewString);
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('content', 'This is a dynamic content.');
+
+        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
+        $renderer = &new $class();
+        ob_start();
+        $renderer->invoke();
+        $buffer = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $buffer);
+
+        $this->_clear($viewString);
     }
 
     /**#@-*/
