@@ -72,6 +72,7 @@ class Piece_Unity_Plugin_ConfiguratorChain extends Piece_Unity_Plugin_Common
                                         'Configurator_Plugin',
                                         'Configurator_Env',
                                         'Configurator_Event',
+                                        'Configurator_Proxy',
                                         'Configurator_Request',
                                         'Configurator_Validation'
                                         );
