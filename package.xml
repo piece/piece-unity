@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- $Id$ -->
 <!DOCTYPE package SYSTEM "http://pear.php.net/dtd/package-1.0">
-<package version="1.0" packagerversion="1.5.0">
+<package version="1.0" packagerversion="1.5.4">
  <name>Piece_Unity</name>
  <summary>A stateful and secure web application framework for PHP</summary>
  <description>Piece_Unity is a stateful and secure web application framework for PHP.
-
-Piece_Unity is a framework against the background of layered architecture, as of now, focuses on the presentation layer.
 
 Piece_Unity allows stateful programming without thinking about sessions by storing and restoring states with a technology known as continuation server. It also provides high security and eases the burden of implementing security measures for applications by application flow control.
  </description>
@@ -31,74 +29,62 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
   </maintainer>
   </maintainers>
  <release>
-  <version>0.11.0</version>
-  <date>2007-02-19</date>
+  <version>0.12.0</version>
+  <date>2007-05-27</date>
   <license>BSD License (revised)</license>
   <state>beta</state>
-  <notes>Hi all,
+  <notes>A new release of Piece_Unity is now available.
 
-A new release of Piece_Unity is now available.
+What&apos;s New in Piece_Unity 0.12.0
 
-This release includes a feature named &quot;Fallback View&quot; which can be used for rendering a fallback view if an error occured while rendering with a specified view, and a feature named &quot;Plug-in Aliases&quot; which can be used multiple aliases as the name of a plug-in class by setting multiple prefixes.
+ * Configurator_AppRoot plug-in: A plug-in for setting the directory and the URL path that form the top of the document tree of an application visible from the web.
+ * Configurator_PieceORM plug-in: A plug-in for Piece_ORM.
+ * Several defect fixes: A defect in fallback view rendering has been fixed. And also a defect in Plug-in Aliases has been fixed. And other defects have been fixed.
 
-Also this release includes a new plug-in &quot;ConfiguratorChain&quot; so that it can invoke multiple configurators. In the release after next, &quot;ConfiguratorChain&quot; will become the default configurator instead of &quot;KernelConfigurator&quot;.
+See the following release notes for details.
 
-And also other enhancements and two fixes are included. See the following release notes for details.
+Enhancements
+============ 
 
-## Enhancements ##
+Plug-ins:
 
-### Kernel ###
+- Added the plugins_dir configuration point. (Renderer_Smarty)
+- Updated &quot;Self Notation&quot; so as to set true to the configuration point &quot;addFlowExecutionTicket&quot; of Renderer_Redirection plug-in. (View)
+- Added &quot;Configurator_PieceORM&quot; plug-in for Piece_ORM.
+- Added &quot;Configurator_Proxy&quot; plug-in for proxy.
+- Changed the default value for the configuration point &quot;configurator&quot; from &quot;KernelConfigurator&quot; to &quot;ConfiguratorChain&quot;. (Root)
+- Added &quot;Configurator_AppRoot&quot; plug-in for setting the directory and the URL path that form the top of the document tree of an application visible from the web. (Ticket #56)
+- Removed the configuration point &quot;importSessionIDFromRequest&quot;. (Interceptor_SessionStart)
 
-##### Piece_Unity_Plugin_Factory #####
+Kernel:
 
-- Added a feature named &quot;Plug-in Aliases&quot; so that this feature can be used multiple aliases as the name of a plug-in class by setting multiple prefixes. (Ticket #40)
+- Updated pushPEARError() so that the params field in the repackage array contains &quot;userinfo&quot; and &quot;debuginfo&quot; fields, which contains each of the return values from getUserInfo() and getDebugInfo(). (Piece_Unity_Error)
+- Updated the constructor so as to receive a prefix for determining the plug-in name. (Piece_Unity_Plugin_Common)
+- Changed the error type on all Piece_Unity_Error::pushError() calls from &quot;warning&quot; to &quot;exception&quot;. (Piece_Unity_URL)
+- Added getRemoteAddr() for getting an IP address (or IP addresses) of the client making the request. (Piece_Unity_Context)
+- Added _getExtension()/_getConfiguration(). (Piece_Unity_Plugin_Common)
+  getExtension()/getConfiguration() are deprecated since Piece_Unity 0.12.0. (Ticket #54)
 
-##### Piece_Unity_URL #####
+Example Applications:
 
-- Added removeQueryString() to remove a name/value pair from the query string.
+- Changed the function for URI encoding from escape() to encodeURIcomponent(). (ahah.js)
+- Replaced all &quot;__basePath&quot; with &quot;__appRootPath&quot;.
 
-### Plug-ins ###
+Defect Fixes
+============ 
 
-##### Renderer_Flexy, Renderer_HTML, Renderer_PHP, Renderer_Smarty #####
+Plug-ins:
 
-- Added a feature named &quot;Fallback View&quot;. (Ticket #37)
-  If an error occured while rendering with a specified view and useFallback is true, a fallback view will be rendered.
+- Fixed a defect in fallback view rendering that caused a fallback view to be always rendered in spite of success in HTML rendering if one or more &quot;warning&quot; level errors raised before rendering. (Ticket #57)
 
-##### KernelConfigurator #####
+Kernel:
 
-- Added a configuration point &quot;pluginPrefixes&quot; for using &quot;Plug-in Aliases&quot;.
-- Added two configuration point &quot;validationValidatorPrefixes&quot; and &quot;validationFilterPrefixes&quot; for using &quot;Validator Aliases&quot; and &quot;Filter Aliases&quot;. (Ticket #43)
+- Fixed the problem that a plug-in with Plug-in Aliases cannot get the current configuration. (Ticket #53)
+- Fixed the problem that the getExtension()/getConfiguration() cannot work with an empty prefix. (Piece_Unity_Plugin_Common)
 
-##### Renderer_Redirection #####
+Example Applications:
 
-- Added a feature so that __eventNameKey is replaced with the event name key. (Ticket #38)
-
-##### View #####
-
-- Added a feature named &quot;Self Notation&quot; for redirection to an entry point itself. (Ticket #39)
-
-##### ConfiguratorChain, Configurator_Env, Configurator_Event, Configurator_Plugin, Configurator_Request, Configurator_Validation #####
-
-- Added a new plug-in &quot;ConfiguratorChain&quot; so that it can invoke multiple configurators. (Ticket #45)
-  In the release after next, &quot;ConfiguratorChain&quot; will become the default configurator instead of &quot;KernelConfigurator&quot;.
-
-### Example Applications ###
-
-- Changed so as to use of ConfigurationChain.
-
-## Defect Fixes ##
-
-### Kernel ###
-
-##### Piece_Unity_URL #####
-
-- Fixed the problem so that EZweb mobile phone cannot redirect with Renderer_Redirection plug-in. (Ticket #44)
-
-### Plug-ins ###
-
-##### Renderer_Redirection #####
-
-- Fixed the problem that the renderer cannot redirect to HTTPS URL.
+- Fixed the problem that all radio elements are transferred regardless of whether they are checked or not. (ahah.js)
   </notes>
   <deps>
    <dep type="php" rel="ge" version="4.3.0" optional="no"/>
@@ -111,6 +97,7 @@ And also other enhancements and two fixes are included. See the following releas
    <dep type="pkg" rel="ge" version="1.2.4" optional="yes">HTML_Template_Flexy</dep>
    <dep type="pkg" rel="ge" version="1.6.8" optional="yes">Smarty</dep>
    <dep type="pkg" rel="ge" version="0.5.0" optional="yes">HTML_AJAX</dep>
+   <dep type="pkg" rel="ge" version="0.3.0" optional="yes">Piece_ORM</dep>
    <dep type="ext" rel="has" optional="yes">json</dep>
   </deps>
   <filelist>
@@ -125,14 +112,19 @@ And also other enhancements and two fixes are included. See the following releas
        </dir> <!-- /data/examples/htdocs/css -->
        <dir name="images">
         <file role="data" name="bg.gif">
+         <replace from="@package_version@" to="version" type="package-info"/>
         </file>
         <file role="data" name="date_icon.gif">
+         <replace from="@package_version@" to="version" type="package-info"/>
         </file>
         <file role="data" name="piece_footer.jpg">
+         <replace from="@package_version@" to="version" type="package-info"/>
         </file>
         <file role="data" name="piece_header.jpg">
+         <replace from="@package_version@" to="version" type="package-info"/>
         </file>
         <file role="data" name="quotes.gif">
+         <replace from="@package_version@" to="version" type="package-info"/>
         </file>
        </dir> <!-- /data/examples/htdocs/images -->
        <dir name="js">
@@ -299,13 +291,22 @@ And also other enhancements and two fixes are included. See the following releas
       </dir> <!-- /Piece/Unity/Config -->
       <dir name="Plugin">
        <dir name="Configurator">
+        <file role="php" name="AppRoot.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
         <file role="php" name="Env.php">
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
         <file role="php" name="Event.php">
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
+        <file role="php" name="PieceORM.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
         <file role="php" name="Plugin.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
+        <file role="php" name="Proxy.php">
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
         <file role="php" name="Request.php">
@@ -444,7 +445,34 @@ And also other enhancements and two fixes are included. See the following releas
         </file>
        </dir> <!-- /tests/Piece/Unity/Config -->
        <dir name="Plugin">
+        <dir name="CommonTestCase">
+         <dir name="CommonTestCaseAlias">
+          <file role="test" name="Baz.php">
+           <replace from="@package_version@" to="version" type="package-info"/>
+          </file>
+          <file role="test" name="Foo.php">
+           <replace from="@package_version@" to="version" type="package-info"/>
+          </file>
+          <file role="test" name="Qux.php">
+           <replace from="@package_version@" to="version" type="package-info"/>
+          </file>
+         </dir> <!-- /tests/Piece/Unity/Plugin/CommonTestCase/CommonTestCaseAlias -->
+         <file role="test" name="CannotGetConfigurationWithPluginPrefixBaz.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+         <file role="test" name="CannotGetConfigurationWithPluginPrefixFoo.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+         <file role="test" name="CannotGetConfigurationWithPluginPrefixQux.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+        </dir> <!-- /tests/Piece/Unity/Plugin/CommonTestCase -->
         <dir name="Configurator">
+         <dir name="PieceORMTestCase">
+          <file role="test" name="piece-orm-config.yaml">
+           <replace from="@package_version@" to="version" type="package-info"/>
+          </file>
+         </dir> <!-- /tests/Piece/Unity/Plugin/Configurator/PieceORMTestCase -->
          <dir name="PluginTestCase">
           <dir name="PluginTestCaseAlias">
            <file role="test" name="Bar.php">
@@ -468,13 +496,22 @@ And also other enhancements and two fixes are included. See the following releas
            <replace from="@package_version@" to="version" type="package-info"/>
           </file>
          </dir> <!-- /tests/Piece/Unity/Plugin/Configurator/ValidationTestCase -->
+         <file role="test" name="AppRootTestCase.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
          <file role="test" name="EnvTestCase.php">
           <replace from="@package_version@" to="version" type="package-info"/>
          </file>
          <file role="test" name="EventTestCase.php">
           <replace from="@package_version@" to="version" type="package-info"/>
          </file>
+         <file role="test" name="PieceORMTestCase.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
          <file role="test" name="PluginTestCase.php">
+          <replace from="@package_version@" to="version" type="package-info"/>
+         </file>
+         <file role="test" name="ProxyTestCase.php">
           <replace from="@package_version@" to="version" type="package-info"/>
          </file>
          <file role="test" name="RequestTestCase.php">
@@ -590,9 +627,6 @@ And also other enhancements and two fixes are included. See the following releas
          <file role="test" name="Second.php">
           <replace from="@package_version@" to="version" type="package-info"/>
          </file>
-         <file role="test" name="SessionStartTestCase.php">
-          <replace from="@package_version@" to="version" type="package-info"/>
-         </file>
          <file role="test" name="TestRunner.php">
           <replace from="@package_version@" to="version" type="package-info"/>
          </file>
@@ -662,9 +696,6 @@ And also other enhancements and two fixes are included. See the following releas
             <file role="test" name="FlexyAutomaticFormElements.html">
              <replace from="@package_version@" to="version" type="package-info"/>
             </file>
-            <file role="test" name="FlexyBuiltinElements.html">
-             <replace from="@package_version@" to="version" type="package-info"/>
-            </file>
             <file role="test" name="FlexyExample.html">
              <replace from="@package_version@" to="version" type="package-info"/>
             </file>
@@ -695,9 +726,6 @@ And also other enhancements and two fixes are included. See the following releas
           </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/PHPTestCase/actions -->
           <dir name="templates">
            <dir name="Content">
-            <file role="test" name="PHPBuiltinElements.php">
-             <replace from="@package_version@" to="version" type="package-info"/>
-            </file>
             <file role="test" name="PHPExample.php">
              <replace from="@package_version@" to="version" type="package-info"/>
             </file>
@@ -726,11 +754,13 @@ And also other enhancements and two fixes are included. See the following releas
             <replace from="@package_version@" to="version" type="package-info"/>
            </file>
           </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/SmartyTestCase/actions -->
+          <dir name="plugins">
+           <file role="test" name="function.helloworld.php">
+            <replace from="@package_version@" to="version" type="package-info"/>
+           </file>
+          </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/SmartyTestCase/plugins -->
           <dir name="templates">
            <dir name="Content">
-            <file role="test" name="SmartyBuiltinElements.tpl">
-             <replace from="@package_version@" to="version" type="package-info"/>
-            </file>
             <file role="test" name="SmartyExample.tpl">
              <replace from="@package_version@" to="version" type="package-info"/>
             </file>
@@ -738,6 +768,9 @@ And also other enhancements and two fixes are included. See the following releas
              <replace from="@package_version@" to="version" type="package-info"/>
             </file>
             <file role="test" name="SmartyLayoutContent.tpl">
+             <replace from="@package_version@" to="version" type="package-info"/>
+            </file>
+            <file role="test" name="SmartyLoadingPlugins.tpl">
              <replace from="@package_version@" to="version" type="package-info"/>
             </file>
            </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/SmartyTestCase/templates/Content -->
@@ -775,6 +808,9 @@ And also other enhancements and two fixes are included. See the following releas
           <replace from="@package_version@" to="version" type="package-info"/>
          </file>
         </dir> <!-- /tests/Piece/Unity/Plugin/Renderer -->
+        <file role="test" name="CommonTestCase.php">
+         <replace from="@package_version@" to="version" type="package-info"/>
+        </file>
         <file role="test" name="ConfiguratorChainTestCase.php">
          <replace from="@package_version@" to="version" type="package-info"/>
         </file>
@@ -868,6 +904,65 @@ And also other enhancements and two fixes are included. See the following releas
   </filelist>
  </release>
  <changelog>
+   <release>
+    <version>0.12.0</version>
+    <date>2007-05-27</date>
+    <license>BSD License (revised)</license>
+    <state>beta</state>
+    <notes>A new release of Piece_Unity is now available.
+
+What&apos;s New in Piece_Unity 0.12.0
+
+ * Configurator_AppRoot plug-in: A plug-in for setting the directory and the URL path that form the top of the document tree of an application visible from the web.
+ * Configurator_PieceORM plug-in: A plug-in for Piece_ORM.
+ * Several defect fixes: A defect in fallback view rendering has been fixed. And also a defect in Plug-in Aliases has been fixed. And other defects have been fixed.
+
+See the following release notes for details.
+
+Enhancements
+============ 
+
+Plug-ins:
+
+- Added the plugins_dir configuration point. (Renderer_Smarty)
+- Updated &quot;Self Notation&quot; so as to set true to the configuration point &quot;addFlowExecutionTicket&quot; of Renderer_Redirection plug-in. (View)
+- Added &quot;Configurator_PieceORM&quot; plug-in for Piece_ORM.
+- Added &quot;Configurator_Proxy&quot; plug-in for proxy.
+- Changed the default value for the configuration point &quot;configurator&quot; from &quot;KernelConfigurator&quot; to &quot;ConfiguratorChain&quot;. (Root)
+- Added &quot;Configurator_AppRoot&quot; plug-in for setting the directory and the URL path that form the top of the document tree of an application visible from the web. (Ticket #56)
+- Removed the configuration point &quot;importSessionIDFromRequest&quot;. (Interceptor_SessionStart)
+
+Kernel:
+
+- Updated pushPEARError() so that the params field in the repackage array contains &quot;userinfo&quot; and &quot;debuginfo&quot; fields, which contains each of the return values from getUserInfo() and getDebugInfo(). (Piece_Unity_Error)
+- Updated the constructor so as to receive a prefix for determining the plug-in name. (Piece_Unity_Plugin_Common)
+- Changed the error type on all Piece_Unity_Error::pushError() calls from &quot;warning&quot; to &quot;exception&quot;. (Piece_Unity_URL)
+- Added getRemoteAddr() for getting an IP address (or IP addresses) of the client making the request. (Piece_Unity_Context)
+- Added _getExtension()/_getConfiguration(). (Piece_Unity_Plugin_Common)
+  getExtension()/getConfiguration() are deprecated since Piece_Unity 0.12.0. (Ticket #54)
+
+Example Applications:
+
+- Changed the function for URI encoding from escape() to encodeURIcomponent(). (ahah.js)
+- Replaced all &quot;__basePath&quot; with &quot;__appRootPath&quot;.
+
+Defect Fixes
+============ 
+
+Plug-ins:
+
+- Fixed a defect in fallback view rendering that caused a fallback view to be always rendered in spite of success in HTML rendering if one or more &quot;warning&quot; level errors raised before rendering. (Ticket #57)
+
+Kernel:
+
+- Fixed the problem that a plug-in with Plug-in Aliases cannot get the current configuration. (Ticket #53)
+- Fixed the problem that the getExtension()/getConfiguration() cannot work with an empty prefix. (Piece_Unity_Plugin_Common)
+
+Example Applications:
+
+- Fixed the problem that all radio elements are transferred regardless of whether they are checked or not. (ahah.js)
+    </notes>
+   </release>
    <release>
     <version>0.11.0</version>
     <date>2007-02-19</date>

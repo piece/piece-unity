@@ -42,73 +42,61 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$version = '0.11.0';
+$version = '0.12.0';
 $apiVersion = '0.7.0';
 $releaseStability = 'beta';
-$notes = 'Hi all,
+$notes = 'A new release of Piece_Unity is now available.
 
-A new release of Piece_Unity is now available.
+What\'s New in Piece_Unity 0.12.0
 
-This release includes a feature named "Fallback View" which can be used for rendering a fallback view if an error occured while rendering with a specified view, and a feature named "Plug-in Aliases" which can be used multiple aliases as the name of a plug-in class by setting multiple prefixes.
+ * Configurator_AppRoot plug-in: A plug-in for setting the directory and the URL path that form the top of the document tree of an application visible from the web.
+ * Configurator_PieceORM plug-in: A plug-in for Piece_ORM.
+ * Several defect fixes: A defect in fallback view rendering has been fixed. And also a defect in Plug-in Aliases has been fixed. And other defects have been fixed.
 
-Also this release includes a new plug-in "ConfiguratorChain" so that it can invoke multiple configurators. In the release after next, "ConfiguratorChain" will become the default configurator instead of "KernelConfigurator".
+See the following release notes for details.
 
-And also other enhancements and two fixes are included. See the following release notes for details.
+Enhancements
+============ 
 
-## Enhancements ##
+Plug-ins:
 
-### Kernel ###
+- Added the plugins_dir configuration point. (Renderer_Smarty)
+- Updated "Self Notation" so as to set true to the configuration point "addFlowExecutionTicket" of Renderer_Redirection plug-in. (View)
+- Added "Configurator_PieceORM" plug-in for Piece_ORM.
+- Added "Configurator_Proxy" plug-in for proxy.
+- Changed the default value for the configuration point "configurator" from "KernelConfigurator" to "ConfiguratorChain". (Root)
+- Added "Configurator_AppRoot" plug-in for setting the directory and the URL path that form the top of the document tree of an application visible from the web. (Ticket #56)
+- Removed the configuration point "importSessionIDFromRequest". (Interceptor_SessionStart)
 
-##### Piece_Unity_Plugin_Factory #####
+Kernel:
 
-- Added a feature named "Plug-in Aliases" so that this feature can be used multiple aliases as the name of a plug-in class by setting multiple prefixes. (Ticket #40)
+- Updated pushPEARError() so that the params field in the repackage array contains "userinfo" and "debuginfo" fields, which contains each of the return values from getUserInfo() and getDebugInfo(). (Piece_Unity_Error)
+- Updated the constructor so as to receive a prefix for determining the plug-in name. (Piece_Unity_Plugin_Common)
+- Changed the error type on all Piece_Unity_Error::pushError() calls from "warning" to "exception". (Piece_Unity_URL)
+- Added getRemoteAddr() for getting an IP address (or IP addresses) of the client making the request. (Piece_Unity_Context)
+- Added _getExtension()/_getConfiguration(). (Piece_Unity_Plugin_Common)
+  getExtension()/getConfiguration() are deprecated since Piece_Unity 0.12.0. (Ticket #54)
 
-##### Piece_Unity_URL #####
+Example Applications:
 
-- Added removeQueryString() to remove a name/value pair from the query string.
+- Changed the function for URI encoding from escape() to encodeURIcomponent(). (ahah.js)
+- Replaced all "__basePath" with "__appRootPath".
 
-### Plug-ins ###
+Defect Fixes
+============ 
 
-##### Renderer_Flexy, Renderer_HTML, Renderer_PHP, Renderer_Smarty #####
+Plug-ins:
 
-- Added a feature named "Fallback View". (Ticket #37)
-  If an error occured while rendering with a specified view and useFallback is true, a fallback view will be rendered.
+- Fixed a defect in fallback view rendering that caused a fallback view to be always rendered in spite of success in HTML rendering if one or more "warning" level errors raised before rendering. (Ticket #57)
 
-##### KernelConfigurator #####
+Kernel:
 
-- Added a configuration point "pluginPrefixes" for using "Plug-in Aliases".
-- Added two configuration point "validationValidatorPrefixes" and "validationFilterPrefixes" for using "Validator Aliases" and "Filter Aliases". (Ticket #43)
+- Fixed the problem that a plug-in with Plug-in Aliases cannot get the current configuration. (Ticket #53)
+- Fixed the problem that the getExtension()/getConfiguration() cannot work with an empty prefix. (Piece_Unity_Plugin_Common)
 
-##### Renderer_Redirection #####
+Example Applications:
 
-- Added a feature so that __eventNameKey is replaced with the event name key. (Ticket #38)
-
-##### View #####
-
-- Added a feature named "Self Notation" for redirection to an entry point itself. (Ticket #39)
-
-##### ConfiguratorChain, Configurator_Env, Configurator_Event, Configurator_Plugin, Configurator_Request, Configurator_Validation #####
-
-- Added a new plug-in "ConfiguratorChain" so that it can invoke multiple configurators. (Ticket #45)
-  In the release after next, "ConfiguratorChain" will become the default configurator instead of "KernelConfigurator".
-
-### Example Applications ###
-
-- Changed so as to use of ConfigurationChain.
-
-## Defect Fixes ##
-
-### Kernel ###
-
-##### Piece_Unity_URL #####
-
-- Fixed the problem so that EZweb mobile phone cannot redirect with Renderer_Redirection plug-in. (Ticket #44)
-
-### Plug-ins ###
-
-##### Renderer_Redirection #####
-
-- Fixed the problem that the renderer cannot redirect to HTTPS URL.';
+- Fixed the problem that all radio elements are transferred regardless of whether they are checked or not. (ahah.js)';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
@@ -126,8 +114,6 @@ $package->setPackage('Piece_Unity');
 $package->setPackageType('php');
 $package->setSummary('A stateful and secure web application framework for PHP');
 $package->setDescription('Piece_Unity is a stateful and secure web application framework for PHP.
-
-Piece_Unity is a framework against the background of layered architecture, as of now, focuses on the presentation layer.
 
 Piece_Unity allows stateful programming without thinking about sessions by storing and restoring states with a technology known as continuation server. It also provides high security and eases the burden of implementing security measures for applications by application flow control.');
 $package->setChannel('pear.piece-framework.com');
@@ -150,6 +136,7 @@ $package->addPackageDepWithChannel('optional', 'Stagehand_TestRunner', 'pear.pie
 $package->addPackageDepWithChannel('optional', 'HTML_Template_Flexy', 'pear.php.net', '1.2.4');
 $package->addPackageDepWithChannel('optional', 'Smarty', 'pearified.com', '1.6.8');
 $package->addPackageDepWithChannel('optional', 'HTML_AJAX', 'pear.php.net', '0.5.0');
+$package->addPackageDepWithChannel('optional', 'Piece_ORM', 'pear.piece-framework.com', '0.3.0');
 $package->addExtensionDep('optional', 'json');
 $package->addMaintainer('lead', 'iteman', 'KUBO Atsuhiro', 'iteman@users.sourceforge.net');
 $package->addMaintainer('developer', 'csakatoku', 'Chihiro Sakatoku', 'csakatoku@users.sourceforge.net');
