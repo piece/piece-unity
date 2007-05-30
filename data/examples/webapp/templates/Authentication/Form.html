@@ -4,9 +4,9 @@
 <form name="Form">
   <input type="hidden" name="{__flowExecutionTicketKey}" value="{__flowExecutionTicket}" />
   <input type="hidden" name="callback" value="{callback}" />
-  <p class="error" flexy:if="__AuthenticationResults.isError(#login_name#)">{__AuthenticationResults.getErrorMessage(#login_name#)}</p>
+  <p class="error" flexy:if="__AuthenticationResults.isError(#loginName#)">{__AuthenticationResults.getErrorMessage(#loginName#)}</p>
   <p>
-    Login Name: <input type="text" name="login_name" />
+    Login Name: <input type="text" name="loginName" />
   </p>
   <p class="error" flexy:if="__AuthenticationResults.isError(#password#)">{__AuthenticationResults.getErrorMessage(#password#)}</p>
   <p>

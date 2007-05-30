@@ -26,7 +26,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 ######################################################################
 
-- name: login_name
+- name: loginName
   description: Login Name
   required:
     message: %_description% is required

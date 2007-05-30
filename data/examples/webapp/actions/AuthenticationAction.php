@@ -83,7 +83,7 @@ class AuthenticationAction extends Piece_Unity_Service_FlowAction
     {
         $validation = &$this->_context->getValidation();
         if ($validation->validate('Authentication', $this->_user)) {
-            if ($this->_user->login_name === 'guest' && $this->_user->password === 'guest') {
+            if ($this->_user->loginName === 'guest' && $this->_user->password === 'guest') {
                 $session = &$this->_context->getSession();
                 $session->setAttribute('isAuthenticated', true);
 
@@ -121,8 +121,11 @@ class AuthenticationAction extends Piece_Unity_Service_FlowAction
         $flexyForm = &new Piece_Unity_Service_FlexyForm();
         $flexyForm->addForm($this->_flow->getView(), $this->_context->getScriptName());
 
-        foreach (array('login_name') as $field) {
-            $flexyForm->setValue($field, @$this->_user->$field);
+        $results = &$this->_flow->getAttribute("__AuthenticationResults");
+        if ($results) {
+            foreach ($results->getFieldNames() as $field) {
+                $flexyForm->setValue($field, @$this->_user->$field);
+            }
         }
 
         $request = &$this->_context->getRequest();

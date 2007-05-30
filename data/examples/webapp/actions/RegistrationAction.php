@@ -101,8 +101,11 @@ class RegistrationAction extends Piece_Unity_Service_FlowAction
         $flexyForm = &new Piece_Unity_Service_FlexyForm();
         $flexyForm->addForm($this->_flow->getView(), $this->_context->getScriptName());
 
-        foreach (array('first_name', 'last_name') as $field) {
-            $flexyForm->setValue($field, @$this->_user->$field);
+        $results = &$this->_flow->getAttribute("__RegistrationResults");
+        if ($results) {
+            foreach ($results->getFieldNames() as $field) {
+                $flexyForm->setValue($field, @$this->_user->$field);
+            }
         }
 
         $viewElement = &$this->_context->getViewElement();
