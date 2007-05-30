@@ -29,30 +29,30 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
+ * @subpackage Piece_Unity_Plugin_Dispatcher_Continuation
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
- * @since      File available since Release 0.1.0
+ * @see        Piece_Flow_Action
+ * @since      File available since Release 0.13.0
  */
 
-require_once 'Piece/Unity/Service/FlowAction.php';
-
-// {{{ CounterAction
+// {{{ Piece_Unity_Service_FlowAction
 
 /**
- * An action class for Counter.
+ * The base class for Piece_Flow actions.
  *
  * @package    Piece_Unity
+ * @subpackage Piece_Unity_Plugin_Dispatcher_Continuation
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
- * @since      Class available since Release 0.1.0
+ * @see        Piece_Flow_Action
+ * @since      Class available since Release 0.13.0
  */
-class CounterAction extends Piece_Unity_Service_FlowAction
+class Piece_Unity_Service_FlowAction
 {
 
     // {{{ properties
@@ -67,30 +67,64 @@ class CounterAction extends Piece_Unity_Service_FlowAction
      * @access private
      */
 
+    var $_flow;
+    var $_context;
+    var $_event;
+
     /**#@-*/
 
     /**#@+
      * @access public
      */
 
-    function setup()
+    // }}}
+    // {{{ setFlow()
+
+    /**
+     * Sets the Piece_Flow object which is used by the flow execution
+     * in progress.
+     *
+     * @param Piece_Flow &$flow
+     */
+    function setFlow(&$flow)
     {
-        if (!$this->_flow->hasAttribute('counter')) {
-            $this->_flow->setAttribute('counter', 0);
-        }
+        $this->_flow = &$flow;
     }
 
-    function increase()
+    // }}}
+    // {{{ setPayload()
+
+    /**
+     * Sets a single instance of Piece_Unity_Context class.
+     *
+     * @param Piece_Unity_Context &$context
+     */
+    function setPayload(&$context)
     {
-        $counter = $this->_flow->getAttribute('counter') + 1;
-        $this->_flow->setAttribute('counter', $counter);
-
-        if ($counter < 3) {
-            return 'succeed';
-        }
-
-        return 'finish';
+        $this->_context = &$context;
     }
+
+    // }}}
+    // {{{ setEvent()
+
+    /**
+     * Sets the current event name.
+     *
+     * @param string $event
+     */
+    function setEvent($event)
+    {
+        $this->_event = $event;
+    }
+
+    // }}}
+    // {{{ prepare()
+
+    /**
+     * Prepares something for an event handler which will be invoked just
+     * after this method call.
+     */
+    function prepare() {}
 
     /**#@-*/
 

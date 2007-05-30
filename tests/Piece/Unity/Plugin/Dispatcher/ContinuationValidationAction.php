@@ -33,12 +33,11 @@
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
  * @since      File available since Release 0.8.0
  */
 
-require_once 'Piece/Flow/Action.php';
+require_once 'Piece/Unity/Service/FlowAction.php';
 
 // {{{ ContinuationValidationAction
 
@@ -50,11 +49,10 @@ require_once 'Piece/Flow/Action.php';
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
  * @since      Class available since Release 0.8.0
  */
-class ContinuationValidationAction extends Piece_Flow_Action
+class ContinuationValidationAction extends Piece_Unity_Service_FlowAction
 {
 
     // {{{ properties
@@ -78,8 +76,8 @@ class ContinuationValidationAction extends Piece_Flow_Action
     function validate()
     {
         $user = &new stdClass();
-        $this->_payload->setAttributeByRef('user', $user);
-        $validation = &$this->_payload->getValidation();
+        $this->_context->setAttributeByRef('user', $user);
+        $validation = &$this->_context->getValidation();
         $config = &$validation->getConfiguration();
         $config->addValidation('email', 'Email');
 
