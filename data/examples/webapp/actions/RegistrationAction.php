@@ -33,11 +33,11 @@
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.9.0
  */
 
-require_once 'Piece/Flow/Action.php';
+require_once 'Piece/Unity/Service/FlowAction.php';
+require_once 'Piece/Unity/Service/FlexyForm.php';
 
 // {{{ RegistrationAction
 
@@ -49,10 +49,9 @@ require_once 'Piece/Flow/Action.php';
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.9.0
  */
-class RegistrationAction extends Piece_Flow_Action
+class RegistrationAction extends Piece_Unity_Service_FlowAction
 {
 
     // {{{ properties
@@ -84,7 +83,7 @@ class RegistrationAction extends Piece_Flow_Action
 
     function validate()
     {
-        $validation = &$this->_payload->getValidation();
+        $validation = &$this->_context->getValidation();
         if ($validation->validate('Registration', $this->_user)) {
             return 'goDisplayConfirmationFromProcessConfirmForm';
         } else {
@@ -99,16 +98,14 @@ class RegistrationAction extends Piece_Flow_Action
 
     function setupForm()
     {
-        $this->_setupFormAttributes();
+        $flexyForm = &new Piece_Unity_Service_FlexyForm();
+        $flexyForm->addForm($this->_flow->getView(), $this->_context->getScriptName());
 
-        $fields = $this->_getFormFields();
-        $elements = $this->_getFormElements();
-        foreach ($fields as $field) {
-            $elements[$field]['_value'] = @$this->_user->$field;
+        foreach (array('first_name', 'last_name') as $field) {
+            $flexyForm->setValue($field, @$this->_user->$field);
         }
 
-        $viewElement = &$this->_payload->getViewElement();
-        $viewElement->setElement('_elements', $elements);
+        $viewElement = &$this->_context->getViewElement();
         $viewElement->setElement('useAHAH', $this->_useAHAH);
 
         $this->_setTitle();
@@ -116,9 +113,10 @@ class RegistrationAction extends Piece_Flow_Action
 
     function setupConfirmation()
     {
-        $this->_setupFormAttributes();
+        $flexyForm = &new Piece_Unity_Service_FlexyForm();
+        $flexyForm->addForm($this->_flow->getView(), $this->_context->getScriptName());
 
-        $viewElement = &$this->_payload->getViewElement();
+        $viewElement = &$this->_context->getViewElement();
         $viewElement->setElementByRef('user', $this->_user);
         $viewElement->setElement('useAHAH', $this->_useAHAH);
 
@@ -127,7 +125,7 @@ class RegistrationAction extends Piece_Flow_Action
 
     function setupFinish()
     {
-        $viewElement = &$this->_payload->getViewElement();
+        $viewElement = &$this->_context->getViewElement();
         $viewElement->setElement('useAHAH', $this->_useAHAH);
 
         $this->_setTitle();
@@ -135,7 +133,7 @@ class RegistrationAction extends Piece_Flow_Action
 
     function prepare()
     {
-        $continuation = &$this->_payload->getContinuation();
+        $continuation = &$this->_context->getContinuation();
         $this->_flowName = $continuation->getCurrentFlowName();
         if ($this->_flowName == 'RegistrationWithExclusiveModeAndAHAH') {
             $this->_useAHAH = true;
@@ -148,34 +146,6 @@ class RegistrationAction extends Piece_Flow_Action
      * @access private
      */
 
-    function _getFormFields()
-    {
-        $fields = array('first_name', 'last_name');
-        return $fields;
-    }
-
-    function _setupFormAttributes()
-    {
-        $view = $this->_flow->getView();
-        $elements = $this->_getFormElements();
-        $elements[$view]['_attributes']['action'] = $this->_payload->getScriptName();
-        $elements[$view]['_attributes']['method'] = 'post';
-        $viewElement = &$this->_payload->getViewElement();
-        $viewElement->setElement('_elements', $elements);
-    }
-
-    function _getFormElements()
-    {
-        $viewElement = &$this->_payload->getViewElement();
-        if (!$viewElement->hasElement('_elements')) {
-            $elements = array();
-        } else {
-            $elements = $viewElement->getElement('_elements');
-        }
-
-        return $elements;
-    }
-
     function _setTitle()
     {
         if ($this->_flowName == 'RegistrationWithNonExclusiveMode') {
@@ -186,7 +156,7 @@ class RegistrationAction extends Piece_Flow_Action
             $title = 'A.3. A Registration Application with AHAH. *exclusive*';
         }
 
-        $viewElement = &$this->_payload->getViewElement();
+        $viewElement = &$this->_context->getViewElement();
         $viewElement->setElement('title', $title);
     }
 

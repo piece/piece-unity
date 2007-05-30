@@ -33,11 +33,10 @@
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.9.0
  */
 
-require_once 'Piece/Flow/Action.php';
+require_once 'Piece/Unity/Service/FlowAction.php';
 
 // {{{ ProtectedResourceAction
 
@@ -49,10 +48,9 @@ require_once 'Piece/Flow/Action.php';
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.9.0
  */
-class ProtectedResourceAction extends Piece_Flow_Action
+class ProtectedResourceAction extends Piece_Unity_Service_FlowAction
 {
 
     // {{{ properties
@@ -96,7 +94,7 @@ class ProtectedResourceAction extends Piece_Flow_Action
 
     function _setTitle()
     {
-        $viewElement = &$this->_payload->getViewElement();
+        $viewElement = &$this->_context->getViewElement();
         $viewElement->setElement('title', 'B.2. A resource which is protected by the above authentication service. *non-exclusive*');
     }
 

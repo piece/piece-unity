@@ -33,11 +33,11 @@
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.9.0
  */
 
-require_once 'Piece/Flow/Action.php';
+require_once 'Piece/Unity/Service/FlowAction.php';
+require_once 'Piece/Unity/Service/FlexyForm.php';
 
 // {{{ AuthenticationAction
 
@@ -49,10 +49,9 @@ require_once 'Piece/Flow/Action.php';
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.9.0
  */
-class AuthenticationAction extends Piece_Flow_Action
+class AuthenticationAction extends Piece_Unity_Service_FlowAction
 {
 
     // {{{ properties
@@ -82,17 +81,17 @@ class AuthenticationAction extends Piece_Flow_Action
 
     function login()
     {
-        $validation = &$this->_payload->getValidation();
+        $validation = &$this->_context->getValidation();
         if ($validation->validate('Authentication', $this->_user)) {
             if ($this->_user->login_name === 'guest' && $this->_user->password === 'guest') {
-                $session = &$this->_payload->getSession();
+                $session = &$this->_context->getSession();
                 $session->setAttribute('isAuthenticated', true);
 
-                $request = &$this->_payload->getRequest();
+                $request = &$this->_context->getRequest();
                 if ($request->hasParameter('callback')) {
                     $callback = $request->getParameter('callback');
                     if (!is_null($callback) && $callback !== '') {
-                        $config = &$this->_payload->getConfiguration();
+                        $config = &$this->_context->getConfiguration();
                         $config->setConfiguration('View',
                                                   'forcedView',
                                                   Piece_Unity_URL::create('http://example.org' . rawurldecode(html_entity_decode($callback))));
@@ -101,7 +100,7 @@ class AuthenticationAction extends Piece_Flow_Action
 
                 return 'goDisplayHomeFromProcessLogin';
             } else {
-                $viewElement = &$this->_payload->getViewElement();
+                $viewElement = &$this->_context->getViewElement();
                 $viewElement->setElement('message', 'Login Failed!');
                 return 'goDisplayFormFromProcessLogin';
             }
@@ -112,24 +111,22 @@ class AuthenticationAction extends Piece_Flow_Action
 
     function logout()
     {
-        $session = &$this->_payload->getSession();
+        $session = &$this->_context->getSession();
         $session->setAttribute('isAuthenticated', false);
         return 'goDisplayFinishFromProcessLogout';
     }
 
     function setupForm()
     {
-        $this->_setupFormAttributes();
+        $flexyForm = &new Piece_Unity_Service_FlexyForm();
+        $flexyForm->addForm($this->_flow->getView(), $this->_context->getScriptName());
 
-        $fields = $this->_getFormFields();
-        $elements = $this->_getFormElements();
-        foreach ($fields as $field) {
-            $elements[$field]['_value'] = @$this->_user->$field;
+        foreach (array('login_name') as $field) {
+            $flexyForm->setValue($field, @$this->_user->$field);
         }
 
-        $viewElement = &$this->_payload->getViewElement();
-        $viewElement->setElement('_elements', $elements);
-        $request = &$this->_payload->getRequest();
+        $request = &$this->_context->getRequest();
+        $viewElement = &$this->_context->getViewElement();
         $viewElement->setElement('callback', @$request->getParameter('callback'));
 
         $this->_setTitle();
@@ -137,7 +134,7 @@ class AuthenticationAction extends Piece_Flow_Action
 
     function setupHome()
     {
-        $viewElement = &$this->_payload->getViewElement();
+        $viewElement = &$this->_context->getViewElement();
         $viewElement->setElement('user', $this->_user);
 
         $this->_setTitle();
@@ -165,37 +162,9 @@ class AuthenticationAction extends Piece_Flow_Action
      * @access private
      */
 
-    function _getFormFields()
-    {
-        $fields = array('login_name');
-        return $fields;
-    }
-
-    function _setupFormAttributes()
-    {
-        $view = $this->_flow->getView();
-        $elements = $this->_getFormElements();
-        $elements[$view]['_attributes']['action'] = $this->_payload->getScriptName();
-        $elements[$view]['_attributes']['method'] = 'post';
-        $viewElement = &$this->_payload->getViewElement();
-        $viewElement->setElement('_elements', $elements);
-    }
-
-    function _getFormElements()
-    {
-        $viewElement = &$this->_payload->getViewElement();
-        if (!$viewElement->hasElement('_elements')) {
-            $elements = array();
-        } else {
-            $elements = $viewElement->getElement('_elements');
-        }
-
-        return $elements;
-    }
-
     function _setTitle()
     {
-        $viewElement = &$this->_payload->getViewElement();
+        $viewElement = &$this->_context->getViewElement();
         $viewElement->setElement('title', 'B.1. An authentication service. *exclusive*');
     }
 
