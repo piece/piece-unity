@@ -29,12 +29,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
+ * @subpackage Piece_Unity_Plugin_Renderer_Flexy
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://pear.php.net/package/HTML_Template_Flexy/
- * @link       http://piece-framework.com/piece-unity/
  * @see        HTML_Template_Flexy
  * @since      File available since Release 0.2.0
  */
@@ -51,12 +51,12 @@ require_once 'Piece/Unity/Error.php';
  * A renderer which is based on HTML_Template_Flexy template engine.
  *
  * @package    Piece_Unity
+ * @subpackage Piece_Unity_Plugin_Renderer_Flexy
  * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://pear.php.net/package/HTML_Template_Flexy/
- * @link       http://piece-framework.com/piece-unity/
  * @see        HTML_Template_Flexy
  * @since      Class available since Release 0.2.0
  */
@@ -105,29 +105,26 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
     function _createFormElements($elements)
     {
         $formElements = array();
-        $formElementValueKey      = $this->_getConfiguration('formElementValueKey');
-        $formElementOptionsKey    = $this->_getConfiguration('formElementOptionsKey');
-        $formElementAttributesKey = $this->_getConfiguration('formElementAttributesKey');
         foreach ($elements as $name => $type) {
             $formElements[$name] = &new HTML_Template_Flexy_Element();
             if (!is_array($type)) {
                 continue;
             }
 
-            if (array_key_exists($formElementValueKey, $type)) {
-                $formElements[$name]->setValue($type[$formElementValueKey]);
+            if (array_key_exists('_value', $type)) {
+                $formElements[$name]->setValue($type['_value']);
             }
 
-            if (array_key_exists($formElementOptionsKey, $type)
-                && is_array($type[$formElementOptionsKey])
+            if (array_key_exists('_options', $type)
+                && is_array($type['_options'])
                 ) {
-                $formElements[$name]->setOptions($type[$formElementOptionsKey]);
+                $formElements[$name]->setOptions($type['_options']);
             }
 
-            if (array_key_exists($formElementAttributesKey, $type)
-                && is_array($type[$formElementAttributesKey])
+            if (array_key_exists('_attributes', $type)
+                && is_array($type['_attributes'])
                 ) {
-                $formElements[$name]->setAttributes($type[$formElementAttributesKey]);
+                $formElements[$name]->setAttributes($type['_attributes']);
             }
         }
 
@@ -173,10 +170,6 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
     {
         parent::_initialize();
         $this->_addConfigurationPoint('templateExtension', '.html');
-        $this->_addConfigurationPoint('formElementsKey', '_elements');
-        $this->_addConfigurationPoint('formElementValueKey', '_value');
-        $this->_addConfigurationPoint('formElementOptionsKey', '_options');
-        $this->_addConfigurationPoint('formElementAttributesKey', '_attributes');
         foreach ($this->_configurationOptions as $point => $default) {
             $this->_addConfigurationPoint($point, $default);
         }
@@ -229,10 +222,9 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
         $viewElements = $viewElement->getElements();
 
         $formElements = array();
-        $formElementsKey = $this->_getConfiguration('formElementsKey');
-        if (array_key_exists($formElementsKey, $viewElements)) {
-            $formElements = $this->_createFormElements($viewElements[$formElementsKey]);
-            unset($viewElements[$formElementsKey]);
+        if (array_key_exists('_elements', $viewElements)) {
+            $formElements = $this->_createFormElements($viewElements['_elements']);
+            unset($viewElements['_elements']);
         }
 
         $controller = (object)$viewElements;
