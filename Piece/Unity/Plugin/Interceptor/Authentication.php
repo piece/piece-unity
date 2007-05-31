@@ -29,11 +29,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
+ * @subpackage Piece_Unity_Plugin_Interceptor_Authentication
  * @author     KUMAKURA Yousuke <kumatch@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.9.0
  */
 
@@ -43,15 +43,15 @@ require_once 'Piece/Unity/Error.php';
 // {{{ Piece_Unity_Plugin_Interceptor_Authentication
 
 /**
- * An interceptor to control the access to protected resources on Piece_Unity
- * applications.
+ * An interceptor to control the access to resources which can be accessed
+ * only by authenticated users.
  *
  * @package    Piece_Unity
+ * @subpackage Piece_Unity_Plugin_Interceptor_Authentication
  * @author     KUMAKURA Yousuke <kumatch@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.9.0
  */
 class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_Common
