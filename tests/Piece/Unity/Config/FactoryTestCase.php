@@ -33,8 +33,6 @@
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Config_Factory
  * @since      File available since Release 0.1.0
  */
 
@@ -53,8 +51,6 @@ require_once 'Cache/Lite/File.php';
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Config_Factory
  * @since      Class available since Release 0.1.0
  */
 class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
@@ -105,31 +101,37 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
 
     function testConfigurationDirectoryNotFound()
     {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__) . '/foo', $this->_cacheDirectory);
 
-        $this->assertEquals(strtolower('Piece_Unity_Config'), strtolower(get_class($config)));
-        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
+        $this->assertNull($config);
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
 
         $error = Piece_Unity_Error::pop();
 
         $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
+
+        Piece_Unity_Error::popCallback();
     }
 
     function testConfigurationFileNotFound()
     {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__), $this->_cacheDirectory);
 
-        $this->assertEquals(strtolower('Piece_Unity_Config'), strtolower(get_class($config)));
-        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
+        $this->assertNull($config);
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
 
         $error = Piece_Unity_Error::pop();
 
         $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
+
+        Piece_Unity_Error::popCallback();
     }
 
     function testNoCachingIfCacheDirectoryNotFound()
     {
-        $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__), dirname(__FILE__) . '/foo');
+        $config = &Piece_Unity_Config_Factory::factory($this->_cacheDirectory, dirname(__FILE__) . '/foo');
 
         $this->assertEquals(strtolower('Piece_Unity_Config'), strtolower(get_class($config)));
         $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
