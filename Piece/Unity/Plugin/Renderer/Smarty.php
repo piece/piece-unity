@@ -29,12 +29,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @subpackage Piece_Unity_Plugin_Renderer_Smarty
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://smarty.php.net/
- * @link       http://piece-framework.com/piece-unity/
  * @see        Smarty
  * @since      File available since Release 0.2.0
  */
@@ -49,12 +48,11 @@ require_once 'Piece/Unity/Error.php';
  * A renderer which is based on Smarty template engine.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @subpackage Piece_Unity_Plugin_Renderer_Smarty
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://smarty.php.net/
- * @link       http://piece-framework.com/piece-unity/
  * @see        Smarty
  * @since      Class available since Release 0.2.0
  */
@@ -138,7 +136,9 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
 
         if (!$included) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    'The Smarty class file [ Smarty.class.php ] not found or was not readable.'
+                                    'The Smarty class file [ Smarty.class.php ] not found or is not readable.',
+                                    'exception',
+                                    array('plugin' => __CLASS__)
                                     );
             return;
         }
@@ -151,7 +151,9 @@ class Piece_Unity_Plugin_Renderer_Smarty extends Piece_Unity_Plugin_Renderer_HTM
 
         if (!$loaded) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    'The class [ Smarty ] not defined in the class file [ Smarty.class.php ].'
+                                    'The class [ Smarty ] does not defined in the class file [ Smarty.class.php ].',
+                                    'exception',
+                                    array('plugin' => __CLASS__)
                                     );
         }
     }
