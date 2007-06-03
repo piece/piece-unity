@@ -29,13 +29,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     Chihiro Sakatoku <csakatoku@users.sourceforge.net>
+ * @subpackage Piece_Unity_Plugin_Renderer_JSON
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @link       http://pecl.php.net/package/json
  * @link       http://pear.php.net/package/HTML_AJAX
- * @link       http://piece-framework.com/piece-unity/
  * @see        HTML_AJAX_JSON
  * @since      File available since Release 0.9.0
  */
@@ -50,13 +49,12 @@ require_once 'PEAR.php';
  * A renderer to output view elements as JSON.
  *
  * @package    Piece_Unity
- * @author     Chihiro Sakatoku <csakatoku@users.sourceforge.net>
+ * @subpackage Piece_Unity_Plugin_Renderer_JSON
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @link       http://pecl.php.net/package/json
  * @link       http://pear.php.net/package/HTML_AJAX
- * @link       http://piece-framework.com/piece-unity/
  * @see        HTML_AJAX_JSON
  * @since      Class available since Release 0.9.0
  */
@@ -210,7 +208,9 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
 
             if ($this->_wasVisited($next, $visited)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_UNEXPECTED_VALUE,
-                                        "A circular refrence detected in an array at the key {$key}."
+                                        "A circular refrence detected in an array at the key {$key}.",
+                                        'exception',
+                                        array('plugin' => __CLASS__)
                                         );
                 return;
             }
@@ -242,7 +242,9 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
             if ($this->_wasVisited($next, $visited)) {
                 $class = get_class($value);
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_UNEXPECTED_VALUE,
-                                        "A circular refrence detected at the property {$key}, class {$class}."
+                                        "A circular refrence detected at the property {$key}, class {$class}.",
+                                        'exception',
+                                        array('plugin' => __CLASS__)
                                         );
                 return;
             }
@@ -368,7 +370,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
         } else {
             if (!include_once 'HTML/AJAX/JSON.php') {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        'The file [ HTML/AJAX/JSON.php ] not found or was not readable.',
+                                        'The file [ HTML/AJAX/JSON.php ] not found or is not readable.',
                                         'exception',
                                         array('plugin' => __CLASS__)
                                         );
