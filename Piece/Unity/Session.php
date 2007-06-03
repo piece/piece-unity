@@ -29,15 +29,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.2.0
  */
 
 require_once 'Piece/Unity/Session/Preload.php';
+require_once 'Piece/Unity/ClassLoader.php';
 
 // {{{ GLOBALS
 
@@ -50,11 +49,9 @@ $GLOBALS['PIECE_UNITY_Session_Autoload_Classes'] = array();
  * The session state storage for Piece_Unity package.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.2.0
  */
 class Piece_Unity_Session
@@ -160,28 +157,21 @@ class Piece_Unity_Session
     /**
      * Starts a new session or restores a session if it already exists, and
      * binds the attribute holder to the $_SESSION superglobal array.
+     *
+     * @throws PIECE_UNITY_ERROR_NOT_READABLE
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_CANNOT_READ
      */
     function start()
     {
         foreach ($GLOBALS['PIECE_UNITY_Session_Autoload_Classes'] as $class) {
-            if (version_compare(phpversion(), '5.0.0', '<')) {
-                $found = class_exists($class);
-            } else {
-                $found = class_exists($class, false);
-            }
-
-            if ($found) {
+            if (Piece_Unity_ClassLoader::loaded($class)) {
                 continue;
             }
 
-            $file = str_replace('_', '/', $class) . '.php';
-            if (!include_once($file)) {
-                Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The class file [ $file ] not found or was not readable.",
-                                        'warning'
-                                        );
-                Piece_Unity_Error::popCallback();
+            Piece_Unity_ClassLoader::load($class);
+            if (Piece_Unity_Error::hasErrors('exception')) {
+                return;
             }
         }
 
