@@ -30,7 +30,6 @@
  *
  * @package    Piece_Unity
  * @subpackage Piece_Unity_Plugin_Dispatcher_Continuation
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
@@ -55,12 +54,13 @@ $GLOBALS['PIECE_UNITY_Continuation_FlowName'] = null;
 // {{{ Piece_Unity_Plugin_Dispatcher_Continuation
 
 /**
- * A dispatcher which dispatches requests to the continuation server based on
- * Piece_Flow.
+ * A dispatcher for stateful applications.
+ *
+ * This dispatcher starts a new continuation or continues with the current
+ * continuation, and returns a view string.
  *
  * @package    Piece_Unity
  * @subpackage Piece_Unity_Plugin_Dispatcher_Continuation
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
@@ -95,9 +95,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
 
     /**
      * Invokes the plugin specific code.
-     *
-     * Starts a new continuation or continues with the current continuation,
-     * and returns a view string.
      *
      * @return string
      * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
