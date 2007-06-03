@@ -30,7 +30,6 @@
  *
  * @package    Piece_Unity
  * @subpackage Piece_Unity_Plugin_Interceptor_Authentication
- * @author     KUMAKURA Yousuke <kumatch@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
@@ -39,6 +38,7 @@
 
 require_once 'Piece/Unity/Plugin/Common.php';
 require_once 'Piece/Unity/Error.php';
+require_once 'Piece/Unity/ClassLoader.php';
 
 // {{{ Piece_Unity_Plugin_Interceptor_Authentication
 
@@ -48,7 +48,6 @@ require_once 'Piece/Unity/Error.php';
  *
  * @package    Piece_Unity
  * @subpackage Piece_Unity_Plugin_Interceptor_Authentication
- * @author     KUMAKURA Yousuke <kumatch@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
@@ -84,6 +83,8 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
      * @return boolean
      * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_NOT_READABLE
+     * @throws PIECE_UNITY_ERROR_CANNOT_READ
      */
     function invoke()
     {
@@ -95,7 +96,9 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
             $guardDirectory = $this->_getConfiguration('guardDirectory');
             if (is_null($guardDirectory)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                        'The guard directory was not specified.'
+                                        'The guard directory does not specified.',
+                                        'exception',
+                                        array('plugin' => __CLASS__)
                                         );
 
                 return;
@@ -104,7 +107,9 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
             $guardClass = @$service['guard']['class'];
             if (is_null($guardClass) || !strlen($guardClass)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                        'The guard class was not specified.'
+                                        'The guard class does not specified.',
+                                        'exception',
+                                        array('plugin' => __CLASS__)
                                         );
                 return;
             }
@@ -112,24 +117,35 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
             $guardMethod = @$service['guard']['method'];
             if (is_null($guardMethod) || !strlen($guardMethod)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                        'The guard method was not specified.'
+                                        'The guard method does not specified.',
+                                        'exception',
+                                        array('plugin' => __CLASS__)
                                         );
                 return;
             }
 
-            $found = $this->_load($guardClass, $guardDirectory);
-            if (!$found) {
-                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The gaurd [ $guardClass ] not found in the directory [ $guardDirectory ]."
-                                        );
-                return;
+            if (!Piece_Unity_ClassLoader::loaded($guardClass)) {
+                Piece_Unity_ClassLoader::load($guardClass, $guardDirectory);
+                if (Piece_Unity_Error::hasErrors('exception')) {
+                    return;
+                }
 
+                if (!Piece_Unity_ClassLoader::loaded($guardClass)) {
+                    Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                            "The guard class [ $guardClass ] not found in the guard directory [ $guardDirectory ].",
+                                            'exception',
+                                            array('plugin' => __CLASS__)
+                                            );
+                    return;
+                }
             }
 
             $guard = &new $guardClass();
             if (!method_exists($guard, $guardMethod)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The guard method [ $guardClass::$guardMethod ] not found."
+                                        "The guard method [ $guardClass::$guardMethod ] not found.",
+                                        'exception',
+                                        array('plugin' => __CLASS__)
                                         );
                 return;
             }
@@ -162,60 +178,6 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
     {
         $this->_addConfigurationPoint('services', array());
         $this->_addConfigurationPoint('guardDirectory');
-    }
-
-    // }}}
-    // {{{ _load()
-
-    /**
-     * Loads a guard class corresponding to the given class name.
-     *
-     * @param string $guard
-     * @param string $guardDirectory
-     * @return boolean
-     * @static
-     */
-    function _load($guard, $guardDirectory)
-    {
-        $file = "$guardDirectory/" . str_replace('_', '/', $guard) . '.php';
-
-        if (!file_exists($file)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The guard file [ $file ] for the class [ $guard ] not found.",
-                                    'warning'
-                                    );
-            Piece_Unity_Error::popCallback();
-            return false;
-        }
-
-        if (!is_readable($file)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_READABLE,
-                                    "The guard file [ $file ] was not readable.",
-                                    'warning'
-                                    );
-            Piece_Unity_Error::popCallback();
-            return false;
-        }
-
-        if (!include_once $file) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The guard file [ $file ] not found or was not readable.",
-                                    'warning'
-                                    );
-            Piece_Unity_Error::popCallback();
-            return false;
-        }
-
-        if (version_compare(phpversion(), '5.0.0', '<')) {
-            $found = class_exists($guard);
-        } else {
-            $found = class_exists($guard, false);
-        }
-
-        return $found;
     }
  
     // }}}
