@@ -29,12 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Validation
  * @since      File available since Release 0.7.0
  */
 
@@ -49,12 +46,9 @@ require_once 'Cache/Lite/File.php';
  * TestCase for Piece_Unity_Validation
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Validation
  * @since      Class available since Release 0.7.0
  */
 class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase

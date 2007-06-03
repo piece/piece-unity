@@ -30,7 +30,6 @@
  *
  * @package    Piece_Unity
  * @subpackage Piece_Unity_Plugin_Renderer_Flexy
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
@@ -52,7 +51,6 @@ require_once 'Piece/Unity/Error.php';
  *
  * @package    Piece_Unity
  * @subpackage Piece_Unity_Plugin_Renderer_Flexy
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@

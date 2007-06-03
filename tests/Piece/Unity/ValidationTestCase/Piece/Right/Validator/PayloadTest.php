@@ -29,11 +29,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_ValidationTestCase
  * @see        Piece_Right_Validator_Common
  * @since      File available since Release 0.9.0
@@ -47,11 +45,9 @@ require_once 'Piece/Right/Validator/Common.php';
  * A class for unit tests.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_ValidationTestCase
  * @see        Piece_Right_Validator_Common
  * @since      Class available since Release 0.9.0

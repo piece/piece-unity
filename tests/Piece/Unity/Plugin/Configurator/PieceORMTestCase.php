@@ -29,12 +29,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @subpackage Piece_Unity_Plugin_Configurator_PieceORM
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Configurator_PieceORM
  * @since      File available since Release 0.12.0
  */
 
@@ -58,12 +56,10 @@ if (version_compare(phpversion(), '5.0.0', '<')) {
  * TestCase for Piece_Unity_Plugin_Configurator_PieceORM
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @subpackage Piece_Unity_Plugin_Configurator_PieceORM
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Configurator_ORM
  * @since      Class available since Release 0.12.0
  */
 class Piece_Unity_Plugin_Configurator_PieceORMTestCase extends PHPUnit_TestCase

@@ -29,12 +29,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     Chihiro Sakatoku <csakatoku@users.sourceforge.net>
+ * @subpackage Piece_Unity_Plugin_Renderer_JSON
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Renderer_JSON
  * @since      File available since Release 0.9.0
  */
 
@@ -53,12 +51,10 @@ require_once 'Piece/Unity/Plugin/View.php';
  * TestCase for Piece_Unity_Plugin_Renderer_JSON
  *
  * @package    Piece_Unity
- * @author     Chihiro Sakatoku <csakatoku@users.sourceforge.net>
+ * @subpackage Piece_Unity_Plugin_Renderer_JSON
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Renderer_Json
  * @since      File available since Release 0.9.0
  */
 class Piece_Unity_Plugin_Renderer_JSONTestCase extends PHPUnit_TestCase

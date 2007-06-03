@@ -29,11 +29,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @subpackage Piece_Unity_Plugin_Configurator_AppRoot
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://piece-framework.com/piece-unity/
  * @since      File available since Release 0.12.0
  */
 
@@ -47,11 +46,10 @@ require_once 'Piece/Unity/Error.php';
  * the top of the document tree of an application visible from the web.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @subpackage Piece_Unity_Plugin_Configurator_AppRoot
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://piece-framework.com/piece-unity/
  * @since      Class available since Release 0.12.0
  */
 class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common

@@ -29,12 +29,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @subpackage Piece_Unity_Plugin_Configurator_Proxy
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Configurator_Env
  * @since      File available since Release 0.12.0
  */
 
@@ -50,12 +48,10 @@ require_once 'Piece/Unity/Error.php';
  * TestCase for Piece_Unity_Plugin_Configurator_Proxy
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @subpackage Piece_Unity_Plugin_Configurator_Proxy
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Configurator_Proxy
  * @since      Class available since Release 0.12.0
  */
 class Piece_Unity_Plugin_Configurator_ProxyTestCase extends PHPUnit_TestCase

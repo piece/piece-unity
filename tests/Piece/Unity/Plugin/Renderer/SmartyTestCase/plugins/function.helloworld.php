@@ -29,12 +29,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     SAKATOKU Chihiro <csakatou@users.sourceforge.net>
+ * @subpackage Piece_Unity_Plugin_Renderer_Smarty
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Renderer_Smarty
+ * @see        Piece_Unity_Plugin_Renderer_SmartyTestCase
  * @since      File available since Release 0.12.0
  */
 

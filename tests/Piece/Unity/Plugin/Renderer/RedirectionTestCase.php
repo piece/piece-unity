@@ -29,13 +29,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @author     MATSUFUJI Hideharu <matsufuji@users.sourceforge.net>
+ * @subpackage Piece_Unity_Plugin_Renderer_Redirection
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Renderer_Redirection
  * @since      File available since Release 0.6.0
  */
 
@@ -53,13 +50,10 @@ require_once 'Piece/Unity/Plugin/Factory.php';
  * TestCase for Piece_Unity_Plugin_Renderer_Redirection
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
- * @author     MATSUFUJI Hideharu <matsufuji@users.sourceforge.net>
+ * @subpackage Piece_Unity_Plugin_Renderer_Redirection
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://piece-framework.com/piece-unity/
- * @see        Piece_Unity_Plugin_Renderer_Redirection
  * @since      Class available since Release 0.6.0
  */
 class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase

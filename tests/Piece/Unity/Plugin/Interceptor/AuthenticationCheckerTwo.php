@@ -29,11 +29,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @subpackage Piece_Unity_Plugin_Interceptor_Authentication
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_Interceptor_AuthenticationTestCase
  * @since      File available since Release 0.9.0
  */
@@ -44,11 +43,10 @@
  * This class is a part of the Piece_Unity_Plugin_Interceptor_Authentication
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @subpackage Piece_Unity_Plugin_Interceptor_Authentication
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @link       http://piece-framework.com/piece-unity/
  * @see        Piece_Unity_Plugin_Interceptor_AuthenticationTestCase
  * @since      Class available since Release 0.9.0
  */
