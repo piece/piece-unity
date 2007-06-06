@@ -115,21 +115,28 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
                                         );
                 return;
             }
-        }
 
-        if (Piece_Unity_ClassLoader::loaded($class)) {
-            $action = &new $class();
-            if (!method_exists($action, 'invoke')) {
+            if (!Piece_Unity_ClassLoader::loaded($class)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The method invoke() not found in the action class [ $class ].",
+                                        "The class [ $class ] not found in the loaded file.",
                                         'exception',
                                         array('plugin' => __CLASS__)
                                         );
                 return;
             }
-
-            $action->invoke($this->_context);
         }
+
+        $action = &new $class();
+        if (!method_exists($action, 'invoke')) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                    "The method invoke() not found in the class [ $class ].",
+                                    'exception',
+                                    array('plugin' => __CLASS__)
+                                    );
+            return;
+        }
+
+        $action->invoke($this->_context);
 
         return $event;
     }

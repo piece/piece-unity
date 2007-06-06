@@ -96,7 +96,7 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
             $guardDirectory = $this->_getConfiguration('guardDirectory');
             if (is_null($guardDirectory)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                        'The guard directory does not specified.',
+                                        'The directory does not specified.',
                                         'exception',
                                         array('plugin' => __CLASS__)
                                         );
@@ -107,7 +107,7 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
             $guardClass = @$service['guard']['class'];
             if (is_null($guardClass) || !strlen($guardClass)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                        'The guard class does not specified.',
+                                        'The class does not specified.',
                                         'exception',
                                         array('plugin' => __CLASS__)
                                         );
@@ -117,7 +117,7 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
             $guardMethod = @$service['guard']['method'];
             if (is_null($guardMethod) || !strlen($guardMethod)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                        'The guard method does not specified.',
+                                        'The method does not specified.',
                                         'exception',
                                         array('plugin' => __CLASS__)
                                         );
@@ -132,7 +132,7 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
 
                 if (!Piece_Unity_ClassLoader::loaded($guardClass)) {
                     Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                            "The guard class [ $guardClass ] not found in the guard directory [ $guardDirectory ].",
+                                            "The class [ $guardClass ] not found in the loaded file.",
                                             'exception',
                                             array('plugin' => __CLASS__)
                                             );
@@ -143,7 +143,7 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
             $guard = &new $guardClass();
             if (!method_exists($guard, $guardMethod)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The guard method [ $guardClass::$guardMethod ] not found.",
+                                        "The method $guardMethod() not found in the class [ $guardClass ].",
                                         'exception',
                                         array('plugin' => __CLASS__)
                                         );

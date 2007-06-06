@@ -74,6 +74,8 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
      * @access private
      */
 
+    var $_cacheDirectory;
+
     /**#@-*/
 
     /**#@+
@@ -83,11 +85,12 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
     function setUp()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+        $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 
     function tearDown()
     {
-        $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/KernelConfiguratorTestCase/',
+        $cache = &new Cache_Lite_File(array('cacheDir' => "{$this->_cacheDirectory}/",
                                             'masterFile' => '',
                                             'automaticSerialization' => true,
                                             'errorHandlingAPIBreak' => true)
@@ -102,7 +105,7 @@ class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
     {
         $_SESSION = array();
         $class = 'Piece_Unity_Plugin_KernelConfiguratorTestCase_AutoloadClass';
-        $oldIncludePath = set_include_path(dirname(__FILE__) . '/../../..' . PATH_SEPARATOR . get_include_path());
+        $oldIncludePath = set_include_path($this->_cacheDirectory . PATH_SEPARATOR . get_include_path());
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('KernelConfigurator', 'autoloadClasses', array($class));
         $context = &Piece_Unity_Context::singleton();

@@ -173,6 +173,13 @@ class Piece_Unity_Session
             if (Piece_Unity_Error::hasErrors('exception')) {
                 return;
             }
+
+            if (!Piece_Unity_ClassLoader::loaded($class)) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                        "The class [ $class ] not found in the loaded file."
+                                        );
+                return;
+            }
         }
 
         session_start();
