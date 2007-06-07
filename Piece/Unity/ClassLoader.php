@@ -46,7 +46,7 @@ require_once 'Piece/Unity/Error.php';
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @since      File available since Release 0.13.0
+ * @since      Class available since Release 0.13.0
  */
 class Piece_Unity_ClassLoader
 {

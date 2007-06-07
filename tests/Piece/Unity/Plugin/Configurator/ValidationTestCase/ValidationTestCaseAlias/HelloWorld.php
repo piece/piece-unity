@@ -50,7 +50,7 @@ require_once 'Piece/Right/Validator/Common.php';
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @see        Piece_Unity_Plugin_Configurator_ValidationTestCase
- * @since      File available since Release 0.11.0
+ * @since      Class available since Release 0.11.0
  */
 class ValidationTestCaseAlias_HelloWorld extends Piece_Right_Validator_Common
 {
