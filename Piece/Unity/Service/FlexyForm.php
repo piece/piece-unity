@@ -100,6 +100,10 @@ class Piece_Unity_Service_FlexyForm
      */
     function addForm($name, $action, $usePost = true, $upload = false)
     {
+        if ($upload) {
+            $usePost = true;
+        }
+
         $elements = $this->_getElements();
         $elements[$name]['_attributes']['action'] = $action;
         $elements[$name]['_attributes']['method'] = $usePost ? 'post' : 'get';
