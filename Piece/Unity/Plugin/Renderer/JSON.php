@@ -282,7 +282,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
         if ($php5 && $isObj) {
             $result = in_array($value, $visited, true);
         } else {
-            for ($i = 0; $i < count($visited); ++$i) {
+            for ($i = 0, $count = count($visited); $i < $count; ++$i) {
                 $sentinel = &$visited[$i];
                 if ($this->_isReference($value, $sentinel)) {
                     $result = true;

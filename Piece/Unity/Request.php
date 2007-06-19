@@ -165,7 +165,7 @@ class Piece_Unity_Request
         }
 
         $pathInfoParameters = explode('/', trim($pathInfo, '/'));
-        for ($i = 0; $i < count($pathInfoParameters); $i += 2) {
+        for ($i = 0, $count = count($pathInfoParameters); $i < $count; $i += 2) {
             $this->_parameters[ $pathInfoParameters[$i] ] = @$pathInfoParameters[$i + 1];
         }
     }

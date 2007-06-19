@@ -198,7 +198,7 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
         if ($this->_context->usingProxy()) {
             $path = $this->_context->getProxyPath();
             if (!is_null($path)) {
-                for ($i = 0; $i < count($resources); ++$i) {
+                for ($i = 0, $count = count($resources); $i < $count; ++$i) {
                     $resources[$i] = str_replace('//', '/', $path . $resources[$i]);
                 }
             }
