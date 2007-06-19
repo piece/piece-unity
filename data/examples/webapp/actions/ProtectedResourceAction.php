@@ -29,7 +29,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
@@ -44,7 +43,6 @@ require_once 'Piece/Unity/Service/FlowAction.php';
  * Action class for the flow ProtectedResourceAction.
  *
  * @package    Piece_Unity
- * @author     KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
