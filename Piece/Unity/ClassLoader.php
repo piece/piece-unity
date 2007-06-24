@@ -129,6 +129,7 @@ class Piece_Unity_ClassLoader
             return class_exists($class, false);
         }
     }
+
     /**#@-*/
 
     /**#@+
