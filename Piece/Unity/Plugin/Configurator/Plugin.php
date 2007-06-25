@@ -83,12 +83,6 @@ class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common
     {
         $this->_setPluginDirectories();
         $this->_setPluginPrefixes();
-
-        /*
-         * Preloads Dispatcher_Continuation plug-in for restoring
-         * action instances in session.
-         */
-        Piece_Unity_Plugin_Factory::factory('Dispatcher_Continuation');
     }
 
     /**#@-*/
