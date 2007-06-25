@@ -35,6 +35,8 @@
  * @since      File available since Release 0.9.0
  */
 
+require_once 'Piece/Unity/Plugin/Factory.php';
+
 // {{{ Piece_Unity_Session_Preload
 
 /**

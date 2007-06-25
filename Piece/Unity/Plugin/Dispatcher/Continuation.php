@@ -348,6 +348,8 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             }
 
             $session->setAttributeByRef(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey(), $continuation);
+            $session->setPreloadCallback('_Dispatcher_Continuation', array('Piece_Unity_Plugin_Factory', 'factory'));
+            $session->addPreloadClass('_Dispatcher_Continuation', 'Dispatcher_Continuation');
         }
 
         $this->_context->setContinuation($continuation);
