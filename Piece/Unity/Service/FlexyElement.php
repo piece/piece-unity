@@ -42,7 +42,8 @@ require_once 'Piece/Unity/Context.php';
 // {{{ Piece_Unity_Service_FlexyElement
 
 /**
- * A helper class of HTML forms for the Renderer_Flexy plug-in.
+ * A helper class which make it easy to build HTML_Template_Flexy elements
+ * such as HTML forms and dynamic elements.
  *
  * @package    Piece_Unity
  * @subpackage Piece_Unity_Plugin_Renderer_Flexy
