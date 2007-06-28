@@ -150,6 +150,23 @@ class Piece_Unity_Service_FlexyForm
         $this->_viewElement->setElement('_elements', $elements);
     }
 
+    // }}}
+    // {{{ setAttirubutes()
+
+    /**
+     * Sets an attributes array to a given field.
+     *
+     * @param string $field
+     * @param array  $attributes
+     */
+    function setAttributes($field, $attributes)
+    {
+        $elements = $this->_getElements();
+        $elements[$field]['_attributes'] = $attributes;
+
+        $this->_viewElement->setElement('_elements', $elements);
+    }
+
     /**#@-*/
 
     /**#@+
