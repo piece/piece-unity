@@ -37,6 +37,7 @@
 
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Service/FlexyForm.php';
+require_once 'Piece/Unity/Context.php';
 
 // {{{ Piece_Unity_Service_FlexyFormTestCase
 
