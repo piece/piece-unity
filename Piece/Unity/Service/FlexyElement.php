@@ -39,7 +39,7 @@
 
 require_once 'Piece/Unity/Context.php';
 
-// {{{ Piece_Unity_Service_FlexyForm
+// {{{ Piece_Unity_Service_FlexyElement
 
 /**
  * A helper class of HTML forms for the Renderer_Flexy plug-in.
@@ -52,7 +52,7 @@ require_once 'Piece/Unity/Context.php';
  * @link       http://pear.php.net/package/HTML_Template_Flexy/
  * @since      Class available since Release 0.13.0
  */
-class Piece_Unity_Service_FlexyForm
+class Piece_Unity_Service_FlexyElement
 {
 
     // {{{ properties
@@ -81,7 +81,7 @@ class Piece_Unity_Service_FlexyForm
     /**
      * Sets the Piece_Unity_ViewElement object.
      */
-    function Piece_Unity_Service_FlexyForm()
+    function Piece_Unity_Service_FlexyElement()
     {
         $context = &Piece_Unity_Context::singleton();
         $this->_viewElement = &$context->getViewElement();

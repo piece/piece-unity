@@ -36,13 +36,13 @@
  */
 
 require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Service/FlexyForm.php';
+require_once 'Piece/Unity/Service/FlexyElement.php';
 require_once 'Piece/Unity/Context.php';
 
-// {{{ Piece_Unity_Service_FlexyFormTestCase
+// {{{ Piece_Unity_Service_FlexyElementTestCase
 
 /**
- * TestCase for Piece_Unity_Service_FlexyForm
+ * TestCase for Piece_Unity_Service_FlexyElement
  *
  * @package    Piece_Unity
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
@@ -50,7 +50,7 @@ require_once 'Piece/Unity/Context.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.13.0
  */
-class Piece_Unity_Service_FlexyFormTestCase extends PHPUnit_TestCase
+class Piece_Unity_Service_FlexyElementTestCase extends PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -79,7 +79,7 @@ class Piece_Unity_Service_FlexyFormTestCase extends PHPUnit_TestCase
     function testAssociativeArrayShouldBeAbleToSetAsAttribute()
     {
         $attributes = array('bar' => 'baz', 'baz' => 'qux');
-        $flexyForm = &new Piece_Unity_Service_FlexyForm();
+        $flexyForm = &new Piece_Unity_Service_FlexyElement();
         $flexyForm->setAttributes('foo', $attributes);
         $context = &Piece_Unity_Context::singleton();
         $viewElement = &$context->getViewElement();
