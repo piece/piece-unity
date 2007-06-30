@@ -80,8 +80,10 @@ class Piece_Unity_Session_Preload
     function __wakeup()
     {
         foreach (array_keys($this->_services) as $service) {
-            foreach ($this->_services[$service]['classes'] as $id => $class) {
-                call_user_func($this->_services[$service]['callback'], $class, $id);
+            if (array_key_exists('classes', $this->_services[$service])) {
+                foreach ($this->_services[$service]['classes'] as $id => $class) {
+                    call_user_func($this->_services[$service]['callback'], $class, $id);
+                }
             }
         }
     }
