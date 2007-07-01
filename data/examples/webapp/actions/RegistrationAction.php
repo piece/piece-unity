@@ -36,7 +36,7 @@
  */
 
 require_once 'Piece/Unity/Service/FlowAction.php';
-require_once 'Piece/Unity/Service/FlexyForm.php';
+require_once 'Piece/Unity/Service/FlexyElement.php';
 
 // {{{ RegistrationAction
 
@@ -96,13 +96,13 @@ class RegistrationAction extends Piece_Unity_Service_FlowAction
 
     function setupForm()
     {
-        $flexyForm = &new Piece_Unity_Service_FlexyForm();
-        $flexyForm->addForm($this->_flow->getView(), $this->_context->getScriptName());
+        $flexyElement = &new Piece_Unity_Service_FlexyElement();
+        $flexyElement->addForm($this->_flow->getView(), $this->_context->getScriptName());
 
         $results = &$this->_flow->getAttribute("__RegistrationResults");
         if ($results) {
             foreach ($results->getFieldNames() as $field) {
-                $flexyForm->setValue($field, @$this->_user->$field);
+                $flexyElement->setValue($field, @$this->_user->$field);
             }
         }
 
@@ -114,8 +114,8 @@ class RegistrationAction extends Piece_Unity_Service_FlowAction
 
     function setupConfirmation()
     {
-        $flexyForm = &new Piece_Unity_Service_FlexyForm();
-        $flexyForm->addForm($this->_flow->getView(), $this->_context->getScriptName());
+        $flexyElement = &new Piece_Unity_Service_FlexyElement();
+        $flexyElement->addForm($this->_flow->getView(), $this->_context->getScriptName());
 
         $viewElement = &$this->_context->getViewElement();
         $viewElement->setElementByRef('user', $this->_user);
