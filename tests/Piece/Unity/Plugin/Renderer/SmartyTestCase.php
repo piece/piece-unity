@@ -84,13 +84,7 @@ class Piece_Unity_Plugin_Renderer_SmartyTestCase extends Piece_Unity_Plugin_Rend
         $config = &$this->_getConfig();
         $context->setConfiguration($config);
         $context->setView($viewString);
-        
-        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
-        $renderer = &new $class();
-        ob_start();
-        $renderer->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
+        $buffer = $this->_render();
 
         $this->assertEquals('Hello World', trim($buffer));
 

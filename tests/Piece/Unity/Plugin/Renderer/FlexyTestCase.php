@@ -110,13 +110,7 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
         $viewElement = &$context->getViewElement();
         $viewElement->setElement('_elements', $elements);
         $context->setView($viewString);
-
-        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
-        $renderer = &new $class();
-        ob_start();
-        $renderer->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
+        $buffer = $this->_render();
 
         $this->assertEquals($this->_expectedOutput, $buffer);
 
@@ -132,13 +126,7 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
         $config->setConfiguration('Renderer_Flexy', 'debug', 1);
         $context->setConfiguration($config);
         $context->setView($viewString);
-
-        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
-        $renderer = &new $class();
-        ob_start();
-        $renderer->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
+        $buffer = $this->_render();
 
         $this->assertTrue(strstr($buffer, 'FLEXY DEBUG:'));
 
@@ -159,13 +147,7 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
 
         $viewElement = &$context->getViewElement();
         $viewElement->setElement('foo', 'BAR');
-
-        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
-        $renderer = &new $class();
-        ob_start();
-        $renderer->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
+        $buffer = $this->_render();
 
         $this->assertEquals('<div>
   <h2>bar</h2>
@@ -188,13 +170,7 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
 
         $viewElement = &$context->getViewElement();
         $viewElement->setElement('foo', 'BAR');
-
-        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
-        $renderer = &new $class();
-        ob_start();
-        $renderer->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
+        $buffer = $this->_render();
 
         $this->assertEquals('<div>
   <h2></h2>
@@ -217,13 +193,7 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
 
         $viewElement = &$context->getViewElement();
         $viewElement->setElement('foo', 'BAR');
-
-        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
-        $renderer = &new $class();
-        ob_start();
-        $renderer->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
+        $this->_render();
 
         $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
 
@@ -248,13 +218,7 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
 
         $viewElement = &$context->getViewElement();
         $viewElement->setElement('foo', 'BAR');
-
-        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
-        $renderer = &new $class();
-        ob_start();
-        $renderer->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
+        $this->_render();
 
         $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
 

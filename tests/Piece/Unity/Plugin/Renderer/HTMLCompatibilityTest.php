@@ -100,7 +100,7 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
         $viewString = "{$this->_target}Example";
         $_GET['_event'] = $viewString;
 
-        $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $this->_render());
+        $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $this->_renderWithDispatcher());
 
         $this->_clear($viewString);
     }
@@ -109,7 +109,7 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
     {
         $_GET['_event'] = '../RelativePathVulnerability';
 
-        $this->assertEquals('', $this->_render());
+        $this->assertEquals('', $this->_renderWithDispatcher());
     }
 
     function testKeepingReference()
@@ -124,12 +124,7 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
         $viewElement = &$context->getViewElement();
         $viewElement->setElementByRef('foo', $foo);
         $context->setView($viewString);
-
-        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
-        $renderer = &new $class();
-        ob_start();
-        $renderer->invoke();
-        ob_end_clean();
+        $this->_render();
 
         $this->assertTrue(array_key_exists('bar', $foo));
         $this->assertEquals('baz', $foo->bar);
@@ -147,10 +142,7 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
         $config = &$this->_getConfig();
         $context->setConfiguration($config);
         $context->setView($viewString);
-
-        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
-        $renderer = &new $class();
-        $renderer->invoke();
+        $this->_render();
 
         $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
 
@@ -231,13 +223,7 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
         $config->setConfiguration("Renderer_{$this->_target}", 'fallbackCompileDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Fallback");
         $context->setConfiguration($config);
         $context->setView($viewString);
-
-        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
-        $renderer = &new $class();
-        ob_start();
-        $renderer->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
+        $buffer = $this->_render();
 
         $this->assertEquals('<html>
   <body>
@@ -269,13 +255,7 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
         $context->setView($viewString);
         $viewElement = &$context->getViewElement();
         $viewElement->setElement('content', 'This is a dynamic content.');
-
-        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
-        $renderer = &new $class();
-        ob_start();
-        $renderer->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
+        $buffer = $this->_render();
 
         $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $buffer);
 
@@ -288,7 +268,7 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
      * @access private
      */
 
-    function _render()
+    function _renderWithDispatcher()
     {
         $context = &Piece_Unity_Context::singleton();
 
@@ -297,15 +277,7 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
         $context->setView($dispatcher->invoke());
-        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
-        $renderer = &new $class();
-
-        ob_start();
-        $renderer->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
-
-        return $buffer;
+        return $this->_render();
     }
 
     function _clear($view) {}
@@ -349,6 +321,18 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
         $this->_clear($layoutViewString);
         
         unset($_SERVER['HTTP_ACCEPT']);
+    }
+
+    function _render()
+    {
+        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
+        $renderer = &new $class();
+        ob_start();
+        $renderer->invoke();
+        $buffer = ob_get_contents();
+        ob_end_clean();
+
+        return $buffer;
     }
 
     /**#@-*/
