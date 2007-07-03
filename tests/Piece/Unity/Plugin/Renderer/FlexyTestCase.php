@@ -145,6 +145,126 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
         $this->_clear($viewString);
     }
 
+    function testControllerShouldBeUsedIfUseControllerIsTrue()
+    {
+        $viewString = "{$this->_target}ControllerShouldBeUsedIfUseControllerIsTrue";
+        $context = &Piece_Unity_Context::singleton();
+
+        $config = &$this->_getConfig();
+        $config->setConfiguration('Renderer_Flexy', 'useController', true);
+        $config->setConfiguration('Renderer_Flexy', 'controllerClass', "Piece_Unity_Plugin_Renderer_FlexyTestCase_{$this->_target}ControllerShouldBeUsedIfUseControllerIsTrue");
+        $config->setConfiguration('Renderer_Flexy', 'controllerDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/lib");
+        $context->setConfiguration($config);
+        $context->setView($viewString);
+
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('foo', 'BAR');
+
+        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
+        $renderer = &new $class();
+        ob_start();
+        $renderer->invoke();
+        $buffer = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals('<div>
+  <h2>bar</h2>
+</div>', rtrim($buffer));
+
+        $this->_clear($viewString);
+    }
+
+    function testControllerShouldNotBeUsedIfUseControllerIsFalse()
+    {
+        $viewString = "{$this->_target}ControllerShouldBeUsedIfUseControllerIsTrue";
+        $context = &Piece_Unity_Context::singleton();
+
+        $config = &$this->_getConfig();
+        $config->setConfiguration('Renderer_Flexy', 'useController', false);
+        $config->setConfiguration('Renderer_Flexy', 'controllerClass', "Piece_Unity_Plugin_Renderer_FlexyTestCase_{$this->_target}ControllerShouldBeUsedIfUseControllerIsTrue");
+        $config->setConfiguration('Renderer_Flexy', 'controllerDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/lib");
+        $context->setConfiguration($config);
+        $context->setView($viewString);
+
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('foo', 'BAR');
+
+        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
+        $renderer = &new $class();
+        ob_start();
+        $renderer->invoke();
+        $buffer = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals('<div>
+  <h2></h2>
+</div>', rtrim($buffer));
+
+        $this->_clear($viewString);
+    }
+
+    function testExceptionShouldBeRaisedIfControllerDirectoryIsNotSpecified()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        $viewString = "{$this->_target}ControllerShouldBeUsedIfUseControllerIsTrue";
+        $context = &Piece_Unity_Context::singleton();
+
+        $config = &$this->_getConfig();
+        $config->setConfiguration('Renderer_Flexy', 'useController', true);
+        $config->setConfiguration('Renderer_Flexy', 'controllerDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/lib");
+        $context->setConfiguration($config);
+        $context->setView($viewString);
+
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('foo', 'BAR');
+
+        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
+        $renderer = &new $class();
+        ob_start();
+        $renderer->invoke();
+        $buffer = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
+
+        Piece_Unity_Error::popCallback();
+    }
+
+    function testExceptionShouldBeRaisedIfControllerClassIsNotSpecified()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        $viewString = "{$this->_target}ControllerShouldBeUsedIfUseControllerIsTrue";
+        $context = &Piece_Unity_Context::singleton();
+
+        $config = &$this->_getConfig();
+        $config->setConfiguration('Renderer_Flexy', 'useController', true);
+        $config->setConfiguration('Renderer_Flexy', 'controllerClass', "Piece_Unity_Plugin_Renderer_FlexyTestCase_{$this->_target}ControllerShouldBeUsedIfUseControllerIsTrue");
+        $context->setConfiguration($config);
+        $context->setView($viewString);
+
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('foo', 'BAR');
+
+        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
+        $renderer = &new $class();
+        ob_start();
+        $renderer->invoke();
+        $buffer = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
+
+        Piece_Unity_Error::popCallback();
+    }
+
     /**#@-*/
 
     /**#@+

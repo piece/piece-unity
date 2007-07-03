@@ -80,6 +80,10 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
      * Invokes the plugin specific code.
      *
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     * @throws PIECE_UNITY_ERROR_NOT_READABLE
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_CANNOT_READ
      */
     function invoke()
     {
@@ -147,6 +151,10 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
      *
      * @param boolean $isLayout
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     * @throws PIECE_UNITY_ERROR_NOT_READABLE
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_CANNOT_READ
      */
     function _render($isLayout)
     {
@@ -194,6 +202,10 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
      *
      * @param boolean $isLayout
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     * @throws PIECE_UNITY_ERROR_NOT_READABLE
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_CANNOT_READ
      * @abstract
      */
     function _doRender($isLayout) {}

@@ -29,31 +29,26 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @subpackage Piece_Unity_Plugin_Controller
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @since      File available since Release 0.4.0
+ * @see        Piece_Unity_Plugin_Renderer_FlexyTestCase
+ * @since      File available since Release 0.13.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
-
-// {{{ Piece_Unity_Plugin_Controller
+// {{{ Piece_Unity_Plugin_Renderer_FlexyTestCase_FlexyControllerShouldBeUsedIfUseControllerIsTrue
 
 /**
- * A controller which delegates requests to appropriate dispatchers
- * and fowards requests to the view handler.
+ * A class for unit tests.
  *
  * @package    Piece_Unity
- * @subpackage Piece_Unity_Plugin_Controller
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @since      Class available since Release 0.4.0
+ * @see        Piece_Unity_Plugin_Renderer_FlexyTestCase
+ * @since      Class available since Release 0.13.0
  */
-class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_Renderer_FlexyTestCase_FlexyControllerShouldBeUsedIfUseControllerIsTrue
 {
 
     // {{{ properties
@@ -74,51 +69,9 @@ class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
      * @access public
      */
 
-    // }}}
-    // {{{ invoke()
-
-    /**
-     * Invokes the plugin specific code.
-     *
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
-     * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
-     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
-     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
-     * @throws PIECE_UNITY_ERROR_CANNOT_READ
-     * @throws PIECE_UNITY_ERROR_NOT_READABLE
-     */
-    function invoke()
+    function lowerCase($value)
     {
-        if (is_null($this->_context->getView())) {
-            $dispatcher = &$this->_getExtension('dispatcher');
-            if (Piece_Unity_Error::hasErrors('exception')) {
-                return;
-            }
-
-            $viewString = $dispatcher->invoke();
-            if (Piece_Unity_Error::hasErrors('exception')) {
-                return;
-            }
-
-            $this->_context->setView($viewString);
-        }
-
-        $dispatcherContinuation = &Piece_Unity_Plugin_Factory::factory('Dispatcher_Continuation');
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            return;
-        }
-
-        $dispatcherContinuation->publish();
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            return;
-        }
-
-        $view = &$this->_getExtension('view');
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            return;
-        }
-
-        $view->invoke();
+        return strtolower($value);
     }
 
     /**#@-*/
@@ -126,20 +79,6 @@ class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
     /**#@+
      * @access private
      */
-
-    // }}}
-    // {{{ _initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
-     */
-    function _initialize()
-    {
-        $this->_addExtensionPoint('dispatcher', 'Dispatcher_Continuation');
-        $this->_addExtensionPoint('view', 'View');
-    }
 
     /**#@-*/
 

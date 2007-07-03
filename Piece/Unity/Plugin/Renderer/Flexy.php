@@ -168,6 +168,9 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
     {
         parent::_initialize();
         $this->_addConfigurationPoint('templateExtension', '.html');
+        $this->_addConfigurationPoint('useController', false);
+        $this->_addConfigurationPoint('controllerClass');
+        $this->_addConfigurationPoint('controllerDirectory');
         foreach ($this->_configurationOptions as $point => $default) {
             $this->_addConfigurationPoint($point, $default);
         }
@@ -181,6 +184,10 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
      *
      * @param boolean $isLayout
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     * @throws PIECE_UNITY_ERROR_NOT_READABLE
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_CANNOT_READ
      */
     function _doRender($isLayout)
     {
@@ -224,8 +231,16 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
             $formElements = $this->_createFormElements($viewElements['_elements']);
             unset($viewElements['_elements']);
         }
+        
+        if (!$this->_getConfiguration('useController')) {
+            $controller = (object)$viewElements;
+        } else {
+            $controller = &$this->_createController($viewElements);
+            if (Piece_Unity_Error::hasErrors('exception')) {
+                return;
+            }
+        }
 
-        $controller = (object)$viewElements;
         $resultOfOutputObject = $flexy->outputObject($controller, $formElements);
         if (PEAR::isError($resultOfOutputObject)) {
             Piece_Unity_Error::pushPEARError($resultOfOutputObject,
@@ -248,6 +263,74 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
         $config = &$this->_context->getConfiguration();
         $config->setConfiguration('Renderer_Flexy', 'templateDir', $this->_getConfiguration('fallbackDirectory'));
         $config->setConfiguration('Renderer_Flexy', 'compileDir', $this->_getConfiguration('fallbackCompileDirectory'));
+    }
+
+    // }}}
+    // {{{ _createController()
+
+    /**
+     * Creates a user-defined object with the given view elements. The object
+     * is used as a page controller by HTML_Template_Flexy::outputObject().
+     *
+     * @param array $viewElements
+     * @return mixed
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     * @throws PIECE_UNITY_ERROR_NOT_READABLE
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_CANNOT_READ
+     */
+    function &_createController($viewElements)
+    {
+        $controllerDirectory = $this->_getConfiguration('controllerDirectory');
+        if (is_null($controllerDirectory)) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    'The controller directory does not specified.',
+                                    'exception',
+                                    array('plugin' => __CLASS__)
+                                    );
+            $return = null;
+            return $return;
+        }
+
+        $controllerClass = $this->_getConfiguration('controllerClass');
+        if (is_null($controllerClass)) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    'The controller class does not specified.',
+                                    'exception',
+                                    array('plugin' => __CLASS__)
+                                    );
+            $return = null;
+            return $return;
+        }
+
+        if (!Piece_Unity_ClassLoader::loaded($controllerClass)) {
+            Piece_Unity_ClassLoader::load($controllerClass, $controllerDirectory);
+            if (Piece_Unity_Error::hasErrors('exception')) {
+                $return = null;
+                return $return;
+            }
+
+            if (!Piece_Unity_ClassLoader::loaded($controllerClass)) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                        "The class [ $controllerClass ] not found in the loaded file.",
+                                        'exception',
+                                        array('plugin' => __CLASS__)
+                                        );
+                $return = null;
+                return $return;
+            }
+        }
+
+        $controller = &new $controllerClass();
+        foreach (array_keys($viewElements) as $element) {
+            if (!is_object($viewElements[$element])) {
+                $controller->$element = $viewElements[$element];
+            } else {
+                $controller->$element = &$viewElements[$element];
+            }
+        }
+
+        return $controller;
     }
 
     /**#@-*/
