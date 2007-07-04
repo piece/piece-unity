@@ -149,9 +149,7 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
         $viewElement->setElement('foo', 'BAR');
         $buffer = $this->_render();
 
-        $this->assertEquals('<div>
-  <h2>bar</h2>
-</div>', rtrim($buffer));
+        $this->assertEquals('<p>bar</p>', rtrim($buffer));
 
         $this->_clear($viewString);
     }
@@ -172,9 +170,7 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
         $viewElement->setElement('foo', 'BAR');
         $buffer = $this->_render();
 
-        $this->assertEquals('<div>
-  <h2></h2>
-</div>', rtrim($buffer));
+        $this->assertEquals('<p></p>', rtrim($buffer));
 
         $this->_clear($viewString);
     }

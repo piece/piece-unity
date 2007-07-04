@@ -182,9 +182,7 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
         $this->assertEquals('<html>
   <body>
     <h1>This is an element for the layout.</h1>
-    <div>
-  <h2>This is an element for the content.</h2>
-</div>
+    This is an element for the content.
   </body>
 </html>', rtrim($buffer));
 
@@ -194,9 +192,7 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
 
     function testTurnOffLayoutByHTTPAcceptSuccess()
     {
-        $this->_assertTurnOffLayoutByHTTPAccept(true, '<div>
-  <h2>This is an element for the content.</h2>
-</div>');
+        $this->_assertTurnOffLayoutByHTTPAccept(true, 'This is an element for the content.');
     }
 
     function testTurnOffLayoutByHTTPAcceptFailure()
@@ -204,9 +200,7 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
         $this->_assertTurnOffLayoutByHTTPAccept(false, '<html>
   <body>
     <h1>This is an element for the layout.</h1>
-    <div>
-  <h2>This is an element for the content.</h2>
-</div>
+    This is an element for the content.
   </body>
 </html>');
     }
