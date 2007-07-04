@@ -85,8 +85,8 @@ class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Rendere
     function &_getConfig()
     {
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', dirname(__FILE__) . '/PHPTestCase/actions');
-        $config->setConfiguration('Renderer_PHP', 'templateDirectory', dirname(__FILE__) . '/PHPTestCase/templates/Content');
+        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', "{$this->_cacheDirectory}/actions");
+        $config->setConfiguration('Renderer_PHP', 'templateDirectory', "{$this->_cacheDirectory}/templates/Content");
         $config->setExtension('View', 'renderer', 'Renderer_PHP');
 
         return $config;

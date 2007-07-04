@@ -72,6 +72,7 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
      */
 
     var $_target;
+    var $_cacheDirectory;
 
     /**#@-*/
 
@@ -83,6 +84,7 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $_SERVER['REQUEST_METHOD'] = 'GET';
+        $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 
     function tearDown()
@@ -164,8 +166,8 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
         $config = &$this->_getConfig();
         $config->setConfiguration("Renderer_{$this->_target}", 'useLayout', true);
         $config->setConfiguration("Renderer_{$this->_target}", 'layoutView', $layoutViewString);
-        $config->setConfiguration("Renderer_{$this->_target}", 'layoutDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/templates/Layout");
-        $config->setConfiguration("Renderer_{$this->_target}", 'layoutCompileDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Layout");
+        $config->setConfiguration("Renderer_{$this->_target}", 'layoutDirectory', "{$this->_cacheDirectory}/templates/Layout");
+        $config->setConfiguration("Renderer_{$this->_target}", 'layoutCompileDirectory', "{$this->_cacheDirectory}/compiled-templates/Layout");
         $context->setConfiguration($config);
 
         $viewElement = &$context->getViewElement();
@@ -213,8 +215,8 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
         $config = &$this->_getConfig();
         $config->setConfiguration("Renderer_{$this->_target}", 'useFallback', true);
         $config->setConfiguration("Renderer_{$this->_target}", 'fallbackView', 'Fallback');
-        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/templates/Fallback");
-        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackCompileDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Fallback");
+        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackDirectory', "{$this->_cacheDirectory}/templates/Fallback");
+        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackCompileDirectory', "{$this->_cacheDirectory}/compiled-templates/Fallback");
         $context->setConfiguration($config);
         $context->setView($viewString);
         $buffer = $this->_render();
@@ -243,8 +245,8 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
         $config = &$this->_getConfig();
         $config->setConfiguration("Renderer_{$this->_target}", 'useFallback', true);
         $config->setConfiguration("Renderer_{$this->_target}", 'fallbackView', 'Fallback');
-        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/templates/Fallback");
-        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackCompileDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Fallback");
+        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackDirectory', "{$this->_cacheDirectory}/templates/Fallback");
+        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackCompileDirectory', "{$this->_cacheDirectory}/compiled-templates/Fallback");
         $context->setConfiguration($config);
         $context->setView($viewString);
         $viewElement = &$context->getViewElement();
@@ -294,8 +296,8 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
         $config->setConfiguration("Renderer_{$this->_target}", 'turnOffLayoutByHTTPAccept', $turnOffLayoutByHTTPAccept);
         $config->setConfiguration("Renderer_{$this->_target}", 'useLayout', true);
         $config->setConfiguration("Renderer_{$this->_target}", 'layoutView', $layoutViewString);
-        $config->setConfiguration("Renderer_{$this->_target}", 'layoutDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/templates/Layout");
-        $config->setConfiguration("Renderer_{$this->_target}", 'layoutCompileDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Layout");
+        $config->setConfiguration("Renderer_{$this->_target}", 'layoutDirectory', "{$this->_cacheDirectory}/templates/Layout");
+        $config->setConfiguration("Renderer_{$this->_target}", 'layoutCompileDirectory', "{$this->_cacheDirectory}/compiled-templates/Layout");
         $context->setConfiguration($config);
 
         $viewElement = &$context->getViewElement();

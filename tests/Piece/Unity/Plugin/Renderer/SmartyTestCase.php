@@ -101,7 +101,7 @@ class Piece_Unity_Plugin_Renderer_SmartyTestCase extends Piece_Unity_Plugin_Rend
     {
         foreach (array('Content', 'Layout', 'Fallback') as $directory) {
             $smarty = &new Smarty();
-            $smarty->compile_dir = dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/$directory";
+            $smarty->compile_dir = "{$this->_cacheDirectory}/compiled-templates/$directory";
             $smarty->clear_compiled_tpl("$view.tpl");
         }
     }
@@ -109,10 +109,10 @@ class Piece_Unity_Plugin_Renderer_SmartyTestCase extends Piece_Unity_Plugin_Rend
     function &_getConfig()
     {
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', dirname(__FILE__) . "/{$this->_target}TestCase/actions");
-        $config->setConfiguration('Renderer_Smarty', 'template_dir', dirname(__FILE__) . "/{$this->_target}TestCase/templates/Content");
-        $config->setConfiguration('Renderer_Smarty', 'compile_dir', dirname(__FILE__) . "/{$this->_target}TestCase/compiled-templates/Content");
-        $config->setConfiguration('Renderer_Smarty', 'plugins_dir', array(dirname(__FILE__) . "/{$this->_target}TestCase/plugins"));
+        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', "{$this->_cacheDirectory}/actions");
+        $config->setConfiguration('Renderer_Smarty', 'template_dir', "{$this->_cacheDirectory}/templates/Content");
+        $config->setConfiguration('Renderer_Smarty', 'compile_dir', "{$this->_cacheDirectory}/compiled-templates/Content");
+        $config->setConfiguration('Renderer_Smarty', 'plugins_dir', array("{$this->_cacheDirectory}/plugins"));
         $config->setExtension('View', 'renderer', 'Renderer_Smarty');
 
         return $config;
