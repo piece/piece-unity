@@ -319,6 +319,9 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
         unset($_SERVER['HTTP_ACCEPT']);
     }
 
+    /**
+     * @since Method available since Release 0.13.0
+     */
     function _render()
     {
         $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
@@ -331,6 +334,9 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
         return $buffer;
     }
 
+    /**
+     * @since Method available since Release 0.13.0
+     */
     function _doSetUp() {}
 
     /**#@-*/

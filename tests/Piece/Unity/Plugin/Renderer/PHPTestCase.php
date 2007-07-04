@@ -92,6 +92,9 @@ class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Rendere
         return $config;
     }
 
+    /**
+     * @since Method available since Release 0.13.0
+     */
     function _doSetUp()
     {
         $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
