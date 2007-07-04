@@ -225,6 +225,82 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
         Piece_Unity_Error::popCallback();
     }
 
+    function testExternalPluginShouldBeAbleToUseByExternalPlugins()
+    {
+        $oldIncludePath = set_include_path("$this->_cacheDirectory/lib" . PATH_SEPARATOR . get_include_path());
+
+        $viewString = "{$this->_target}ExternalPluginShouldBeAbleToUseByExternalPlugins";
+        $context = &Piece_Unity_Context::singleton();
+
+        $config = &$this->_getConfig();
+        $config->setConfiguration('Renderer_Flexy',
+                                  'externalPlugins',
+                                  array("Piece_Unity_Plugin_Renderer_FlexyTestCase_{$this->_target}ExternalPluginShouldBeAbleToUseByExternalPlugins" => "Piece/Unity/Plugin/Renderer/FlexyTestCase/{$this->_target}ExternalPluginShouldBeAbleToUseByExternalPlugins.php")
+                                  );
+        $context->setConfiguration($config);
+        $context->setView($viewString);
+
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('foo', 'BAR');
+        $viewElement->setElement('bar', 1000);
+        $buffer = $this->_render();
+
+        $this->assertEquals('bar:bar:[pear_error: message=&quot;could not find plugin with method: \'numberformat\'&quot; code=0 mode=return level=notice prefix=&quot;&quot; info=&quot;&quot;]:[pear_error: message="could not find plugin with method: \'numberformat\'" code=0 mode=return level=notice prefix="" info=""]', rtrim($buffer));
+
+        set_include_path($oldIncludePath);
+        $this->_clear($viewString);
+    }
+
+    function testFlexyBuiltinPluginShouldBeAbleToUseByPlugins()
+    {
+        $oldIncludePath = set_include_path("$this->_cacheDirectory/lib" . PATH_SEPARATOR . get_include_path());
+
+        $viewString = "{$this->_target}ExternalPluginShouldBeAbleToUseByExternalPlugins";
+        $context = &Piece_Unity_Context::singleton();
+
+        $config = &$this->_getConfig();
+        $config->setConfiguration('Renderer_Flexy', 'plugins', array('Savant'));
+        $context->setConfiguration($config);
+        $context->setView($viewString);
+
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('foo', 'BAR');
+        $viewElement->setElement('bar', 1000);
+        $buffer = $this->_render();
+
+        $this->assertEquals('[pear_error: message=&quot;could not find plugin with method: \'lowerCase\'&quot; code=0 mode=return level=notice prefix=&quot;&quot; info=&quot;&quot;]:[pear_error: message="could not find plugin with method: \'lowerCase\'" code=0 mode=return level=notice prefix="" info=""]:1,000.00:1,000.00', rtrim($buffer));
+
+        set_include_path($oldIncludePath);
+        $this->_clear($viewString);
+    }
+
+    function testFlexyBuiltinPluginAndExternalPluginShouldBeAbleToUseTogether()
+    {
+        $oldIncludePath = set_include_path("$this->_cacheDirectory/lib" . PATH_SEPARATOR . get_include_path());
+
+        $viewString = "{$this->_target}ExternalPluginShouldBeAbleToUseByExternalPlugins";
+        $context = &Piece_Unity_Context::singleton();
+
+        $config = &$this->_getConfig();
+        $config->setConfiguration('Renderer_Flexy', 'plugins', array('Savant'));
+        $config->setConfiguration('Renderer_Flexy',
+                                  'externalPlugins',
+                                  array("Piece_Unity_Plugin_Renderer_FlexyTestCase_{$this->_target}ExternalPluginShouldBeAbleToUseByExternalPlugins" => "Piece/Unity/Plugin/Renderer/FlexyTestCase/{$this->_target}ExternalPluginShouldBeAbleToUseByExternalPlugins.php")
+                                  );
+        $context->setConfiguration($config);
+        $context->setView($viewString);
+
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('foo', 'BAR');
+        $viewElement->setElement('bar', 1000);
+        $buffer = $this->_render();
+
+        $this->assertEquals('bar:bar:1,000.00:1,000.00', rtrim($buffer));
+
+        set_include_path($oldIncludePath);
+        $this->_clear($viewString);
+    }
+
     /**#@-*/
 
     /**#@+

@@ -75,7 +75,8 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
 
     var $_configurationOptions = array('templateDir' => null,
                                        'compileDir'  => null,
-                                       'debug'       => 0
+                                       'debug'       => 0,
+                                       'plugins'     => array()
                                        );
 
     /**#@-*/
@@ -153,6 +154,11 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
             }
         }
 
+        $externalPlugins = $this->_getConfiguration('externalPlugins');
+        if (is_array($externalPlugins) && count(array_keys($externalPlugins))) {
+            $options['plugins'] = array_merge($options['plugins'], $externalPlugins);
+        }
+
         return $options;
     }
 
@@ -171,6 +177,7 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
         $this->_addConfigurationPoint('useController', false);
         $this->_addConfigurationPoint('controllerClass');
         $this->_addConfigurationPoint('controllerDirectory');
+        $this->_addConfigurationPoint('externalPlugins', array());
         foreach ($this->_configurationOptions as $point => $default) {
             $this->_addConfigurationPoint($point, $default);
         }
