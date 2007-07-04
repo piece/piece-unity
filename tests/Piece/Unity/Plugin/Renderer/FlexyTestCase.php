@@ -261,6 +261,11 @@ class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Rende
         return $config;
     }
 
+    function _doSetUp()
+    {
+        $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
+    }
+
     /**#@-*/
 
     // }}}

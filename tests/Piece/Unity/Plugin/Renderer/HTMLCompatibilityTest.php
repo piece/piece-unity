@@ -84,7 +84,7 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
+        $this->_doSetUp();
     }
 
     function tearDown()
@@ -330,6 +330,8 @@ class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
 
         return $buffer;
     }
+
+    function _doSetUp() {}
 
     /**#@-*/
 
