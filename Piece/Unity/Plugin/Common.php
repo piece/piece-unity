@@ -199,10 +199,19 @@ class Piece_Unity_Plugin_Common
      */
     function &_getExtension($extensionPoint)
     {
+        $extensionPoint = strtolower($extensionPoint);
+        if (!array_key_exists($extensionPoint, $this->_extensionPoints)) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                    "The extension point  [ $extensionPoint ] not found in the plug-in [ " . get_class($this) . ' ]'
+                                    );
+            $return = null;
+            return $return;
+        }
+
         $config = &$this->_context->getConfiguration();
-        $extension = $config->getExtension($this->_name, strtolower($extensionPoint));
+        $extension = $config->getExtension($this->_name, $extensionPoint);
         if (is_null($extension)) {
-            $extension = $this->_extensionPoints[ strtolower($extensionPoint) ];
+            $extension = $this->_extensionPoints[$extensionPoint];
         }
 
         if (!$extension || is_array($extension)) {
@@ -220,14 +229,23 @@ class Piece_Unity_Plugin_Common
      *
      * @param string $configurationPoint
      * @return string
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
      * @since Method available since Release 0.12.0
      */
     function _getConfiguration($configurationPoint)
     {
+        $configurationPoint = strtolower($configurationPoint);
+        if (!array_key_exists($configurationPoint, $this->_configurationPoints)) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                    "The configuration point  [ $configurationPoint ] not found in the plug-in [ " . get_class($this) . ' ]'
+                                    );
+            return;
+        }
+
         $config = &$this->_context->getConfiguration();
-        $configuration = $config->getConfiguration($this->_name, strtolower($configurationPoint));
+        $configuration = $config->getConfiguration($this->_name, $configurationPoint);
         if (is_null($configuration)) {
-            $configuration = $this->_configurationPoints[ strtolower($configurationPoint) ];
+            $configuration = $this->_configurationPoints[$configurationPoint];
         }
 
         return $configuration;

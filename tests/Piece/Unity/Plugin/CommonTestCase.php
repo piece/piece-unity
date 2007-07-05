@@ -80,7 +80,7 @@ class Piece_Unity_Plugin_CommonTestCase extends PHPUnit_TestCase
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $this->_oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
-        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/CommonTestCase');
+        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
         $this->_oldPluginPrefixes = $GLOBALS['PIECE_UNITY_Plugin_Prefixes'];
     }
 
@@ -117,6 +117,50 @@ class Piece_Unity_Plugin_CommonTestCase extends PHPUnit_TestCase
 
         $this->assertEquals('baz', $empty->_bar);
         $this->assertEquals(strtolower('CannotGetConfigurationWithPluginPrefixQux'), strtolower(get_class($empty->_baz)));
+    }
+
+    /**
+     * @since Method available since Release 0.13.0
+     */
+    function testExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsed()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        $config = &new Piece_Unity_Config();
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestCaseAlias');
+        $plugin = &Piece_Unity_Plugin_Factory::factory('ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsed');
+        $plugin->invoke();
+
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
+
+        Piece_Unity_Error::popCallback();
+    }
+
+    /**
+     * @since Method available since Release 0.13.0
+     */
+    function testExceptionShouldBeRaisedWhenUndefinedConfigurationPointIsUsed()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        $config = &new Piece_Unity_Config();
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestCaseAlias');
+        $plugin = &Piece_Unity_Plugin_Factory::factory('ExceptionShouldBeRaisedWhenUndefinedConfigurationPointIsUsed');
+        $plugin->invoke();
+
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
+
+        Piece_Unity_Error::popCallback();
     }
 
     /**#@-*/
