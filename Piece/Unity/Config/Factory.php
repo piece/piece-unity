@@ -115,7 +115,6 @@ class Piece_Unity_Config_Factory
         }
 
         if (!is_readable($configFile)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_READABLE,
                                     "The configuration file [ $configFile ] is not readable."
                                     );
