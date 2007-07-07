@@ -99,7 +99,8 @@ class RegistrationAction extends Piece_Unity_Service_FlowAction
         $flexyElement = &new Piece_Unity_Service_FlexyElement();
         $flexyElement->addForm($this->_flow->getView(), $this->_context->getScriptName());
 
-        $results = &$this->_flow->getAttribute("__RegistrationResults");
+        $validation = &$this->_context->getValidation();
+        $results = &$validation->getResults('Registration');
         if ($results) {
             foreach ($results->getFieldNames() as $field) {
                 $flexyElement->setValue($field, @$this->_user->$field);
