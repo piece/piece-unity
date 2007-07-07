@@ -214,11 +214,7 @@ class Piece_Unity_Validation
      */
     function &getResults($validationSet = null)
     {
-        if (!is_null($validationSet)) {
-            $name = "__{$validationSet}Results";
-        } else {
-            $name = '__results';
-        }
+        $name = Piece_Unity_Validation::_createResultsName($validationSet);
 
         $context = &Piece_Unity_Context::singleton();
         $continuation = &$context->getContinuation();
@@ -251,15 +247,11 @@ class Piece_Unity_Validation
     {
         $context = &Piece_Unity_Context::singleton();
         $viewElement = &$context->getViewElement();
-        $viewElement->setElementByRef(!is_null($validationSet) ? "__{$validationSet}Results" : '__results',
-                                      $results
-                                      );
+        $viewElement->setElementByRef(Piece_Unity_Validation::_createResultsName($validationSet), $results);
 
         $continuation = &$context->getContinuation();
         if (!is_null($continuation)) {
-            $continuation->setAttributeByRef(!is_null($validationSet) ? "__{$validationSet}Results" : '__results',
-                                             $results
-                                             );
+            $continuation->setAttributeByRef(Piece_Unity_Validation::_createResultsName($validationSet), $results);
         }
     }
 
@@ -324,6 +316,26 @@ class Piece_Unity_Validation
     /**#@+
      * @access private
      */
+
+    // }}}
+    // {{{ _createResultsName()
+
+    /**
+     * Creates a field name from the given validation set that
+     * Piece_Right_Results will be stored by.
+     *
+     * @param string $validationSet
+     * @static
+     * @since Method available since Release 0.13.0
+     */
+    function _createResultsName($validationSet)
+    {
+        if (!is_null($validationSet)) {
+            return "__{$validationSet}Results";
+        } else {
+            return '__results';
+        }
+    }
 
     /**#@-*/
 
