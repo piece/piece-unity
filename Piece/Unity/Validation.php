@@ -206,12 +206,33 @@ class Piece_Unity_Validation
     // {{{ getResults()
 
     /**
-     * Gets the Piece_Right_Results object of the latest validation.
+     * Gets the Piece_Right_Results object of the given validation set or
+     * the latest validation.
      *
+     * @param string $validationSet
      * @return Piece_Right_Results
      */
-    function &getResults()
+    function &getResults($validationSet = null)
     {
+        if (!is_null($validationSet)) {
+            $name = "__{$validationSet}Results";
+        } else {
+            $name = '__results';
+        }
+
+        $context = &Piece_Unity_Context::singleton();
+        $continuation = &$context->getContinuation();
+        if (!is_null($continuation)) {
+            if ($continuation->hasAttribute($name)) {
+                return $continuation->getAttribute($name);
+            }
+        } else {
+            $viewElement = &$context->getViewElement();
+            if ($viewElement->hasElement($name)) {
+                return $viewElement->getElement($name);
+            }
+        }
+
         return $this->_results;
     }
 
