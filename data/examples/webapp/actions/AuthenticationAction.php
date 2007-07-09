@@ -92,7 +92,8 @@ class AuthenticationAction extends Piece_Unity_Service_FlowAction
                         $config = &$this->_context->getConfiguration();
                         $config->setConfiguration('View',
                                                   'forcedView',
-                                                  Piece_Unity_URL::create('http://example.org' . rawurldecode(html_entity_decode($callback))));
+                                                  Piece_Unity_URL::create('http://example.org' . rawurldecode(html_entity_decode($callback)))
+                                                  );
                     }
                 }
 
@@ -119,16 +120,19 @@ class AuthenticationAction extends Piece_Unity_Service_FlowAction
         $flexyElement = &new Piece_Unity_Service_FlexyElement();
         $flexyElement->addForm($this->_flow->getView(), $this->_context->getScriptName());
 
-        $results = &$this->_flow->getAttribute("__AuthenticationResults");
+        $validation = &$this->_context->getValidation();
+        $results = &$validation->getResults('Authentication');
         if ($results) {
             foreach ($results->getFieldNames() as $field) {
                 $flexyElement->setValue($field, @$this->_user->$field);
             }
         }
 
+        $flexyElement->setValue('password', '');
+
         $request = &$this->_context->getRequest();
         $viewElement = &$this->_context->getViewElement();
-        $viewElement->setElement('callback', @$request->getParameter('callback'));
+        $viewElement->setElement('callback', rawurldecode(html_entity_decode(@$request->getParameter('callback'))));
 
         $this->_setTitle();
     }
