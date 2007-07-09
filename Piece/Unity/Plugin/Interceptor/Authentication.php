@@ -104,14 +104,41 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
                 return;
             }
 
-            if (!array_key_exists('resources', $service)) {
+            $resourcesMatchExists = array_key_exists('resourcesMatch', $service);
+            $resourcesExists = array_key_exists('resources', $service);
+            if (!$resourcesMatchExists && !$resourcesExists) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                        "The \"resources\" element is required in the configuration point [ services ] on the plug-in [ {$this->_name} ]."
+                                        "Either \"resourcesMatch\" element or \"resources\" element is required in the configuration point [ services ] on the plug-in [ {$this->_name} ]."
                                         );
                 return;
             }
 
-            if (!$this->_isProtectedResource($service['resources'])) {
+            $isProtectedResource = false;
+            if ($resourcesMatchExists) {
+                if (!is_array($service['resourcesMatch'])) {
+                    Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                            "The configuration point [ resourcesMatch ] on the plug-in [ {$this->_name} ] should be an array."
+                                            );
+                    return;
+                }
+
+                $isProtectedResource = $this->_isProtectedResourceByRegex($service['resourcesMatch']);
+            }
+
+            if (!$isProtectedResource) {
+                if ($resourcesExists) {
+                    if (!is_array($service['resources'])) {
+                        Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                                "The configuration point [ resources ] on the plug-in [ {$this->_name} ] should be an array."
+                                                );
+                        return;
+                    }
+
+                    $isProtectedResource = $this->_isProtectedResource($service['resources']);
+                }
+            }
+
+            if (!$isProtectedResource) {
                 continue;
             }
 
@@ -287,6 +314,34 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
         }
 
         return "$url?$callbackKey=" . htmlentities(rawurlencode($this->_context->getScriptName() . "$pathInfo$query"));
+    }
+
+    // }}}
+    // {{{ _isProtectedResourceByRegex()
+
+    /**
+     * Returns whether the current resource is protected or not by regex.
+     *
+     * @param array $resources
+     * @return boolean
+     */
+    function _isProtectedResourceByRegex($resources)
+    {
+        $scriptName = $this->_context->getScriptName();
+        if ($this->_context->usingProxy()) {
+            $proxyPath = $this->_context->getProxyPath();
+            if (!is_null($proxyPath)) {
+                $scriptName = preg_replace("!^$proxyPath!", '', $scriptName);
+            }
+        }
+
+        foreach ($resources as $resource) {
+            if (preg_match("!$resource!", $scriptName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**#@-*/

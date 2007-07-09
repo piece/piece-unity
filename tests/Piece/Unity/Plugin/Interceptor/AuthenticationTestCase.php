@@ -212,6 +212,62 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
         unset($_SERVER['HTTP_X_FORWARDED_FOR']);
     }
 
+    function testResourceProtectionShouldWorkByResourcesMatch()
+    {
+        $services = array(array('name'      => 'Foo',
+                                'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
+                                'url'       => 'http://example.org/authenticate.php',
+                                'resourcesMatch' => array('^/admin/(foo|bar)\.php$'))
+                          );
+
+        $this->_setIsAuthenticated(true);
+        $_SERVER['SCRIPT_NAME'] = '/admin/foo.php';
+
+        $this->assertEquals('Foo', $this->_invokeInterceptor($services));
+
+        $this->tearDown();
+        $this->setUp();
+
+        $services = array(array('name'      => 'Foo',
+                                'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
+                                'url'       => 'http://example.org/authenticate.php',
+                                'resourcesMatch' => array('^/admin/(foo|bar)\.php$'))
+                          );
+
+        $this->_setIsAuthenticated(false);
+        $_SERVER['SCRIPT_NAME'] = '/admin/foo.php';
+
+        $this->assertEquals('http://example.org/authenticate.php', $this->_invokeInterceptor($services));
+
+        $this->tearDown();
+        $this->setUp();
+
+        $services = array(array('name'      => 'Foo',
+                                'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
+                                'url'       => 'http://example.org/authenticate.php',
+                                'resourcesMatch' => array('^/admin/(foo|bar)\.php$'))
+                          );
+
+        $this->_setIsAuthenticated(true);
+        $_SERVER['SCRIPT_NAME'] = '/foo.php';
+
+        $this->assertEquals('Foo', $this->_invokeInterceptor($services));
+
+        $this->tearDown();
+        $this->setUp();
+
+        $services = array(array('name'      => 'Foo',
+                                'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
+                                'url'       => 'http://example.org/authenticate.php',
+                                'resourcesMatch' => array('^/admin/(foo|bar)\.php$'))
+                          );
+
+        $this->_setIsAuthenticated(false);
+        $_SERVER['SCRIPT_NAME'] = '/foo.php';
+
+        $this->assertEquals('Foo', $this->_invokeInterceptor($services));
+    }
+
     /**#@-*/
 
     /**#@+
