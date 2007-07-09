@@ -3,7 +3,7 @@
 <p>Try to login as Guest with guest/guest.</p>
 <form name="Form">
   <input type="hidden" name="{__flowExecutionTicketKey}" value="{__flowExecutionTicket}" />
-  <input type="hidden" name="callback" value="{callback}" />
+  <input type="hidden" name="callback" value="{callback:h}" />
   <p class="error" flexy:if="__AuthenticationResults.isError(#loginName#)">{__AuthenticationResults.getErrorMessage(#loginName#)}</p>
   <p>
     Login Name: <input type="text" name="loginName" />
