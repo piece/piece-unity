@@ -202,7 +202,11 @@ class Piece_Unity_Plugin_Common
         $extensionPoint = strtolower($extensionPoint);
         if (!array_key_exists($extensionPoint, $this->_extensionPoints)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The extension point  [ $extensionPoint ] not found in the plug-in [ " . get_class($this) . ' ]'
+                                    "The configuration point  [ $extensionPoint ] not found in the plug-in [ {$this->_name} ].",
+                                    'exception',
+                                    false,
+                                    false,
+                                    debug_backtrace()
                                     );
             $return = null;
             return $return;
@@ -237,7 +241,11 @@ class Piece_Unity_Plugin_Common
         $configurationPoint = strtolower($configurationPoint);
         if (!array_key_exists($configurationPoint, $this->_configurationPoints)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The configuration point  [ $configurationPoint ] not found in the plug-in [ " . get_class($this) . ' ]'
+                                    "The configuration point  [ $configurationPoint ] not found in the plug-in [ {$this->_name} ].",
+                                    'exception',
+                                    false,
+                                    false,
+                                    debug_backtrace()
                                     );
             return;
         }
