@@ -71,28 +71,6 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
      * @access private
      */
 
-    var $_services = array(array('name'      => 'Authentication Service One',
-                                 'guard'     => array('class' => 'AuthenticationCheckerOne', 'method' => 'isAuthenticated'),
-                                 'url'       => 'http://example.org/one/authenticate.php',
-                                 'resources' => array('/one/foo.php', '/one/bar.php')),
-                           array('name'      => 'Authentication Service Two',
-                                 'guard'     => array('class' => 'AuthenticationCheckerTwo', 'method' => 'isAuthenticated'),
-                                 'url'       => 'http://example.org/two/authenticate.php',
-                                 'resources' => array('/two/foo.php', '/two/bar.php'),
-                                 'useCallback' => true),
-                           array('name'      => 'Authentication Service Three',
-                                 'guard'     => array('class' => 'AuthenticationCheckerThree', 'method' => 'isAuthenticated'),
-                                 'url'       => 'http://example.org/three/authenticate.php',
-                                 'resources' => array('/three/foo.php', '/three/bar.php'),
-                                 'useCallback' => true,
-                                 'callbackKey' => 'three'),
-                           array('name'      => 'Authentication Service Four',
-                                 'guard'     => array('class' => 'AuthenticationCheckerFour', 'method' => 'isAuthenticated'),
-                                 'url'       => 'http://example.org/four/authenticate.php',
-                                 'resources' => array('/four/foo.php', '/four/bar.php')
-                                 )
-                           );
-
     /**#@-*/
 
     /**#@+
@@ -106,120 +84,176 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
 
     function tearDown()
     {
+        unset($GLOBALS['PIECE_UNITY_PLUGIN_INTERCEPTOR_AUTHENTICATIONTESTCASE_isAuthenticated']);
+        Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
         Piece_Unity_Error::popCallback();
     }
 
-    function testAccessToProtectedResourcesByOneService()
+    function testProtectedResourceShouldBeAbleToAccessedIfUserIsAuthenticated()
     {
-        $this->assertFalse($this->_assertAccess('/one/foo.php', 'http://example.org/one/authenticate.php', false));
-        $this->assertTrue($this->_assertAccess('/one/foo.php', 'http://example.org/one/authenticate.php', true));
-        $this->assertFalse($this->_assertAccess('/one/bar.php', 'http://example.org/one/authenticate.php', false));
-        $this->assertTrue($this->_assertAccess('/one/bar.php', 'http://example.org/one/authenticate.php', true));
-        $this->assertTrue($this->_assertAccess('/one/baz.php', 'http://example.org/one/authenticate.php', false));
-        $this->assertTrue($this->_assertAccess('/one/baz.php', 'http://example.org/one/authenticate.php', true));
+        $GLOBALS['PIECE_UNITY_PLUGIN_INTERCEPTOR_AUTHENTICATIONTESTCASE_isAuthenticated'] = true;
+        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/admin/foo.php';
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Interceptor_Authentication', 'services',
+                                  array(array('name'      => 'Foo',
+                                              'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
+                                              'url'       => 'http://example.org/authenticate.php',
+                                              'resources' => array('/admin/foo.php', '/admin/bar.php')))
+                                  );
+        $config->setConfiguration('Interceptor_Authentication', 'guardDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setView('Foo');
+        $context->setConfiguration($config);
+
+        $interceptor = &new Piece_Unity_Plugin_Interceptor_Authentication();
+        $interceptor->invoke();
+
+        $this->assertEquals('Foo', $context->getView());
+
+        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
     }
 
-    function testAccessToProtectedResourcesByTwoService()
+    function testProtectedResourceShouldNotBeAbleToAccessedIfUserIsAuthenticated()
     {
-        $this->assertFalse($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php', false));
-        $this->assertTrue($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php', true));
-        $this->assertFalse($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbar.php', false));
-        $this->assertTrue($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbar.php', true));
-        $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbaz.php', false));
-        $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbaz.php', true));
+        $GLOBALS['PIECE_UNITY_PLUGIN_INTERCEPTOR_AUTHENTICATIONTESTCASE_isAuthenticated'] = false;
+        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/admin/foo.php';
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Interceptor_Authentication', 'services',
+                                  array(array('name'      => 'Foo',
+                                              'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
+                                              'url'       => 'http://example.org/authenticate.php',
+                                              'resources' => array('/admin/foo.php', '/admin/bar.php')))
+                                  );
+        $config->setConfiguration('Interceptor_Authentication', 'guardDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setView('Foo');
+        $context->setConfiguration($config);
+
+        $interceptor = &new Piece_Unity_Plugin_Interceptor_Authentication();
+        $interceptor->invoke();
+
+        $this->assertEquals('http://example.org/authenticate.php', $context->getView());
+
+        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
     }
 
-    function testAccessToProtectedResourcesByTwoServiceWithPathInfo()
+    function testNonProtectedResourceShouldAlwaysBeAbleToAccessed()
     {
-        $this->assertFalse($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php%2Ffoo%2Fbar%2F', false, '/foo/bar/'));
-        $this->assertTrue($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php%2Ffoo%2Fbar%2F', true, '/foo/bar/'));
-        $this->assertFalse($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbar.php%2Ffoo%2Fbar%2F', false, '/foo/bar/'));
-        $this->assertTrue($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbar.php%2Ffoo%2Fbar%2F', true, '/foo/bar/'));
-        $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbaz.php%2Ffoo%2Fbar%2F', false, '/foo/bar/'));
-        $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbaz.php%2Ffoo%2Fbar%2F', true, '/foo/bar/'));
+        $GLOBALS['PIECE_UNITY_PLUGIN_INTERCEPTOR_AUTHENTICATIONTESTCASE_isAuthenticated'] = true;
+        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/foo.php';
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Interceptor_Authentication', 'services',
+                                  array(array('name'      => 'Foo',
+                                              'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
+                                              'url'       => 'http://example.org/authenticate.php',
+                                              'resources' => array('/admin/foo.php', '/admin/bar.php')))
+                                  );
+        $config->setConfiguration('Interceptor_Authentication', 'guardDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setView('Foo');
+        $context->setConfiguration($config);
+
+        $interceptor = &new Piece_Unity_Plugin_Interceptor_Authentication();
+        $interceptor->invoke();
+
+        $this->assertEquals('Foo', $context->getView());
+
+        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+
+        unset($GLOBALS['PIECE_UNITY_PLUGIN_INTERCEPTOR_AUTHENTICATIONTESTCASE_isAuthenticated']);
+        Piece_Unity_Context::clear();
+        Piece_Unity_Error::clearErrors();
+
+        $GLOBALS['PIECE_UNITY_PLUGIN_INTERCEPTOR_AUTHENTICATIONTESTCASE_isAuthenticated'] = false;
+        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/foo.php';
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Interceptor_Authentication', 'services',
+                                  array(array('name'      => 'Foo',
+                                              'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
+                                              'url'       => 'http://example.org/authenticate.php',
+                                              'resources' => array('/admin/foo.php', '/admin/bar.php')))
+                                  );
+        $config->setConfiguration('Interceptor_Authentication', 'guardDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setView('Foo');
+        $context->setConfiguration($config);
+
+        $interceptor = &new Piece_Unity_Plugin_Interceptor_Authentication();
+        $interceptor->invoke();
+
+        $this->assertEquals('Foo', $context->getView());
+
+        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
     }
 
-    function testAccessToProtectedResourcesByTwoServiceWithQueryString()
+    function testViewShouldBeReplacedWithURLContainsEncodedCallbackURL()
     {
-        $this->assertFalse($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php%3Ffoo%3Dbar', false, null, 'foo=bar'));
-        $this->assertTrue($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php%3Ffoo%3Dbar', true, null, 'foo=bar'));
-        $this->assertFalse($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbar.php%3Ffoo%3Dbar', false, null, 'foo=bar'));
-        $this->assertTrue($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbar.php%3Ffoo%3Dbar', true, null, 'foo=bar'));
-        $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbaz.php%3Ffoo%3Dbar', false, null, 'foo=bar'));
-        $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbaz.php%3Ffoo%3Dbar', true, null, 'foo=bar'));
+        $GLOBALS['PIECE_UNITY_PLUGIN_INTERCEPTOR_AUTHENTICATIONTESTCASE_isAuthenticated'] = false;
+        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/admin/foo.php';
+        $_SERVER['QUERY_STRING'] = '_flowExecutionTicket=15059b11c49f77a1830dca29a7a2cd045f72dd6d&firstName=Atsuhiro&lastName=Kubo&_event_confirmForm=confirm';
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Interceptor_Authentication', 'services',
+                                  array(array('name'      => 'Foo',
+                                              'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
+                                              'url'       => 'http://example.org/authenticate.php',
+                                              'resources' => array('/admin/foo.php', '/admin/bar.php'),
+                                              'useCallback' => true
+                                              ))
+                                  );
+        $config->setConfiguration('Interceptor_Authentication', 'guardDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setView('Foo');
+        $context->setConfiguration($config);
+
+        $interceptor = &new Piece_Unity_Plugin_Interceptor_Authentication();
+        $interceptor->invoke();
+
+        $this->assertEquals('http://example.org/authenticate.php?callback=%2Fadmin%2Ffoo.php%3F_flowExecutionTicket%3D15059b11c49f77a1830dca29a7a2cd045f72dd6d%26firstName%3DAtsuhiro%26lastName%3DKubo%26_event_confirmForm%3Dconfirm', $context->getView());
+
+        unset($_SERVER['QUERY_STRING']);
+        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
     }
 
-    function testAccessToProtectedResourcesByTwoServiceWithPathInfoAndQueryString()
+    function testViewShouldBeReplacedWithURLContainsSpecifiedCallbackKey()
     {
-        $this->assertFalse($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', false, '/foo/bar/', 'foo=bar'));
-        $this->assertTrue($this->_assertAccess('/two/foo.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Ffoo.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', true, '/foo/bar/', 'foo=bar'));
-        $this->assertFalse($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbar.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', false, '/foo/bar/', 'foo=bar'));
-        $this->assertTrue($this->_assertAccess('/two/bar.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbar.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', true, '/foo/bar/', 'foo=bar'));
-        $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbaz.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', false, '/foo/bar/', 'foo=bar'));
-        $this->assertTrue($this->_assertAccess('/two/baz.php', 'http://example.org/two/authenticate.php?callback=%2Ftwo%2Fbaz.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', true, '/foo/bar/', 'foo=bar'));
-    }
+        $GLOBALS['PIECE_UNITY_PLUGIN_INTERCEPTOR_AUTHENTICATIONTESTCASE_isAuthenticated'] = false;
+        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/admin/foo.php';
+        $_SERVER['QUERY_STRING'] = '_flowExecutionTicket=15059b11c49f77a1830dca29a7a2cd045f72dd6d&firstName=Atsuhiro&lastName=Kubo&_event_confirmForm=confirm';
 
-    function testAccessToProtectedResourcesByThreeService()
-    {
-        $this->assertFalse($this->_assertAccess('/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fthree%2Ffoo.php', false));
-        $this->assertTrue($this->_assertAccess('/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fthree%2Ffoo.php', true));
-        $this->assertFalse($this->_assertAccess('/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fthree%2Fbar.php', false));
-        $this->assertTrue($this->_assertAccess('/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fthree%2Fbar.php', true));
-        $this->assertTrue($this->_assertAccess('/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fthree%2Fbaz.php', false));
-        $this->assertTrue($this->_assertAccess('/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fthree%2Fbaz.php', true));
-    }
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Interceptor_Authentication', 'services',
+                                  array(array('name'      => 'Foo',
+                                              'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
+                                              'url'       => 'http://example.org/authenticate.php',
+                                              'resources' => array('/admin/foo.php', '/admin/bar.php'),
+                                              'useCallback' => true,
+                                              'callbackKey' => 'mycallback'
+                                              ))
+                                  );
+        $config->setConfiguration('Interceptor_Authentication', 'guardDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setView('Foo');
+        $context->setConfiguration($config);
 
-    function testAccessToProtectedResourcesByThreeServiceWithProxyPath()
-    {
-        $this->assertFalse($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php', false, null, null, '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php', true, null, null, '/proxy'));
-        $this->assertFalse($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php', false, null, null, '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php', true, null, null, '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php', false, null, null, '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php', true, null, null, '/proxy'));
+        $interceptor = &new Piece_Unity_Plugin_Interceptor_Authentication();
+        $interceptor->invoke();
 
-        $this->assertFalse($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php', false, null, null, '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php', true, null, null, '/proxy'));
-        $this->assertFalse($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php', false, null, null, '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php', true, null, null, '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php', false, null, null, '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php', true, null, null, '/proxy'));
+        $this->assertEquals('http://example.org/authenticate.php?mycallback=%2Fadmin%2Ffoo.php%3F_flowExecutionTicket%3D15059b11c49f77a1830dca29a7a2cd045f72dd6d%26firstName%3DAtsuhiro%26lastName%3DKubo%26_event_confirmForm%3Dconfirm', $context->getView());
 
-        $this->assertFalse($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php%2Ffoo%2Fbar%2F', false, '/foo/bar/', null, '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php%2Ffoo%2Fbar%2F', true, '/foo/bar/', null, '/proxy'));
-        $this->assertFalse($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php%2Ffoo%2Fbar%2F', false, '/foo/bar/', null, '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php%2Ffoo%2Fbar%2F', true, '/foo/bar/', null, '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php%2Ffoo%2Fbar%2F', false, '/foo/bar/', null, '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php%2Ffoo%2Fbar%2F', true, '/foo/bar/', null, '/proxy'));
-
-        $this->assertFalse($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php%3Ffoo%3Dbar', false, null, 'foo=bar', '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php%3Ffoo%3Dbar', true, null, 'foo=bar', '/proxy'));
-        $this->assertFalse($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php%3Ffoo%3Dbar', false, null, 'foo=bar', '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php%3Ffoo%3Dbar', true, null, 'foo=bar', '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php%3Ffoo%3Dbar', false, null, 'foo=bar', '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php%3Ffoo%3Dbar', true, null, 'foo=bar', '/proxy'));
-
-        $this->assertFalse($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', false, '/foo/bar/', 'foo=bar', '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/foo.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Ffoo.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', true, '/foo/bar/', 'foo=bar', '/proxy'));
-        $this->assertFalse($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', false, '/foo/bar/', 'foo=bar', '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/bar.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbar.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', true, '/foo/bar/', 'foo=bar', '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', false, '/foo/bar/', 'foo=bar', '/proxy'));
-        $this->assertTrue($this->_assertAccess('/proxy/three/baz.php', 'http://example.org/three/authenticate.php?three=%2Fproxy%2Fthree%2Fbaz.php%2Ffoo%2Fbar%2F%3Ffoo%3Dbar', true, '/foo/bar/', 'foo=bar', '/proxy'));
-    }
-
-    function testFailureToCheckSinceGuardNotFound()
-    {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
-        $this->_assertAccess('/four/foo.php', 'http://example.org/four/authenticate.php', false);
-        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
-
-        Piece_Unity_Error::popCallback();
+        unset($_SERVER['QUERY_STRING']);
+        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
     }
 
     /**#@-*/
@@ -227,96 +261,6 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
     /**#@+
      * @access private
      */
-
-    function _assertAccess($scriptName,
-                           $url,
-                           $isAuthenticated,
-                           $pathInfo = null,
-                           $queryString = null,
-                           $proxy = null
-                           )
-    {
-        $previousScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = $scriptName;
-        if ($pathInfo) {
-            $_SERVER['PATH_INFO'] = $pathInfo;
-        }
-        if ($queryString) {
-            $_SERVER['QUERY_STRING'] = $queryString;
-        }
-        $GLOBALS['isAuthenticated'] = $isAuthenticated;
-        $GLOBALS['isAuthenticatedCalled'] = false;
-
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Interceptor_Authentication', 'services', $this->_services);
-        $config->setConfiguration('Interceptor_Authentication', 'guardDirectory', dirname(__FILE__));
-        $context = &Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        if ($proxy) {
-            $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
-            $context->setProxyPath($proxy);
-            $context->setBasePath($proxy . $context->getBasePath());
-        }
-
-        $interceptor = &new Piece_Unity_Plugin_Interceptor_Authentication();
-        $interceptor->invoke();
-
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            Piece_Unity_Context::clear();
-            unset($GLOBALS['isAuthenticatedCalled']);
-            unset($GLOBALS['isAuthenticated']);
-            unset($_SERVER['PATH_INFO']);
-            unset($_SERVER['QUERY_STRING']);
-            unset($_SERVER['HTTP_X_FORWARDED_FOR']);
-            $_SERVER['SCRIPT_NAME'] = $previousScriptName;
-            return;
-        }
-
-        $view = $context->getView();
-        if ($this->_isProtectedResource($scriptName, $proxy)) {
-            if (!$isAuthenticated) {
-                $this->assertEquals($url, $view);
-                $this->assertFalse($GLOBALS['isAuthenticated']);
-            } else {
-                $this->assertNull($view);
-                $this->assertTrue($GLOBALS['isAuthenticated']);
-            }
-
-            $this->assertTrue($GLOBALS['isAuthenticatedCalled']);
-        } else {
-            $this->assertFalse($GLOBALS['isAuthenticatedCalled']);
-        }
-
-        Piece_Unity_Context::clear();
-        unset($GLOBALS['isAuthenticatedCalled']);
-        unset($GLOBALS['isAuthenticated']);
-        unset($_SERVER['PATH_INFO']);
-        unset($_SERVER['QUERY_STRING']);
-        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
-        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
-
-        return is_null($view) ? true : false;
-    }
-
-    function _isProtectedResource($scriptName, $proxy)
-    {
-        foreach ($this->_services as $service) {
-            if ($proxy) {
-                $resources = array();
-                foreach ($service['resources'] as $resource) {
-                    $resources[] = $proxy . $resource;
-                }
-            } else {
-                $resources = $service['resources'];
-            }
-
-            if (in_array($scriptName, $resources)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     /**#@-*/
 
