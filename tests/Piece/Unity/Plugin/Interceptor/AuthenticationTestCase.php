@@ -94,7 +94,7 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
         Piece_Unity_Error::popCallback();
     }
 
-    function testProtectedResourceShouldBeAbleToAccessedIfUserIsAuthenticated()
+    function testProtectedResourceShouldBeAbleToAccessIfUserIsAuthenticated()
     {
         $services = array(array('name'      => 'Foo',
                                 'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
@@ -108,7 +108,7 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
         $this->assertEquals('Foo', $this->_invokeInterceptor($services));
     }
 
-    function testProtectedResourceShouldNotBeAbleToAccessedIfUserIsAuthenticated()
+    function testProtectedResourceShouldNotBeAbleToAccessIfUserIsAuthenticated()
     {
         $services = array(array('name'      => 'Foo',
                                 'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
@@ -122,7 +122,7 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
         $this->assertEquals('http://example.org/authenticate.php', $this->_invokeInterceptor($services));
     }
 
-    function testNonProtectedResourceShouldAlwaysBeAbleToAccessed()
+    function testNonProtectedResourceShouldAlwaysBeAbleToAccess()
     {
         $services = array(array('name'      => 'Foo',
                                 'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
