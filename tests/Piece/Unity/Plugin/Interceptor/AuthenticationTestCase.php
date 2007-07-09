@@ -71,6 +71,8 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
      * @access private
      */
 
+    var $_oldScriptName;
+
     /**#@-*/
 
     /**#@+
@@ -80,10 +82,12 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
     function setUp()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+        $this->_oldScriptName = $_SERVER['SCRIPT_NAME'];
     }
 
     function tearDown()
     {
+        $_SERVER['SCRIPT_NAME'] = $this->_oldScriptName;
         unset($GLOBALS['PIECE_UNITY_PLUGIN_INTERCEPTOR_AUTHENTICATIONTESTCASE_isAuthenticated']);
         Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
@@ -92,168 +96,101 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
 
     function testProtectedResourceShouldBeAbleToAccessedIfUserIsAuthenticated()
     {
-        $GLOBALS['PIECE_UNITY_PLUGIN_INTERCEPTOR_AUTHENTICATIONTESTCASE_isAuthenticated'] = true;
-        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $services = array(array('name'      => 'Foo',
+                                'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
+                                'url'       => 'http://example.org/authenticate.php',
+                                'resources' => array('/admin/foo.php', '/admin/bar.php'))
+                          );
+
+        $this->_setIsAuthenticated(true);
         $_SERVER['SCRIPT_NAME'] = '/admin/foo.php';
 
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Interceptor_Authentication', 'services',
-                                  array(array('name'      => 'Foo',
-                                              'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
-                                              'url'       => 'http://example.org/authenticate.php',
-                                              'resources' => array('/admin/foo.php', '/admin/bar.php')))
-                                  );
-        $config->setConfiguration('Interceptor_Authentication', 'guardDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
-        $context = &Piece_Unity_Context::singleton();
-        $context->setView('Foo');
-        $context->setConfiguration($config);
-
-        $interceptor = &new Piece_Unity_Plugin_Interceptor_Authentication();
-        $interceptor->invoke();
-
-        $this->assertEquals('Foo', $context->getView());
-
-        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+        $this->assertEquals('Foo', $this->_invokeInterceptor($services));
     }
 
     function testProtectedResourceShouldNotBeAbleToAccessedIfUserIsAuthenticated()
     {
-        $GLOBALS['PIECE_UNITY_PLUGIN_INTERCEPTOR_AUTHENTICATIONTESTCASE_isAuthenticated'] = false;
-        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $services = array(array('name'      => 'Foo',
+                                'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
+                                'url'       => 'http://example.org/authenticate.php',
+                                'resources' => array('/admin/foo.php', '/admin/bar.php'))
+                          );
+
+        $this->_setIsAuthenticated(false);
         $_SERVER['SCRIPT_NAME'] = '/admin/foo.php';
 
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Interceptor_Authentication', 'services',
-                                  array(array('name'      => 'Foo',
-                                              'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
-                                              'url'       => 'http://example.org/authenticate.php',
-                                              'resources' => array('/admin/foo.php', '/admin/bar.php')))
-                                  );
-        $config->setConfiguration('Interceptor_Authentication', 'guardDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
-        $context = &Piece_Unity_Context::singleton();
-        $context->setView('Foo');
-        $context->setConfiguration($config);
-
-        $interceptor = &new Piece_Unity_Plugin_Interceptor_Authentication();
-        $interceptor->invoke();
-
-        $this->assertEquals('http://example.org/authenticate.php', $context->getView());
-
-        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+        $this->assertEquals('http://example.org/authenticate.php', $this->_invokeInterceptor($services));
     }
 
     function testNonProtectedResourceShouldAlwaysBeAbleToAccessed()
     {
-        $GLOBALS['PIECE_UNITY_PLUGIN_INTERCEPTOR_AUTHENTICATIONTESTCASE_isAuthenticated'] = true;
-        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $services = array(array('name'      => 'Foo',
+                                'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
+                                'url'       => 'http://example.org/authenticate.php',
+                                'resources' => array('/admin/foo.php', '/admin/bar.php'))
+                          );
+
+        $this->_setIsAuthenticated(true);
         $_SERVER['SCRIPT_NAME'] = '/foo.php';
 
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Interceptor_Authentication', 'services',
-                                  array(array('name'      => 'Foo',
-                                              'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
-                                              'url'       => 'http://example.org/authenticate.php',
-                                              'resources' => array('/admin/foo.php', '/admin/bar.php')))
-                                  );
-        $config->setConfiguration('Interceptor_Authentication', 'guardDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
-        $context = &Piece_Unity_Context::singleton();
-        $context->setView('Foo');
-        $context->setConfiguration($config);
+        $this->assertEquals('Foo', $this->_invokeInterceptor($services));
 
-        $interceptor = &new Piece_Unity_Plugin_Interceptor_Authentication();
-        $interceptor->invoke();
+        $this->tearDown();
+        $this->setUp();
 
-        $this->assertEquals('Foo', $context->getView());
+        $services = array(array('name'      => 'Foo',
+                                'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
+                                'url'       => 'http://example.org/authenticate.php',
+                                'resources' => array('/admin/foo.php', '/admin/bar.php'))
+                          );
 
-        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
-
-        unset($GLOBALS['PIECE_UNITY_PLUGIN_INTERCEPTOR_AUTHENTICATIONTESTCASE_isAuthenticated']);
-        Piece_Unity_Context::clear();
-        Piece_Unity_Error::clearErrors();
-
-        $GLOBALS['PIECE_UNITY_PLUGIN_INTERCEPTOR_AUTHENTICATIONTESTCASE_isAuthenticated'] = false;
-        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $this->_setIsAuthenticated(false);
         $_SERVER['SCRIPT_NAME'] = '/foo.php';
 
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Interceptor_Authentication', 'services',
-                                  array(array('name'      => 'Foo',
-                                              'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
-                                              'url'       => 'http://example.org/authenticate.php',
-                                              'resources' => array('/admin/foo.php', '/admin/bar.php')))
-                                  );
-        $config->setConfiguration('Interceptor_Authentication', 'guardDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
-        $context = &Piece_Unity_Context::singleton();
-        $context->setView('Foo');
-        $context->setConfiguration($config);
-
-        $interceptor = &new Piece_Unity_Plugin_Interceptor_Authentication();
-        $interceptor->invoke();
-
-        $this->assertEquals('Foo', $context->getView());
-
-        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+        $this->assertEquals('Foo', $this->_invokeInterceptor($services));
     }
 
     function testViewShouldBeReplacedWithURLContainsEncodedCallbackURL()
     {
-        $GLOBALS['PIECE_UNITY_PLUGIN_INTERCEPTOR_AUTHENTICATIONTESTCASE_isAuthenticated'] = false;
-        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $services = array(array('name'      => 'Foo',
+                                'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
+                                'url'       => 'http://example.org/authenticate.php',
+                                'resources' => array('/admin/foo.php', '/admin/bar.php'),
+                                'useCallback' => true
+                                )
+                          );
+
+        $this->_setIsAuthenticated(false);
         $_SERVER['SCRIPT_NAME'] = '/admin/foo.php';
         $_SERVER['QUERY_STRING'] = '_flowExecutionTicket=15059b11c49f77a1830dca29a7a2cd045f72dd6d&firstName=Atsuhiro&lastName=Kubo&_event_confirmForm=confirm';
 
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Interceptor_Authentication', 'services',
-                                  array(array('name'      => 'Foo',
-                                              'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
-                                              'url'       => 'http://example.org/authenticate.php',
-                                              'resources' => array('/admin/foo.php', '/admin/bar.php'),
-                                              'useCallback' => true
-                                              ))
-                                  );
-        $config->setConfiguration('Interceptor_Authentication', 'guardDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
-        $context = &Piece_Unity_Context::singleton();
-        $context->setView('Foo');
-        $context->setConfiguration($config);
-
-        $interceptor = &new Piece_Unity_Plugin_Interceptor_Authentication();
-        $interceptor->invoke();
-
-        $this->assertEquals('http://example.org/authenticate.php?callback=%2Fadmin%2Ffoo.php%3F_flowExecutionTicket%3D15059b11c49f77a1830dca29a7a2cd045f72dd6d%26firstName%3DAtsuhiro%26lastName%3DKubo%26_event_confirmForm%3Dconfirm', $context->getView());
+        $this->assertEquals('http://example.org/authenticate.php?callback=%2Fadmin%2Ffoo.php%3F_flowExecutionTicket%3D15059b11c49f77a1830dca29a7a2cd045f72dd6d%26firstName%3DAtsuhiro%26lastName%3DKubo%26_event_confirmForm%3Dconfirm',
+                            $this->_invokeInterceptor($services)
+                            );
 
         unset($_SERVER['QUERY_STRING']);
-        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
     }
 
     function testViewShouldBeReplacedWithURLContainsSpecifiedCallbackKey()
     {
-        $GLOBALS['PIECE_UNITY_PLUGIN_INTERCEPTOR_AUTHENTICATIONTESTCASE_isAuthenticated'] = false;
-        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $services = array(array('name'      => 'Foo',
+                                'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
+                                'url'       => 'http://example.org/authenticate.php',
+                                'resources' => array('/admin/foo.php', '/admin/bar.php'),
+                                'useCallback' => true,
+                                'callbackKey' => 'mycallback'
+                                )
+                          );
+
+        $this->_setIsAuthenticated(false);
         $_SERVER['SCRIPT_NAME'] = '/admin/foo.php';
         $_SERVER['QUERY_STRING'] = '_flowExecutionTicket=15059b11c49f77a1830dca29a7a2cd045f72dd6d&firstName=Atsuhiro&lastName=Kubo&_event_confirmForm=confirm';
 
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Interceptor_Authentication', 'services',
-                                  array(array('name'      => 'Foo',
-                                              'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
-                                              'url'       => 'http://example.org/authenticate.php',
-                                              'resources' => array('/admin/foo.php', '/admin/bar.php'),
-                                              'useCallback' => true,
-                                              'callbackKey' => 'mycallback'
-                                              ))
-                                  );
-        $config->setConfiguration('Interceptor_Authentication', 'guardDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
-        $context = &Piece_Unity_Context::singleton();
-        $context->setView('Foo');
-        $context->setConfiguration($config);
-
-        $interceptor = &new Piece_Unity_Plugin_Interceptor_Authentication();
-        $interceptor->invoke();
-
-        $this->assertEquals('http://example.org/authenticate.php?mycallback=%2Fadmin%2Ffoo.php%3F_flowExecutionTicket%3D15059b11c49f77a1830dca29a7a2cd045f72dd6d%26firstName%3DAtsuhiro%26lastName%3DKubo%26_event_confirmForm%3Dconfirm', $context->getView());
+        $this->assertEquals('http://example.org/authenticate.php?mycallback=%2Fadmin%2Ffoo.php%3F_flowExecutionTicket%3D15059b11c49f77a1830dca29a7a2cd045f72dd6d%26firstName%3DAtsuhiro%26lastName%3DKubo%26_event_confirmForm%3Dconfirm',
+                            $this->_invokeInterceptor($services)
+                            );
 
         unset($_SERVER['QUERY_STRING']);
-        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
     }
 
     /**#@-*/
@@ -261,6 +198,25 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
     /**#@+
      * @access private
      */
+
+    function _invokeInterceptor($services)
+    {
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Interceptor_Authentication', 'services', $services);
+        $config->setConfiguration('Interceptor_Authentication', 'guardDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setView('Foo');
+        $context->setConfiguration($config);
+
+        $interceptor = &new Piece_Unity_Plugin_Interceptor_Authentication();
+        $interceptor->invoke();
+        return $context->getView();
+    }
+
+    function _setIsAuthenticated($isAuthenticated)
+    {
+        $GLOBALS['PIECE_UNITY_PLUGIN_INTERCEPTOR_AUTHENTICATIONTESTCASE_isAuthenticated'] = $isAuthenticated;
+    }
 
     /**#@-*/
 
