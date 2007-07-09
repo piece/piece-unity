@@ -88,73 +88,133 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
      */
     function invoke()
     {
-        foreach ($this->_getConfiguration('services') as $service) {
-            if (!$this->_isProtectedResource(@$service['resources'])) {
+        $services = $this->_getConfiguration('services');
+        if (!is_array($services)) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    "The configuration point [ services ] on the plug-in [ {$this->_name} ] should be an array."
+                                    );
+            return;
+        }
+
+        foreach ($services as $service) {
+            if (!is_array($service)) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                        "An element of the configuration point [ services ] on the plug-in [ {$this->_name} ] should be an array."
+                                        );
+                return;
+            }
+
+            if (!array_key_exists('resources', $service)) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                        "The \"resources\" element is required in the configuration point [ services ] on the plug-in [ {$this->_name} ]."
+                                        );
+                return;
+            }
+
+            if (!$this->_isProtectedResource($service['resources'])) {
                 continue;
+            }
+
+            if (!array_key_exists('url', $service)) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                        "The \"url\" element is required in the configuration point [ services ] on the plug-in [ {$this->_name} ]."
+                                        );
+                return;
             }
 
             $guardDirectory = $this->_getConfiguration('guardDirectory');
             if (is_null($guardDirectory)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                        'The directory does not specified.',
-                                        'exception',
-                                        array('plugin' => __CLASS__)
+                                        "The configuration point [ guardDirectory ] on the plug-in [ {$this->_name} ] is required."
                                         );
-
                 return;
             }
 
-            $guardClass = @$service['guard']['class'];
-            if (is_null($guardClass) || !strlen($guardClass)) {
+            if (!array_key_exists('guard', $service)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                        'The class does not specified.',
-                                        'exception',
-                                        array('plugin' => __CLASS__)
+                                        "The \"guard\" element is required in the configuration point [ services ] on the plug-in [ {$this->_name} ]."
                                         );
                 return;
             }
 
-            $guardMethod = @$service['guard']['method'];
-            if (is_null($guardMethod) || !strlen($guardMethod)) {
+            if (!is_array($service['guard'])) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                        'The method does not specified.',
-                                        'exception',
-                                        array('plugin' => __CLASS__)
+                                        "The configuration point [ guard ] on the plug-in [ {$this->_name} ] should be an array."
                                         );
                 return;
             }
 
-            if (!Piece_Unity_ClassLoader::loaded($guardClass)) {
-                Piece_Unity_ClassLoader::load($guardClass, $guardDirectory);
+            if (!array_key_exists('class', $service['guard'])) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                        "The \"class\" element is required in the configuration point [ guard ] on the plug-in [ {$this->_name} ]."
+                                        );
+                return;
+            }
+
+            if (is_null($service['guard']['class']) || !strlen($service['guard']['class'])) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                        "The \"class\" element is required in the configuration point [ guard ] on the plug-in [ {$this->_name} ]."
+                                        );
+                return;
+            }
+
+            if (!array_key_exists('method', $service['guard'])) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                        "The \"method\" element is required in the configuration point [ guard ] on the plug-in [ {$this->_name} ]."
+                                        );
+                return;
+            }
+
+            if (is_null($service['guard']['method']) || !strlen($service['guard']['method'])) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                        "The \"method\" element is required in the configuration point [ guard ] on the plug-in [ {$this->_name} ]."
+                                        );
+                return;
+            }
+
+            if (!Piece_Unity_ClassLoader::loaded($service['guard']['class'])) {
+                Piece_Unity_ClassLoader::load($service['guard']['class'], $guardDirectory);
                 if (Piece_Unity_Error::hasErrors('exception')) {
                     return;
                 }
 
-                if (!Piece_Unity_ClassLoader::loaded($guardClass)) {
+                if (!Piece_Unity_ClassLoader::loaded($service['guard']['class'])) {
                     Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                            "The class [ $guardClass ] not found in the loaded file.",
-                                            'exception',
-                                            array('plugin' => __CLASS__)
+                                            "The class [ {$service['guard']['class']} ] not found in the loaded file."
                                             );
                     return;
                 }
             }
 
-            $guard = &new $guardClass();
-            if (!method_exists($guard, $guardMethod)) {
+            $guard = &new $service['guard']['class']();
+            if (!method_exists($guard, $service['guard']['method'])) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The method $guardMethod() not found in the class [ $guardClass ].",
-                                        'exception',
-                                        array('plugin' => __CLASS__)
+                                        "The method {$service['guard']['method']} not found in the class [ $guardClass ]."
                                         );
                 return;
             }
 
-            if (!$guard->$guardMethod($this->_context)) {
-                $this->_context->setView($this->_getServiceURL(@$service['url'],
-                                                               @$service['useCallback'],
-                                                               @$service['callbackKey'])
-                                         );
+            if (!$guard->$service['guard']['method']($this->_context)) {
+                if (@$service['useCallback']) {
+                    if (!array_key_exists('callbackKey', $service)) {
+                        $callbackKey = 'callback';
+                    } else {
+                        if (is_null($service['callbackKey']) || !strlen($service['callbackKey'])) {
+                            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                                    "The configuration point [ callbackKey ] on the plug-in [ {$this->_name} ] should be string."
+                                                    );
+                            return;
+                        }
+
+                        $callbackKey = $service['callbackKey'];
+                    }
+
+                    $view = $this->_createServiceURL($service['url'], $callbackKey);
+                } else {
+                    $view = $service['url'];
+                }
+
+                $this->_context->setView($view);
                 return false;
             }
         }
@@ -191,10 +251,6 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
      */
     function _isProtectedResource($resources)
     {
-        if (!is_array($resources)) {
-            return false;
-        }
-
         if ($this->_context->usingProxy()) {
             $path = $this->_context->getProxyPath();
             if (!is_null($path)) {
@@ -208,27 +264,18 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
     }
 
     // }}}
-    // {{{ _getServiceURL()
+    // {{{ _createServiceURL()
 
     /**
-     * Gets the appropriate URL for an authentication service.
+     * Createss the appropriate URL for an authentication service.
      *
-     * @param string  $url
-     * @param boolean $useCallback
-     * @param string  $callbackKey
+     * @param string $url
+     * @param string $callbackKey
      * @return string
      */
-    function _getServiceURL($url, $useCallback, $callbackKey)
+    function _createServiceURL($url, $callbackKey)
     {
-        if (is_null($useCallback)) {
-            return $url;
-        }
-
-        if (!$useCallback) {
-            return $url;
-        }
-
-        if (!(array_key_exists('QUERY_STRING', $_SERVER) && strlen($_SERVER['QUERY_STRING']))) {
+        if (!array_key_exists('QUERY_STRING', $_SERVER) || !strlen($_SERVER['QUERY_STRING'])) {
             $query = '';
         } else {
             $query = "?{$_SERVER['QUERY_STRING']}";
@@ -238,10 +285,6 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
             $pathInfo = '';
         } else {
             $pathInfo = $_SERVER['PATH_INFO'];
-        }
-
-        if (is_null($callbackKey)) {
-            $callbackKey = 'callback';
         }
 
         return "$url?$callbackKey=" . htmlentities(rawurlencode($this->_context->getScriptName() . "$pathInfo$query"));
