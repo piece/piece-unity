@@ -251,16 +251,15 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
      */
     function _isProtectedResource($resources)
     {
+        $scriptName = $this->_context->getScriptName();
         if ($this->_context->usingProxy()) {
-            $path = $this->_context->getProxyPath();
-            if (!is_null($path)) {
-                for ($i = 0, $count = count($resources); $i < $count; ++$i) {
-                    $resources[$i] = str_replace('//', '/', $path . $resources[$i]);
-                }
+            $proxyPath = $this->_context->getProxyPath();
+            if (!is_null($proxyPath)) {
+                $scriptName = preg_replace("!^$proxyPath!", '', $scriptName);
             }
         }
 
-        return in_array($this->_context->getScriptName(), $resources);
+        return in_array($scriptName, $resources);
     }
 
     // }}}

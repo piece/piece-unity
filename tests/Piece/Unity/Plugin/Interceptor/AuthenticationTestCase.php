@@ -193,6 +193,25 @@ class Piece_Unity_Plugin_Interceptor_AuthenticationTestCase extends PHPUnit_Test
         unset($_SERVER['QUERY_STRING']);
     }
 
+    function testResourceProtectionShouldWorkWhenUsingProxy()
+    {
+        $services = array(array('name'      => 'Foo',
+                                'guard'     => array('class' => 'Piece_Unity_Plugin_Interceptor_AuthenticationTestCase_Authentication', 'method' => 'isAuthenticated'),
+                                'url'       => 'http://example.org/authenticate.php',
+                                'resources' => array('/admin/foo.php', '/admin/bar.php'))
+                          );
+
+        $this->_setIsAuthenticated(false);
+        $_SERVER['SCRIPT_NAME'] = '/baz/admin/foo.php';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
+        $context = &Piece_Unity_Context::singleton();
+        $context->setProxyPath('/baz');
+
+        $this->assertEquals('http://example.org/authenticate.php', $this->_invokeInterceptor($services));
+
+        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
+    }
+
     /**#@-*/
 
     /**#@+
