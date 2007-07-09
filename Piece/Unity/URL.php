@@ -238,7 +238,11 @@ class Piece_Unity_URL
 
                 $this->_url->host = $_SERVER['SERVER_NAME'];
                 $this->_url->port = $_SERVER['SERVER_PORT'];
-                $this->_url->path = preg_replace('!^' . $context->getProxyPath() . '!', '', $this->_url->path);
+
+                $proxyPath = $context->getProxyPath();
+                if (!is_null($proxyPath)) {
+                    $this->_url->path = preg_replace("!^$proxyPath!", '', $this->_url->path);
+                }
             }
         }
     }
