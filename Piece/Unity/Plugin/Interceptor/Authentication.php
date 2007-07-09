@@ -68,6 +68,8 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
      * @access private
      */
 
+    var $_scriptName;
+
     /**#@-*/
 
     /**#@+
@@ -265,6 +267,14 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
     {
         $this->_addConfigurationPoint('services', array());
         $this->_addConfigurationPoint('guardDirectory');
+
+        $this->_scriptName = $this->_context->getScriptName();
+        if ($this->_context->usingProxy()) {
+            $proxyPath = $this->_context->getProxyPath();
+            if (!is_null($proxyPath)) {
+                $this->_scriptName = preg_replace("!^$proxyPath!", '', $this->_scriptName);
+            }
+        }
     }
  
     // }}}
@@ -278,15 +288,7 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
      */
     function _isProtectedResource($resources)
     {
-        $scriptName = $this->_context->getScriptName();
-        if ($this->_context->usingProxy()) {
-            $proxyPath = $this->_context->getProxyPath();
-            if (!is_null($proxyPath)) {
-                $scriptName = preg_replace("!^$proxyPath!", '', $scriptName);
-            }
-        }
-
-        return in_array($scriptName, $resources);
+        return in_array($this->_scriptName, $resources);
     }
 
     // }}}
@@ -327,16 +329,8 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
      */
     function _isProtectedResourceByRegex($resources)
     {
-        $scriptName = $this->_context->getScriptName();
-        if ($this->_context->usingProxy()) {
-            $proxyPath = $this->_context->getProxyPath();
-            if (!is_null($proxyPath)) {
-                $scriptName = preg_replace("!^$proxyPath!", '', $scriptName);
-            }
-        }
-
         foreach ($resources as $resource) {
-            if (preg_match("!$resource!", $scriptName)) {
+            if (preg_match("!$resource!", $this->_scriptName)) {
                 return true;
             }
         }
