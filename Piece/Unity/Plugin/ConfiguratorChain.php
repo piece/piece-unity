@@ -86,19 +86,17 @@ class Piece_Unity_Plugin_ConfiguratorChain extends Piece_Unity_Plugin_Common
 
     /**
      * Invokes the plugin specific code.
+     *
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      */
     function invoke()
     {
         $configurators = &$this->_getExtension('configurators');
         if (!is_array($configurators)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    'Failed to configure the configuration point [ configurators ] at the plugin [ ' . __CLASS__ . ' ].',
-                                    'warning',
-                                    array('plugin' => __CLASS__)
+                                    "The value of the extension point [ configurators ] on the plug-in [ {$this->_name} ] should be an array."
                                     );
-            Piece_Unity_Error::popCallback();
-            $configurators = array();
+            return;
         }
 
         foreach (array_merge($this->_requiredConfigurators, $configurators) as $extension) {
