@@ -35,6 +35,7 @@
  * @version    SVN: $Id$
  * @see        Piece_Unity_Plugin_KernelConfiguratorTestCaseg
  * @since      File available since Release 0.9.0
+ * @deprecated File deprecated in Release 0.12.0
  */
 
 // {{{ Piece_Unity_Plugin_KernelConfiguratorTestCase_AutoloadClass
@@ -49,6 +50,7 @@
  * @version    Release: @package_version@
  * @see        Piece_Unity_Plugin_KernelConfiguratorTestCase
  * @since      Class available since Release 0.9.0
+ * @deprecated Class deprecated in Release 0.12.0
  */
 class Piece_Unity_Plugin_KernelConfiguratorTestCase_AutoloadClass {}
 

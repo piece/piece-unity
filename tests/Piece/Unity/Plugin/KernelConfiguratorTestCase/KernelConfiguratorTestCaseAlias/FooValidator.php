@@ -35,6 +35,7 @@
  * @version    SVN: $Id$
  * @see        Piece_Unity_Plugin_KernelConfiguratorTestCase
  * @since      File available since Release 0.11.0
+ * @deprecated File deprecated in Release 0.12.0
  */
 
 require_once 'Piece/Right/Validator/Common.php';
@@ -51,6 +52,7 @@ require_once 'Piece/Right/Validator/Common.php';
  * @version    Release: @package_version@
  * @see        Piece_Unity_Plugin_KernelConfiguratorTestCase
  * @since      Class available since Release 0.11.0
+ * @deprecated Class deprecated in Release 0.12.0
  */
 class KernelConfiguratorTestCaseAlias_FooValidator extends Piece_Right_Validator_Common
 {

@@ -34,6 +34,7 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.5.0
+ * @deprecated File deprecated in Release 0.12.0
  */
 
 require_once 'PHPUnit.php';
@@ -52,6 +53,7 @@ require_once 'Piece/Unity/Config.php';
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.5.0
+ * @deprecated Class deprecated in Release 0.12.0
  */
 class Piece_Unity_Plugin_Interceptor_ProxyBasePathTestCase extends PHPUnit_TestCase
 {

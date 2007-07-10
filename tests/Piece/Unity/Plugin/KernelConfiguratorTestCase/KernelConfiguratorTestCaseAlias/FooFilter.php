@@ -35,6 +35,7 @@
  * @version    SVN: $Id$
  * @see        Piece_Unity_Plugin_KernelConfiguratorTestCase
  * @since      File available since Release 0.11.0
+ * @deprecated File deprecated in Release 0.12.0
  */
 
 // {{{ KernelConfiguratorTestCaseAlias_FooFilter
@@ -49,6 +50,7 @@
  * @version    Release: @package_version@
  * @see        Piece_Unity_Plugin_KernelConfiguratorTestCase
  * @since      Class available since Release 0.11.0
+ * @deprecated Class deprecated in Release 0.12.0
  */
 class KernelConfiguratorTestCaseAlias_FooFilter
 {

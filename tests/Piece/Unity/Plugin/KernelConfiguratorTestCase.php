@@ -34,6 +34,7 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.1.0
+ * @deprecated File deprecated in Release 0.12.0
  */
 
 require_once 'PHPUnit.php';
@@ -58,6 +59,7 @@ require_once 'Cache/Lite/File.php';
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
+ * @deprecated Class deprecated in Release 0.12.0
  */
 class Piece_Unity_Plugin_KernelConfiguratorTestCase extends PHPUnit_TestCase
 {
