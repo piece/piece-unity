@@ -311,6 +311,21 @@ class Piece_Unity_Validation
         Piece_Right_Filter_Factory::addFilterPrefix($filterPrefix);
     }
 
+    // }}}
+    // {{{ hasResults()
+
+    /**
+     * Returns whether or not the Piece_Right_Results object of the given
+     * validation set or the latest validation exists.
+     *
+     * @param string $validationSet
+     * @return boolean
+     */
+    function hasResults($validationSet = null)
+    {
+        return (boolean)$this->getResults($validationSet);
+    }
+
     /**#@-*/
 
     /**#@+
