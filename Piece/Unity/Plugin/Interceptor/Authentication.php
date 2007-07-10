@@ -230,7 +230,7 @@ class Piece_Unity_Plugin_Interceptor_Authentication extends Piece_Unity_Plugin_C
                     } else {
                         if (is_null($service['callbackKey']) || !strlen($service['callbackKey'])) {
                             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                                    "The \"callbackKey\" element for the configuration point [ services ] on the plug-in [ {$this->_name} ] should be string."
+                                                    "The \"callbackKey\" element is required for the configuration point [ services ] on the plug-in [ {$this->_name} ]."
                                                     );
                             return;
                         }
