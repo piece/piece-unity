@@ -78,6 +78,8 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
 
     /**
      * Invokes the plugin specific code.
+     *
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      */
     function invoke()
     {
@@ -86,8 +88,20 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
         $validation->setCacheDirectory($this->_getConfiguration('cacheDirectory'));
 
         $this->_setValidatorDirectories();
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
+
         $this->_setFilterDirectories();
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
+
         $this->_setValidatorPrefixes();
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
+
         $this->_setFilterPrefixes();
     }
 
@@ -118,18 +132,16 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
 
     /**
      * Sets validator directories.
+     *
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      */
     function _setValidatorDirectories()
     {
         $validatorDirectories = $this->_getConfiguration('validatorDirectories');
         if (!is_array($validatorDirectories)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    'Failed to configure the configuration point [ validatorDirectories ] at the plugin [ ' . __CLASS__ . ' ].',
-                                    'warning',
-                                    array('plugin' => __CLASS__)
+                                    "The value of the configuration point [ validatorDirectories ] on the plug-in [ {$this->_name} ] should be an array."
                                     );
-            Piece_Unity_Error::popCallback();
             return;
         }
 
@@ -143,18 +155,16 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
 
     /**
      * Sets filter directories.
+     *
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      */
     function _setFilterDirectories()
     {
         $filterDirectories = $this->_getConfiguration('filterDirectories');
         if (!is_array($filterDirectories)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    'Failed to configure the configuration point [ filterDirectories ] at the plugin [ ' . __CLASS__ . ' ].',
-                                    'warning',
-                                    array('plugin' => __CLASS__)
+                                    "The value of the configuration point [ filterDirectories ] on the plug-in [ {$this->_name} ] should be an array."
                                     );
-            Piece_Unity_Error::popCallback();
             return;
         }
 
@@ -168,18 +178,16 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
 
     /**
      * Sets validator prefixes.
+     *
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      */
     function _setValidatorPrefixes()
     {
         $validatorPrefixes = $this->_getConfiguration('validatorPrefixes');
         if (!is_array($validatorPrefixes)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    'Failed to configure the configuration point [ validatorPrefixes ] at the plugin [ ' . __CLASS__ . ' ].',
-                                    'warning',
-                                    array('plugin' => __CLASS__)
+                                    "The value of the configuration point [ validatorPrefixes ] on the plug-in [ {$this->_name} ] should be an array."
                                     );
-            Piece_Unity_Error::popCallback();
             return;
         }
 
@@ -193,18 +201,16 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
 
     /**
      * Sets filter prefixes.
+     *
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      */
     function _setFilterPrefixes()
     {
         $filterPrefixes = $this->_getConfiguration('filterPrefixes');
         if (!is_array($filterPrefixes)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    'Failed to configure the configuration point [ filterPrefixes ] at the plugin [ ' . __CLASS__ . ' ].',
-                                    'warning',
-                                    array('plugin' => __CLASS__)
+                                    "The value of the configuration point [ filterPrefixes ] on the plug-in [ {$this->_name} ] should be an array."
                                     );
-            Piece_Unity_Error::popCallback();
             return;
         }
 

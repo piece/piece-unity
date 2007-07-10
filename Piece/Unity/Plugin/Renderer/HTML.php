@@ -182,9 +182,9 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
             }
 
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    'Failed to render a HTML template with the plugin [ ' . get_class($this) . ' ].',
+                                    "Failed to render a HTML template with the plugin [ {$this->_name} ].",
                                     $level,
-                                    array('plugin' => __CLASS__),
+                                    array(),
                                     $error
                                     );
 

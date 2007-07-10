@@ -214,18 +214,14 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
             if ($flexy->currentTemplate === false) {
                 Piece_Unity_Error::pushPEARError($resultOfCompile,
                                                  'PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
-                                                 "The HTML template file [ $file ] not found.",
-                                                 'exception',
-                                                 array('plugin' => __CLASS__)
+                                                 "The HTML template file [ $file ] not found."
                                                  );
                 return;
             }
 
             Piece_Unity_Error::pushPEARError($resultOfCompile,
                                              PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                             'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
-                                             'exception',
-                                             array('plugin' => __CLASS__)
+                                             "Failed to invoke the plugin [ {$this->_name} ]."
                                              );
             return;
         }
@@ -252,9 +248,7 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
         if (PEAR::isError($resultOfOutputObject)) {
             Piece_Unity_Error::pushPEARError($resultOfOutputObject,
                                              PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                             'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
-                                             'exception',
-                                             array('plugin' => __CLASS__)
+                                             "Failed to invoke the plugin [ {$this->_name} ]."
                                              );
         }
     }
@@ -291,9 +285,7 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
         $controllerDirectory = $this->_getConfiguration('controllerDirectory');
         if (is_null($controllerDirectory)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    'The controller directory does not specified.',
-                                    'exception',
-                                    array('plugin' => __CLASS__)
+                                    "The value of the configuration point [ controllerDirectory ] on the plug-in [ {$this->_name} ] is required."
                                     );
             $return = null;
             return $return;
@@ -302,9 +294,7 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
         $controllerClass = $this->_getConfiguration('controllerClass');
         if (is_null($controllerClass)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    'The controller class does not specified.',
-                                    'exception',
-                                    array('plugin' => __CLASS__)
+                                    "The value of the configuration point [ controllerClass ] on the plug-in [ {$this->_name} ] is required."
                                     );
             $return = null;
             return $return;
@@ -319,9 +309,7 @@ class Piece_Unity_Plugin_Renderer_Flexy extends Piece_Unity_Plugin_Renderer_HTML
 
             if (!Piece_Unity_ClassLoader::loaded($controllerClass)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The class [ $controllerClass ] not found in the loaded file.",
-                                        'exception',
-                                        array('plugin' => __CLASS__)
+                                        "The class [ $controllerClass ] not found in the loaded file."
                                         );
                 $return = null;
                 return $return;

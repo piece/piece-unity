@@ -154,9 +154,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
         if (HTML_AJAX_JSON::isError($json)) {
             Piece_Unity_Error::pushPEARError($json,
                                              PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                             'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
-                                             'exception',
-                                             array('plugin' => __CLASS__)
+                                             "Failed to invoke the plugin [ {$this->_name} ]."
                                              );
             return;
         }
@@ -208,9 +206,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
 
             if ($this->_wasVisited($next, $visited)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_UNEXPECTED_VALUE,
-                                        "A circular refrence detected in an array at the key {$key}.",
-                                        'exception',
-                                        array('plugin' => __CLASS__)
+                                        "A circular refrence detected in an array at the key {$key}."
                                         );
                 return;
             }
@@ -242,9 +238,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
             if ($this->_wasVisited($next, $visited)) {
                 $class = get_class($value);
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_UNEXPECTED_VALUE,
-                                        "A circular refrence detected at the property {$key}, class {$class}.",
-                                        'exception',
-                                        array('plugin' => __CLASS__)
+                                        "A circular refrence detected at the property {$key}, class {$class}."
                                         );
                 return;
             }
@@ -359,9 +353,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
         if (!$this->_getConfiguration('useHTMLAJAX')) {
             if (!extension_loaded('json')) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        'json extension not loaded. Please check PHP configuration.',
-                                        'exception',
-                                        array('plugin' => __CLASS__)
+                                        'json extension not loaded. Please check PHP configuration.'
                                         );
                 return;
             }
@@ -370,9 +362,7 @@ class Piece_Unity_Plugin_Renderer_JSON extends Piece_Unity_Plugin_Common
         } else {
             if (!include_once 'HTML/AJAX/JSON.php') {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        'The file [ HTML/AJAX/JSON.php ] not found or is not readable.',
-                                        'exception',
-                                        array('plugin' => __CLASS__)
+                                        'The file [ HTML/AJAX/JSON.php ] not found or is not readable.'
                                         );
                 return;
             }

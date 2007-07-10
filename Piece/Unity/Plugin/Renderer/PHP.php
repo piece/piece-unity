@@ -119,18 +119,14 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
 
         if (!file_exists($file)) {
             Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
-                                   "The HTML template file [ $file ] not found.",
-                                    'exception',
-                                    array('plugin' => __CLASS__)
+                                   "The HTML template file [ $file ] not found."
                                    );
             return;
         }
 
         if (!is_readable($file)) {
             Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
-                                   "The HTML template file [ $file ] is not readable.",
-                                    'exception',
-                                    array('plugin' => __CLASS__)
+                                   "The HTML template file [ $file ] is not readable."
                                    );
             return;
         }
@@ -140,9 +136,7 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
 
         if (!include $file) {
             Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
-                                    'The HTML template file [ $file ] not found or is not readable.',
-                                    'exception',
-                                    array('plugin' => __CLASS__)
+                                    'The HTML template file [ $file ] not found or is not readable.'
                                     );
         }
     }

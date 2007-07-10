@@ -78,10 +78,16 @@ class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common
 
     /**
      * Invokes the plugin specific code.
+     *
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      */
     function invoke()
     {
         $this->_setPluginDirectories();
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
+
         $this->_setPluginPrefixes();
     }
 
@@ -108,18 +114,16 @@ class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common
 
     /**
      * Sets plug-in directories.
+     *
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      */
     function _setPluginDirectories()
     {
         $pluginDirectories = $this->_getConfiguration('pluginDirectories');
         if (!is_array($pluginDirectories)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    'Failed to configure the configuration point [ pluginDirectories ] at the plugin [ ' . __CLASS__ . ' ].',
-                                    'warning',
-                                    array('plugin' => __CLASS__)
+                                    "The value of the configuration point [ pluginDirectories ] on the plug-in [ {$this->_name} ] should be an array."
                                     );
-            Piece_Unity_Error::popCallback();
             return;
         }
 
@@ -133,18 +137,16 @@ class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common
 
     /**
      * Sets plug-in prefixes.
+     *
+     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      */
     function _setPluginPrefixes()
     {
         $pluginPrefixes = $this->_getConfiguration('pluginPrefixes');
         if (!is_array($pluginPrefixes)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    'Failed to configure the configuration point [ pluginPrefixes ] at the plugin [ ' . __CLASS__ . ' ].',
-                                    'warning',
-                                    array('plugin' => __CLASS__)
+                                    "The value of the configuration point [ pluginPrefixes ] on the plug-in [ {$this->_name} ] should be an array."
                                     );
-            Piece_Unity_Error::popCallback();
             return;
         }
 

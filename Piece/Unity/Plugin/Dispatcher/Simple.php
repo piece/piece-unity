@@ -110,7 +110,7 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_CANNOT_READ,
                                         "Failed to read the action class [ $class ] for any reasons.",
                                         'exception',
-                                        array('plugin' => __CLASS__),
+                                        array(),
                                         $error
                                         );
                 return;
@@ -118,9 +118,7 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
 
             if (!Piece_Unity_ClassLoader::loaded($class)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The class [ $class ] not found in the loaded file.",
-                                        'exception',
-                                        array('plugin' => __CLASS__)
+                                        "The class [ $class ] not found in the loaded file."
                                         );
                 return;
             }
@@ -129,9 +127,7 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
         $action = &new $class();
         if (!method_exists($action, 'invoke')) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The method invoke() not found in the class [ $class ].",
-                                    'exception',
-                                    array('plugin' => __CLASS__)
+                                    "The method invoke() not found in the class [ $class ]."
                                     );
             return;
         }

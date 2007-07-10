@@ -88,7 +88,7 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common
             $result = chdir($appRoot);
             if (!$result) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                        'Failed calling chdir() for the configuration point [ appRoot ] at the plugin [ ' . __CLASS__ . ' ].'
+                                        "Failed calling chdir() for the configuration point [ appRoot ] on the plugin [ {$this->_name} ]."
                                         );
                 return;
             }

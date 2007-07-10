@@ -110,9 +110,9 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->_continuation->invoke($this->_context, $this->_getConfiguration('bindActionsWithFlowExecution'));
         if (Piece_Flow_Error::hasErrors('exception')) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
+                                    "Failed to invoke the plugin [ {$this->_name} ].",
                                     'exception',
-                                    array('plugin' => __CLASS__),
+                                    array(),
                                     Piece_Flow_Error::pop()
                                     );
             return;
@@ -123,9 +123,9 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         Piece_Unity_Error::popCallback();
         if (Piece_Flow_Error::hasErrors('exception')) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    'Failed to invoke the plugin [ ' . __CLASS__ . ' ].',
+                                    "Failed to invoke the plugin [ {$this->_name} ].",
                                     'exception',
-                                    array('plugin' => __CLASS__),
+                                    array(),
                                     Piece_Flow_Error::pop()
                                     );
             return;
@@ -285,9 +285,9 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             Piece_Unity_Error::popCallback();
             if (Piece_Flow_Error::hasErrors('exception')) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                        'Failed to configure the plugin [ ' . __CLASS__ . ' ].',
+                                        "Failed to configure the plugin [ {$this->_name}.",
                                         'exception',
-                                        array('plugin' => __CLASS__),
+                                        array(),
                                         Piece_Flow_Error::pop()
                                         );
                 $return = null;
