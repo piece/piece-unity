@@ -36,6 +36,7 @@
  * @since      File available since Release 0.9.0
  */
 
+require dirname(__FILE__) . '/../../../../prepare.php';
 require_once 'PHPUnit.php';
 require_once 'HTML/AJAX/JSON.php';
 require_once 'Piece/Unity/Plugin/Renderer/JSON.php';

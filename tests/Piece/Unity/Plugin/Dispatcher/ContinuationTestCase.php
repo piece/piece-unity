@@ -36,6 +36,7 @@
  * @since      File available since Release 0.1.0
  */
 
+require dirname(__FILE__) . '/../../../../prepare.php';
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Dispatcher/Continuation.php';
 require_once 'Piece/Unity/Context.php';

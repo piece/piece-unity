@@ -36,8 +36,8 @@
  * @since      File available since Release 0.1.0
  */
 
-require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
 require_once dirname(__FILE__) . '/HTMLCompatibilityTest.php';
+require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'Piece/Unity/Config.php';
 

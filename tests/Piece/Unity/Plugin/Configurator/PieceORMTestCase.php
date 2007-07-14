@@ -36,6 +36,7 @@
  * @since      File available since Release 0.12.0
  */
 
+require dirname(__FILE__) . '/../../../../prepare.php';
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Configurator/PieceORM.php';
 require_once 'Piece/ORM/Context.php';

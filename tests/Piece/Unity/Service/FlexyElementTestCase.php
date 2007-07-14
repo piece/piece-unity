@@ -35,6 +35,7 @@
  * @since      File available since Release 0.13.0
  */
 
+require dirname(__FILE__) . '/../../../prepare.php';
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Service/FlexyElement.php';
 require_once 'Piece/Unity/Context.php';

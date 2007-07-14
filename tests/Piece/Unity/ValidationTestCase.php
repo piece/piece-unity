@@ -35,6 +35,7 @@
  * @since      File available since Release 0.7.0
  */
 
+require dirname(__FILE__) . '/../../prepare.php';
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Validation.php';
 require_once 'Piece/Unity/Error.php';
