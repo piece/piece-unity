@@ -37,7 +37,7 @@
  * @since      File available since Release 0.13.0
  */
 
-// {{{ Piece_Unity_Plugin_Renderer_FlexyTestCase_FlexyExternalPluginShouldBeAbleToUseByExternalPlugins
+// {{{ Piece_Unity_Plugin_Renderer_FlexyTestCase_Plugin
 
 /**
  * A class for unit tests.
@@ -50,7 +50,7 @@
  * @see        Piece_Unity_Plugin_Renderer_FlexyTestCase
  * @since      Class available since Release 0.13.0
  */
-class Piece_Unity_Plugin_Renderer_FlexyTestCase_FlexyExternalPluginShouldBeAbleToUseByExternalPlugins
+class Piece_Unity_Plugin_Renderer_FlexyTestCase_Plugin
 {
 
     // {{{ properties
