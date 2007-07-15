@@ -40,72 +40,26 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$version = '0.12.0';
-$apiVersion = '0.7.0';
+$releaseVersion = '0.13.0';
 $releaseStability = 'beta';
+$apiVersion = '0.7.0';
+$apiStability = 'beta';
 $notes = 'A new release of Piece_Unity is now available.
 
-What\'s New in Piece_Unity 0.12.0
-
- * Configurator_AppRoot plug-in: A plug-in for setting the directory and the URL path that form the top of the document tree of an application visible from the web.
- * Configurator_PieceORM plug-in: A plug-in for Piece_ORM.
- * Several defect fixes: A defect in fallback view rendering has been fixed. And also a defect in Plug-in Aliases has been fixed. And other defects have been fixed.
-
-See the following release notes for details.
-
-Enhancements
-============ 
-
-Plug-ins:
-
-- Added the plugins_dir configuration point. (Renderer_Smarty)
-- Updated "Self Notation" so as to set true to the configuration point "addFlowExecutionTicket" of Renderer_Redirection plug-in. (View)
-- Added "Configurator_PieceORM" plug-in for Piece_ORM.
-- Added "Configurator_Proxy" plug-in for proxy.
-- Changed the default value for the configuration point "configurator" from "KernelConfigurator" to "ConfiguratorChain". (Root)
-- Added "Configurator_AppRoot" plug-in for setting the directory and the URL path that form the top of the document tree of an application visible from the web. (Ticket #56)
-- Removed the configuration point "importSessionIDFromRequest". (Interceptor_SessionStart)
-
-Kernel:
-
-- Updated pushPEARError() so that the params field in the repackage array contains "userinfo" and "debuginfo" fields, which contains each of the return values from getUserInfo() and getDebugInfo(). (Piece_Unity_Error)
-- Updated the constructor so as to receive a prefix for determining the plug-in name. (Piece_Unity_Plugin_Common)
-- Changed the error type on all Piece_Unity_Error::pushError() calls from "warning" to "exception". (Piece_Unity_URL)
-- Added getRemoteAddr() for getting an IP address (or IP addresses) of the client making the request. (Piece_Unity_Context)
-- Added _getExtension()/_getConfiguration(). (Piece_Unity_Plugin_Common)
-  getExtension()/getConfiguration() are deprecated since Piece_Unity 0.12.0. (Ticket #54)
-
-Example Applications:
-
-- Changed the function for URI encoding from escape() to encodeURIcomponent(). (ahah.js)
-- Replaced all "__basePath" with "__appRootPath".
-
-Defect Fixes
-============ 
-
-Plug-ins:
-
-- Fixed a defect in fallback view rendering that caused a fallback view to be always rendered in spite of success in HTML rendering if one or more "warning" level errors raised before rendering. (Ticket #57)
-
-Kernel:
-
-- Fixed the problem that a plug-in with Plug-in Aliases cannot get the current configuration. (Ticket #53)
-- Fixed the problem that the getExtension()/getConfiguration() cannot work with an empty prefix. (Piece_Unity_Plugin_Common)
-
-Example Applications:
-
-- Fixed the problem that all radio elements are transferred regardless of whether they are checked or not. (ahah.js)';
+What\'s New in Piece_Unity 0.13.0
+';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
                            'changelogoldtonew' => false,
                            'simpleoutput'      => true,
                            'baseinstalldir'    => '/',
-                           'packagefile'       => 'package2.xml',
+                           'packagefile'       => 'package.xml',
                            'packagedirectory'  => '.',
                            'dir_roles'         => array('data' => 'data',
                                                         'tests' => 'test',
-                                                        'docs' => 'doc'))
+                                                        'docs' => 'doc'),
+                           'ignore'            => array('package.php', 'package.xml', 'components/'))
                      );
 
 $package->setPackage('Piece_Unity');
@@ -115,12 +69,10 @@ $package->setDescription('Piece_Unity is a stateful and secure web application f
 
 Piece_Unity allows stateful programming without thinking about sessions by storing and restoring states with a technology known as continuation server. It also provides high security and eases the burden of implementing security measures for applications by application flow control.');
 $package->setChannel('pear.piece-framework.com');
-$package->setLicense('BSD License (revised)',
-                     'http://www.opensource.org/licenses/bsd-license.php'
-                     );
+$package->setLicense('BSD License (revised)', 'http://www.opensource.org/licenses/bsd-license.php');
 $package->setAPIVersion($apiVersion);
-$package->setAPIStability('beta');
-$package->setReleaseVersion($version);
+$package->setAPIStability($apiStability);
+$package->setReleaseVersion($releaseVersion);
 $package->setReleaseStability($releaseStability);
 $package->setNotes($notes);
 $package->setPhpDep('4.3.0');
@@ -130,28 +82,24 @@ $package->addPackageDepWithChannel('required', 'Cache_Lite', 'pear.php.net', '1.
 $package->addPackageDepWithChannel('required', 'PEAR', 'pear.php.net', '1.4.3');
 $package->addPackageDepWithChannel('required', 'Net_URL', 'pear.php.net', '1.0.14');
 $package->addPackageDepWithChannel('required', 'Piece_Right', 'pear.piece-framework.com', '1.5.0');
-$package->addPackageDepWithChannel('optional', 'Stagehand_TestRunner', 'pear.piece-framework.com', '0.4.0');
+$package->addPackageDepWithChannel('optional', 'Stagehand_TestRunner', 'pear.piece-framework.com', '0.5.0');
 $package->addPackageDepWithChannel('optional', 'HTML_Template_Flexy', 'pear.php.net', '1.2.4');
 $package->addPackageDepWithChannel('optional', 'Smarty', 'pearified.com', '1.6.8');
 $package->addPackageDepWithChannel('optional', 'HTML_AJAX', 'pear.php.net', '0.5.0');
-$package->addPackageDepWithChannel('optional', 'Piece_ORM', 'pear.piece-framework.com', '0.3.0');
+$package->addPackageDepWithChannel('optional', 'PHPUnit', 'pear.phpunit.de', '1.3.2', '1.3.2');
 $package->addExtensionDep('optional', 'json');
 $package->addMaintainer('lead', 'iteman', 'KUBO Atsuhiro', 'iteman@users.sourceforge.net');
 $package->addMaintainer('developer', 'csakatoku', 'Chihiro Sakatoku', 'csakatoku@users.sourceforge.net');
 $package->addMaintainer('developer', 'kumatch', 'KUMAKURA Yousuke', 'kumatch@users.sourceforge.net');
-$package->addIgnore(array('package.php', 'package.xml', 'package2.xml'));
 $package->addGlobalReplacement('package-info', '@package_version@', 'version');
 $package->generateContents();
-$package1 = &$package->exportCompatiblePackageFile1();
 
 if (array_key_exists(1, $_SERVER['argv'])
     && $_SERVER['argv'][1] == 'make'
     ) {
     $package->writePackageFile();
-    $package1->writePackageFile();
 } else {
     $package->debugPackageFile();
-    $package1->debugPackageFile();
 }
 
 exit();
