@@ -36,7 +36,6 @@
  * @since      File available since Release 0.2.0
  */
 
-require dirname(__FILE__) . '/../../../../prepare.php';
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Plugin/Dispatcher/Simple.php';
@@ -44,7 +43,7 @@ require_once 'Piece/Unity/Plugin/View.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
 require_once 'Piece/Unity/Error.php';
 
-// {{{ Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest
+// {{{ Piece_Unity_Plugin_Renderer_HTMLTest
 
 /**
  * The base class for compatibility test of Piece_Unity_Plugin_View's
@@ -57,7 +56,7 @@ require_once 'Piece/Unity/Error.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.2.0
  */
-class Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest extends PHPUnit_TestCase
+class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
 {
 
     // {{{ properties

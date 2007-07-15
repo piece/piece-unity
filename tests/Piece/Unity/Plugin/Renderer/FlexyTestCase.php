@@ -36,7 +36,8 @@
  * @since      File available since Release 0.2.0
  */
 
-require_once dirname(__FILE__) . '/HTMLCompatibilityTest.php';
+require dirname(__FILE__) . '/../../../../prepare.php';
+require_once 'Piece/Unity/Plugin/Renderer/HTMLTest.php';
 require_once 'Piece/Unity/Plugin/Renderer/Flexy.php';
 require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/Context.php';
@@ -53,7 +54,7 @@ require_once 'Piece/Unity/Context.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.2.0
  */
-class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Renderer_HTMLCompatibilityTest
+class Piece_Unity_Plugin_Renderer_FlexyTestCase extends Piece_Unity_Plugin_Renderer_HTMLTest
 {
 
     // {{{ properties
