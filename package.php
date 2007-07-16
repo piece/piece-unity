@@ -39,14 +39,53 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$releaseVersion = '0.13.0';
-$releaseStability = 'beta';
+$releaseVersion = '1.0.0';
+$releaseStability = 'stable';
 $apiVersion = '0.7.0';
-$apiStability = 'beta';
-$notes = 'A new release of Piece_Unity is now available.
+$apiStability = 'stable';
+$notes = 'This is the first stable release of Piece_Unity.
 
-What\'s New in Piece_Unity 0.13.0
-';
+What\'s New in Piece_Unity 1.0.0
+
+ * Components: A component is a package that consists of plug-ins, services, GUI elements (HTML templates, images, scripts, etc.), flow definition files, action classes, and entry points, etc.. Many plug-ins are extracted as each Piece_Unity_Component_Xxx package. See the following release notes for details.
+ * Services: A service is one or more classes that provides useful operations for client use.
+ * The Piece_Unity_Service_FlowAction class: The Piece_Unity_Service_FlowAction class can be used as the base class for Piece_Flow actions.
+
+See the following release notes for details.
+
+Enhancements
+============ 
+
+Plug-ins:
+
+- Added error handling. (Interceptor_SessionStart)
+- Moved the process of preloading Dispatcher_Continuation plug-in from Configurator_Plugin to Interceptor_SessionStart.
+- A improvement for restoring action instances in session. (Dispatcher_Continuation, Interceptor_SessionStart, Piece_Unity_Session_Preload)
+- Changed the error type on all Piece_Unity_Error::pushError() calls from "warning" to "exception". (ConfiguratorChain, InterceptorChain, OutputBufferStack)
+- Moved the following plug-ins to components/. These plug-ins will be packaged as each Piece_Unity_Component_Xxx package.
+  * Interceptor_Authentication
+  * OutputFilter_ContentLength
+  * Renderer_Flexy
+  * Renderer_JSON
+  * OutputFilter_JapaneseZ2H
+  * KernelConfigurator (obsoleted)
+  * Interceptor_NullByteAttackPreventation
+  * Configurator_PieceORM
+  * Interceptor_ProxyBasePath (obsoleted)
+  * Renderer_Smarty
+
+Services:
+
+- Added the base class for Piece_Flow actions. (Piece_Unity_Service_FlowAction)
+
+Kernel:
+
+- Changed factory() to throw an exception if the configuration directory or the configuration file not found. (Ticket #66) (Piece_Unity_Config_Factory)
+- Added a class loader. (Piece_Unity_ClassLoader)
+- Updated an exception to be raised when an undefined extension point is used. (Ticket #72) (Piece_Unity_Plugin_Common)
+- Updated getResults() so that a Piece_Right_Results object can be get by a validation set name. (Ticket #70) (Piece_Unity_Validation)
+- Improved error handling so as to recognize the place where the exception is raised. (Piece_Unity_Plugin_Common)
+- Added hasResults() to check whether or not the Piece_Right_Results object of the given validation set or the latest validation exists. (Piece_Unity_Validation)';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
@@ -76,7 +115,7 @@ $package->setReleaseStability($releaseStability);
 $package->setNotes($notes);
 $package->setPhpDep('4.3.0');
 $package->setPearinstallerDep('1.4.3');
-$package->addPackageDepWithChannel('required', 'Piece_Flow', 'pear.piece-framework.com', '1.8.0');
+$package->addPackageDepWithChannel('required', 'Piece_Flow', 'pear.piece-framework.com', '1.9.0');
 $package->addPackageDepWithChannel('required', 'Cache_Lite', 'pear.php.net', '1.7.0');
 $package->addPackageDepWithChannel('required', 'PEAR', 'pear.php.net', '1.4.3');
 $package->addPackageDepWithChannel('required', 'Net_URL', 'pear.php.net', '1.0.14');

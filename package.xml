@@ -16,198 +16,63 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
   <email>iteman@users.sourceforge.net</email>
   <active>yes</active>
  </lead>
- <developer>
-  <name>Chihiro Sakatoku</name>
-  <user>csakatoku</user>
-  <email>csakatoku@users.sourceforge.net</email>
-  <active>yes</active>
- </developer>
- <developer>
-  <name>KUMAKURA Yousuke</name>
-  <user>kumatch</user>
-  <email>kumatch@users.sourceforge.net</email>
-  <active>yes</active>
- </developer>
- <date>2007-07-15</date>
- <time>16:50:26</time>
+ <date>2007-07-16</date>
+ <time>18:14:35</time>
  <version>
-  <release>0.13.0</release>
+  <release>1.0.0</release>
   <api>0.7.0</api>
  </version>
  <stability>
-  <release>beta</release>
-  <api>beta</api>
+  <release>stable</release>
+  <api>stable</api>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
- <notes>A new release of Piece_Unity is now available.
+ <notes>This is the first stable release of Piece_Unity.
 
-What&apos;s New in Piece_Unity 0.13.0
- </notes>
+What&apos;s New in Piece_Unity 1.0.0
+
+ * Components: A component is a package that consists of plug-ins, services, GUI elements (HTML templates, images, scripts, etc.), flow definition files, action classes, and entry points, etc.. Many plug-ins are extracted as each Piece_Unity_Component_Xxx package. See the following release notes for details.
+ * Services: A service is one or more classes that provides useful operations for client use.
+ * The Piece_Unity_Service_FlowAction class: The Piece_Unity_Service_FlowAction class can be used as the base class for Piece_Flow actions.
+
+See the following release notes for details.
+
+Enhancements
+============ 
+
+Plug-ins:
+
+- Added error handling. (Interceptor_SessionStart)
+- Moved the process of preloading Dispatcher_Continuation plug-in from Configurator_Plugin to Interceptor_SessionStart.
+- A improvement for restoring action instances in session. (Dispatcher_Continuation, Interceptor_SessionStart, Piece_Unity_Session_Preload)
+- Changed the error type on all Piece_Unity_Error::pushError() calls from &quot;warning&quot; to &quot;exception&quot;. (ConfiguratorChain, InterceptorChain, OutputBufferStack)
+- Moved the following plug-ins to components/. These plug-ins will be packaged as each Piece_Unity_Component_Xxx package.
+  * Interceptor_Authentication
+  * OutputFilter_ContentLength
+  * Renderer_Flexy
+  * Renderer_JSON
+  * OutputFilter_JapaneseZ2H
+  * KernelConfigurator (obsoleted)
+  * Interceptor_NullByteAttackPreventation
+  * Configurator_PieceORM
+  * Interceptor_ProxyBasePath (obsoleted)
+  * Renderer_Smarty
+
+Services:
+
+- Added the base class for Piece_Flow actions. (Piece_Unity_Service_FlowAction)
+
+Kernel:
+
+- Changed factory() to throw an exception if the configuration directory or the configuration file not found. (Ticket #66) (Piece_Unity_Config_Factory)
+- Added a class loader. (Piece_Unity_ClassLoader)
+- Updated an exception to be raised when an undefined extension point is used. (Ticket #72) (Piece_Unity_Plugin_Common)
+- Updated getResults() so that a Piece_Right_Results object can be get by a validation set name. (Ticket #70) (Piece_Unity_Validation)
+- Improved error handling so as to recognize the place where the exception is raised. (Piece_Unity_Plugin_Common)
+- Added hasResults() to check whether or not the Piece_Right_Results object of the given validation set or the latest validation exists. (Piece_Unity_Validation)</notes>
  <contents>
   <dir baseinstalldir="/" name="/">
    <dir name="data">
-    <dir name="examples">
-     <dir name="htdocs">
-      <dir name="css">
-       <file name="default.css" role="data">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-      </dir> <!-- /data/examples/htdocs/css -->
-      <dir name="images">
-       <file name="bg.gif" role="data">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-       <file name="date_icon.gif" role="data">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-       <file name="piece_footer.jpg" role="data">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-       <file name="piece_header.jpg" role="data">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-       <file name="quotes.gif" role="data">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-      </dir> <!-- /data/examples/htdocs/images -->
-      <dir name="js">
-       <file name="ahah.js" role="data">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-       <file name="window_operation.js" role="data">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-      </dir> <!-- /data/examples/htdocs/js -->
-      <file name="authenticate.php" role="data">
-       <tasks:replace from="@package_version@" to="version" type="package-info" />
-      </file>
-      <file name="index.php" role="data">
-       <tasks:replace from="@package_version@" to="version" type="package-info" />
-      </file>
-      <file name="protected-resource.php" role="data">
-       <tasks:replace from="@package_version@" to="version" type="package-info" />
-      </file>
-      <file name="register-with-exclusive-mode-and-ahah.php" role="data">
-       <tasks:replace from="@package_version@" to="version" type="package-info" />
-      </file>
-      <file name="register-with-exclusive-mode.php" role="data">
-       <tasks:replace from="@package_version@" to="version" type="package-info" />
-      </file>
-      <file name="register-with-non-exclusive-mode.php" role="data">
-       <tasks:replace from="@package_version@" to="version" type="package-info" />
-      </file>
-     </dir> <!-- /data/examples/htdocs -->
-     <dir name="webapp">
-      <dir name="actions">
-       <file name="AuthenticationAction.php" role="data">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-       <file name="IndexAction.php" role="data">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-       <file name="ProtectedResourceAction.php" role="data">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-       <file name="RegistrationAction.php" role="data">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-      </dir> <!-- /data/examples/webapp/actions -->
-      <dir name="cache">
-       <dir name="flows">
-        <file name="README" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-       </dir> <!-- /data/examples/webapp/cache/flows -->
-       <dir name="validations">
-        <file name="README" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-       </dir> <!-- /data/examples/webapp/cache/validations -->
-       <file name="README" role="data">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-      </dir> <!-- /data/examples/webapp/cache -->
-      <dir name="compiled-templates">
-       <file name="README" role="data">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-      </dir> <!-- /data/examples/webapp/compiled-templates -->
-      <dir name="config">
-       <dir name="flows">
-        <file name="Authentication.yaml" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="ProtectedResource.yaml" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="Registration.yaml" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-       </dir> <!-- /data/examples/webapp/config/flows -->
-       <dir name="validations">
-        <file name="Authentication.yaml" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="Registration.yaml" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-       </dir> <!-- /data/examples/webapp/config/validations -->
-       <file name="piece-unity-config.yaml" role="data">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-      </dir> <!-- /data/examples/webapp/config -->
-      <dir name="sessions">
-       <file name="README" role="data">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-      </dir> <!-- /data/examples/webapp/sessions -->
-      <dir name="templates">
-       <dir name="Authentication">
-        <file name="Finish.html" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="Form.html" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="Home.html" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-       </dir> <!-- /data/examples/webapp/templates/Authentication -->
-       <dir name="Layout">
-        <file name="Layout.html" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-       </dir> <!-- /data/examples/webapp/templates/Layout -->
-       <dir name="ProtectedResource">
-        <file name="A.html" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="B.html" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="C.html" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-       </dir> <!-- /data/examples/webapp/templates/ProtectedResource -->
-       <dir name="Registration">
-        <file name="Confirmation.html" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="Finish.html" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="Form.html" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-       </dir> <!-- /data/examples/webapp/templates/Registration -->
-       <dir name="Static">
-        <file name="Index.html" role="data">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-       </dir> <!-- /data/examples/webapp/templates/Static -->
-      </dir> <!-- /data/examples/webapp/templates -->
-     </dir> <!-- /data/examples/webapp -->
-    </dir> <!-- /data/examples -->
     <dir name="js">
      <file name="ahah.js" role="data">
       <tasks:replace from="@package_version@" to="version" type="package-info" />
@@ -265,41 +130,21 @@ What&apos;s New in Piece_Unity 0.13.0
        </file>
       </dir> <!-- /Piece/Unity/Plugin/Dispatcher -->
       <dir name="Interceptor">
-       <file name="NullByteAttackPreventation.php" role="php">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-       <file name="ProxyBasePath.php" role="php">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
        <file name="SessionStart.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
       </dir> <!-- /Piece/Unity/Plugin/Interceptor -->
-      <dir name="OutputFilter">
-       <file name="ContentLength.php" role="php">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-       <file name="JapaneseZ2H.php" role="php">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-      </dir> <!-- /Piece/Unity/Plugin/OutputFilter -->
       <dir name="Renderer">
-       <file name="Flexy.php" role="php">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
        <file name="HTML.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
-       <file name="JSON.php" role="php">
+       <file name="HTMLTest.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
        <file name="PHP.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
        <file name="Redirection.php" role="php">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-       <file name="Smarty.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
       </dir> <!-- /Piece/Unity/Plugin/Renderer -->
@@ -318,9 +163,6 @@ What&apos;s New in Piece_Unity 0.13.0
       <file name="InterceptorChain.php" role="php">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
-      <file name="KernelConfigurator.php" role="php">
-       <tasks:replace from="@package_version@" to="version" type="package-info" />
-      </file>
       <file name="OutputBufferStack.php" role="php">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
@@ -332,9 +174,6 @@ What&apos;s New in Piece_Unity 0.13.0
       </file>
      </dir> <!-- /Piece/Unity/Plugin -->
      <dir name="Service">
-      <file name="FlexyElement.php" role="php">
-       <tasks:replace from="@package_version@" to="version" type="package-info" />
-      </file>
       <file name="FlowAction.php" role="php">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
@@ -543,61 +382,10 @@ What&apos;s New in Piece_Unity 0.13.0
         <file name="First.php" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
-        <file name="NullByteAttackPreventationTestCase.php" role="test">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="ProxyBasePathTestCase.php" role="test">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
         <file name="Second.php" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
        </dir> <!-- /tests/Piece/Unity/Plugin/Interceptor -->
-       <dir name="KernelConfiguratorTestCase">
-        <dir name="KernelConfiguratorTestCaseAlias">
-         <file name="FooFilter.php" role="test">
-          <tasks:replace from="@package_version@" to="version" type="package-info" />
-         </file>
-         <file name="FooPlugin.php" role="test">
-          <tasks:replace from="@package_version@" to="version" type="package-info" />
-         </file>
-         <file name="FooValidator.php" role="test">
-          <tasks:replace from="@package_version@" to="version" type="package-info" />
-         </file>
-        </dir> <!-- /tests/Piece/Unity/Plugin/KernelConfiguratorTestCase/KernelConfiguratorTestCaseAlias -->
-        <dir name="Piece">
-         <dir name="Right">
-          <dir name="Filter">
-           <file name="LowerCase.php" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-          </dir> <!-- /tests/Piece/Unity/Plugin/KernelConfiguratorTestCase/Piece/Right/Filter -->
-          <dir name="Validator">
-           <file name="HelloWorld.php" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-          </dir> <!-- /tests/Piece/Unity/Plugin/KernelConfiguratorTestCase/Piece/Right/Validator -->
-         </dir> <!-- /tests/Piece/Unity/Plugin/KernelConfiguratorTestCase/Piece/Right -->
-         <dir name="Unity">
-          <dir name="Plugin">
-           <dir name="KernelConfiguratorTestCase">
-            <file name="AutoloadClass.php" role="test">
-             <tasks:replace from="@package_version@" to="version" type="package-info" />
-            </file>
-            <file name="Bar.php" role="test">
-             <tasks:replace from="@package_version@" to="version" type="package-info" />
-            </file>
-            <file name="Foo.php" role="test">
-             <tasks:replace from="@package_version@" to="version" type="package-info" />
-            </file>
-           </dir> <!-- /tests/Piece/Unity/Plugin/KernelConfiguratorTestCase/Piece/Unity/Plugin/KernelConfiguratorTestCase -->
-          </dir> <!-- /tests/Piece/Unity/Plugin/KernelConfiguratorTestCase/Piece/Unity/Plugin -->
-         </dir> <!-- /tests/Piece/Unity/Plugin/KernelConfiguratorTestCase/Piece/Unity -->
-        </dir> <!-- /tests/Piece/Unity/Plugin/KernelConfiguratorTestCase/Piece -->
-        <file name="Authentication.yaml" role="test">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-       </dir> <!-- /tests/Piece/Unity/Plugin/KernelConfiguratorTestCase -->
        <dir name="OutputFilter">
         <file name="First.php" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
@@ -607,68 +395,6 @@ What&apos;s New in Piece_Unity 0.13.0
         </file>
        </dir> <!-- /tests/Piece/Unity/Plugin/OutputFilter -->
        <dir name="Renderer">
-        <dir name="FlexyTestCase">
-         <dir name="actions">
-          <file name="FlexyExampleAction.php" role="test">
-           <tasks:replace from="@package_version@" to="version" type="package-info" />
-          </file>
-         </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/FlexyTestCase/actions -->
-         <dir name="compiled-templates">
-          <file name="README" role="test">
-           <tasks:replace from="@package_version@" to="version" type="package-info" />
-          </file>
-         </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/FlexyTestCase/compiled-templates -->
-         <dir name="lib">
-          <dir name="Piece">
-           <dir name="Unity">
-            <dir name="Plugin">
-             <dir name="Renderer">
-              <dir name="FlexyTestCase">
-               <file name="FlexyControllerShouldBeUsedIfUseControllerIsTrue.php" role="test">
-                <tasks:replace from="@package_version@" to="version" type="package-info" />
-               </file>
-               <file name="FlexyExternalPluginShouldBeAbleToUseByExternalPlugins.php" role="test">
-                <tasks:replace from="@package_version@" to="version" type="package-info" />
-               </file>
-              </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/FlexyTestCase/lib/Piece/Unity/Plugin/Renderer/FlexyTestCase -->
-             </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/FlexyTestCase/lib/Piece/Unity/Plugin/Renderer -->
-            </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/FlexyTestCase/lib/Piece/Unity/Plugin -->
-           </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/FlexyTestCase/lib/Piece/Unity -->
-          </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/FlexyTestCase/lib/Piece -->
-         </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/FlexyTestCase/lib -->
-         <dir name="templates">
-          <dir name="Content">
-           <file name="FlexyAutomaticFormElements.html" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-           <file name="FlexyControllerShouldBeUsedIfUseControllerIsTrue.html" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-           <file name="FlexyExample.html" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-           <file name="FlexyExternalPluginShouldBeAbleToUseByExternalPlugins.html" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-           <file name="FlexyKeepingReference.html" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-           <file name="FlexyLayoutContent.html" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-          </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/FlexyTestCase/templates/Content -->
-          <dir name="Fallback">
-           <file name="Fallback.html" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-          </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/FlexyTestCase/templates/Fallback -->
-          <dir name="Layout">
-           <file name="FlexyLayout.html" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-          </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/FlexyTestCase/templates/Layout -->
-         </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/FlexyTestCase/templates -->
-        </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/FlexyTestCase -->
         <dir name="PHPTestCase">
          <dir name="actions">
           <file name="PHPExampleAction.php" role="test">
@@ -699,77 +425,10 @@ What&apos;s New in Piece_Unity 0.13.0
           </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/PHPTestCase/templates/Layout -->
          </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/PHPTestCase/templates -->
         </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/PHPTestCase -->
-        <dir name="SmartyTestCase">
-         <dir name="actions">
-          <file name="SmartyExampleAction.php" role="test">
-           <tasks:replace from="@package_version@" to="version" type="package-info" />
-          </file>
-         </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/SmartyTestCase/actions -->
-         <dir name="compiled-templates">
-          <dir name="Content">
-           <file name="README" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-          </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/SmartyTestCase/compiled-templates/Content -->
-          <dir name="Fallback">
-           <file name="README" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-          </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/SmartyTestCase/compiled-templates/Fallback -->
-          <dir name="Layout">
-           <file name="README" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-          </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/SmartyTestCase/compiled-templates/Layout -->
-         </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/SmartyTestCase/compiled-templates -->
-         <dir name="plugins">
-          <file name="function.helloworld.php" role="test">
-           <tasks:replace from="@package_version@" to="version" type="package-info" />
-          </file>
-         </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/SmartyTestCase/plugins -->
-         <dir name="templates">
-          <dir name="Content">
-           <file name="SmartyExample.tpl" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-           <file name="SmartyKeepingReference.tpl" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-           <file name="SmartyLayoutContent.tpl" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-           <file name="SmartyLoadingPlugins.tpl" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-          </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/SmartyTestCase/templates/Content -->
-          <dir name="Fallback">
-           <file name="Fallback.tpl" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-          </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/SmartyTestCase/templates/Fallback -->
-          <dir name="Layout">
-           <file name="SmartyLayout.tpl" role="test">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-           </file>
-          </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/SmartyTestCase/templates/Layout -->
-         </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/SmartyTestCase/templates -->
-        </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/SmartyTestCase -->
-        <file name="FlexyTestCase.php" role="test">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="HTMLCompatibilityTest.php" role="test">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="JSONTestCase.php" role="test">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
         <file name="PHPTestCase.php" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
         <file name="RedirectionTestCase.php" role="test">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="SmartyTestCase.php" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
        </dir> <!-- /tests/Piece/Unity/Plugin/Renderer -->
@@ -785,9 +444,6 @@ What&apos;s New in Piece_Unity 0.13.0
        <file name="InterceptorChainTestCase.php" role="test">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
-       <file name="KernelConfiguratorTestCase.php" role="test">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
        <file name="OutputBufferStackTestCase.php" role="test">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
@@ -801,11 +457,6 @@ What&apos;s New in Piece_Unity 0.13.0
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
       </dir> <!-- /tests/Piece/Unity/Plugin -->
-      <dir name="Service">
-       <file name="FlexyElementTestCase.php" role="test">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-      </dir> <!-- /tests/Piece/Unity/Service -->
       <dir name="SessionTestCase">
        <file name="AutoloadClass.php" role="test">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
@@ -874,7 +525,7 @@ What&apos;s New in Piece_Unity 0.13.0
    <package>
     <name>Piece_Flow</name>
     <channel>pear.piece-framework.com</channel>
-    <min>1.8.0</min>
+    <min>1.9.0</min>
    </package>
    <package>
     <name>Cache_Lite</name>
@@ -904,47 +555,70 @@ What&apos;s New in Piece_Unity 0.13.0
     <min>0.5.0</min>
    </package>
    <package>
-    <name>HTML_Template_Flexy</name>
-    <channel>pear.php.net</channel>
-    <min>1.2.4</min>
-   </package>
-   <package>
-    <name>Smarty</name>
-    <channel>pearified.com</channel>
-    <min>1.6.8</min>
-   </package>
-   <package>
-    <name>HTML_AJAX</name>
-    <channel>pear.php.net</channel>
-    <min>0.5.0</min>
-   </package>
-   <package>
     <name>PHPUnit</name>
     <channel>pear.phpunit.de</channel>
     <min>1.3.2</min>
     <max>1.3.2</max>
    </package>
-   <extension>
-    <name>json</name>
-   </extension>
   </optional>
-  <group hint="An interceptor to control the access to resources which can be accessed only by authenticated users." name="Authentication">
-   <subpackage>
-    <name>Piece_Unity_Component_Authentication</name>
-    <channel>pear.piece-framework.com</channel>
-    <min>0.13.0</min>
-   </subpackage>
-  </group>
-  <group hint="A configurator for Piece_ORM." name="PieceORM">
-   <subpackage>
-    <name>Piece_Unity_Component_PieceORM</name>
-    <channel>pear.piece-framework.com</channel>
-    <min>1.0.0</min>
-   </subpackage>
-  </group>
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>1.0.0</release>
+    <api>0.7.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2007-07-16</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+   <notes>This is the first stable release of Piece_Unity.
+
+What&apos;s New in Piece_Unity 1.0.0
+
+ * Components: A component is a package that consists of plug-ins, services, GUI elements (HTML templates, images, scripts, etc.), flow definition files, action classes, and entry points, etc.. Many plug-ins are extracted as each Piece_Unity_Component_Xxx package. See the following release notes for details.
+ * Services: A service is one or more classes that provides useful operations for client use.
+ * The Piece_Unity_Service_FlowAction class: The Piece_Unity_Service_FlowAction class can be used as the base class for Piece_Flow actions.
+
+See the following release notes for details.
+
+Enhancements
+============ 
+
+Plug-ins:
+
+- Added error handling. (Interceptor_SessionStart)
+- Moved the process of preloading Dispatcher_Continuation plug-in from Configurator_Plugin to Interceptor_SessionStart.
+- A improvement for restoring action instances in session. (Dispatcher_Continuation, Interceptor_SessionStart, Piece_Unity_Session_Preload)
+- Changed the error type on all Piece_Unity_Error::pushError() calls from &quot;warning&quot; to &quot;exception&quot;. (ConfiguratorChain, InterceptorChain, OutputBufferStack)
+- Moved the following plug-ins to components/. These plug-ins will be packaged as each Piece_Unity_Component_Xxx package.
+  * Interceptor_Authentication
+  * OutputFilter_ContentLength
+  * Renderer_Flexy
+  * Renderer_JSON
+  * OutputFilter_JapaneseZ2H
+  * KernelConfigurator (obsoleted)
+  * Interceptor_NullByteAttackPreventation
+  * Configurator_PieceORM
+  * Interceptor_ProxyBasePath (obsoleted)
+  * Renderer_Smarty
+
+Services:
+
+- Added the base class for Piece_Flow actions. (Piece_Unity_Service_FlowAction)
+
+Kernel:
+
+- Changed factory() to throw an exception if the configuration directory or the configuration file not found. (Ticket #66) (Piece_Unity_Config_Factory)
+- Added a class loader. (Piece_Unity_ClassLoader)
+- Updated an exception to be raised when an undefined extension point is used. (Ticket #72) (Piece_Unity_Plugin_Common)
+- Updated getResults() so that a Piece_Right_Results object can be get by a validation set name. (Ticket #70) (Piece_Unity_Validation)
+- Improved error handling so as to recognize the place where the exception is raised. (Piece_Unity_Plugin_Common)
+- Added hasResults() to check whether or not the Piece_Right_Results object of the given validation set or the latest validation exists. (Piece_Unity_Validation)</notes>
+  </release>
   <release>
    <version>
     <release>0.13.0</release>
@@ -958,8 +632,7 @@ What&apos;s New in Piece_Unity 0.13.0
    <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
    <notes>A new release of Piece_Unity is now available.
 
-What&apos;s New in Piece_Unity 0.13.0
-   </notes>
+What&apos;s New in Piece_Unity 0.13.0</notes>
   </release>
   <release>
    <version>
