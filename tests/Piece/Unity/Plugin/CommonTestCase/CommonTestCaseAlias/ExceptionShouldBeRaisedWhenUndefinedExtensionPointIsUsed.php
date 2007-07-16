@@ -33,7 +33,7 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @see        Piece_Unity_Plugin_CommonTestCase
- * @since      File available since Release 0.13.0
+ * @since      File available since Release 1.0.0
  */
 
 require_once 'Piece/Unity/Plugin/Common.php';
@@ -48,7 +48,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @see        Piece_Unity_Plugin_CommonTestCase
- * @since      Class available since Release 0.13.0
+ * @since      Class available since Release 1.0.0
  */
 class CommonTestCaseAlias_ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsed extends Piece_Unity_Plugin_Common
 {

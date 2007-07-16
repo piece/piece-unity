@@ -92,7 +92,7 @@ class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Rendere
     }
 
     /**
-     * @since Method available since Release 0.13.0
+     * @since Method available since Release 1.0.0
      */
     function _doSetUp()
     {

@@ -121,7 +121,7 @@ class Piece_Unity_Plugin_CommonTestCase extends PHPUnit_TestCase
     }
 
     /**
-     * @since Method available since Release 0.13.0
+     * @since Method available since Release 1.0.0
      */
     function testExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsed()
     {
@@ -143,7 +143,7 @@ class Piece_Unity_Plugin_CommonTestCase extends PHPUnit_TestCase
     }
 
     /**
-     * @since Method available since Release 0.13.0
+     * @since Method available since Release 1.0.0
      */
     function testExceptionShouldBeRaisedWhenUndefinedConfigurationPointIsUsed()
     {

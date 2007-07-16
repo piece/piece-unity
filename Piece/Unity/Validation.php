@@ -341,7 +341,7 @@ class Piece_Unity_Validation
      *
      * @param string $validationSet
      * @static
-     * @since Method available since Release 0.13.0
+     * @since Method available since Release 1.0.0
      */
     function _createResultsName($validationSet)
     {

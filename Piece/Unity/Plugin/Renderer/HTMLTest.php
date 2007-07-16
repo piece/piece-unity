@@ -318,7 +318,7 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
     }
 
     /**
-     * @since Method available since Release 0.13.0
+     * @since Method available since Release 1.0.0
      */
     function _render()
     {
@@ -333,7 +333,7 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
     }
 
     /**
-     * @since Method available since Release 0.13.0
+     * @since Method available since Release 1.0.0
      */
     function _doSetUp() {}
 
