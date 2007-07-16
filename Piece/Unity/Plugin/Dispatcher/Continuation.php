@@ -29,7 +29,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @subpackage Piece_Unity_Plugin_Dispatcher_Continuation
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
@@ -60,7 +59,6 @@ $GLOBALS['PIECE_UNITY_Continuation_FlowName'] = null;
  * continuation, and returns a view string.
  *
  * @package    Piece_Unity
- * @subpackage Piece_Unity_Plugin_Dispatcher_Continuation
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
