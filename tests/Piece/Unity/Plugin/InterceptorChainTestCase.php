@@ -35,7 +35,7 @@
  * @since      File available since Release 0.4.0
  */
 
-require dirname(__FILE__) . '/../../../prepare.php';
+require_once realpath(dirname(__FILE__) . '/../../../prepare.php');
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/InterceptorChain.php';
 require_once 'Piece/Unity/Plugin/Factory.php';

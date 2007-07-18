@@ -35,7 +35,7 @@
  * @since      File available since Release 0.9.0
  */
 
-require dirname(__FILE__) . '/../../prepare.php';
+require_once realpath(dirname(__FILE__) . '/../../prepare.php');
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/URL.php';
 require_once 'Piece/Unity/Context.php';
