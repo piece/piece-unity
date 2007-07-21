@@ -180,6 +180,32 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
         $this->assertEquals('foo', $context->getView());
     }
 
+    /**
+     * @since Method available since Release 1.1.0
+     */
+    function testApplicationShouldBeAbleToConfigureWithSetConfiguration()
+    {
+        $unity = &new Piece_Unity();
+        $unity->setConfiguration($GLOBALS['PIECE_UNITY_Root_Plugin'], 'Bar', 'Baz');
+        $context = &Piece_Unity_Context::singleton();
+        $config = &$context->getConfiguration();
+
+        $this->assertEquals('Baz', $config->getConfiguration($GLOBALS['PIECE_UNITY_Root_Plugin'], 'Bar'));
+    }
+
+    /**
+     * @since Method available since Release 1.1.0
+     */
+    function testApplicationShouldBeAbleToConfigureWithSetExtension()
+    {
+        $unity = &new Piece_Unity();
+        $unity->setExtension($GLOBALS['PIECE_UNITY_Root_Plugin'], 'renderer', 'Foo');
+        $context = &Piece_Unity_Context::singleton();
+        $config = &$context->getConfiguration();
+
+        $this->assertEquals('Foo', $config->getExtension($GLOBALS['PIECE_UNITY_Root_Plugin'], 'renderer'));
+    }
+
     /**#@-*/
 
     /**#@+

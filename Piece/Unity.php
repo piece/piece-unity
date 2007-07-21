@@ -71,9 +71,7 @@ class Piece_Unity
      * @access private
      */
 
-    var $_configDirectory;
-    var $_cacheDirectory;
-    var $_dynamicConfig;
+    var $_context;
 
     /**#@-*/
 
@@ -87,19 +85,29 @@ class Piece_Unity
     /**
      * Configures the application.
      *
+     * First this method tries to load a configuration from a configuration
+     * file in the given configration directory using
+     * Piece_Unity_Config_Factory::factory method. The method creates a new
+     * object if the load failed.
+     * Second this method merges the given configuretion into the loaded
+     * configuration.
+     * Finally this method sets the configuration to the current context.
+     *
      * @param string             $configDirectory
      * @param string             $cacheDirectory
      * @param Piece_Unity_Config $dynamicConfig
      */
-    function Piece_Unity($configDirectory = null,
-                         $cacheDirectory = null,
-                         $dynamicConfig = null
-                         )
+    function Piece_Unity($configDirectory = null, $cacheDirectory = null, $dynamicConfig = null)
     {
-        $this->_configDirectory = $configDirectory;
-        $this->_cacheDirectory = $cacheDirectory;
-        $this->_dynamicConfig = $dynamicConfig;
-        $this->_configure();
+        $config = &Piece_Unity_Config_Factory::factory($configDirectory, $cacheDirectory);
+        if (is_a($dynamicConfig, 'Piece_Unity_Config')) {
+            $config->merge($dynamicConfig);
+        }
+
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $this->_context = &$context;
     }
 
     // }}}
@@ -125,39 +133,45 @@ class Piece_Unity
         $root->invoke();
     }
 
+    // }}}
+    // {{{ setConfiguration()
+
+    /**
+     * Sets the configuration to the configuration point of the plugin.
+     *
+     * @param string $plugin
+     * @param string $configurationPoint
+     * @param string $configuration
+     * @since Method available since Release 1.1.0
+     */
+    function setConfiguration($plugin, $configurationPoint, $configuration)
+    {
+        $config = &$this->_context->getConfiguration();
+        $config->setConfiguration($plugin, $configurationPoint, $configuration);
+    }
+
+    // }}}
+    // {{{ setExtension()
+
+    /**
+     * Sets the extension to the extension point of the plugin.
+     *
+     * @param string $plugin
+     * @param string $extensionPoint
+     * @param string $extension
+     * @since Method available since Release 1.1.0
+     */
+    function setExtension($plugin, $extensionPoint, $extension)
+    {
+        $config = &$this->_context->getConfiguration();
+        $config->setExtension($plugin, $extensionPoint, $extension);
+    }
+
     /**#@-*/
 
     /**#@+
      * @access private
      */
-
-    // }}}
-    // {{{ _configure()
-
-    /**
-     * Configures the application.
-     *
-     * First this method tries to load a configuration from a configuration
-     * file in the given configration directory using
-     * Piece_Unity_Config_Factory::factory method. The method creates a new
-     * object if the load failed.
-     * Second this method merges the given configuretion into the loaded
-     * configuration.
-     * Finally this method sets the configuration to the current context.
-     */
-    function _configure()
-    {
-        $config = &Piece_Unity_Config_Factory::factory($this->_configDirectory,
-                                                       $this->_cacheDirectory
-                                                       );
-
-        if (is_a($this->_dynamicConfig, 'Piece_Unity_Config')) {
-            $config->merge($this->_dynamicConfig);
-        }
-
-        $context = &Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-    }
 
     /**#@-*/
 
