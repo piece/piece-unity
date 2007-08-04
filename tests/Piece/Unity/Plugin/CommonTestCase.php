@@ -164,6 +164,52 @@ class Piece_Unity_Plugin_CommonTestCase extends PHPUnit_TestCase
         Piece_Unity_Error::popCallback();
     }
 
+    /**
+     * @since Method available since Release 1.1.0
+     */
+    function testExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsedInConfiguration()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        $config = &new Piece_Unity_Config();
+        $config->setExtension('ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsedInConfiguration', 'bar', 'baz');
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestCaseAlias');
+        $plugin = &Piece_Unity_Plugin_Factory::factory('ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsedInConfiguration');
+
+        $this->assertNull($plugin);
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
+
+        Piece_Unity_Error::popCallback();
+    }
+
+    /**
+     * @since Method available since Release 1.1.0
+     */
+    function testExceptionShouldBeRaisedWhenUndefinedConfigurationPointIsUsedInConfiguration()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsedInConfiguration', 'bar', 'baz');
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestCaseAlias');
+        $plugin = &Piece_Unity_Plugin_Factory::factory('ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsedInConfiguration');
+
+        $this->assertNull($plugin);
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
+
+        Piece_Unity_Error::popCallback();
+    }
+
     /**#@-*/
 
     /**#@+

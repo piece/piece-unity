@@ -227,6 +227,64 @@ class Piece_Unity_Config
         return $this->_configurations;
     }
 
+    // }}}
+    // {{{ validateExtensionPoints()
+
+    /**
+     * Validates whether all extension points in the current configuration
+     * can be found in the given plug-in.
+     *
+     * @param string $plugin
+     * @param array  $extensionPoints
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @since Method available since Release 1.1.0
+     */
+    function validateExtensionPoints($plugin, $extensionPoints)
+    {
+        $plugin = strtolower($plugin);
+        if (!array_key_exists($plugin, $this->_extensions)) {
+            return;
+        }
+
+        foreach (array_keys($this->_extensions[$plugin]) as $extensionPoint) {
+            if (!in_array($extensionPoint, $extensionPoints)) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                        "The extension point [ $extensionPoint ] not found in the plug-in [ $plugin ]."
+                                        );
+                return;
+            }
+        }
+    }
+
+    // }}}
+    // {{{ validateConfigurationPoints()
+
+    /**
+     * Validates whether all configuration points in the current
+     * configuration can be found in the given plug-in.
+     *
+     * @param string $plugin
+     * @param array  $configurationPoints
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @since Method available since Release 1.1.0
+     */
+    function validateConfigurationPoints($plugin, $configurationPoints)
+    {
+        $plugin = strtolower($plugin);
+        if (!array_key_exists($plugin, $this->_configurations)) {
+            return;
+        }
+
+        foreach (array_keys($this->_configurations[$plugin]) as $configurationPoint) {
+            if (!in_array($configurationPoint, $configurationPoints)) {
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                        "The configuration point [ $configurationPoint ] not found in the plug-in [ $plugin ]."
+                                        );
+                return;
+            }
+        }
+    }
+
     /**#@-*/
 
     /**#@+

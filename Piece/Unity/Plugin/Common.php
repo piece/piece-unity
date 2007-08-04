@@ -84,6 +84,7 @@ class Piece_Unity_Plugin_Common
      * And also the plug-in name is set.
      *
      * @param string $prefix
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
      */
     function Piece_Unity_Plugin_Common($prefix = 'Piece_Unity_Plugin')
     {
@@ -94,7 +95,16 @@ class Piece_Unity_Plugin_Common
         }
 
         $this->_context = &Piece_Unity_Context::singleton();
+
         $this->_initialize();
+
+        $config = &$this->_context->getConfiguration();
+        $config->validateExtensionPoints($this->_name, array_keys($this->_extensionPoints));
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
+
+        $config->validateConfigurationPoints($this->_name, array_keys($this->_configurationPoints));
     }
 
     // }}}
