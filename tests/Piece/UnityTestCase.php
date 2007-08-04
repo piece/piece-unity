@@ -166,10 +166,7 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
         $_GET['_event'] = 'foo';
 
         $config = &new Piece_Unity_Config();
-        $config->setExtension($GLOBALS['PIECE_UNITY_Root_Plugin'],
-                              'dispatcher',
-                              'Dispatcher_Simple'
-                              );
+        $config->setExtension('controller', 'dispatcher', 'Dispatcher_Simple');
         $unity = &new Piece_Unity(dirname(__FILE__) . '/../../data',
                                   dirname(__FILE__),
                                   $config

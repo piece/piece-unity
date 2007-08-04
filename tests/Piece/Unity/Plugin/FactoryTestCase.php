@@ -39,6 +39,8 @@ require_once realpath(dirname(__FILE__) . '/../../../prepare.php');
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
 require_once 'Piece/Unity/Error.php';
+require_once 'Piece/Unity/Config.php';
+require_once 'Piece/Unity/Context.php';
 
 // {{{ Piece_Unity_Plugin_FactoryTestCase
 
@@ -81,10 +83,14 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
         $this->_oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
         Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/FactoryTestCase');
         $this->_oldPluginPrefixes = $GLOBALS['PIECE_UNITY_Plugin_Prefixes'];
+        $config = &new Piece_Unity_Config();
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
     }
 
     function tearDown()
     {
+        Piece_Unity_Context::clear();
         $GLOBALS['PIECE_UNITY_Plugin_Prefixes'] = $this->_oldPluginPrefixes;
         Piece_Unity_Plugin_Factory::clearInstances();
         $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $this->_oldPluginDirectories;
