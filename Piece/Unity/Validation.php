@@ -43,7 +43,6 @@ require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Right/Validation/Script.php';
 require_once 'Piece/Right/Validator/Factory.php';
 require_once 'Piece/Right/Filter/Factory.php';
-require_once 'Piece/Right/Results.php';
 
 // {{{ Piece_Unity_Validation
 
@@ -324,6 +323,40 @@ class Piece_Unity_Validation
     function hasResults($validationSet = null)
     {
         return (boolean)$this->getResults($validationSet);
+    }
+
+    // }}}
+    // {{{ getFieldNames()
+
+    /**
+     * Gets all field names corresponding to the given validation set and
+     * a Piece_Right_Config object.
+     *
+     * @param string $validationSet
+     * @return array
+     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     */
+    function getFieldNames($validationSet)
+    {
+        $script = &new Piece_Right_Validation_Script($this->_configDirectory,
+                                                     $this->_cacheDirectory,
+                                                     array(__CLASS__, 'getFieldValueFromContext'),
+                                                     array(__CLASS__, 'setResultsAsViewElementAndFlowAttribute')
+                                                     );
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        $fieldNames = $script->getFieldNames($validationSet, $this->_config);
+        Piece_Unity_Error::popCallback();
+        if (Piece_Right_Error::hasErrors('exception')) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                    'Failed to invoke Piece_Right_Validation_Script::getFieldNames() method for any reasons.',
+                                    'exception',
+                                    array(),
+                                    Piece_Right_Error::pop()
+                                    );
+            return;
+        }
+
+        return $fieldNames;
     }
 
     /**#@-*/
