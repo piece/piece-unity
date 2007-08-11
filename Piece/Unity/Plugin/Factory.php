@@ -145,6 +145,11 @@ class Piece_Unity_Plugin_Factory
             }
 
             $plugin = &new $pluginClass($prefixAlias);
+            if (Piece_Unity_Error::hasErrors('exception')) {
+                $return = null;
+                return $return;
+            }
+
             if (!is_subclass_of($plugin, 'Piece_Unity_Plugin_Common')) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_PLUGIN,
                                         "The plugin [ $pluginName ] is invalid."
