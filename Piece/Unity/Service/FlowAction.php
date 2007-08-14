@@ -127,6 +127,8 @@ class Piece_Unity_Service_FlowAction
 
     /**
      * Clears all properties for the next use.
+     *
+     * @since Method available since Release 1.1.0
      */
     function clear()
     {
