@@ -122,6 +122,19 @@ class Piece_Unity_Service_FlowAction
      */
     function prepare() {}
 
+    // }}}
+    // {{{ clear()
+
+    /**
+     * Clears all properties for the next use.
+     */
+    function clear()
+    {
+        unset($this->_flow);
+        unset($this->_context);
+        $this->_event = null;
+    }
+
     /**#@-*/
 
     /**#@+
