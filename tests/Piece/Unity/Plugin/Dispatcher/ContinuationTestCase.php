@@ -339,6 +339,46 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         }
     }
 
+    /**
+     * @since Method available since Release 1.1.0
+     */
+    function testFallbackURLShouldBeReturnedWhenFlowExecutionHasExpiredAndGCIsEnabled()
+    {
+        $cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Continuation', 'flowName', 'FlowExecutionExpired');
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'FlowExecutionExpired', 'file' => "$cacheDirectory/FlowExecutionExpired.yaml", 'isExclusive' => false)));
+        $config->setConfiguration('Dispatcher_Continuation', 'enableGC', true);
+        $config->setConfiguration('Dispatcher_Continuation', 'gcExpirationTime', 1);
+        $config->setConfiguration('Dispatcher_Continuation', 'useGCFallback', true);
+        $config->setConfiguration('Dispatcher_Continuation', 'gcFallbackURL', 'http://www.example.org/');
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $session = &$context->getSession();
+        @$session->start();
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+
+        $this->assertEquals('Form', $dispatcher->invoke());
+
+        $session = &$context->getSession();
+        $continuation = &$session->getAttribute(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey());
+        $flowExecutionTicket = $continuation->getCurrentFlowExecutionTicket();
+
+        Piece_Unity_Context::clear();
+        $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $session = &$context->getSession();
+        @$session->start();
+        $session->setAttributeByRef(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey(), $continuation);
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+        sleep(2);
+
+        $this->assertEquals('http://www.example.org/', $dispatcher->invoke());
+    }
+
     /**#@-*/
 
     /**#@+

@@ -105,13 +105,22 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             return;
         }
 
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $this->_continuation->invoke($this->_context, $this->_getConfiguration('bindActionsWithFlowExecution'));
+        Piece_Unity_Error::popCallback();
         if (Piece_Flow_Error::hasErrors('exception')) {
+            $error = Piece_Flow_Error::pop();
+            if ($error['code'] == PIECE_FLOW_ERROR_FLOW_EXECUTION_EXPIRED) {
+                if ($this->_getConfiguration('useGCFallback')) {
+                    return $this->_getConfiguration('gcFallbackURL');
+                }
+            }
+
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
                                     "Failed to invoke the plugin [ {$this->_name} ].",
                                     'exception',
                                     array(),
-                                    Piece_Flow_Error::pop()
+                                    $error
                                     );
             return;
         }
@@ -268,7 +277,10 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      */
     function &_createContinuation()
     {
-        $continuation = &new Piece_Flow_Continuation($this->_getConfiguration('enableSingleFlowMode'));
+        $continuation = &new Piece_Flow_Continuation($this->_getConfiguration('enableSingleFlowMode'),
+                                                     $this->_getConfiguration('enableGC'),
+                                                     $this->_getConfiguration('gcExpirationTime')
+                                                     );
         $continuation->setCacheDirectory($this->_getConfiguration('cacheDirectory'));
         $continuation->setEventNameCallback(array(__CLASS__, 'getEventName'));
         $continuation->setFlowExecutionTicketCallback(array(__CLASS__, 'getFlowExecutionTicket'));
@@ -314,6 +326,10 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->_addConfigurationPoint('flowNameKey', '_flow');
         $this->_addConfigurationPoint('flowName');
         $this->_addConfigurationPoint('bindActionsWithFlowExecution', true);
+        $this->_addConfigurationPoint('enableGC', false);
+        $this->_addConfigurationPoint('gcExpirationTime', 1440);
+        $this->_addConfigurationPoint('useGCFallback', false);
+        $this->_addConfigurationPoint('gcFallbackURL');
 
         $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey'] = $this->_getConfiguration('flowExecutionTicketKey');
         $GLOBALS['PIECE_UNITY_Continuation_FlowNameKey'] = $this->_getConfiguration('flowNameKey');
