@@ -68,6 +68,8 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
      * @access private
      */
 
+    var $_cacheDirectory;
+
     /**#@-*/
 
     /**#@+
@@ -77,11 +79,12 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
     function setUp()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
+        $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 
     function tearDown()
     {
-        $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
+        $cache = &new Cache_Lite_File(array('cacheDir' => "{$this->_cacheDirectory}/",
                                             'masterFile' => '',
                                             'automaticSerialization' => true,
                                             'errorHandlingAPIBreak' => true)
@@ -144,8 +147,8 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
 
         $context = &Piece_Unity_Context::singleton();
         $validation = &$context->getValidation();
-        $validation->setConfigDirectory(dirname(__FILE__));
-        $validation->setCacheDirectory(dirname(__FILE__));
+        $validation->setConfigDirectory($this->_cacheDirectory);
+        $validation->setCacheDirectory($this->_cacheDirectory);
         $this->_dispatch();
 
         $viewElement = &$context->getViewElement();
@@ -172,7 +175,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
     function _dispatch()
     {
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_cacheDirectory);
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
