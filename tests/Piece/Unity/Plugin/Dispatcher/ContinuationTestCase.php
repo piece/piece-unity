@@ -70,6 +70,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
      * @access private
      */
 
+    var $_cacheDirectory;
+
     /**#@-*/
 
     /**#@+
@@ -81,12 +83,13 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SESSION = array();
+        $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 
     function tearDown()
     {
         unset($_SESSION);
-        $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
+        $cache = &new Cache_Lite_File(array('cacheDir' => "{$this->_cacheDirectory}/",
                                             'masterFile' => '',
                                             'automaticSerialization' => true,
                                             'errorHandlingAPIBreak' => true)
@@ -106,9 +109,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $_GET['_flow'] = 'Counter';
 
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
-        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__));
-        $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'Counter', 'file' => dirname(__FILE__) . '/Counter.yaml', 'isExclusive' => true)));
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'Counter', 'file' => "{$this->_cacheDirectory}/Counter.yaml", 'isExclusive' => true)));
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $session = &$context->getSession();
@@ -151,12 +154,12 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $_GET['_flow'] = 'Counter';
 
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'enableSingleFlowMode', true);
-        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_cacheDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions',
-                                  array(array('name' => 'Counter', 'file' => dirname(__FILE__) . '/Counter.yaml', 'isExclusive' => true),
-                                        array('name' => 'SeconfCounter', 'file' => dirname(__FILE__) . '/Counter.yaml', 'isExclusive' => true))
+                                  array(array('name' => 'Counter', 'file' => "{$this->_cacheDirectory}/Counter.yaml", 'isExclusive' => true),
+                                        array('name' => 'SeconfCounter', 'file' => "{$this->_cacheDirectory}/Counter.yaml", 'isExclusive' => true))
                                   );
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
@@ -180,11 +183,11 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
 
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'enableSingleFlowMode', true);
-        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__));
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_cacheDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions',
-                                  array(array('name' => 'Counter', 'file' => dirname(__FILE__) . '/Counter.yaml', 'isExclusive' => false))
+                                  array(array('name' => 'Counter', 'file' => "{$this->_cacheDirectory}/Counter.yaml", 'isExclusive' => false))
                                   );
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
@@ -227,12 +230,12 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $_GET['_bar'] = 'Counter';
 
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
-        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__));
-        $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'Counter', 'file' => dirname(__FILE__) . '/Counter.yaml', 'isExclusive' => true)));
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'Counter', 'file' => "{$this->_cacheDirectory}/Counter.yaml", 'isExclusive' => true)));
         $config->setConfiguration('Dispatcher_Continuation', 'flowExecutionTicketKey', '_foo');
         $config->setConfiguration('Dispatcher_Continuation', 'flowNameKey', '_bar');
-        $config->setConfiguration('Renderer_PHP', 'templateDirectory', dirname(__FILE__));
+        $config->setConfiguration('Renderer_PHP', 'templateDirectory', $this->_cacheDirectory);
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $session = &$context->getSession();
@@ -257,9 +260,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
         $_GET['_flow'] = 'Foo';
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
-        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__));
-        $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'Counter', 'file' => dirname(__FILE__) . '/Counter.yaml', 'isExclusive' => true)));
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'Counter', 'file' => "{$this->_cacheDirectory}/Counter.yaml", 'isExclusive' => true)));
         $config->setConfiguration('Dispatcher_Continuation', 'flowName', 'Counter');
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
@@ -289,9 +292,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         }
 
         $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
-        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__));
-        $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'ContinuationValidation', 'file' => dirname(__FILE__) . '/ContinuationValidation.yaml', 'isExclusive' => true)));
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'ContinuationValidation', 'file' => "{$this->_cacheDirectory}/ContinuationValidation.yaml", 'isExclusive' => true)));
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $session = &$context->getSession();
@@ -313,8 +316,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         @$session->start();
         $session->setAttributeByRef(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey(), $continuation);
         $validation = &$context->getValidation();
-        $validation->setConfigDirectory(dirname(__FILE__));
-        $validation->setCacheDirectory(dirname(__FILE__));
+        $validation->setConfigDirectory($this->_cacheDirectory);
+        $validation->setCacheDirectory($this->_cacheDirectory);
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
 
         $this->assertEquals('Success', $dispatcher->invoke());
@@ -344,12 +347,11 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
      */
     function testFallbackURLShouldBeReturnedWhenFlowExecutionHasExpiredAndGCIsEnabled()
     {
-        $cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'flowName', 'FlowExecutionExpired');
-        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__));
-        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__));
-        $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'FlowExecutionExpired', 'file' => "$cacheDirectory/FlowExecutionExpired.yaml", 'isExclusive' => false)));
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'FlowExecutionExpired', 'file' => "{$this->_cacheDirectory}/FlowExecutionExpired.yaml", 'isExclusive' => false)));
         $config->setConfiguration('Dispatcher_Continuation', 'enableGC', true);
         $config->setConfiguration('Dispatcher_Continuation', 'gcExpirationTime', 1);
         $config->setConfiguration('Dispatcher_Continuation', 'useGCFallback', true);
