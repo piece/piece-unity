@@ -125,6 +125,17 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             return;
         }
 
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            $error = Piece_Unity_Error::pop();
+            Piece_Unity_Error::push($error['code'],
+                                    $error['message'],
+                                    'exception',
+                                    $error['params'],
+                                    $error['repackage']
+                                    );
+            return;
+        }
+
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $view = $this->_continuation->getView();
         Piece_Unity_Error::popCallback();
