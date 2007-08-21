@@ -65,6 +65,10 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common
      * @access private
      */
 
+    var $_requiredEnvHandlers = array('Configurator_EnvHandler_PieceFlow',
+                                      'Configurator_EnvHandler_PieceRight'
+                                      );
+
     /**#@-*/
 
     /**#@+
@@ -78,6 +82,9 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common
      * Invokes the plugin specific code.
      *
      * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
+     * @throws PIECE_UNITY_ERROR_CANNOT_READ
      */
     function invoke()
     {
@@ -87,6 +94,26 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common
         }
 
         $this->_setNonSSLableServers();
+
+        $envHandlers = &$this->_getExtension('envHandlers');
+        if (!is_array($envHandlers)) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    "The value of the extension point [ envHandlers ] on the plug-in [ {$this->_name} ] should be an array."
+                                    );
+            return;
+        }
+
+        foreach (array_merge($this->_requiredEnvHandlers, $envHandlers) as $extension) {
+            $envHandler = &Piece_Unity_Plugin_Factory::factory($extension);
+            if (Piece_Unity_Error::hasErrors('exception')) {
+                return;
+            }
+
+            $envHandler->invoke(Piece_Unity_Env::isProduction());
+            if (Piece_Unity_Error::hasErrors('exception')) {
+                return;
+            }
+        }
     }
 
     /**#@-*/
@@ -105,6 +132,7 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common
     {
         $this->_addConfigurationPoint('proxyPath');
         $this->_addConfigurationPoint('nonSSLableServers', array());
+        $this->_addExtensionPoint('envHandlers', array());
     }
 
     // }}}
