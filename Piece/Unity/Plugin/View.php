@@ -83,6 +83,7 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
      * @throws PIECE_UNITY_ERROR_NOT_READABLE
      * @throws PIECE_UNITY_ERROR_NOT_FOUND
      * @throws PIECE_UNITY_ERROR_CANNOT_READ
+     * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
      */
     function invoke()
     {
