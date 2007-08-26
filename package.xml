@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- $Id$ -->
-<package packagerversion="1.5.4" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+<package packagerversion="1.6.1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
     http://pear.php.net/dtd/tasks-1.0.xsd
     http://pear.php.net/dtd/package-2.0
     http://pear.php.net/dtd/package-2.0.xsd">
@@ -16,10 +16,10 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
   <email>iteman@users.sourceforge.net</email>
   <active>yes</active>
  </lead>
- <date>2007-07-18</date>
- <time>19:15:42</time>
+ <date>2007-08-26</date>
+ <time>19:50:26</time>
  <version>
-  <release>1.0.0</release>
+  <release>1.1.0</release>
   <api>0.7.0</api>
  </version>
  <stability>
@@ -27,49 +27,37 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
   <api>stable</api>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
- <notes>This is the first stable release of Piece_Unity.
+ <notes>A new release of Piece_Unity is now available.
 
-What&apos;s New in Piece_Unity 1.0.0
+What&apos;s New in Piece_Unity 1.1.0
 
- * Components: A component is a package that consists of plug-ins, services, GUI elements (HTML templates, images, scripts, etc.), flow definition files, action classes, and entry points, etc.. Many plug-ins are extracted as each Piece_Unity_Component_Xxx package. See the following release notes for details.
- * Services: A service is one or more classes that provides useful operations for client use.
- * The Piece_Unity_Service_FlowAction class: The Piece_Unity_Service_FlowAction class can be used as the base class for Piece_Flow actions.
+ * Two client interfaces for dynamic configuration: Piece_Unity::setConfiguration() and Piece_Unity::setExtension() can be used for dynamic configuration in entry points and actions.
+ * A client interface to get all field names in a form: Piece_Unity_Validation::getFieldNames() can be used to get all field names corresponding to the given validation set and a Piece_Right_Config object.
+ * Environment settings: The configuration file is always read when the current environment is not production.
+ * Garbage Collection: The garbage collection can be used for sweeping expired flow executions. The target of the garbage collection is only non-exclusive flow executions.
 
 See the following release notes for details.
 
 Enhancements
 ============ 
 
-Plug-ins:
+Kernel:
 
-- Added error handling. (Interceptor_SessionStart)
-- Moved the process of preloading Dispatcher_Continuation plug-in from Configurator_Plugin to Interceptor_SessionStart.
-- A improvement for restoring action instances in session. (Dispatcher_Continuation, Interceptor_SessionStart, Piece_Unity_Session_Preload)
-- Changed the error type on all Piece_Unity_Error::pushError() calls from &quot;warning&quot; to &quot;exception&quot;. (ConfiguratorChain, InterceptorChain, OutputBufferStack)
-- Moved the following plug-ins to components/. These plug-ins will be packaged as each Piece_Unity_Component_Xxx package.
-  * Interceptor_Authentication
-  * OutputFilter_ContentLength
-  * Renderer_Flexy
-  * Renderer_JSON
-  * OutputFilter_JapaneseZ2H
-  * KernelConfigurator (obsoleted)
-  * Interceptor_NullByteAttackPreventation
-  * Configurator_PieceORM
-  * Interceptor_ProxyBasePath (obsoleted)
-  * Renderer_Smarty
+- Added setConfiguration()/setExtension() for client use. (Piece_Unity)
+- Updated an exception to be raised when an undefined extension point or configuration point is used in the current configuration. (Piece_Unity_Plugin_Common, Piece_Unity_Config)
+- Added error handling after instantiating a plug-in. (Piece_Unity_Plugin_Factory)
+- Added getFieldNames() to get all field names corresponding to the given validation set and a Piece_Right_Config object. (Piece_Unity_Validation)
+- Updated code so that the configuration file is always read when the current environment is not production. (Ticket #75) (Piece_Unity_Env, Piece_Unity_Config_Factory)
 
 Services:
 
-- Added the base class for Piece_Flow actions. (Piece_Unity_Service_FlowAction)
+- Added clear() to clear all properties for the next use. (Piece_Unity_Service_FlowAction)
 
-Kernel:
+Plug-ins:
 
-- Changed factory() to throw an exception if the configuration directory or the configuration file not found. (Ticket #66) (Piece_Unity_Config_Factory)
-- Added a class loader. (Piece_Unity_ClassLoader)
-- Updated an exception to be raised when an undefined extension point is used. (Ticket #72) (Piece_Unity_Plugin_Common)
-- Updated getResults() so that a Piece_Right_Results object can be get by a validation set name. (Ticket #70) (Piece_Unity_Validation)
-- Improved error handling so as to recognize the place where the exception is raised. (Piece_Unity_Plugin_Common)
-- Added hasResults() to check whether or not the Piece_Right_Results object of the given validation set or the latest validation exists. (Piece_Unity_Validation)</notes>
+- Added support for garbage collection for expired flow executions. (Dispatcher_Continuation)
+- Added missing error handling. (Dispatcher_Continuation)
+- Added an extension point &quot;envHandlers&quot; which can be used to set whether the current environment is production or not to arbitrary components. (Configurator_Env, Configurator_EnvHandler_PieceFlow, Configurator_EnvHandler_PieceRight)</notes>
  <contents>
   <dir baseinstalldir="/" name="/">
    <dir name="data">
@@ -99,6 +87,14 @@ Kernel:
      </dir> <!-- /Piece/Unity/Config -->
      <dir name="Plugin">
       <dir name="Configurator">
+       <dir name="EnvHandler">
+        <file name="PieceFlow.php" role="php">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="PieceRight.php" role="php">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+       </dir> <!-- /Piece/Unity/Plugin/Configurator/EnvHandler -->
        <file name="AppRoot.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
@@ -192,6 +188,9 @@ Kernel:
      <file name="Context.php" role="php">
       <tasks:replace from="@package_version@" to="version" type="package-info" />
      </file>
+     <file name="Env.php" role="php">
+      <tasks:replace from="@package_version@" to="version" type="package-info" />
+     </file>
      <file name="Error.php" role="php">
       <tasks:replace from="@package_version@" to="version" type="package-info" />
      </file>
@@ -238,6 +237,9 @@ Kernel:
           <tasks:replace from="@package_version@" to="version" type="package-info" />
          </file>
          <file name="ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsed.php" role="test">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+         <file name="ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsedInConfiguration.php" role="test">
           <tasks:replace from="@package_version@" to="version" type="package-info" />
          </file>
          <file name="Foo.php" role="test">
@@ -312,34 +314,44 @@ Kernel:
         </file>
        </dir> <!-- /tests/Piece/Unity/Plugin/ConfiguratorChainTestCase -->
        <dir name="Dispatcher">
+        <dir name="ContinuationTestCase">
+         <file name="ContinuationValidation.yaml" role="test">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+         <file name="ContinuationValidationAction.php" role="test">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+         <file name="Counter.php" role="test">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+         <file name="Counter.yaml" role="test">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+         <file name="CounterAction.php" role="test">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+         <file name="FlowExecutionExpired.yaml" role="test">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+         <file name="Validation.yaml" role="test">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+        </dir> <!-- /tests/Piece/Unity/Plugin/Dispatcher/ContinuationTestCase -->
+        <dir name="SimpleTestCase">
+         <file name="SimpleExampleAction.php" role="test">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+         <file name="SimpleValidationAction.php" role="test">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+         <file name="Validation.yaml" role="test">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+        </dir> <!-- /tests/Piece/Unity/Plugin/Dispatcher/SimpleTestCase -->
         <file name="ContinuationTestCase.php" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
-        <file name="ContinuationValidation.yaml" role="test">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="ContinuationValidationAction.php" role="test">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="Counter.php" role="test">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="Counter.yaml" role="test">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="CounterAction.php" role="test">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="SimpleExampleAction.php" role="test">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
         <file name="SimpleTestCase.php" role="test">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="SimpleValidationAction.php" role="test">
-         <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="Validation.yaml" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
        </dir> <!-- /tests/Piece/Unity/Plugin/Dispatcher -->
@@ -525,7 +537,7 @@ Kernel:
    <package>
     <name>Piece_Flow</name>
     <channel>pear.piece-framework.com</channel>
-    <min>1.9.0</min>
+    <min>1.12.0</min>
    </package>
    <package>
     <name>Cache_Lite</name>
@@ -545,7 +557,7 @@ Kernel:
    <package>
     <name>Piece_Right</name>
     <channel>pear.piece-framework.com</channel>
-    <min>1.5.0</min>
+    <min>1.7.0</min>
    </package>
   </required>
   <optional>
@@ -563,6 +575,49 @@ Kernel:
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>1.1.0</release>
+    <api>0.7.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2007-08-26</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+   <notes>A new release of Piece_Unity is now available.
+
+What&apos;s New in Piece_Unity 1.1.0
+
+ * Two client interfaces for dynamic configuration: Piece_Unity::setConfiguration() and Piece_Unity::setExtension() can be used for dynamic configuration in entry points and actions.
+ * A client interface to get all field names in a form: Piece_Unity_Validation::getFieldNames() can be used to get all field names corresponding to the given validation set and a Piece_Right_Config object.
+ * Environment settings: The configuration file is always read when the current environment is not production.
+ * Garbage Collection: The garbage collection can be used for sweeping expired flow executions. The target of the garbage collection is only non-exclusive flow executions.
+
+See the following release notes for details.
+
+Enhancements
+============ 
+
+Kernel:
+
+- Added setConfiguration()/setExtension() for client use. (Piece_Unity)
+- Updated an exception to be raised when an undefined extension point or configuration point is used in the current configuration. (Piece_Unity_Plugin_Common, Piece_Unity_Config)
+- Added error handling after instantiating a plug-in. (Piece_Unity_Plugin_Factory)
+- Added getFieldNames() to get all field names corresponding to the given validation set and a Piece_Right_Config object. (Piece_Unity_Validation)
+- Updated code so that the configuration file is always read when the current environment is not production. (Ticket #75) (Piece_Unity_Env, Piece_Unity_Config_Factory)
+
+Services:
+
+- Added clear() to clear all properties for the next use. (Piece_Unity_Service_FlowAction)
+
+Plug-ins:
+
+- Added support for garbage collection for expired flow executions. (Dispatcher_Continuation)
+- Added missing error handling. (Dispatcher_Continuation)
+- Added an extension point &quot;envHandlers&quot; which can be used to set whether the current environment is production or not to arbitrary components. (Configurator_Env, Configurator_EnvHandler_PieceFlow, Configurator_EnvHandler_PieceRight)</notes>
+  </release>
   <release>
    <version>
     <release>1.0.0</release>

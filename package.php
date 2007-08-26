@@ -39,53 +39,41 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$releaseVersion = '1.0.0';
+$releaseVersion = '1.1.0';
 $releaseStability = 'stable';
 $apiVersion = '0.7.0';
 $apiStability = 'stable';
-$notes = 'This is the first stable release of Piece_Unity.
+$notes = 'A new release of Piece_Unity is now available.
 
-What\'s New in Piece_Unity 1.0.0
+What\'s New in Piece_Unity 1.1.0
 
- * Components: A component is a package that consists of plug-ins, services, GUI elements (HTML templates, images, scripts, etc.), flow definition files, action classes, and entry points, etc.. Many plug-ins are extracted as each Piece_Unity_Component_Xxx package. See the following release notes for details.
- * Services: A service is one or more classes that provides useful operations for client use.
- * The Piece_Unity_Service_FlowAction class: The Piece_Unity_Service_FlowAction class can be used as the base class for Piece_Flow actions.
+ * Two client interfaces for dynamic configuration: Piece_Unity::setConfiguration() and Piece_Unity::setExtension() can be used for dynamic configuration in entry points and actions.
+ * A client interface to get all field names in a form: Piece_Unity_Validation::getFieldNames() can be used to get all field names corresponding to the given validation set and a Piece_Right_Config object.
+ * Environment settings: The configuration file is always read when the current environment is not production.
+ * Garbage Collection: The garbage collection can be used for sweeping expired flow executions. The target of the garbage collection is only non-exclusive flow executions.
 
 See the following release notes for details.
 
 Enhancements
 ============ 
 
-Plug-ins:
+Kernel:
 
-- Added error handling. (Interceptor_SessionStart)
-- Moved the process of preloading Dispatcher_Continuation plug-in from Configurator_Plugin to Interceptor_SessionStart.
-- A improvement for restoring action instances in session. (Dispatcher_Continuation, Interceptor_SessionStart, Piece_Unity_Session_Preload)
-- Changed the error type on all Piece_Unity_Error::pushError() calls from "warning" to "exception". (ConfiguratorChain, InterceptorChain, OutputBufferStack)
-- Moved the following plug-ins to components/. These plug-ins will be packaged as each Piece_Unity_Component_Xxx package.
-  * Interceptor_Authentication
-  * OutputFilter_ContentLength
-  * Renderer_Flexy
-  * Renderer_JSON
-  * OutputFilter_JapaneseZ2H
-  * KernelConfigurator (obsoleted)
-  * Interceptor_NullByteAttackPreventation
-  * Configurator_PieceORM
-  * Interceptor_ProxyBasePath (obsoleted)
-  * Renderer_Smarty
+- Added setConfiguration()/setExtension() for client use. (Piece_Unity)
+- Updated an exception to be raised when an undefined extension point or configuration point is used in the current configuration. (Piece_Unity_Plugin_Common, Piece_Unity_Config)
+- Added error handling after instantiating a plug-in. (Piece_Unity_Plugin_Factory)
+- Added getFieldNames() to get all field names corresponding to the given validation set and a Piece_Right_Config object. (Piece_Unity_Validation)
+- Updated code so that the configuration file is always read when the current environment is not production. (Ticket #75) (Piece_Unity_Env, Piece_Unity_Config_Factory)
 
 Services:
 
-- Added the base class for Piece_Flow actions. (Piece_Unity_Service_FlowAction)
+- Added clear() to clear all properties for the next use. (Piece_Unity_Service_FlowAction)
 
-Kernel:
+Plug-ins:
 
-- Changed factory() to throw an exception if the configuration directory or the configuration file not found. (Ticket #66) (Piece_Unity_Config_Factory)
-- Added a class loader. (Piece_Unity_ClassLoader)
-- Updated an exception to be raised when an undefined extension point is used. (Ticket #72) (Piece_Unity_Plugin_Common)
-- Updated getResults() so that a Piece_Right_Results object can be get by a validation set name. (Ticket #70) (Piece_Unity_Validation)
-- Improved error handling so as to recognize the place where the exception is raised. (Piece_Unity_Plugin_Common)
-- Added hasResults() to check whether or not the Piece_Right_Results object of the given validation set or the latest validation exists. (Piece_Unity_Validation)';
+- Added support for garbage collection for expired flow executions. (Dispatcher_Continuation)
+- Added missing error handling. (Dispatcher_Continuation)
+- Added an extension point "envHandlers" which can be used to set whether the current environment is production or not to arbitrary components. (Configurator_Env, Configurator_EnvHandler_PieceFlow, Configurator_EnvHandler_PieceRight)';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
@@ -115,20 +103,18 @@ $package->setReleaseStability($releaseStability);
 $package->setNotes($notes);
 $package->setPhpDep('4.3.0');
 $package->setPearinstallerDep('1.4.3');
-$package->addPackageDepWithChannel('required', 'Piece_Flow', 'pear.piece-framework.com', '1.9.0');
+$package->addPackageDepWithChannel('required', 'Piece_Flow', 'pear.piece-framework.com', '1.12.0');
 $package->addPackageDepWithChannel('required', 'Cache_Lite', 'pear.php.net', '1.7.0');
 $package->addPackageDepWithChannel('required', 'PEAR', 'pear.php.net', '1.4.3');
 $package->addPackageDepWithChannel('required', 'Net_URL', 'pear.php.net', '1.0.14');
-$package->addPackageDepWithChannel('required', 'Piece_Right', 'pear.piece-framework.com', '1.5.0');
+$package->addPackageDepWithChannel('required', 'Piece_Right', 'pear.piece-framework.com', '1.7.0');
 $package->addPackageDepWithChannel('optional', 'Stagehand_TestRunner', 'pear.piece-framework.com', '0.5.0');
 $package->addPackageDepWithChannel('optional', 'PHPUnit', 'pear.phpunit.de', '1.3.2');
 $package->addMaintainer('lead', 'iteman', 'KUBO Atsuhiro', 'iteman@users.sourceforge.net');
 $package->addGlobalReplacement('package-info', '@package_version@', 'version');
 $package->generateContents();
 
-if (array_key_exists(1, $_SERVER['argv'])
-    && $_SERVER['argv'][1] == 'make'
-    ) {
+if (array_key_exists(1, $_SERVER['argv']) && $_SERVER['argv'][1] == 'make') {
     $package->writePackageFile();
 } else {
     $package->debugPackageFile();
