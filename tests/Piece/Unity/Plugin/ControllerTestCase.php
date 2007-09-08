@@ -32,26 +32,27 @@
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @since      File available since Release 0.4.0
+ * @since      File available since Release 1.2.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
+require_once realpath(dirname(__FILE__) . '/../../../prepare.php');
+require_once 'PHPUnit.php';
+require_once 'Piece/Unity/Plugin/Controller.php';
+require_once 'Piece/Unity/Context.php';
+require_once 'Piece/Unity/Config.php';
 
-// {{{ Piece_Unity_Plugin_Controller
+// {{{ Piece_Unity_Plugin_ControllerTestCase
 
 /**
- * A controller which delegates requests to appropriate dispatchers
- * and fowards requests to the view handler.
+ * TestCase for Piece_Unity_Plugin_Controller
  *
  * @package    Piece_Unity
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @since      Class available since Release 0.4.0
+ * @since      Class available since Release 1.2.0
  */
-class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_ControllerTestCase extends PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -66,59 +67,45 @@ class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
      * @access private
      */
 
+    var $_cacheDirectory;
+
     /**#@-*/
 
     /**#@+
      * @access public
      */
 
-    // }}}
-    // {{{ invoke()
-
-    /**
-     * Invokes the plugin specific code.
-     *
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
-     * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
-     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
-     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
-     * @throws PIECE_UNITY_ERROR_CANNOT_READ
-     * @throws PIECE_UNITY_ERROR_NOT_READABLE
-     */
-    function invoke()
+    function setUp()
     {
-        if (is_null($this->_context->getView())) {
-            $dispatcher = &$this->_getExtension('dispatcher');
-            if (Piece_Unity_Error::hasErrors('exception')) {
-                return;
-            }
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
+    }
 
-            $viewString = $dispatcher->invoke();
-            if (Piece_Unity_Error::hasErrors('exception')) {
-                return;
-            }
+    function tearDown()
+    {
+        unset($_SESSION);
+        Piece_Unity_Context::clear();
+        unset($_GET['_event']);
+        unset($_SERVER['REQUEST_METHOD']);
+    }
 
-            if (is_null($this->_context->getView())) {
-                $this->_context->setView($viewString);
-            }
-        }
+    function testViewShouldBeAbleToOverwriteWithArbitraryViewInAction()
+    {
+        $_GET['_event'] = 'ControllerTestCaseSpecifyingArbitraryViewInActionShouldWork';
+        $_SERVER['SCRIPT_NAME'] = '/foo.php';
+        $_SERVER['SERVER_NAME'] = 'example.org';
+        $_SERVER['SERVER_PORT'] = '80';
+        $config = &new Piece_Unity_Config();
+        $config->setExtension('Controller', 'dispatcher', 'Dispatcher_Simple');
+        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_cacheDirectory);
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $session = &$context->getSession();
+        @$session->start();
+        $controller = &new Piece_Unity_Plugin_Controller();
+        $controller->invoke();
 
-        $dispatcherContinuation = &Piece_Unity_Plugin_Factory::factory('Dispatcher_Continuation');
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            return;
-        }
-
-        $dispatcherContinuation->publish();
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            return;
-        }
-
-        $view = &$this->_getExtension('view');
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            return;
-        }
-
-        $view->invoke();
+        $this->assertEquals('http://example.org/', $context->getView());
     }
 
     /**#@-*/
@@ -126,20 +113,6 @@ class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
     /**#@+
      * @access private
      */
-
-    // }}}
-    // {{{ _initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
-     */
-    function _initialize()
-    {
-        $this->_addExtensionPoint('dispatcher', 'Dispatcher_Continuation');
-        $this->_addExtensionPoint('view', 'View');
-    }
 
     /**#@-*/
 
