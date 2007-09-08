@@ -42,6 +42,7 @@ require_once 'Piece/Unity/Plugin/Factory.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Config.php';
+require_once 'Piece/Unity/Env.php';
 
 // {{{ Piece_Unity_Plugin_ConfiguratorChainTestCase
 
