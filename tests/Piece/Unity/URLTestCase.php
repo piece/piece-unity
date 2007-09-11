@@ -85,15 +85,6 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
         Piece_Unity_Error::popCallback();
     }
 
-    function testExternalURL()
-    {
-        $url = &new Piece_Unity_URL('http://example.org/foo/bar/baz.php', true);
-
-        $this->assertEquals('https://example.org/foo/bar/baz.php', $url->getURL(true));
-        $this->assertEquals('http://example.org/foo/bar/baz.php', $url->getURL(false));
-        $this->assertEquals('http://example.org/foo/bar/baz.php', $url->getURL());
-    }
-
     function testInternalURLWithAbsolutePath()
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
@@ -315,6 +306,38 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['HTTP_VIA']);
+    }
+
+    /**
+     * @since Method available since Release 1.2.0
+     */
+    function testDomainStringShouldNotBeReplacedIfExternalURLIsGiven()
+    {
+        $url = &new Piece_Unity_URL('http://example.org/foo/bar/baz.php', true);
+
+        $this->assertEquals('http://example.org/foo/bar/baz.php', $url->getURL(false));
+        $this->assertEquals('http://example.org/foo/bar/baz.php', $url->getURL(true));
+
+        $url = &new Piece_Unity_URL('http://example.org:80/foo/bar/baz.php', true);
+
+        $this->assertEquals('http://example.org/foo/bar/baz.php', $url->getURL(false));
+
+        $url = &new Piece_Unity_URL('http://example.org:443/foo/bar/baz.php', true);
+
+        $this->assertEquals('http://example.org:443/foo/bar/baz.php', $url->getURL(false));
+
+        $url = &new Piece_Unity_URL('http://example.org:8201/foo/bar/baz.php', true);
+
+        $this->assertEquals('http://example.org:8201/foo/bar/baz.php', $url->getURL(false));
+
+        $url = &new Piece_Unity_URL('http://example.org:8202/foo/bar/baz.php', true);
+
+        $this->assertEquals('http://example.org:8202/foo/bar/baz.php', $url->getURL(false));
+
+        $url = &new Piece_Unity_URL('https://example.org/foo/bar/baz.php', true);
+
+        $this->assertEquals('https://example.org/foo/bar/baz.php', $url->getURL(false));
+        $this->assertEquals('https://example.org/foo/bar/baz.php', $url->getURL(true));
     }
 
     /**#@-*/

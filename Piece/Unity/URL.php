@@ -159,12 +159,14 @@ class Piece_Unity_URL
             return;
         }
 
-        if (!$this->_isExternal) {
-            $context = &Piece_Unity_Context::singleton();
-            if (!$context->usingProxy()) {
-                if ($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
-                    return $this->_url->getURL();
-                }
+        if ($this->_isExternal) {
+            return $this->_url->getURL();
+        }
+
+        $context = &Piece_Unity_Context::singleton();
+        if (!$context->usingProxy()) {
+            if ($_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) {
+                return $this->_url->getURL();
             }
         }
 
