@@ -105,8 +105,8 @@ class Piece_Unity_Context
     // {{{ singleton()
 
     /**
-     * Returns the Piece_Unity_Context instance if exists. If not exists, a
-     * new instance of the Piece_Unity_Context class will be created and
+     * Returns the Piece_Unity_Context instance if it exists. If it not
+     * exists, a new instance of Piece_Unity_Context will be created and
      * returned.
      *
      * @return Piece_Unity_Context
