@@ -340,6 +340,36 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
         $this->assertEquals('https://example.org/foo/bar/baz.php', $url->getURL(true));
     }
 
+    /**
+     * @since Method available since Release 1.2.0
+     */
+    function testPathInfoInURLShouldBeKept()
+    {
+        $url = &new Piece_Unity_URL('http://example.org/foo.php/bar/baz', true);
+
+        $this->assertEquals('http://example.org/foo.php/bar/baz', $url->getURL());
+    }
+
+    /**
+     * @since Method available since Release 1.2.0
+     */
+    function testPathInfoInURLShouldNotBeEncoded()
+    {
+        $url = &new Piece_Unity_URL("http://example.org/foo.php/bar/\xe4\xb9\x85\xe4\xbf\x9d\xe6\x95\xa6\xe5\x95\x93", true);
+
+        $this->assertEquals("http://example.org/foo.php/bar/\xe4\xb9\x85\xe4\xbf\x9d\xe6\x95\xa6\xe5\x95\x93", $url->getURL());
+    }
+
+    /**
+     * @since Method available since Release 1.2.0
+     */
+    function testQueryStringInURLShouldNotBeEncoded()
+    {
+        $url = &new Piece_Unity_URL("http://example.org/foo.php?bar=\xe4\xb9\x85\xe4\xbf\x9d\xe6\x95\xa6\xe5\x95\x93", true);
+
+        $this->assertEquals("http://example.org/foo.php?bar=\xe4\xb9\x85\xe4\xbf\x9d\xe6\x95\xa6\xe5\x95\x93", $url->getURL());
+    }
+
     /**#@-*/
 
     /**#@+
