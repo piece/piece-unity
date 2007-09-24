@@ -64,6 +64,8 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
      * @access private
      */
 
+    var $_fileForDoRender;
+
     /**#@-*/
 
     /**#@+
@@ -117,24 +119,25 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
 
         if (!file_exists($file)) {
             Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
-                                   "The HTML template file [ $file ] not found."
-                                   );
+                                    "The HTML template file [ $file ] not found."
+                                    );
             return;
         }
 
         if (!is_readable($file)) {
             Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
-                                   "The HTML template file [ $file ] is not readable."
-                                   );
+                                    "The HTML template file [ $file ] is not readable."
+                                    );
             return;
         }
 
+        $this->_fileForDoRender = $file;
         $viewElement = &$this->_context->getViewElement();
         extract($viewElement->getElements(), EXTR_OVERWRITE | EXTR_REFS);
 
-        if (!include $file) {
+        if (!include $this->_fileForDoRender) {
             Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
-                                    'The HTML template file [ $file ] not found or is not readable.'
+                                    "The HTML template file [ {$this->_fileForDoRender} ] not found or is not readable."
                                     );
         }
     }
