@@ -65,6 +65,7 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
      */
 
     var $_fileForDoRender;
+    var $_viewElementForDoRender;
 
     /**#@-*/
 
@@ -132,8 +133,8 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
         }
 
         $this->_fileForDoRender = $file;
-        $viewElement = &$this->_context->getViewElement();
-        extract($viewElement->getElements(), EXTR_OVERWRITE | EXTR_REFS);
+        $this->_viewElementForDoRender = &$this->_context->getViewElement();
+        extract($this->_viewElementForDoRender->getElements(), EXTR_OVERWRITE | EXTR_REFS);
 
         if (!include $this->_fileForDoRender) {
             Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
