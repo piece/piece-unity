@@ -161,11 +161,56 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
         $this->assertEquals('Renderer_PHP', $config->getExtension('View', 'renderer'));
     }
 
+    /**
+     * @since Method available since Release 1.2.0
+     */
+    function testCacheIDsShouldUniqueInOneCacheDirectory()
+    {
+        $oldDirectory = getcwd();
+        chdir("{$this->_cacheDirectory}/CacheIDsShouldBeUniqueInOneCacheDirectory1");
+        Piece_Unity_Config_Factory::factory('.', $this->_cacheDirectory);
+
+        $this->assertEquals(1, $this->_getCacheFileCount($this->_cacheDirectory));
+
+        chdir("{$this->_cacheDirectory}/CacheIDsShouldBeUniqueInOneCacheDirectory2");
+        Piece_Unity_Config_Factory::factory('.', $this->_cacheDirectory);
+
+        $this->assertEquals(2, $this->_getCacheFileCount($this->_cacheDirectory));
+
+        chdir($oldDirectory);
+    }
+
     /**#@-*/
 
     /**#@+
      * @access private
      */
+
+    /**
+     * @since Method available since Release 1.2.0
+     */
+    function _getCacheFileCount($directory)
+    {
+        $cacheFileCount = 0;
+        if ($dh = opendir($directory)) {
+            while (true) {
+                $file = readdir($dh);
+                if ($file === false) {
+                    break;
+                }
+
+                if (filetype("$directory/$file") == 'file') {
+                    if (preg_match('/^cache_.+/', $file)) {
+                        ++$cacheFileCount;
+                    }
+                }
+            }
+
+            closedir($dh);
+        }
+
+        return $cacheFileCount;
+    }
 
     /**#@-*/
 
