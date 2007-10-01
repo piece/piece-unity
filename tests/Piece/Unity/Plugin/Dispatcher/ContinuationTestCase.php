@@ -121,12 +121,14 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
         $this->assertEquals('Counter', $dispatcher->invoke());
 
-        $continuation = &$session->getAttribute(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey());
-        $flowExecutionTicket = $continuation->getCurrentFlowExecutionTicket();
+        $continuationServer = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_SessionKey']);
+        $continuationService = &$continuationServer->createService();
+        $viewElement = &$context->getViewElement();
+        $flowExecutionTicket = $viewElement->getElement('__flowExecutionTicket');
 
-        $this->assertTrue(is_a($continuation, 'Piece_Flow_Continuation'));
-        $this->assertTrue($continuation->hasAttribute('counter'));
-        $this->assertEquals(0, $continuation->getAttribute('counter'));
+        $this->assertEquals(strtolower('Piece_Flow_Continuation_Server'), strtolower(get_class($continuationServer)));
+        $this->assertTrue($continuationService->hasAttribute('counter'));
+        $this->assertEquals(0, $continuationService->getAttribute('counter'));
 
         Piece_Unity_Context::clear();
         $_GET['_event'] = 'increase';
@@ -136,16 +138,20 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $session = &$context->getSession();
         @$session->start();
-        $session->setAttributeByRef(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey(), $continuation);
+        $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_SessionKey'], $continuationServer);
+        $dispatcher->invoke();
+        $continuationService = &$continuationServer->createService();
+
+        $this->assertEquals(1, $continuationService->getAttribute('counter'));
+
         $dispatcher->invoke();
 
-        $this->assertEquals(1, $continuation->getAttribute('counter'));
-
-        $dispatcher->invoke();
-
-        $this->assertEquals(2, $continuation->getAttribute('counter'));
+        $this->assertEquals(2, $continuationService->getAttribute('counter'));
         $this->assertEquals('Finish', $dispatcher->invoke());
-        $this->assertEquals(3, $continuation->getAttribute('counter'));
+
+        $continuationService = &$continuationServer->createService();
+
+        $this->assertEquals(3, $continuationService->getAttribute('counter'));
     }
 
     function testInvalidConfiguration()
@@ -199,8 +205,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals('Counter', $dispatcher->invoke());
 
         $session = &$context->getSession();
-        $continuation = &$session->getAttribute(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey());
-        $flowExecutionTicket = $continuation->getCurrentFlowExecutionTicket();
+        $continuationServer = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_SessionKey']);
+        $viewElement = &$context->getViewElement();
+        $flowExecutionTicket = $viewElement->getElement('__flowExecutionTicket');
         Piece_Unity_Context::clear();
         $_GET['_event'] = 'increase';
         $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
@@ -210,7 +217,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         @$session->start();
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $session = &$context->getSession();
-        $session->setAttributeByRef(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey(), $continuation);
+        $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_SessionKey'], $continuationServer);
         $dispatcher->invoke();
         $dispatcher->invoke();
         $dispatcher->invoke();
@@ -225,7 +232,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         Piece_Unity_Error::popCallback();
     }
 
-    function testSettingContinuationObjectAsViewElement()
+    function testSettingContinuationServiceObjectAsViewElement()
     {
         $_GET['_bar'] = 'Counter';
 
@@ -304,8 +311,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals('Form', $dispatcher->invoke());
 
         $session = &$context->getSession();
-        $continuation = &$session->getAttribute(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey());
-        $flowExecutionTicket = $continuation->getCurrentFlowExecutionTicket();
+        $continuationServer = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_SessionKey']);
+        $viewElement = &$context->getViewElement();
+        $flowExecutionTicket = $viewElement->getElement('__flowExecutionTicket');
 
         Piece_Unity_Context::clear();
         $_GET['_event'] = 'validate';
@@ -314,7 +322,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context->setConfiguration($config);
         $session = &$context->getSession();
         @$session->start();
-        $session->setAttributeByRef(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey(), $continuation);
+        $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_SessionKey'], $continuationServer);
         $validation = &$context->getValidation();
         $validation->setConfigDirectory($this->_cacheDirectory);
         $validation->setCacheDirectory($this->_cacheDirectory);
@@ -327,10 +335,10 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertTrue($viewElement->hasElement('__ValidationResults'));
         $this->assertEquals($validation->getResults(), $viewElement->getElement('__ValidationResults'));
 
-        $continuation = &$context->getContinuation();
+        $continuationService = &$context->getContinuation();
 
-        $this->assertTrue($continuation->hasAttribute('__ValidationResults'));
-        $this->assertEquals($validation->getResults(), $continuation->getAttribute('__ValidationResults'));
+        $this->assertTrue($continuationService->hasAttribute('__ValidationResults'));
+        $this->assertEquals($validation->getResults(), $continuationService->getAttribute('__ValidationResults'));
 
         $user = &$context->getAttribute('user');
         foreach ($fields as $field => $value) {
@@ -365,8 +373,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals('Form', $dispatcher->invoke());
 
         $session = &$context->getSession();
-        $continuation = &$session->getAttribute(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey());
-        $flowExecutionTicket = $continuation->getCurrentFlowExecutionTicket();
+        $continuationServer = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_SessionKey']);
+        $viewElement = &$context->getViewElement();
+        $flowExecutionTicket = $viewElement->getElement('__flowExecutionTicket');
 
         Piece_Unity_Context::clear();
         $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
@@ -374,7 +383,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context->setConfiguration($config);
         $session = &$context->getSession();
         @$session->start();
-        $session->setAttributeByRef(Piece_Unity_Plugin_Dispatcher_Continuation::getContinuationSessionKey(), $continuation);
+        $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_SessionKey'], $continuationServer);
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         sleep(2);
 
