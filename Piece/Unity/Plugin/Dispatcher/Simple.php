@@ -86,12 +86,20 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $event = $this->_context->getEventName();
-        $class = str_replace('.', '', "{$event}Action");
+        $eventName = $this->_context->getEventName();
+
+        if ($this->_getConfiguration('useDefaultEvent')) {
+            if (is_null($eventName) || !strlen($eventName)) {
+                $eventName = $this->_getConfiguration('defaultEventName');
+                $this->_context->setEventName($eventName);
+            }
+        }
+
+        $class = str_replace('.', '', "{$eventName}Action");
 
         $actionDirectory = $this->_getConfiguration('actionDirectory');
         if (is_null($actionDirectory)) {
-            return $event;
+            return $eventName;
         }
 
         if (!Piece_Unity_ClassLoader::loaded($class)) {
@@ -102,7 +110,7 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
             if (Piece_Unity_Error::hasErrors('exception')) {
                 $error = Piece_Unity_Error::pop();
                 if ($error['code'] == PIECE_UNITY_ERROR_NOT_FOUND) {
-                    return $event;
+                    return $eventName;
                 }
 
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_CANNOT_READ,
@@ -132,7 +140,7 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
 
         $action->invoke($this->_context);
 
-        return $event;
+        return $eventName;
     }
 
     /**#@-*/
@@ -152,6 +160,8 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
     function _initialize()
     {
         $this->_addConfigurationPoint('actionDirectory');
+        $this->_addConfigurationPoint('useDefaultEvent', false);
+        $this->_addConfigurationPoint('defaultEventName');
     }
  
     /**#@-*/

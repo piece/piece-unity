@@ -166,6 +166,102 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
         }
     }
 
+    /**
+     * @since Method available since Release 1.2.0
+     */
+    function testDefaultEventShouldBeUsedIfEventNameIsEmptyString()
+    {
+        $_GET['_event'] = '';
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Simple', 'useDefaultEvent', true);
+        $config->setConfiguration('Dispatcher_Simple', 'defaultEventName', 'Index');
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
+        $eventName = $dispatcher->invoke();
+
+        $this->assertEquals('Index', $eventName);
+        $this->assertEquals('Index', $context->getEventName());
+    }
+
+    /**
+     * @since Method available since Release 1.2.0
+     */
+    function testDefaultEventShouldBeUsedIfEventNameIsNull()
+    {
+        $_GET['_event'] = null;
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Simple', 'useDefaultEvent', true);
+        $config->setConfiguration('Dispatcher_Simple', 'defaultEventName', 'Index');
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
+        $dispatcher->invoke();
+        $eventName = $dispatcher->invoke();
+
+        $this->assertEquals('Index', $eventName);
+        $this->assertEquals('Index', $context->getEventName());
+    }
+
+    /**
+     * @since Method available since Release 1.2.0
+     */
+    function testDefaultEventShouldNotBeUsedIfEventNameIsNotEmptyStringOrNull()
+    {
+        $_GET['_event'] = 'Foo';
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Simple', 'useDefaultEvent', true);
+        $config->setConfiguration('Dispatcher_Simple', 'defaultEventName', 'Index');
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
+        $eventName = $dispatcher->invoke();
+
+        $this->assertFalse($eventName == 'Index');
+        $this->assertEquals('Foo', $eventName);
+        $this->assertEquals('Foo', $context->getEventName());
+    }
+
+    /**
+     * @since Method available since Release 1.2.0
+     */
+    function testDefaultEventShouldNotBeUsedIfUseDefaultEventIsFalse()
+    {
+        $_GET['_event'] = 'Foo';
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Simple', 'useDefaultEvent', false);
+        $config->setConfiguration('Dispatcher_Simple', 'defaultEventName', 'Index');
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
+        $dispatcher->invoke();
+        $eventName = $context->getEventName();
+
+        $this->assertFalse($eventName == 'Index');
+        $this->assertEquals('Foo', $eventName);
+        $this->assertEquals('Foo', $context->getEventName());
+    }
+
+    /**
+     * @since Method available since Release 1.2.0
+     */
+    function testDefaultEventShouldBeFalseIfUseDefaultEventIsNotGiven()
+    {
+        $_GET['_event'] = 'Foo';
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Simple', 'useDefaultEvent', false);
+        $config->setConfiguration('Dispatcher_Simple', 'defaultEventName', 'Index');
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
+        $dispatcher->invoke();
+        $eventName = $context->getEventName();
+
+        $this->assertFalse($eventName == 'Index');
+        $this->assertEquals('Foo', $eventName);
+        $this->assertEquals('Foo', $context->getEventName());
+    }
+
     /**#@-*/
 
     /**#@+
