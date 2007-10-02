@@ -138,7 +138,7 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
         $context = &Piece_Unity_Context::singleton();
         $config = &$context->getConfiguration();
 
-        $masterFile = dirname(__FILE__) . '/../../data/piece-unity-config.yaml';
+        $masterFile = realpath(dirname(__FILE__) . '/../../data/piece-unity-config.yaml');
         $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
                                             'masterFile' => $masterFile,
                                             'automaticSerialization' => true)
