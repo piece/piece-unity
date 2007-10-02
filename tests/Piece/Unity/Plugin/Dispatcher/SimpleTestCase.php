@@ -110,8 +110,13 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
     {
         $_GET['_event'] = 'SimpleExample';
         $GLOBALS['actionCalled'] = false;
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_cacheDirectory);
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
 
-        $this->assertEquals('SimpleExample', $this->_dispatch());
+        $this->assertEquals('SimpleExample', $dispatcher->invoke());
         $this->assertTrue($GLOBALS['actionCalled']);
 
         unset($GLOBALS['actionCalled']);
@@ -122,8 +127,13 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
         $_GET['_event'] = '../RelativePathVulnerability';
         $GLOBALS['actionCalled'] = false;
         $GLOBALS['RelativePathVulnerabilityActionLoaded'] = false;
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_cacheDirectory);
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
 
-        $this->assertEquals('../RelativePathVulnerability', $this->_dispatch());
+        $this->assertEquals('../RelativePathVulnerability', $dispatcher->invoke());
         $this->assertFalse($GLOBALS['actionCalled']);
         $this->assertFalse($GLOBALS['RelativePathVulnerabilityActionLoaded']);
 
@@ -149,7 +159,12 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
         $validation = &$context->getValidation();
         $validation->setConfigDirectory($this->_cacheDirectory);
         $validation->setCacheDirectory($this->_cacheDirectory);
-        $this->_dispatch();
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_cacheDirectory);
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
+        $dispatcher->invoke();
 
         $viewElement = &$context->getViewElement();
 
@@ -267,16 +282,6 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
     /**#@+
      * @access private
      */
-
-    function _dispatch()
-    {
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_cacheDirectory);
-        $context = &Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
-        return $dispatcher->invoke();
-    }
 
     /**#@-*/
 
