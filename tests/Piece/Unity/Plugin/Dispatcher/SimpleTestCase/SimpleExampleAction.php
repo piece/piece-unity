@@ -39,7 +39,7 @@
 // {{{ SimpleExampleAction
 
 /**
- * Action class for the event SimpleExample.
+ * A class for unit tests.
  *
  * @package    Piece_Unity
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>

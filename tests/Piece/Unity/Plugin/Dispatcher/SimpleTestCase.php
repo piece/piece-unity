@@ -193,9 +193,9 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
-        $eventName = $dispatcher->invoke();
+        $viewString = $dispatcher->invoke();
 
-        $this->assertEquals('Index', $eventName);
+        $this->assertEquals('Index', $viewString);
         $this->assertEquals('Index', $context->getEventName());
     }
 
@@ -212,9 +212,9 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
         $context->setConfiguration($config);
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
         $dispatcher->invoke();
-        $eventName = $dispatcher->invoke();
+        $viewString = $dispatcher->invoke();
 
-        $this->assertEquals('Index', $eventName);
+        $this->assertEquals('Index', $viewString);
         $this->assertEquals('Index', $context->getEventName());
     }
 
@@ -230,10 +230,10 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
-        $eventName = $dispatcher->invoke();
+        $viewString = $dispatcher->invoke();
 
-        $this->assertFalse($eventName == 'Index');
-        $this->assertEquals('Foo', $eventName);
+        $this->assertFalse($viewString == 'Index');
+        $this->assertEquals('Foo', $viewString);
         $this->assertEquals('Foo', $context->getEventName());
     }
 
