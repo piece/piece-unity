@@ -277,6 +277,26 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
         $this->assertEquals('Foo', $context->getEventName());
     }
 
+    /**
+     * @since Method available since Release 1.2.0
+     */
+    function testActionShouldBeAbleToReturnViewString()
+    {
+        $_GET['_event'] = 'ActionShouldBeAbleToReturnViewString';
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_cacheDirectory);
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
+        $dispatcher->invoke();
+        $viewString = $dispatcher->invoke();
+        $eventName = $context->getEventName();
+
+        $this->assertFalse($viewString == $eventName);
+        $this->assertEquals('Foo', $viewString);
+        $this->assertEquals('ActionShouldBeAbleToReturnViewString', $eventName);
+    }
+
     /**#@-*/
 
     /**#@+

@@ -138,9 +138,12 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
             return;
         }
 
-        $action->invoke($this->_context);
-
-        return $eventName;
+        $viewString = $action->invoke($this->_context);
+        if (is_null($viewString)) {
+            return $eventName;
+        } else {
+            return $viewString;
+        }
     }
 
     /**#@-*/
