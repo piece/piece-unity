@@ -42,7 +42,7 @@ require_once 'Piece/Unity/ClassLoader.php';
 // {{{ Piece_Unity_Plugin_Dispatcher_Simple
 
 /**
- * A dispatcher for stateless applications.
+ * A dispatcher for stateless application components.
  *
  * This plug-in invokes the action corresponding to an event if it exists,
  * and returns an event name as a view string.
