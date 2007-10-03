@@ -54,7 +54,7 @@ $GLOBALS['PIECE_UNITY_Continuation_SessionKey'] = '_continuation';
 // {{{ Piece_Unity_Plugin_Dispatcher_Continuation
 
 /**
- * A dispatcher for stateful applications.
+ * A dispatcher for stateful application components.
  *
  * This dispatcher starts a new continuation or continues with the current
  * continuation, and returns a view string.
