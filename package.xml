@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id$ -->
-<package packagerversion="1.6.1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+<package packagerversion="1.6.2" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
     http://pear.php.net/dtd/tasks-1.0.xsd
     http://pear.php.net/dtd/package-2.0
     http://pear.php.net/dtd/package-2.0.xsd">
@@ -16,10 +15,10 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
   <email>iteman@users.sourceforge.net</email>
   <active>yes</active>
  </lead>
- <date>2007-08-26</date>
- <time>19:50:26</time>
+ <date>2007-10-05</date>
+ <time>11:40:12</time>
  <version>
-  <release>1.1.0</release>
+  <release>1.2.0</release>
   <api>0.7.0</api>
  </version>
  <stability>
@@ -29,35 +28,38 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
  <notes>A new release of Piece_Unity is now available.
 
-What&apos;s New in Piece_Unity 1.1.0
+What&apos;s New in Piece_Unity 1.2.0
 
- * Two client interfaces for dynamic configuration: Piece_Unity::setConfiguration() and Piece_Unity::setExtension() can be used for dynamic configuration in entry points and actions.
- * A client interface to get all field names in a form: Piece_Unity_Validation::getFieldNames() can be used to get all field names corresponding to the given validation set and a Piece_Right_Config object.
- * Environment settings: The configuration file is always read when the current environment is not production.
- * Garbage Collection: The garbage collection can be used for sweeping expired flow executions. The target of the garbage collection is only non-exclusive flow executions.
+ * Enhanced Dispatcher_Simple plug-in: Two configuration points &quot;useDefaultEvent&quot; and &quot;defaultEventName&quot; have been added. These provide a feature so that the default event is used if the event is an empty string or NULL. And a feature which allows users to return a view string from an action has been added.
+ * A few Defect Fixes: A defect that caused the same cache to be used if the relative paths of the configuration files are same even though the absolute paths of the files are different has been fixed. And also two defects in Renderer_PHP plug-in have been fixed.
 
 See the following release notes for details.
 
 Enhancements
-============ 
+============
 
 Kernel:
 
-- Added setConfiguration()/setExtension() for client use. (Piece_Unity)
-- Updated an exception to be raised when an undefined extension point or configuration point is used in the current configuration. (Piece_Unity_Plugin_Common, Piece_Unity_Config)
-- Added error handling after instantiating a plug-in. (Piece_Unity_Plugin_Factory)
-- Added getFieldNames() to get all field names corresponding to the given validation set and a Piece_Right_Config object. (Piece_Unity_Validation)
-- Updated code so that the configuration file is always read when the current environment is not production. (Ticket #75) (Piece_Unity_Env, Piece_Unity_Config_Factory)
-
-Services:
-
-- Added clear() to clear all properties for the next use. (Piece_Unity_Service_FlowAction)
+- Changed getURL() so as to return without replacing the host and port if the URL is external. (Piece_Unity_URL)
 
 Plug-ins:
 
-- Added support for garbage collection for expired flow executions. (Dispatcher_Continuation)
-- Added missing error handling. (Dispatcher_Continuation)
-- Added an extension point &quot;envHandlers&quot; which can be used to set whether the current environment is production or not to arbitrary components. (Configurator_Env, Configurator_EnvHandler_PieceFlow, Configurator_EnvHandler_PieceRight)</notes>
+- Added a feature so that users can overwrite the view returned from the dispatcher with an arbitrary view in an action. (Controller)
+- Changed code so as to use the new interfaces for the continuation server. (Dispatcher_Continuation)
+- Added two configuration points &quot;useDefaultEvent&quot; and &quot;defaultEventName&quot;. These provide a feature so that the default event is used if the event is an empty string or NULL. (Ticket #80) (Dispatcher_Simple)
+- Added a feature which allows users to return a view string from an action. (Ticket #86) (Dispatcher_Simple)
+
+Defect Fixes
+============
+
+Kernel:
+
+- Fixed the defect that caused the same cache to be used if the relative paths of the configuration files are same even though the absolute paths of the files are different. (Piece_Unity_Config_Factory)
+
+Plug-ins:
+
+- Fixed the defect that caused $file to be tainted if the Piece_Unity_ViewElement object has &quot;file&quot; attribute. (Renderer_PHP)
+- Fixed the defect that caused $viewElement to be tainted if the Piece_Unity_ViewElement object has &quot;viewElement&quot; attribute. (Renderer_PHP)</notes>
  <contents>
   <dir baseinstalldir="/" name="/">
    <dir name="data">
@@ -219,6 +221,16 @@ Plug-ins:
      <dir name="Unity">
       <dir name="Config">
        <dir name="FactoryTestCase">
+        <dir name="CacheIDsShouldBeUniqueInOneCacheDirectory1">
+         <file name="piece-unity-config.yaml" role="test">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+        </dir> <!-- /tests/Piece/Unity/Config/FactoryTestCase/CacheIDsShouldBeUniqueInOneCacheDirectory1 -->
+        <dir name="CacheIDsShouldBeUniqueInOneCacheDirectory2">
+         <file name="piece-unity-config.yaml" role="test">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+        </dir> <!-- /tests/Piece/Unity/Config/FactoryTestCase/CacheIDsShouldBeUniqueInOneCacheDirectory2 -->
         <file name="piece-unity-config.yaml" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
@@ -313,6 +325,11 @@ Plug-ins:
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
        </dir> <!-- /tests/Piece/Unity/Plugin/ConfiguratorChainTestCase -->
+       <dir name="ControllerTestCase">
+        <file name="ControllerTestCaseSpecifyingArbitraryViewInActionShouldWorkAction.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+       </dir> <!-- /tests/Piece/Unity/Plugin/ControllerTestCase -->
        <dir name="Dispatcher">
         <dir name="ContinuationTestCase">
          <file name="ContinuationValidation.yaml" role="test">
@@ -338,6 +355,9 @@ Plug-ins:
          </file>
         </dir> <!-- /tests/Piece/Unity/Plugin/Dispatcher/ContinuationTestCase -->
         <dir name="SimpleTestCase">
+         <file name="ActionShouldBeAbleToReturnViewStringAction.php" role="test">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
          <file name="SimpleExampleAction.php" role="test">
           <tasks:replace from="@package_version@" to="version" type="package-info" />
          </file>
@@ -450,6 +470,9 @@ Plug-ins:
        <file name="ConfiguratorChainTestCase.php" role="test">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
+       <file name="ControllerTestCase.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
        <file name="FactoryTestCase.php" role="test">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
@@ -537,7 +560,7 @@ Plug-ins:
    <package>
     <name>Piece_Flow</name>
     <channel>pear.piece-framework.com</channel>
-    <min>1.12.0</min>
+    <min>1.14.0</min>
    </package>
    <package>
     <name>Cache_Lite</name>
@@ -560,21 +583,55 @@ Plug-ins:
     <min>1.7.0</min>
    </package>
   </required>
-  <optional>
-   <package>
-    <name>Stagehand_TestRunner</name>
-    <channel>pear.piece-framework.com</channel>
-    <min>0.5.0</min>
-   </package>
-   <package>
-    <name>PHPUnit</name>
-    <channel>pear.phpunit.de</channel>
-    <min>1.3.2</min>
-   </package>
-  </optional>
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>1.2.0</release>
+    <api>0.7.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2007-10-05</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+   <notes>A new release of Piece_Unity is now available.
+
+What&apos;s New in Piece_Unity 1.2.0
+
+ * Enhanced Dispatcher_Simple plug-in: Two configuration points &quot;useDefaultEvent&quot; and &quot;defaultEventName&quot; have been added. These provide a feature so that the default event is used if the event is an empty string or NULL. And a feature which allows users to return a view string from an action has been added.
+ * A few Defect Fixes: A defect that caused the same cache to be used if the relative paths of the configuration files are same even though the absolute paths of the files are different has been fixed. And also two defects in Renderer_PHP plug-in have been fixed.
+
+See the following release notes for details.
+
+Enhancements
+============
+
+Kernel:
+
+- Changed getURL() so as to return without replacing the host and port if the URL is external. (Piece_Unity_URL)
+
+Plug-ins:
+
+- Added a feature so that users can overwrite the view returned from the dispatcher with an arbitrary view in an action. (Controller)
+- Changed code so as to use the new interfaces for the continuation server. (Dispatcher_Continuation)
+- Added two configuration points &quot;useDefaultEvent&quot; and &quot;defaultEventName&quot;. These provide a feature so that the default event is used if the event is an empty string or NULL. (Ticket #80) (Dispatcher_Simple)
+- Added a feature which allows users to return a view string from an action. (Ticket #86) (Dispatcher_Simple)
+
+Defect Fixes
+============
+
+Kernel:
+
+- Fixed the defect that caused the same cache to be used if the relative paths of the configuration files are same even though the absolute paths of the files are different. (Piece_Unity_Config_Factory)
+
+Plug-ins:
+
+- Fixed the defect that caused $file to be tainted if the Piece_Unity_ViewElement object has &quot;file&quot; attribute. (Renderer_PHP)
+- Fixed the defect that caused $viewElement to be tainted if the Piece_Unity_ViewElement object has &quot;viewElement&quot; attribute. (Renderer_PHP)</notes>
+  </release>
   <release>
    <version>
     <release>1.1.0</release>
