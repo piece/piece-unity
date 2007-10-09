@@ -360,6 +360,52 @@ class Piece_Unity_Validation
         return $fieldNames;
     }
 
+    // }}}
+    // {{{ mergeValidationSet()
+
+    /**
+     * Merges the given validation set into the Piece_Right_Config object for
+     * the current validation.
+     *
+     * @param string $validationSetName
+     * @param string $configDirectory
+     * @param string $cacheDirectory
+     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     * @since Method available since Release 1.3.0
+     */
+    function mergeValidationSet($validationSetName, $configDirectory = null, $cacheDirectory = null)
+    {
+        if (is_null($configDirectory)) {
+            $configDirectory = $this->_configDirectory;
+        }
+
+        if (is_null($cacheDirectory)) {
+            $cacheDirectory = $this->_cacheDirectory;
+        }
+
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        $config = &Piece_Right_Config_Factory::factory($validationSetName,
+                                                       $configDirectory,
+                                                       $cacheDirectory
+                                                       );
+        Piece_Unity_Error::popCallback();
+        if (Piece_Right_Error::hasErrors('exception')) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                    'Failed to invoke Piece_Right_Validation_Script::mergeValidationSet() method for any reasons.',
+                                    'exception',
+                                    array(),
+                                    Piece_Right_Error::pop()
+                                    );
+            return;
+        }
+
+        if (is_null($this->_config)) {
+            $this->_config = &new Piece_Right_Config();
+        }
+
+        $this->_config->merge($config);
+    }
+
     /**#@-*/
 
     /**#@+

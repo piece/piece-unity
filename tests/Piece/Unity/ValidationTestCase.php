@@ -287,6 +287,44 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
         unset($_FILES['userfile']);
     }
 
+    /**
+     * @since Method available since Release 1.3.0
+     */
+    function testMergeValidationSetShouldMergeConfigurationFileIntoConfiguration()
+    {
+        $_POST['foo'] = '1';
+        $_POST['bar'] = '2';
+        $_POST['baz'] = '3';
+        $_POST['qux'] = '4';
+        $validation = &new Piece_Unity_Validation();
+        $validation->setConfigDirectory($this->_cacheDirectory);
+        $validation->setCacheDirectory($this->_cacheDirectory);
+        $validation->mergeValidationSet('MergeValidationSetShouldMergeConfigurationFileIntoConfiguration2');
+        $validation->mergeValidationSet('MergeValidationSetShouldMergeConfigurationFileIntoConfiguration3');
+        $container = &new stdClass();
+        $result = $validation->validate('MergeValidationSetShouldMergeConfigurationFileIntoConfiguration1', $container);
+        $properties = get_object_vars($container);
+
+        $this->assertTrue($result);
+        $this->assertEquals(4, count(array_keys($properties)));
+        $this->assertTrue(array_key_exists('foo', $container));
+        $this->assertTrue(array_key_exists('bar', $container));
+        $this->assertTrue(array_key_exists('baz', $container));
+        $this->assertTrue(array_key_exists('qux', $container));
+        $this->assertEquals('1', $container->foo);
+        $this->assertEquals('2', $container->bar);
+        $this->assertEquals('3', $container->baz);
+        $this->assertEquals('4', $container->qux);
+
+        $fieldNames = $validation->getFieldNames('MergeValidationSetShouldMergeConfigurationFileIntoConfiguration1');
+
+        $this->assertEquals(4, count($fieldNames));
+        $this->assertContains('foo', $fieldNames);
+        $this->assertContains('bar', $fieldNames);
+        $this->assertContains('baz', $fieldNames);
+        $this->assertContains('qux', $fieldNames);
+    }
+
     /**#@-*/
 
     /**#@+
