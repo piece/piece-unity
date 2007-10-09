@@ -43,6 +43,7 @@ require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Right/Validation/Script.php';
 require_once 'Piece/Right/Validator/Factory.php';
 require_once 'Piece/Right/Filter/Factory.php';
+require_once 'Piece/Right/Config/Factory.php';
 
 // {{{ Piece_Unity_Validation
 
@@ -115,13 +116,13 @@ class Piece_Unity_Validation
      * Validates the current field values with the given validation set and
      * configuration.
      *
-     * @param string  $validationSet
+     * @param string  $validationSetName
      * @param mixed   &$container
      * @param boolean $keepOriginalFieldValue
      * @return boolean
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
-    function validate($validationSet,
+    function validate($validationSetName,
                       &$container,
                       $keepOriginalFieldValue = true
                       )
@@ -134,7 +135,7 @@ class Piece_Unity_Validation
         $context = &Piece_Unity_Context::singleton();
         $script->setPayload($context);
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-        $this->_results = &$script->run($validationSet,
+        $this->_results = &$script->run($validationSetName,
                                         $container,
                                         $this->_config,
                                         $keepOriginalFieldValue
@@ -208,12 +209,12 @@ class Piece_Unity_Validation
      * Gets the Piece_Right_Results object of the given validation set or
      * the latest validation.
      *
-     * @param string $validationSet
+     * @param string $validationSetName
      * @return Piece_Right_Results
      */
-    function &getResults($validationSet = null)
+    function &getResults($validationSetName = null)
     {
-        $name = Piece_Unity_Validation::_createResultsName($validationSet);
+        $name = Piece_Unity_Validation::_createResultsName($validationSetName);
 
         $context = &Piece_Unity_Context::singleton();
         $continuation = &$context->getContinuation();
@@ -238,19 +239,19 @@ class Piece_Unity_Validation
      * Sets a Piece_Right_Result object as a view element and a flow
      * attribute.
      *
-     * @param string              $validationSet
+     * @param string              $validationSetName
      * @param Piece_Right_Results &$results
      * @static
      */
-    function setResultsAsViewElementAndFlowAttribute($validationSet, &$results)
+    function setResultsAsViewElementAndFlowAttribute($validationSetName, &$results)
     {
         $context = &Piece_Unity_Context::singleton();
         $viewElement = &$context->getViewElement();
-        $viewElement->setElementByRef(Piece_Unity_Validation::_createResultsName($validationSet), $results);
+        $viewElement->setElementByRef(Piece_Unity_Validation::_createResultsName($validationSetName), $results);
 
         $continuation = &$context->getContinuation();
         if (!is_null($continuation)) {
-            $continuation->setAttributeByRef(Piece_Unity_Validation::_createResultsName($validationSet), $results);
+            $continuation->setAttributeByRef(Piece_Unity_Validation::_createResultsName($validationSetName), $results);
         }
     }
 
@@ -317,12 +318,12 @@ class Piece_Unity_Validation
      * Returns whether or not the Piece_Right_Results object of the given
      * validation set or the latest validation exists.
      *
-     * @param string $validationSet
+     * @param string $validationSetName
      * @return boolean
      */
-    function hasResults($validationSet = null)
+    function hasResults($validationSetName = null)
     {
-        return (boolean)$this->getResults($validationSet);
+        return (boolean)$this->getResults($validationSetName);
     }
 
     // }}}
@@ -332,11 +333,11 @@ class Piece_Unity_Validation
      * Gets all field names corresponding to the given validation set and
      * a Piece_Right_Config object.
      *
-     * @param string $validationSet
+     * @param string $validationSetName
      * @return array
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
-    function getFieldNames($validationSet)
+    function getFieldNames($validationSetName)
     {
         $script = &new Piece_Right_Validation_Script($this->_configDirectory,
                                                      $this->_cacheDirectory,
@@ -344,7 +345,7 @@ class Piece_Unity_Validation
                                                      array(__CLASS__, 'setResultsAsViewElementAndFlowAttribute')
                                                      );
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-        $fieldNames = $script->getFieldNames($validationSet, $this->_config);
+        $fieldNames = $script->getFieldNames($validationSetName, $this->_config);
         Piece_Unity_Error::popCallback();
         if (Piece_Right_Error::hasErrors('exception')) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
@@ -372,14 +373,14 @@ class Piece_Unity_Validation
      * Creates a field name from the given validation set that
      * Piece_Right_Results will be stored by.
      *
-     * @param string $validationSet
+     * @param string $validationSetName
      * @static
      * @since Method available since Release 1.0.0
      */
-    function _createResultsName($validationSet)
+    function _createResultsName($validationSetName)
     {
-        if (!is_null($validationSet)) {
-            return "__{$validationSet}Results";
+        if (!is_null($validationSetName)) {
+            return "__{$validationSetName}Results";
         } else {
             return '__results';
         }
