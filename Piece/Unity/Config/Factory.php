@@ -136,8 +136,7 @@ class Piece_Unity_Config_Factory
                                     );
             Piece_Unity_Error::popCallback();
 
-            $config = &Piece_Unity_Config_Factory::_getConfigurationFromFile($configFile);
-            return $config;
+            return Piece_Unity_Config_Factory::_getConfigurationFromFile($configFile);
         }
 
         if (!is_readable($cacheDirectory) || !is_writable($cacheDirectory)) {
@@ -148,8 +147,7 @@ class Piece_Unity_Config_Factory
                                     );
             Piece_Unity_Error::popCallback();
 
-            $config = &Piece_Unity_Config_Factory::_getConfigurationFromFile($configFile);
-            return $config;
+            return Piece_Unity_Config_Factory::_getConfigurationFromFile($configFile);
         }
 
         return Piece_Unity_Config_Factory::_getConfiguration($configFile, $cacheDirectory);
@@ -198,8 +196,7 @@ class Piece_Unity_Config_Factory
                                     );
             Piece_Unity_Error::popCallback();
 
-            $config = &Piece_Unity_Config_Factory::_getConfigurationFromFile($masterFile);
-            return $config;
+            return Piece_Unity_Config_Factory::_getConfigurationFromFile($masterFile);
         }
 
         if (!$config) {
