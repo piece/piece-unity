@@ -160,8 +160,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
 
         $session = &$this->_context->getSession();
         $session->setPreloadCallback('_Dispatcher_Continuation_ActionLoader', array(__CLASS__, 'loadAction'));
-        $actionInstances = Piece_Flow_Action_Factory::getInstances();
-        foreach (array_keys($actionInstances) as $actionClass) {
+        foreach (array_keys(Piece_Flow_Action_Factory::getInstances()) as $actionClass) {
             $session->addPreloadClass('_Dispatcher_Continuation_ActionLoader',
                                       $actionClass,
                                       Piece_Unity_Plugin_Dispatcher_Continuation::getFlowName()
