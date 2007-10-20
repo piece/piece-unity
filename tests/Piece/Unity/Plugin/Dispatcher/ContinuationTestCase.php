@@ -390,6 +390,34 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals('http://www.example.org/', $dispatcher->invoke());
     }
 
+    /**
+     * @since Method available since Release 1.3.0
+     */
+    function testAnyExceptionsExceptPieceFlowShouldBeRaisedAgain()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Continuation', 'flowName', 'AnyExceptionsExceptPieceFlow');
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions', array(array('name' => 'AnyExceptionsExceptPieceFlow', 'file' => "{$this->_cacheDirectory}/AnyExceptionsExceptPieceFlow.yaml", 'isExclusive' => false)));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $session = &$context->getSession();
+        @$session->start();
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+        $dispatcher->invoke();
+
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
+
+        Piece_Unity_Error::popCallback();
+    }
+
     /**#@-*/
 
     /**#@+

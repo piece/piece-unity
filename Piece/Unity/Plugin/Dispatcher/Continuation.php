@@ -42,6 +42,7 @@ require_once 'Piece/Flow/Action/Factory.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Flow/Error.php';
 require_once 'Piece/Unity/Error.php';
+require_once 'PEAR/ErrorStack.php';
 
 // {{{ GLOBALS
 
@@ -118,7 +119,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             }
 
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    "Failed to invoke the plugin [ {$this->_name} ].",
+                                    "Failed to invoke the plugin [ {$this->_name} ] for any reasons.",
                                     'exception',
                                     array(),
                                     $error
@@ -126,15 +127,19 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             return;
         }
 
-        if (Piece_Unity_Error::hasErrors('exception')) {
-            $error = Piece_Unity_Error::pop();
-            Piece_Unity_Error::push($error['code'],
-                                    $error['message'],
-                                    'exception',
-                                    $error['params'],
-                                    $error['repackage']
-                                    );
-            return;
+        if (PEAR_ErrorStack::staticHasErrors()) {
+            $allErrors = PEAR_ErrorStack::staticGetErrors(true);
+            foreach (array_values($allErrors) as $errors) {
+                if (count($errors)) {
+                    $error = array_shift($errors);
+                    Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                            "Failed to invoke the plugin [ {$this->_name} ] for any reasons.",
+                                            'exception',
+                                            array(),
+                                            $error
+                                            );
+                }
+            }
         }
 
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
@@ -142,7 +147,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         Piece_Unity_Error::popCallback();
         if (Piece_Flow_Error::hasErrors('exception')) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    "Failed to invoke the plugin [ {$this->_name} ].",
+                                    "Failed to invoke the plugin [ {$this->_name} ] for any reasons.",
                                     'exception',
                                     array(),
                                     Piece_Flow_Error::pop()
