@@ -26,8 +26,8 @@
 # POSSIBILITY OF SUCH DAMAGE.
 ######################################################################
 
-name: config
-desc: the definition of Piece_Unity configuration file.
+name: piece-unity
+desc: Piece_Unity 0.1.0 YAML Schema Definition
 type: seq
 sequence:
   - type: map
