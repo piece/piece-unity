@@ -99,6 +99,19 @@ class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Rendere
         $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 
+    /**
+     * @since Method available since Release 1.3.0
+     */
+    function &_getConfigForLayeredStructure()
+    {
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', "{$this->_cacheDirectory}/actions");
+        $config->setConfiguration('Renderer_PHP', 'templateDirectory', "{$this->_cacheDirectory}/templates");
+        $config->setExtension('View', 'renderer', 'Renderer_PHP');
+
+        return $config;
+    }
+
     /**#@-*/
 
     // }}}

@@ -41,6 +41,9 @@ require_once 'Piece/Unity/Plugin/Dispatcher/Simple.php';
 require_once 'Piece/Unity/Plugin/View.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
 require_once 'Piece/Unity/Error.php';
+require_once 'PHP/Compat.php';
+
+PHP_Compat::loadFunction('scandir');
 
 // {{{ Piece_Unity_Plugin_Renderer_HTMLTest
 
@@ -87,6 +90,7 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
 
     function tearDown()
     {
+        Piece_Unity_Plugin_Renderer_HTMLTest::removeDirectoryRecursively("{$this->_cacheDirectory}/compiled-templates");
         Piece_Unity_Plugin_Factory::clearInstances();
         Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
@@ -101,8 +105,6 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
         $_GET['_event'] = $viewString;
 
         $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $this->_renderWithDispatcher());
-
-        $this->_clear($viewString);
     }
 
     function testRelativePathVulnerability()
@@ -128,8 +130,6 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
 
         $this->assertTrue(array_key_exists('bar', $foo));
         $this->assertEquals('baz', $foo->bar);
-
-        $this->_clear($viewString);
     }
 
     function testNonExistingTemplate()
@@ -149,8 +149,6 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
         $error = Piece_Unity_Error::pop();
 
         $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
-
-        $this->_clear($viewString);
 
         Piece_Unity_Error::popCallback();
     }
@@ -185,9 +183,6 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
     This is an element for the content.
   </body>
 </html>', rtrim($buffer));
-
-        $this->_clear($viewString);
-        $this->_clear($layoutViewString);
     }
 
     function testTurnOffLayoutByHTTPAcceptSuccess()
@@ -226,8 +221,6 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
 </html>', rtrim($buffer));
 
         $this->assertFalse(Piece_Unity_Error::hasErrors());
-
-        $this->_clear('Fallback');
     }
 
     function testRenderWithWarnings()
@@ -252,8 +245,48 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
         $buffer = $this->_render();
 
         $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $buffer);
+    }
 
-        $this->_clear($viewString);
+    /**
+     * @since Method available since Release 1.3.0
+     */
+    function testUnderScoresInViewStringShouldBeUsedAsDirectorySeparators()
+    {
+        $viewString = 'Foo_Bar_Baz';
+        $context = &Piece_Unity_Context::singleton();
+
+        $config = &$this->_getConfigForLayeredStructure();
+        $context->setConfiguration($config);
+        $context->setView($viewString);
+        $buffer = $this->_render();
+
+        $this->assertEquals('Hello, World!', rtrim($buffer));
+    }
+
+    /**
+     * @since Method available since Release 1.3.0
+     */
+    function removeDirectoryRecursively($directory)
+    {
+        if (!is_dir($directory)) {
+            return;
+        }
+
+        foreach (scandir($directory) as $file) {
+            if ($file == '.' || $file == '..' || $file == 'README') {
+                continue;
+            }
+
+            $file = "$directory/$file";
+
+            if (is_dir($file)) {
+                Piece_Unity_Plugin_Renderer_HTMLTest::removeDirectoryRecursively($file);
+            } elseif (is_file($file)) {
+                @unlink($file);
+            }
+        }
+
+        @rmdir($directory);
     }
 
     /**#@-*/
@@ -274,9 +307,7 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
         return $this->_render();
     }
 
-    function _clear($view) {}
-
-    function _getConfig() {}
+    function &_getConfig() {}
 
     function _assertTurnOffLayoutByHTTPAccept($turnOffLayoutByHTTPAccept, $result)
     {
@@ -311,9 +342,6 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
 
         $this->assertEquals($result, rtrim($buffer));
 
-        $this->_clear($viewString);
-        $this->_clear($layoutViewString);
-        
         unset($_SERVER['HTTP_ACCEPT']);
     }
 
@@ -336,6 +364,12 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
      * @since Method available since Release 1.0.0
      */
     function _doSetUp() {}
+
+    /**
+     * @abstract
+     * @since Method available since Release 1.3.0
+     */
+    function &_getConfigForLayeredStructure() {}
 
     /**#@-*/
 
