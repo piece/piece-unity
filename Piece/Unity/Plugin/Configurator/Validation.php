@@ -84,6 +84,8 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
         $validation = &$this->_context->getValidation();
         $validation->setConfigDirectory($this->_getConfiguration('configDirectory'));
         $validation->setCacheDirectory($this->_getConfiguration('cacheDirectory'));
+        $validation->setTemplate($this->_getConfiguration('template'));
+        $validation->setUseUnderscoreAsDirectorySeparator($this->_getConfiguration('useUnderscoreAsDirectorySeparator'));
 
         $this->_setValidatorDirectories();
         if (Piece_Unity_Error::hasErrors('exception')) {
@@ -123,6 +125,8 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
         $this->_addConfigurationPoint('filterDirectories', array());
         $this->_addConfigurationPoint('validatorPrefixes', array());
         $this->_addConfigurationPoint('filterPrefixes', array());
+        $this->_addConfigurationPoint('template');
+        $this->_addConfigurationPoint('useUnderscoreAsDirectorySeparator', false);
     }
 
     // }}}

@@ -1,0 +1,9 @@
+# $Id$
+
+- name: firstName
+  description: First Name
+  basedOn: String
+
+- name: lastName
+  description: Last Name
+  basedOn: String

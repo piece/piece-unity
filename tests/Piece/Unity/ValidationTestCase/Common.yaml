@@ -1,0 +1,13 @@
+# $Id$
+
+- name: String
+  required:
+    message: %_description% is required
+  filter:
+     - trim
+  validator:
+    - name: Length
+      rule:
+        min: 1
+        max: 255
+      message: The length of %_description% must be less than %max% characters

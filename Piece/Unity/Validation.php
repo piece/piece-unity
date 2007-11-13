@@ -76,6 +76,7 @@ class Piece_Unity_Validation
     var $_cacheDirectory;
     var $_results;
     var $_config;
+    var $_template;
 
     /**#@-*/
 
@@ -134,6 +135,7 @@ class Piece_Unity_Validation
                                                      );
         $context = &Piece_Unity_Context::singleton();
         $script->setPayload($context);
+        $script->setTemplate($this->_template);
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $this->_results = &$script->run($validationSetName,
                                         $container,
@@ -386,7 +388,8 @@ class Piece_Unity_Validation
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $config = &Piece_Right_Config_Factory::factory($validationSetName,
                                                        $configDirectory,
-                                                       $cacheDirectory
+                                                       $cacheDirectory,
+                                                       $this->_template
                                                        );
         Piece_Unity_Error::popCallback();
         if (Piece_Right_Error::hasErrors('exception')) {
@@ -404,6 +407,34 @@ class Piece_Unity_Validation
         }
 
         $this->_config->merge($config);
+    }
+
+    // }}}
+    // {{{ setTemplate()
+
+    /**
+     * Sets the given validation set as a template.
+     *
+     * @param string $template
+     * @since Method available since Release 1.3.0
+     */
+    function setTemplate($template)
+    {
+        $this->_template = $template;
+    }
+
+    // }}}
+    // {{{ setUseUnderscoreAsDirectorySeparator()
+
+    /**
+     * Sets whether or not Piece_Right uses underscores in validation set
+     * names as directory separators.
+     *
+     * @param boolean $treatUnderscoreAsDirectorySeparator
+     */
+    function setUseUnderscoreAsDirectorySeparator($useUnderscoreAsDirectorySeparator)
+    {
+        Piece_Right_Config_Factory::setUseUnderscoreAsDirectorySeparator($useUnderscoreAsDirectorySeparator);
     }
 
     /**#@-*/

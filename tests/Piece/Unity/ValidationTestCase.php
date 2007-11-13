@@ -325,6 +325,31 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
         $this->assertContains('qux', $fieldNames);
     }
 
+    /**
+     * @since Method available since Release 1.3.0
+     */
+    function testTemplateShouldBeUsedIfFileIsSetAndBasedOnElementIsSpecified()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_POST['firstName'] = ' Foo ';
+        $_POST['lastName'] = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+
+        $validation = &new Piece_Unity_Validation();
+        $validation->setConfigDirectory($this->_cacheDirectory);
+        $validation->setCacheDirectory($this->_cacheDirectory);
+        $validation->setTemplate('Common');
+        $container = &new stdClass();
+        $result = $validation->validate('TemplateShouldBeUsedIfFileIsSetAndBasedOnElementIsSpecified', $container);
+        $results = &$validation->getResults();
+
+        $this->assertFalse($result);
+        $this->assertEquals(1, $results->countErrors());
+        $this->assertTrue(in_array('firstName', $results->getValidFields()));
+        $this->assertTrue(in_array('lastName', $results->getErrorFields()));
+        $this->assertEquals('Foo', $results->getFieldValue('firstName'));
+        $this->assertEquals('The length of Last Name must be less than 255 characters', $results->getErrorMessage('lastName'));
+    }
+
     /**#@-*/
 
     /**#@+
