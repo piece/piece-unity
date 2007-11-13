@@ -431,6 +431,7 @@ class Piece_Unity_Validation
      * names as directory separators.
      *
      * @param boolean $treatUnderscoreAsDirectorySeparator
+     * @since Method available since Release 1.3.0
      */
     function setUseUnderscoreAsDirectorySeparator($useUnderscoreAsDirectorySeparator)
     {
