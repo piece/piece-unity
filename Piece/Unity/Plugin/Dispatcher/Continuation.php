@@ -44,12 +44,16 @@ require_once 'Piece/Flow/Error.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'PEAR/ErrorStack.php';
 
+// {{{ constants
+
+define('PIECE_UNITY_CONTINUATION_SESSIONKEY', '_continuation');
+
+// }}}
 // {{{ GLOBALS
 
 $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey'] = null;
-$GLOBALS['PIECE_UNITY_Continuation_FlowNameKey'] = null;
-$GLOBALS['PIECE_UNITY_Continuation_FlowName'] = null;
-$GLOBALS['PIECE_UNITY_Continuation_SessionKey'] = '_continuation';
+$GLOBALS['PIECE_UNITY_Continuation_FlowIDKey'] = null;
+$GLOBALS['PIECE_UNITY_Continuation_FlowID'] = null;
 
 // }}}
 // {{{ Piece_Unity_Plugin_Dispatcher_Continuation
@@ -127,8 +131,8 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             return;
         }
 
-        if (PEAR_ErrorStack::staticHasErrors()) {
-            $allErrors = PEAR_ErrorStack::staticGetErrors(true);
+        if (PEAR_ErrorStack::staticHasErrors(false, 'exception')) {
+            $allErrors = @PEAR_ErrorStack::staticGetErrors(true, 'exception');
             foreach (array_values($allErrors) as $errors) {
                 if (count($errors)) {
                     $error = array_shift($errors);
@@ -163,8 +167,18 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         foreach (array_keys(Piece_Flow_Action_Factory::getInstances()) as $actionClass) {
             $session->addPreloadClass('_Dispatcher_Continuation_ActionLoader',
                                       $actionClass,
-                                      Piece_Unity_Plugin_Dispatcher_Continuation::getFlowName()
+                                      $this->_continuationServer->getActiveFlowID()
                                       );
+        }
+
+        if ($this->_getConfiguration('useFlowMappings')) {
+            if (!preg_match('!^https?://!', $view) && !preg_match('!^selfs?://.*!', $view)) {
+                $flowName = $this->_continuationServer->getActiveFlowSource();
+                $positionOfUnderscore = strrpos($flowName, '_');
+                if ($positionOfUnderscore) {
+                    return substr($flowName, 0, $positionOfUnderscore + 1) . $view;
+                }
+            }
         }
 
         return $view;
@@ -202,23 +216,23 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     }
 
     // }}}
-    // {{{ getFlowName()
+    // {{{ getFlowID()
 
     /**
-     * Gets a flow name.
+     * Gets a flow ID.
      *
      * @return string
      * @static
      */
-    function getFlowName()
+    function getFlowID()
     {
-        if (!is_null($GLOBALS['PIECE_UNITY_Continuation_FlowName'])) {
-            return $GLOBALS['PIECE_UNITY_Continuation_FlowName'];
+        if (!is_null($GLOBALS['PIECE_UNITY_Continuation_FlowID'])) {
+            return $GLOBALS['PIECE_UNITY_Continuation_FlowID'];
         }
 
         $context = &Piece_Unity_Context::singleton();
         $request = &$context->getRequest();
-        return $request->hasParameter($GLOBALS['PIECE_UNITY_Continuation_FlowNameKey']) ? $request->getParameter($GLOBALS['PIECE_UNITY_Continuation_FlowNameKey']) : null;
+        return $request->hasParameter($GLOBALS['PIECE_UNITY_Continuation_FlowIDKey']) ? $request->getParameter($GLOBALS['PIECE_UNITY_Continuation_FlowIDKey']) : null;
     }
 
     // }}}
@@ -229,12 +243,12 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      * incomplete class.
      *
      * @param string $class
-     * @param string $flowName
+     * @param string $flowID
      * @static
      */
-    function loadAction($class, $flowName)
+    function loadAction($class, $flowID)
     {
-        if ($flowName == Piece_Unity_Plugin_Dispatcher_Continuation::getFlowName()) {
+        if ($flowID == Piece_Unity_Plugin_Dispatcher_Continuation::getFlowID()) {
             Piece_Flow_Action_Factory::load($class);
         }
     }
@@ -287,24 +301,47 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $continuationServer->setCacheDirectory($this->_getConfiguration('cacheDirectory'));
         $continuationServer->setEventNameCallback(array(__CLASS__, 'getEventName'));
         $continuationServer->setFlowExecutionTicketCallback(array(__CLASS__, 'getFlowExecutionTicket'));
-        $continuationServer->setFlowNameCallback(array(__CLASS__, 'getFlowName'));
+        $continuationServer->setFlowIDCallback(array(__CLASS__, 'getFlowID'));
 
-        foreach ($this->_getConfiguration('flowDefinitions') as $flowDefinition) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            $continuationServer->addFlow($flowDefinition['name'],
-                                         $flowDefinition['file'],
-                                         $flowDefinition['isExclusive']
-                                         );
-            Piece_Unity_Error::popCallback();
-            if (Piece_Flow_Error::hasErrors('exception')) {
-                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                        "Failed to configure the plugin [ {$this->_name}.",
-                                        'exception',
-                                        array(),
-                                        Piece_Flow_Error::pop()
-                                        );
-                $return = null;
-                return $return;
+        if ($this->_getConfiguration('useFlowMappings')) {
+            $continuationServer->setConfigDirectory($this->_getConfiguration('configDirectory'));
+            $continuationServer->setConfigExtension($this->_getConfiguration('configExtension'));
+            foreach ($this->_getConfiguration('flowMappings') as $flowMapping) {
+                Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+                $continuationServer->addFlow($flowMapping['url'],
+                                             $flowMapping['flowName'],
+                                             $flowMapping['isExclusive']
+                                             );
+                Piece_Unity_Error::popCallback();
+                if (Piece_Flow_Error::hasErrors('exception')) {
+                    Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                            "Failed to configure the plugin [ {$this->_name}.",
+                                            'exception',
+                                            array(),
+                                            Piece_Flow_Error::pop()
+                                            );
+                    $return = null;
+                    return $return;
+                }
+            }
+        } else {
+            foreach ($this->_getConfiguration('flowDefinitions') as $flowDefinition) {
+                Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+                $continuationServer->addFlow($flowDefinition['name'],
+                                             $flowDefinition['file'],
+                                             $flowDefinition['isExclusive']
+                                             );
+                Piece_Unity_Error::popCallback();
+                if (Piece_Flow_Error::hasErrors('exception')) {
+                    Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                            "Failed to configure the plugin [ {$this->_name}.",
+                                            'exception',
+                                            array(),
+                                            Piece_Flow_Error::pop()
+                                            );
+                    $return = null;
+                    return $return;
+                }
             }
         }
 
@@ -326,22 +363,32 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->_addConfigurationPoint('cacheDirectory');
         $this->_addConfigurationPoint('flowDefinitions', array());
         $this->_addConfigurationPoint('flowExecutionTicketKey', '_flowExecutionTicket');
-        $this->_addConfigurationPoint('flowNameKey', '_flow');
-        $this->_addConfigurationPoint('flowName');
+        $this->_addConfigurationPoint('flowNameKey', '_flow'); // deprecated
+        $this->_addConfigurationPoint('flowName');             // deprecated
         $this->_addConfigurationPoint('bindActionsWithFlowExecution', true);
         $this->_addConfigurationPoint('enableGC', false);
         $this->_addConfigurationPoint('gcExpirationTime', 1440);
         $this->_addConfigurationPoint('useGCFallback', false);
         $this->_addConfigurationPoint('gcFallbackURL');
+        $this->_addConfigurationPoint('useFlowMappings', false);
+        $this->_addConfigurationPoint('flowMappings', array());
+        $this->_addConfigurationPoint('configDirectory');
+        $this->_addConfigurationPoint('configExtension', '.flow');
 
         $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey'] = $this->_getConfiguration('flowExecutionTicketKey');
-        $GLOBALS['PIECE_UNITY_Continuation_FlowNameKey'] = $this->_getConfiguration('flowNameKey');
-        $GLOBALS['PIECE_UNITY_Continuation_FlowName'] = $this->_getConfiguration('flowName');
+        $GLOBALS['PIECE_UNITY_Continuation_FlowIDKey'] = $this->_getConfiguration('flowNameKey');
+
+        if ($this->_getConfiguration('useFlowMappings')) {
+            $GLOBALS['PIECE_UNITY_Continuation_FlowID'] = $this->_context->getScriptName();
+        } else {
+            $GLOBALS['PIECE_UNITY_Continuation_FlowID'] = $this->_getConfiguration('flowName');
+        }
+
         Piece_Flow_Action_Factory::setActionDirectory($this->_getConfiguration('actionDirectory'));
 
         $viewElement = &$this->_context->getViewElement();
         $viewElement->setElement('__flowExecutionTicketKey', $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey']);
-        $viewElement->setElement('__flowNameKey', $GLOBALS['PIECE_UNITY_Continuation_FlowNameKey']);
+        $viewElement->setElement('__flowNameKey', $GLOBALS['PIECE_UNITY_Continuation_FlowIDKey']);
     }
 
     // }}}
@@ -357,14 +404,14 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     function _prepareContinuation()
     {
         $session = &$this->_context->getSession();
-        $continuationServer = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_SessionKey']);
+        $continuationServer = &$session->getAttribute(PIECE_UNITY_CONTINUATION_SESSIONKEY);
         if (is_null($continuationServer)) {
             $continuationServer = &$this->_createContinuationServer();
             if (Piece_Unity_Error::hasErrors('exception')) {
                 return;
             }
 
-            $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_SessionKey'], $continuationServer);
+            $session->setAttributeByRef(PIECE_UNITY_CONTINUATION_SESSIONKEY, $continuationServer);
             $session->setPreloadCallback('_Dispatcher_Continuation', array('Piece_Unity_Plugin_Factory', 'factory'));
             $session->addPreloadClass('_Dispatcher_Continuation', 'Dispatcher_Continuation');
         }

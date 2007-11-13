@@ -121,7 +121,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
         $this->assertEquals('Counter', $dispatcher->invoke());
 
-        $continuationServer = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_SessionKey']);
+        $continuationServer = &$session->getAttribute(PIECE_UNITY_CONTINUATION_SESSIONKEY);
         $continuationService = &$continuationServer->createService();
         $viewElement = &$context->getViewElement();
         $flowExecutionTicket = $viewElement->getElement('__flowExecutionTicket');
@@ -138,7 +138,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $session = &$context->getSession();
         @$session->start();
-        $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_SessionKey'], $continuationServer);
+        $session->setAttributeByRef(PIECE_UNITY_CONTINUATION_SESSIONKEY, $continuationServer);
         $dispatcher->invoke();
         $continuationService = &$continuationServer->createService();
 
@@ -205,7 +205,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals('Counter', $dispatcher->invoke());
 
         $session = &$context->getSession();
-        $continuationServer = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_SessionKey']);
+        $continuationServer = &$session->getAttribute(PIECE_UNITY_CONTINUATION_SESSIONKEY);
         $viewElement = &$context->getViewElement();
         $flowExecutionTicket = $viewElement->getElement('__flowExecutionTicket');
         Piece_Unity_Context::clear();
@@ -217,7 +217,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         @$session->start();
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $session = &$context->getSession();
-        $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_SessionKey'], $continuationServer);
+        $session->setAttributeByRef(PIECE_UNITY_CONTINUATION_SESSIONKEY, $continuationServer);
         $dispatcher->invoke();
         $dispatcher->invoke();
         $dispatcher->invoke();
@@ -311,7 +311,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals('Form', $dispatcher->invoke());
 
         $session = &$context->getSession();
-        $continuationServer = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_SessionKey']);
+        $continuationServer = &$session->getAttribute(PIECE_UNITY_CONTINUATION_SESSIONKEY);
         $viewElement = &$context->getViewElement();
         $flowExecutionTicket = $viewElement->getElement('__flowExecutionTicket');
 
@@ -322,7 +322,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context->setConfiguration($config);
         $session = &$context->getSession();
         @$session->start();
-        $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_SessionKey'], $continuationServer);
+        $session->setAttributeByRef(PIECE_UNITY_CONTINUATION_SESSIONKEY, $continuationServer);
         $validation = &$context->getValidation();
         $validation->setConfigDirectory($this->_cacheDirectory);
         $validation->setCacheDirectory($this->_cacheDirectory);
@@ -373,7 +373,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals('Form', $dispatcher->invoke());
 
         $session = &$context->getSession();
-        $continuationServer = &$session->getAttribute($GLOBALS['PIECE_UNITY_Continuation_SessionKey']);
+        $continuationServer = &$session->getAttribute(PIECE_UNITY_CONTINUATION_SESSIONKEY);
         $viewElement = &$context->getViewElement();
         $flowExecutionTicket = $viewElement->getElement('__flowExecutionTicket');
 
@@ -383,7 +383,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context->setConfiguration($config);
         $session = &$context->getSession();
         @$session->start();
-        $session->setAttributeByRef($GLOBALS['PIECE_UNITY_Continuation_SessionKey'], $continuationServer);
+        $session->setAttributeByRef(PIECE_UNITY_CONTINUATION_SESSIONKEY, $continuationServer);
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         sleep(2);
 
@@ -416,6 +416,37 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
 
         Piece_Unity_Error::popCallback();
+    }
+
+    /**
+     * @since Method available since Release 1.3.0
+     */
+    function testURLToFlowMappingsShouldWorkIfUseFlowMappingsIsTrue()
+    {
+        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/entry/new.php';
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'useFlowMappings', true);
+        $config->setConfiguration('Dispatcher_Continuation',
+                                  'flowMappings',
+                                  array(array('url' => '/entry/new.php',
+                                              'flowName' => 'Entry_New',
+                                              'isExclusive' => false))
+                                  );
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $session = &$context->getSession();
+        @$session->start();
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+        $viewString = $dispatcher->invoke();
+
+        $this->assertEquals('Entry_New', $viewString);
+        $this->assertEquals('bar', $context->getAttribute('foo'));
+
+        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
     }
 
     /**#@-*/

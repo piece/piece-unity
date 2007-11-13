@@ -1,0 +1,10 @@
+# $Id: Counter.yaml 976 2007-08-21 16:17:47Z iteman $
+
+firstState: DisplayNew
+
+viewState:
+
+  - name: DisplayNew
+    view: New
+    activity:
+      method: doActivityOnDisplayNew
