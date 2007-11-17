@@ -132,17 +132,15 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         }
 
         if (PEAR_ErrorStack::staticHasErrors(false, 'exception')) {
-            $allErrors = @PEAR_ErrorStack::staticGetErrors(true, 'exception');
+            $allErrors = @PEAR_ErrorStack::staticGetErrors(false, 'exception');
             foreach (array_values($allErrors) as $errors) {
-                if (count($errors)) {
-                    $error = array_shift($errors);
-                    Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                            "Failed to invoke the plugin [ {$this->_name} ] for any reasons.",
-                                            'exception',
-                                            array(),
-                                            $error
-                                            );
-                }
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                        "Failed to invoke the plugin [ {$this->_name} ] for any reasons.",
+                                        'exception',
+                                        array(),
+                                        $errors[0]
+                                        );
+                return;
             }
         }
 
