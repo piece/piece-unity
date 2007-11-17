@@ -125,7 +125,7 @@ class Piece_Unity_Config_Factory
         }
 
         if (is_null($cacheDirectory)) {
-            $cacheDirectory = './cache';
+            return Piece_Unity_Config_Factory::_getConfigurationFromFile($configFile);
         }
 
         if (!file_exists($cacheDirectory)) {
