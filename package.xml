@@ -15,10 +15,10 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
   <email>iteman@users.sourceforge.net</email>
   <active>yes</active>
  </lead>
- <date>2007-10-05</date>
- <time>11:40:12</time>
+ <date>2007-11-18</date>
+ <time>22:16:14</time>
  <version>
-  <release>1.2.0</release>
+  <release>1.3.0</release>
   <api>0.7.0</api>
  </version>
  <stability>
@@ -28,10 +28,11 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
  <notes>A new release of Piece_Unity is now available.
 
-What&apos;s New in Piece_Unity 1.2.0
+What&apos;s New in Piece_Unity 1.3.0
 
- * Enhanced Dispatcher_Simple plug-in: Two configuration points &quot;useDefaultEvent&quot; and &quot;defaultEventName&quot; have been added. These provide a feature so that the default event is used if the event is an empty string or NULL. And a feature which allows users to return a view string from an action has been added.
- * A few Defect Fixes: A defect that caused the same cache to be used if the relative paths of the configuration files are same even though the absolute paths of the files are different has been fixed. And also two defects in Renderer_PHP plug-in have been fixed.
+ * New configuration system for mapping urls to flows: A new configuration system for mapping urls to flows using a directory where flow definition files exist and an extension of flow definition files has been supported. And it supports layered structure for flow definition files, actions, and html views by using underscores in flow names as directory separators.
+ * Layered structure support for less configuration: As mentioned above, the new configuration system for mapping urls to flows supports layered structure. And also the validation sysytem supports layered structure for validation definition files by using underscores in validation set names as directory separators.
+ * Validation Template: Validation Template allows users to use a validation set as a template for another validation set.
 
 See the following release notes for details.
 
@@ -40,26 +41,25 @@ Enhancements
 
 Kernel:
 
-- Changed getURL() so as to return without replacing the host and port if the URL is external. (Piece_Unity_URL)
+- Added mergeValidationSet() which can be used to merge a validation set into the Piece_Right_Config object for the current validation. (Ticket #83) (Piece_Unity_Validation)
+- Added a feature which allows users to use a validation set as a template for another validation set. (Piece_Unity_Validation)
+- Added support for layered structure by using underscores in validation set names as directory separators. (Piece_Unity_Validation)
+- Changed factory() so as to use the given cache directory as is. (Ticket #90) (Piece_Unity_Config_Factory)
 
 Plug-ins:
 
-- Added a feature so that users can overwrite the view returned from the dispatcher with an arbitrary view in an action. (Controller)
-- Changed code so as to use the new interfaces for the continuation server. (Dispatcher_Continuation)
-- Added two configuration points &quot;useDefaultEvent&quot; and &quot;defaultEventName&quot;. These provide a feature so that the default event is used if the event is an empty string or NULL. (Ticket #80) (Dispatcher_Simple)
-- Added a feature which allows users to return a view string from an action. (Ticket #86) (Dispatcher_Simple)
+- Changed code so as to use the value of &quot;templateDirectory&quot; instead if &quot;layoutDirectory&quot; is not given when using layout. (Renderer_PHP)
+- Changed code so as to set the value to &quot;templateDirectory&quot; only if &quot;fallbackDirectory&quot; is given when using fallback. (Renderer_PHP)
+- Added a feature which allows users to use a validation set as a template for another validation set. (Configurator_Validation)
+- Added support for layered structure by using underscores in validation set names as directory separators. (Configurator_Validation)
+- Added support for new configuration system using a directory where flow definition files exist and an extension of flow definition files. (Ticket #85) (Dispatcher_Continuation)
 
 Defect Fixes
 ============
 
-Kernel:
-
-- Fixed the defect that caused the same cache to be used if the relative paths of the configuration files are same even though the absolute paths of the files are different. (Piece_Unity_Config_Factory)
-
 Plug-ins:
 
-- Fixed the defect that caused $file to be tainted if the Piece_Unity_ViewElement object has &quot;file&quot; attribute. (Renderer_PHP)
-- Fixed the defect that caused $viewElement to be tainted if the Piece_Unity_ViewElement object has &quot;viewElement&quot; attribute. (Renderer_PHP)</notes>
+- Fixed a defect that caused any exceptions except Piece_Flow to not be thrown. (Ticket #88) (Dispatcher_Continuation)</notes>
  <contents>
   <dir baseinstalldir="/" name="/">
    <dir name="data">
@@ -332,6 +332,20 @@ Plug-ins:
        </dir> <!-- /tests/Piece/Unity/Plugin/ControllerTestCase -->
        <dir name="Dispatcher">
         <dir name="ContinuationTestCase">
+         <dir name="Entry">
+          <file name="New.flow" role="test">
+           <tasks:replace from="@package_version@" to="version" type="package-info" />
+          </file>
+          <file name="NewAction.php" role="test">
+           <tasks:replace from="@package_version@" to="version" type="package-info" />
+          </file>
+         </dir> <!-- /tests/Piece/Unity/Plugin/Dispatcher/ContinuationTestCase/Entry -->
+         <file name="AnyExceptionsExceptPieceFlow.yaml" role="test">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
+         <file name="AnyExceptionsExceptPieceFlowAction.php" role="test">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+         </file>
          <file name="ContinuationValidation.yaml" role="test">
           <tasks:replace from="@package_version@" to="version" type="package-info" />
          </file>
@@ -450,6 +464,13 @@ Plug-ins:
             <tasks:replace from="@package_version@" to="version" type="package-info" />
            </file>
           </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/PHPTestCase/templates/Fallback -->
+          <dir name="Foo">
+           <dir name="Bar">
+            <file name="Baz.php" role="test">
+             <tasks:replace from="@package_version@" to="version" type="package-info" />
+            </file>
+           </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/PHPTestCase/templates/Foo/Bar -->
+          </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/PHPTestCase/templates/Foo -->
           <dir name="Layout">
            <file name="PHPLayout.php" role="test">
             <tasks:replace from="@package_version@" to="version" type="package-info" />
@@ -516,6 +537,21 @@ Plug-ins:
        <file name="Authentication.yaml" role="test">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
+       <file name="Common.yaml" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="MergeValidationSetShouldMergeConfigurationFileIntoConfiguration1.yaml" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="MergeValidationSetShouldMergeConfigurationFileIntoConfiguration2.yaml" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="MergeValidationSetShouldMergeConfigurationFileIntoConfiguration3.yaml" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
+       <file name="TemplateShouldBeUsedIfFileIsSetAndBasedOnElementIsSpecified.yaml" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
       </dir> <!-- /tests/Piece/Unity/ValidationTestCase -->
       <file name="ConfigTestCase.php" role="test">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
@@ -560,7 +596,7 @@ Plug-ins:
    <package>
     <name>Piece_Flow</name>
     <channel>pear.piece-framework.com</channel>
-    <min>1.14.0</min>
+    <min>1.15.0</min>
    </package>
    <package>
     <name>Cache_Lite</name>
@@ -580,12 +616,58 @@ Plug-ins:
    <package>
     <name>Piece_Right</name>
     <channel>pear.piece-framework.com</channel>
-    <min>1.7.0</min>
+    <min>1.8.0</min>
    </package>
   </required>
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>1.3.0</release>
+    <api>0.7.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2007-11-18</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+   <notes>A new release of Piece_Unity is now available.
+
+What&apos;s New in Piece_Unity 1.3.0
+
+ * New configuration system for mapping urls to flows: A new configuration system for mapping urls to flows using a directory where flow definition files exist and an extension of flow definition files has been supported. And it supports layered structure for flow definition files, actions, and html views by using underscores in flow names as directory separators.
+ * Layered structure support for less configuration: As mentioned above, the new configuration system for mapping urls to flows supports layered structure. And also the validation sysytem supports layered structure for validation definition files by using underscores in validation set names as directory separators.
+ * Validation Template: Validation Template allows users to use a validation set as a template for another validation set.
+
+See the following release notes for details.
+
+Enhancements
+============
+
+Kernel:
+
+- Added mergeValidationSet() which can be used to merge a validation set into the Piece_Right_Config object for the current validation. (Ticket #83) (Piece_Unity_Validation)
+- Added a feature which allows users to use a validation set as a template for another validation set. (Piece_Unity_Validation)
+- Added support for layered structure by using underscores in validation set names as directory separators. (Piece_Unity_Validation)
+- Changed factory() so as to use the given cache directory as is. (Ticket #90) (Piece_Unity_Config_Factory)
+
+Plug-ins:
+
+- Changed code so as to use the value of &quot;templateDirectory&quot; instead if &quot;layoutDirectory&quot; is not given when using layout. (Renderer_PHP)
+- Changed code so as to set the value to &quot;templateDirectory&quot; only if &quot;fallbackDirectory&quot; is given when using fallback. (Renderer_PHP)
+- Added a feature which allows users to use a validation set as a template for another validation set. (Configurator_Validation)
+- Added support for layered structure by using underscores in validation set names as directory separators. (Configurator_Validation)
+- Added support for new configuration system using a directory where flow definition files exist and an extension of flow definition files. (Ticket #85) (Dispatcher_Continuation)
+
+Defect Fixes
+============
+
+Plug-ins:
+
+- Fixed a defect that caused any exceptions except Piece_Flow to not be thrown. (Ticket #88) (Dispatcher_Continuation)</notes>
+  </release>
   <release>
    <version>
     <release>1.2.0</release>

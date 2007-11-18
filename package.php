@@ -39,16 +39,17 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$releaseVersion = '1.2.0';
+$releaseVersion = '1.3.0';
 $releaseStability = 'stable';
 $apiVersion = '0.7.0';
 $apiStability = 'stable';
 $notes = 'A new release of Piece_Unity is now available.
 
-What\'s New in Piece_Unity 1.2.0
+What\'s New in Piece_Unity 1.3.0
 
- * Enhanced Dispatcher_Simple plug-in: Two configuration points "useDefaultEvent" and "defaultEventName" have been added. These provide a feature so that the default event is used if the event is an empty string or NULL. And a feature which allows users to return a view string from an action has been added.
- * A few Defect Fixes: A defect that caused the same cache to be used if the relative paths of the configuration files are same even though the absolute paths of the files are different has been fixed. And also two defects in Renderer_PHP plug-in have been fixed.
+ * New configuration system for mapping urls to flows: A new configuration system for mapping urls to flows using a directory where flow definition files exist and an extension of flow definition files has been supported. And it supports layered structure for flow definition files, actions, and html views by using underscores in flow names as directory separators.
+ * Layered structure support for less configuration: As mentioned above, the new configuration system for mapping urls to flows supports layered structure. And also the validation sysytem supports layered structure for validation definition files by using underscores in validation set names as directory separators.
+ * Validation Template: Validation Template allows users to use a validation set as a template for another validation set.
 
 See the following release notes for details.
 
@@ -57,26 +58,25 @@ Enhancements
 
 Kernel:
 
-- Changed getURL() so as to return without replacing the host and port if the URL is external. (Piece_Unity_URL)
+- Added mergeValidationSet() which can be used to merge a validation set into the Piece_Right_Config object for the current validation. (Ticket #83) (Piece_Unity_Validation)
+- Added a feature which allows users to use a validation set as a template for another validation set. (Piece_Unity_Validation)
+- Added support for layered structure by using underscores in validation set names as directory separators. (Piece_Unity_Validation)
+- Changed factory() so as to use the given cache directory as is. (Ticket #90) (Piece_Unity_Config_Factory)
 
 Plug-ins:
 
-- Added a feature so that users can overwrite the view returned from the dispatcher with an arbitrary view in an action. (Controller)
-- Changed code so as to use the new interfaces for the continuation server. (Dispatcher_Continuation)
-- Added two configuration points "useDefaultEvent" and "defaultEventName". These provide a feature so that the default event is used if the event is an empty string or NULL. (Ticket #80) (Dispatcher_Simple)
-- Added a feature which allows users to return a view string from an action. (Ticket #86) (Dispatcher_Simple)
+- Changed code so as to use the value of "templateDirectory" instead if "layoutDirectory" is not given when using layout. (Renderer_PHP)
+- Changed code so as to set the value to "templateDirectory" only if "fallbackDirectory" is given when using fallback. (Renderer_PHP)
+- Added a feature which allows users to use a validation set as a template for another validation set. (Configurator_Validation)
+- Added support for layered structure by using underscores in validation set names as directory separators. (Configurator_Validation)
+- Added support for new configuration system using a directory where flow definition files exist and an extension of flow definition files. (Ticket #85) (Dispatcher_Continuation)
 
 Defect Fixes
 ============
 
-Kernel:
-
-- Fixed the defect that caused the same cache to be used if the relative paths of the configuration files are same even though the absolute paths of the files are different. (Piece_Unity_Config_Factory)
-
 Plug-ins:
 
-- Fixed the defect that caused $file to be tainted if the Piece_Unity_ViewElement object has "file" attribute. (Renderer_PHP)
-- Fixed the defect that caused $viewElement to be tainted if the Piece_Unity_ViewElement object has "viewElement" attribute. (Renderer_PHP)';
+- Fixed a defect that caused any exceptions except Piece_Flow to not be thrown. (Ticket #88) (Dispatcher_Continuation)';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
@@ -106,11 +106,11 @@ $package->setReleaseStability($releaseStability);
 $package->setNotes($notes);
 $package->setPhpDep('4.3.0');
 $package->setPearinstallerDep('1.4.3');
-$package->addPackageDepWithChannel('required', 'Piece_Flow', 'pear.piece-framework.com', '1.14.0');
+$package->addPackageDepWithChannel('required', 'Piece_Flow', 'pear.piece-framework.com', '1.15.0');
 $package->addPackageDepWithChannel('required', 'Cache_Lite', 'pear.php.net', '1.7.0');
 $package->addPackageDepWithChannel('required', 'PEAR', 'pear.php.net', '1.4.3');
 $package->addPackageDepWithChannel('required', 'Net_URL', 'pear.php.net', '1.0.14');
-$package->addPackageDepWithChannel('required', 'Piece_Right', 'pear.piece-framework.com', '1.7.0');
+$package->addPackageDepWithChannel('required', 'Piece_Right', 'pear.piece-framework.com', '1.8.0');
 $package->addMaintainer('lead', 'iteman', 'KUBO Atsuhiro', 'iteman@users.sourceforge.net');
 $package->addGlobalReplacement('package-info', '@package_version@', 'version');
 $package->generateContents();
