@@ -449,6 +449,42 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $_SERVER['SCRIPT_NAME'] = $oldScriptName;
     }
 
+    /**
+     * @since Method available since Release 1.3.1
+     */
+    function testURLToFlowMappingsShouldWorkWithReverseProxy()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+
+        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/entry/new.php';
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'useFlowMappings', true);
+        $config->setConfiguration('Dispatcher_Continuation',
+                                  'flowMappings',
+                                  array(array('url' => '/entry/new.php',
+                                              'flowName' => 'Entry_New',
+                                              'isExclusive' => false))
+                                  );
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $context->setProxyPath('/crud');
+        $context->setScriptName($context->getProxyPath() . $context->getScriptName());
+        $session = &$context->getSession();
+        @$session->start();
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+        $viewString = $dispatcher->invoke();
+
+        $this->assertFalse(Piece_Unity_Error::hasErrors('exception'));
+
+        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+
+        Piece_Unity_Error::popCallback();
+    }
+
     /**#@-*/
 
     /**#@+
