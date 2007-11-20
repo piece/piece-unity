@@ -423,6 +423,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
      */
     function testURLToFlowMappingsShouldWorkIfUseFlowMappingsIsTrue()
     {
+        $_SERVER['SERVER_NAME'] = 'example.org';
+        $_SERVER['SERVER_PORT'] = '80';
         $oldScriptName = $_SERVER['SCRIPT_NAME'];
         $_SERVER['SCRIPT_NAME'] = '/entry/new.php';
         $config = &new Piece_Unity_Config();
@@ -447,6 +449,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals('bar', $context->getAttribute('foo'));
 
         $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+        unset($_SERVER['SERVER_PORT']);
+        unset($_SERVER['SERVER_NAME']);
     }
 
     /**
@@ -456,6 +460,10 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
 
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
+        $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'example.org';
+        $_SERVER['SERVER_NAME'] = 'foo.example.org';
+        $_SERVER['SERVER_PORT'] = '8201';
         $oldScriptName = $_SERVER['SCRIPT_NAME'];
         $_SERVER['SCRIPT_NAME'] = '/entry/new.php';
         $config = &new Piece_Unity_Config();
@@ -481,6 +489,49 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertFalse(Piece_Unity_Error::hasErrors('exception'));
 
         $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+        unset($_SERVER['SERVER_PORT']);
+        unset($_SERVER['SERVER_NAME']);
+        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
+        unset($_SERVER['HTTP_X_FORWARDED_SERVER']);
+
+        Piece_Unity_Error::popCallback();
+    }
+
+    /**
+     * @since Method available since Release 1.3.1
+     */
+    function testURLToFlowMappingsShouldWorkWithBackendServerDirectly()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+
+        $_SERVER['SERVER_NAME'] = 'example.org';
+        $_SERVER['SERVER_PORT'] = '80';
+        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/entry/new.php';
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'useFlowMappings', true);
+        $config->setConfiguration('Dispatcher_Continuation',
+                                  'flowMappings',
+                                  array(array('url' => '/entry/new.php',
+                                              'flowName' => 'Entry_New',
+                                              'isExclusive' => false))
+                                  );
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $context->setProxyPath('/crud');
+        $session = &$context->getSession();
+        @$session->start();
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+        $viewString = $dispatcher->invoke();
+
+        $this->assertFalse(Piece_Unity_Error::hasErrors('exception'));
+
+        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+        unset($_SERVER['SERVER_PORT']);
+        unset($_SERVER['SERVER_NAME']);
 
         Piece_Unity_Error::popCallback();
     }

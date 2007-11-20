@@ -305,8 +305,12 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             $continuationServer->setConfigDirectory($this->_getConfiguration('configDirectory'));
             $continuationServer->setConfigExtension($this->_getConfiguration('configExtension'));
             foreach ($this->_getConfiguration('flowMappings') as $flowMapping) {
+                if ($this->_context->usingProxy()) {
+                    $flowMapping['url'] = $this->_context->getProxyPath() . $flowMapping['url'];
+                }
+
                 Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-                $continuationServer->addFlow($this->_context->getProxyPath() . $flowMapping['url'],
+                $continuationServer->addFlow($flowMapping['url'],
                                              $flowMapping['flowName'],
                                              $flowMapping['isExclusive']
                                              );
