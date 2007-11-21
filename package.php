@@ -39,44 +39,15 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$releaseVersion = '1.3.0';
+$releaseVersion = '1.3.1';
 $releaseStability = 'stable';
 $apiVersion = '0.7.0';
 $apiStability = 'stable';
 $notes = 'A new release of Piece_Unity is now available.
 
-What\'s New in Piece_Unity 1.3.0
+What\'s New in Piece_Unity 1.3.1
 
- * New configuration system for mapping urls to flows: A new configuration system for mapping urls to flows using a directory where flow definition files exist and an extension of flow definition files has been supported. And it supports layered structure for flow definition files, actions, and html views by using underscores in flow names as directory separators.
- * Layered structure support for less configuration: As mentioned above, the new configuration system for mapping urls to flows supports layered structure. And also the validation sysytem supports layered structure for validation definition files by using underscores in validation set names as directory separators.
- * Validation Template: Validation Template allows users to use a validation set as a template for another validation set.
-
-See the following release notes for details.
-
-Enhancements
-============
-
-Kernel:
-
-- Added mergeValidationSet() which can be used to merge a validation set into the Piece_Right_Config object for the current validation. (Ticket #83) (Piece_Unity_Validation)
-- Added a feature which allows users to use a validation set as a template for another validation set. (Piece_Unity_Validation)
-- Added support for layered structure by using underscores in validation set names as directory separators. (Piece_Unity_Validation)
-- Changed factory() so as to use the given cache directory as is. (Ticket #90) (Piece_Unity_Config_Factory)
-
-Plug-ins:
-
-- Changed code so as to use the value of "templateDirectory" instead if "layoutDirectory" is not given when using layout. (Renderer_PHP)
-- Changed code so as to set the value to "templateDirectory" only if "fallbackDirectory" is given when using fallback. (Renderer_PHP)
-- Added a feature which allows users to use a validation set as a template for another validation set. (Configurator_Validation)
-- Added support for layered structure by using underscores in validation set names as directory separators. (Configurator_Validation)
-- Added support for new configuration system using a directory where flow definition files exist and an extension of flow definition files. (Ticket #85) (Dispatcher_Continuation)
-
-Defect Fixes
-============
-
-Plug-ins:
-
-- Fixed a defect that caused any exceptions except Piece_Flow to not be thrown. (Ticket #88) (Dispatcher_Continuation)';
+ * A Defect Fix: A defect that flowMappings does not work with reverse proxy.';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',
