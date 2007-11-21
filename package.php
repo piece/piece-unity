@@ -47,7 +47,7 @@ $notes = 'A new release of Piece_Unity is now available.
 
 What\'s New in Piece_Unity 1.3.1
 
- * A Defect Fix: A defect that flowMappings does not work with reverse proxy.';
+ * A Defect Fix: A defect that flowMappings does not work with reverse proxy has been fixed.';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',

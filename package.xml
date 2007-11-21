@@ -16,7 +16,7 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
   <active>yes</active>
  </lead>
  <date>2007-11-21</date>
- <time>11:59:50</time>
+ <time>12:15:39</time>
  <version>
   <release>1.3.1</release>
   <api>0.7.0</api>
@@ -30,7 +30,7 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
 
 What&apos;s New in Piece_Unity 1.3.1
 
- * A Defect Fix: A defect that flowMappings does not work with reverse proxy.</notes>
+ * A Defect Fix: A defect that flowMappings does not work with reverse proxy has been fixed.</notes>
  <contents>
   <dir baseinstalldir="/" name="/">
    <dir name="data">
@@ -608,7 +608,7 @@ What&apos;s New in Piece_Unity 1.3.1
 
 What&apos;s New in Piece_Unity 1.3.1
 
- * A Defect Fix: A defect that flowMappings does not work with reverse proxy.</notes>
+ * A Defect Fix: A defect that flowMappings does not work with reverse proxy has been fixed.</notes>
   </release>
   <release>
    <version>
