@@ -172,9 +172,13 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         if ($this->_getConfiguration('useFlowMappings')) {
             if (!preg_match('!^https?://!', $view) && !preg_match('!^selfs?://.*!', $view)) {
                 $flowName = $this->_continuationServer->getActiveFlowSource();
-                $positionOfUnderscore = strrpos($flowName, '_');
-                if ($positionOfUnderscore) {
-                    return substr($flowName, 0, $positionOfUnderscore + 1) . $view;
+                if ($this->_getConfiguration('useFullFlowNameAsViewPrefix')) {
+                    return "{$flowName}_{$view}";
+                } else {
+                    $positionOfUnderscore = strrpos($flowName, '_');
+                    if ($positionOfUnderscore) {
+                        return substr($flowName, 0, $positionOfUnderscore + 1) . $view;
+                    }
                 }
             }
         }
@@ -376,6 +380,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->_addConfigurationPoint('flowMappings', array());
         $this->_addConfigurationPoint('configDirectory');
         $this->_addConfigurationPoint('configExtension', '.flow');
+        $this->_addConfigurationPoint('useFullFlowNameAsViewPrefix', true);
 
         $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey'] = $this->_getConfiguration('flowExecutionTicketKey');
         $GLOBALS['PIECE_UNITY_Continuation_FlowIDKey'] = $this->_getConfiguration('flowNameKey');
