@@ -309,10 +309,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             $continuationServer->setConfigDirectory($this->_getConfiguration('configDirectory'));
             $continuationServer->setConfigExtension($this->_getConfiguration('configExtension'));
             foreach ($this->_getConfiguration('flowMappings') as $flowMapping) {
-                if ($this->_context->usingProxy()) {
-                    $flowMapping['url'] = $this->_context->getProxyPath() . $flowMapping['url'];
-                }
-
                 Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
                 $continuationServer->addFlow($flowMapping['url'],
                                              $flowMapping['flowName'],
@@ -386,7 +382,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $GLOBALS['PIECE_UNITY_Continuation_FlowIDKey'] = $this->_getConfiguration('flowNameKey');
 
         if ($this->_getConfiguration('useFlowMappings')) {
-            $GLOBALS['PIECE_UNITY_Continuation_FlowID'] = $this->_context->getScriptName();
+            $GLOBALS['PIECE_UNITY_Continuation_FlowID'] = $_SERVER['SCRIPT_NAME'];
         } else {
             $GLOBALS['PIECE_UNITY_Continuation_FlowID'] = $this->_getConfiguration('flowName');
         }
