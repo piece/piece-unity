@@ -39,15 +39,23 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$releaseVersion = '1.3.1';
+$releaseVersion = '1.4.0';
 $releaseStability = 'stable';
 $apiVersion = '0.7.0';
 $apiStability = 'stable';
 $notes = 'A new release of Piece_Unity is now available.
 
-What\'s New in Piece_Unity 1.3.1
+What\'s New in Piece_Unity 1.4.0
 
- * A Defect Fix: A defect that flowMappings does not work with reverse proxy has been fixed.';
+ * Full flow name as view prefix: A feature so that the full flow name can be used as the view prefix by turning on "useFullFlowNameAsViewPrefix". (default: on) If you want to keep backward compatibility with Piece_Unity 1.3.0/1.3.1 configurations, set false to "useFullFlowNameAsViewPrefix". For example, if there is a view "Baz", the final view of "Baz" by different flow names and states of "useFullFlowNameAsViewPrefix" as follows:
+
++-----------+-----------+-------------+
+| flow name | off/1.3.x | on          |
++-----------+-----------+-------------+
+| Foo       | Baz       | Foo_Baz     |
++-----------+-----------+-------------+
+| Foo_Bar   | Foo_Baz   | Foo_Bar_Baz |
++-----------+-----------+-------------+';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'svn',

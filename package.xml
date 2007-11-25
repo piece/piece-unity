@@ -15,10 +15,10 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
   <email>iteman@users.sourceforge.net</email>
   <active>yes</active>
  </lead>
- <date>2007-11-21</date>
- <time>12:15:39</time>
+ <date>2007-11-25</date>
+ <time>13:49:01</time>
  <version>
-  <release>1.3.1</release>
+  <release>1.4.0</release>
   <api>0.7.0</api>
  </version>
  <stability>
@@ -28,9 +28,17 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
  <notes>A new release of Piece_Unity is now available.
 
-What&apos;s New in Piece_Unity 1.3.1
+What&apos;s New in Piece_Unity 1.4.0
 
- * A Defect Fix: A defect that flowMappings does not work with reverse proxy has been fixed.</notes>
+ * Full flow name as view prefix: A feature so that the full flow name can be used as the view prefix by turning on &quot;useFullFlowNameAsViewPrefix&quot;. (default: on) If you want to keep backward compatibility with Piece_Unity 1.3.0/1.3.1 configurations, set false to &quot;useFullFlowNameAsViewPrefix&quot;. For example, if there is a view &quot;Baz&quot;, the final view of &quot;Baz&quot; by different flow names and states of &quot;useFullFlowNameAsViewPrefix&quot; as follows:
+
++-----------+-----------+-------------+
+| flow name | off/1.3.x | on          |
++-----------+-----------+-------------+
+| Foo       | Baz       | Foo_Baz     |
++-----------+-----------+-------------+
+| Foo_Bar   | Foo_Baz   | Foo_Bar_Baz |
++-----------+-----------+-------------+</notes>
  <contents>
   <dir baseinstalldir="/" name="/">
    <dir name="data">
@@ -593,6 +601,31 @@ What&apos;s New in Piece_Unity 1.3.1
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>1.4.0</release>
+    <api>0.7.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2007-11-25</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+   <notes>A new release of Piece_Unity is now available.
+
+What&apos;s New in Piece_Unity 1.4.0
+
+ * Full flow name as view prefix: A feature so that the full flow name can be used as the view prefix by turning on &quot;useFullFlowNameAsViewPrefix&quot;. (default: on) If you want to keep backward compatibility with Piece_Unity 1.3.0/1.3.1 configurations, set false to &quot;useFullFlowNameAsViewPrefix&quot;. For example, if there is a view &quot;Baz&quot;, the final view of &quot;Baz&quot; by different flow names and states of &quot;useFullFlowNameAsViewPrefix&quot; as follows:
+
++-----------+-----------+-------------+
+| flow name | off/1.3.x | on          |
++-----------+-----------+-------------+
+| Foo       | Baz       | Foo_Baz     |
++-----------+-----------+-------------+
+| Foo_Bar   | Foo_Baz   | Foo_Bar_Baz |
++-----------+-----------+-------------+</notes>
+  </release>
   <release>
    <version>
     <release>1.3.1</release>
