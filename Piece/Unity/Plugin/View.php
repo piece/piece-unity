@@ -144,6 +144,10 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
             }
         }
 
+        if (preg_match('!^raw:!', $viewString)) {
+            return;
+        }
+
         $renderer = &$this->_getExtension('renderer');
         if (Piece_Unity_Error::hasErrors('exception')) {
             return;
