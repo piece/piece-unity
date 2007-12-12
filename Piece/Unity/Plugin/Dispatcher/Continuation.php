@@ -361,9 +361,9 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     function _initialize()
     {
         $this->_addConfigurationPoint('actionDirectory');
-        $this->_addConfigurationPoint('enableSingleFlowMode', false);
+        $this->_addConfigurationPoint('enableSingleFlowMode', false); // deprecated
         $this->_addConfigurationPoint('cacheDirectory');
-        $this->_addConfigurationPoint('flowDefinitions', array());
+        $this->_addConfigurationPoint('flowDefinitions', array()); // deprecated
         $this->_addConfigurationPoint('flowExecutionTicketKey', '_flowExecutionTicket');
         $this->_addConfigurationPoint('flowNameKey', '_flow'); // deprecated
         $this->_addConfigurationPoint('flowName');             // deprecated
@@ -391,7 +391,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
 
         $viewElement = &$this->_context->getViewElement();
         $viewElement->setElement('__flowExecutionTicketKey', $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey']);
-        $viewElement->setElement('__flowNameKey', $GLOBALS['PIECE_UNITY_Continuation_FlowIDKey']);
+        $viewElement->setElement('__flowNameKey', $GLOBALS['PIECE_UNITY_Continuation_FlowIDKey']); // deprecated
     }
 
     // }}}
