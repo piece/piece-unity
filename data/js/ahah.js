@@ -31,7 +31,7 @@ function ahahDone(url, target, delay, content) {
     }
 }
 
-function sendAHAHReqeust(sender, target, delay) {
+function sendAHAHRequest(sender, target, delay) {
     if (sender.form) {
         var form = sender.form;
         var data = [
