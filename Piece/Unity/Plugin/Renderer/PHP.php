@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.1.0
@@ -37,6 +37,7 @@
 
 require_once 'Piece/Unity/Plugin/Renderer/HTML.php';
 require_once 'Piece/Unity/Error.php';
+require_once 'Piece/Unity/Service/Rendering/PHP.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_PHP
 
@@ -44,7 +45,7 @@ require_once 'Piece/Unity/Error.php';
  * A renderer which uses PHP itself as a template engine.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
@@ -63,9 +64,6 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
     /**#@+
      * @access private
      */
-
-    var $_fileForDoRender;
-    var $_viewElementForDoRender;
 
     /**#@-*/
 
@@ -121,28 +119,13 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
         }
 
         $file = "$templateDirectory/" . str_replace('_', '/', str_replace('.', '', $view)) . $this->_getConfiguration('templateExtension');
-
-        if (!file_exists($file)) {
+        $viewElement = &$this->_context->getViewElement();
+        $rendering = &new Piece_Unity_Service_Rendering_PHP();
+        $rendering->render($file, $viewElement);
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            $error = Piece_Unity_Error::pop();
             Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
-                                    "The HTML template file [ $file ] not found."
-                                    );
-            return;
-        }
-
-        if (!is_readable($file)) {
-            Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
-                                    "The HTML template file [ $file ] is not readable."
-                                    );
-            return;
-        }
-
-        $this->_fileForDoRender = $file;
-        $this->_viewElementForDoRender = &$this->_context->getViewElement();
-        extract($this->_viewElementForDoRender->getElements(), EXTR_OVERWRITE | EXTR_REFS);
-
-        if (!include $this->_fileForDoRender) {
-            Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
-                                    "The HTML template file [ {$this->_fileForDoRender} ] not found or is not readable."
+                                    $error['message']
                                     );
         }
     }
