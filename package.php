@@ -39,35 +39,22 @@ require_once 'PEAR/PackageFileManager2.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$releaseVersion = '1.4.0';
+$releaseVersion = '1.5.0';
 $releaseStability = 'stable';
 $apiVersion = '0.7.0';
 $apiStability = 'stable';
 $notes = 'A new release of Piece_Unity is now available.
 
-What\'s New in Piece_Unity 1.4.0
-
- * Full flow name as view prefix: A feature so that the full flow name can be used as the view prefix by turning on "useFullFlowNameAsViewPrefix". (default: on) If you want to keep backward compatibility with Piece_Unity 1.3.0/1.3.1 configurations, set false to "useFullFlowNameAsViewPrefix". For example, if there is a view "Baz", the final view of "Baz" by different flow names and states of "useFullFlowNameAsViewPrefix" as follows:
-
-+-----------+-----------+-------------+
-| flow name | off/1.3.x | on          |
-+-----------+-----------+-------------+
-| Foo       | Baz       | Foo_Baz     |
-+-----------+-----------+-------------+
-| Foo_Bar   | Foo_Baz   | Foo_Bar_Baz |
-+-----------+-----------+-------------+';
+What\'s New in Piece_Unity 1.5.0';
 
 $package = new PEAR_PackageFileManager2();
-$package->setOptions(array('filelistgenerator' => 'svn',
+$package->setOptions(array('filelistgenerator' => 'file',
                            'changelogoldtonew' => false,
                            'simpleoutput'      => true,
                            'baseinstalldir'    => '/',
                            'packagefile'       => 'package.xml',
                            'packagedirectory'  => '.',
-                           'dir_roles'         => array('data' => 'data',
-                                                        'tests' => 'test',
-                                                        'docs' => 'doc'),
-                           'ignore'            => array('package.php', 'package.xml', 'components/'))
+                           'ignore'            => array('package.php', 'components/'))
                      );
 
 $package->setPackage('Piece_Unity');
