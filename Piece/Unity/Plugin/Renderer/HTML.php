@@ -94,6 +94,26 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
             }
         }
 
+        $componentDeployers = &$this->_getExtension('componentDeployers');
+        if (!is_array($componentDeployers)) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
+                                    "The value of the extension point [ componentDeployers ] on the plug-in [ {$this->_name} ] should be an array."
+                                    );
+            return;
+        }
+
+        foreach ($componentDeployers as $extension) {
+            $componentDeployer = &Piece_Unity_Plugin_Factory::factory($extension);
+            if (Piece_Unity_Error::hasErrors('exception')) {
+                return;
+            }
+
+            $componentDeployer->invoke();
+            if (Piece_Unity_Error::hasErrors('exception')) {
+                return;
+            }
+        }
+
         if (!$useLayout) {
             $this->_render(false);
         } else {
@@ -137,6 +157,7 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
         $this->_addConfigurationPoint('fallbackView');
         $this->_addConfigurationPoint('fallbackDirectory');
         $this->_addConfigurationPoint('fallbackCompileDirectory');
+        $this->_addExtensionPoint('componentDeployers', array());
     }
 
     // }}}
