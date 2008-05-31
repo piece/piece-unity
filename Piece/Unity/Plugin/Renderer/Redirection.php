@@ -80,7 +80,43 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
      */
     function invoke()
     {
-        $isExternal = $this->_getConfiguration('isExternal');
+        $this->_replaceSelfNotation();
+        $this->_url = $this->_buildURL();
+
+        if (!headers_sent() && !is_null($this->_url)) {
+            header("Location: {$this->_url}");
+        }
+    }
+
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
+
+    // }}}
+    // {{{ _initialize()
+
+    /**
+     * Defines and initializes extension points and configuration points.
+     *
+     * @since Method available since Release 0.6.0
+     */
+    function _initialize()
+    {
+        $this->_addConfigurationPoint('addSessionID', false);
+        $this->_addConfigurationPoint('isExternal', false);
+        $this->_addConfigurationPoint('addFlowExecutionTicket', false);
+    }
+
+    // }}}
+    // {{{ _replaceSelfNotation()
+
+    /**
+     * @since Method available since Release 1.5.0
+     */
+    function _replaceSelfNotation()
+    {
         $viewString = $this->_context->getView();
         if (preg_match('!^selfs?://(.*)!', $viewString, $matches)) {
             $config = &$this->_context->getConfiguration();
@@ -91,7 +127,17 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
                 $this->_context->setView('https://example.org' . $this->_context->getScriptName() . '?' . $matches[1]);
             }
         }
+    }
 
+    // }}}
+    // {{{ _buildURL()
+
+    /**
+     * @since Method available since Release 1.5.0
+     */
+    function _buildURL()
+    {
+        $isExternal = $this->_getConfiguration('isExternal');
         $viewString = $this->_context->getView();
         $url = &new Piece_Unity_URL($viewString, $isExternal);
 
@@ -133,37 +179,12 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
         }
 
         if (substr($viewString, 0, 7) == 'http://') {
-            $this->_url = $url->getURL();
+            return $url->getURL();
         } elseif (substr($viewString, 0, 8) == 'https://') {
-            $this->_url = $url->getURL(true);
-        }
-
-        if (!headers_sent() && !is_null($this->_url)) {
-            header("Location: {$this->_url}");
+            return $url->getURL(true);
         }
     }
 
-    /**#@-*/
-
-    /**#@+
-     * @access private
-     */
-
-    // }}}
-    // {{{ _initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
-     */
-    function _initialize()
-    {
-        $this->_addConfigurationPoint('addSessionID', false);
-        $this->_addConfigurationPoint('isExternal', false);
-        $this->_addConfigurationPoint('addFlowExecutionTicket', false);
-    }
- 
     /**#@-*/
 
     // }}}
