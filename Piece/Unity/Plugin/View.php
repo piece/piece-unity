@@ -134,11 +134,7 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
             return;
         }
 
-        $config = &$this->_context->getConfiguration();
-        if (!strlen($config->getExtension('View', 'renderer'))) {
-            $config->setExtension('View', 'renderer', $rendererExtension);
-        }
-
+        $config->setExtension('View', 'renderer', $rendererExtension);
         $renderer = &$this->_getExtension('renderer');
         if (Piece_Unity_Error::hasErrors('exception')) {
             return;
