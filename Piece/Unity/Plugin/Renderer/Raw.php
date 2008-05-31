@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,88 +29,26 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @since      File available since Release 0.1.0
+ * @since      File available since Release 1.5.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../../../prepare.php');
-require_once 'Piece/Unity/Plugin/Renderer/HTMLTest.php';
-require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
+require_once 'Piece/Unity/Plugin/Common.php';
 
-// {{{ Piece_Unity_Plugin_Renderer_PHPTestCase
+// {{{ Piece_Unity_Plugin_Renderer_Raw
 
 /**
- * Some tests for Piece_Unity_Plugin_Renderer_PHP.
+ * A renderer to do nothing.
  *
  * @package    Piece_Unity
- * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @since      Class available since Release 0.1.0
+ * @since      Class available since Release 1.5.0
  */
-class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Renderer_HTMLTest
-{
-
-    // {{{ properties
-
-    /**#@+
-     * @access public
-     */
-
-    /**#@-*/
-
-    /**#@+
-     * @access private
-     */
-
-    var $_target = 'PHP';
-
-    /**#@-*/
-
-    /**#@+
-     * @access public
-     */
-
-    /**#@-*/
-
-    /**#@+
-     * @access private
-     */
-
-    function &_getConfig()
-    {
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Renderer_PHP', 'templateDirectory', "{$this->_cacheDirectory}/templates/Content");
-
-        return $config;
-    }
-
-    /**
-     * @since Method available since Release 1.0.0
-     */
-    function _doSetUp()
-    {
-        $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
-    }
-
-    /**
-     * @since Method available since Release 1.3.0
-     */
-    function &_getConfigForLayeredStructure()
-    {
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Renderer_PHP', 'templateDirectory', "{$this->_cacheDirectory}/templates");
-
-        return $config;
-    }
-
-    /**#@-*/
-
-    // }}}
-}
+class Piece_Unity_Plugin_Renderer_Raw extends Piece_Unity_Plugin_Common {}
 
 // }}}
 

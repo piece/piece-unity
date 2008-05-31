@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,32 +29,31 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @since      File available since Release 0.11.0
+ * @since      File available since Release 1.5.0
  */
 
 require_once realpath(dirname(__FILE__) . '/../../../prepare.php');
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/Error.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
-require_once 'Piece/Unity/Plugin/View.php';
+require_once 'Piece/Unity/Plugin/ViewSchemeHandler.php';
 
-// {{{ Piece_Unity_Plugin_ViewTestCase
+// {{{ Piece_Unity_Plugin_ViewSchemeHandlerTestCase
 
 /**
- * Some tests for Piece_Unity_Plugin_View.
+ * Some tests for Piece_Unity_Plugin_ViewSchemeHandler.
  *
  * @package    Piece_Unity
- * @copyright  2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @since      Class available since Release 0.11.0
+ * @since      Class available since Release 1.5.0
  */
-class Piece_Unity_Plugin_ViewTestCase extends PHPUnit_TestCase
+class Piece_Unity_Plugin_ViewSchemeHandlerTestCase extends PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -84,31 +83,38 @@ class Piece_Unity_Plugin_ViewTestCase extends PHPUnit_TestCase
     {
         Piece_Unity_Context::clear();
         Piece_Unity_Plugin_Factory::clearInstances();
-        Piece_Unity_Error::popCallback();
     }
 
-    /**
-     * @since Method available since Release 0.12.0
-     */
-    function testBuiltinElements()
+    function testShouldRemoveHtmlSchemeStringFromAViewString()
     {
-        $config = &new Piece_Unity_Config();
         $context = &Piece_Unity_Context::singleton();
+        $context->setView('html:Foo');
+        $config = &new Piece_Unity_Config();
         $context->setConfiguration($config);
-        $view = &Piece_Unity_Plugin_Factory::factory('View');
-        $view->invoke();
-        $viewElement = &$context->getViewElement();
-        $elements = $viewElement->getElements();
+        $viewSchemeHandler = &Piece_Unity_Plugin_Factory::factory('ViewSchemeHandler');;
+        $rendererExtension = $viewSchemeHandler->invoke();
 
-        $this->assertEquals(9, count($elements));
-        $this->assertTrue(array_key_exists('__request', $elements));
-        $this->assertTrue(array_key_exists('__session', $elements));
-        $this->assertTrue(array_key_exists('__eventNameKey', $elements));
-        $this->assertTrue(array_key_exists('__scriptName', $elements));
-        $this->assertTrue(array_key_exists('__basePath', $elements));
-        $this->assertTrue(array_key_exists('__sessionName', $elements));
-        $this->assertTrue(array_key_exists('__sessionID', $elements));
-        $this->assertTrue(array_key_exists('__appRootPath', $elements));
+        $this->assertEquals('Renderer_PHP', $rendererExtension);
+        $this->assertEquals('Foo', $context->getView());
+    }
+
+    function testShouldRaiseAnExceptionIfTheViewStringIsStartedWithColon()
+    {
+        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        $context = &Piece_Unity_Context::singleton();
+        $context->setView(':Foo');
+        $config = &new Piece_Unity_Config();
+        $context->setConfiguration($config);
+        $viewSchemeHandler = &Piece_Unity_Plugin_Factory::factory('ViewSchemeHandler');;
+        $viewSchemeHandler->invoke();
+
+        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_UNEXPECTED_VALUE, $error['code']);
+
+        Piece_Unity_Error::popCallback();
     }
 
     /**#@-*/

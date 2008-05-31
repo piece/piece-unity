@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.6.0
@@ -39,18 +39,17 @@ require_once realpath(dirname(__FILE__) . '/../../../../prepare.php');
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/Plugin/Renderer/Redirection.php';
-require_once 'Piece/Unity/Plugin/View.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
+require_once 'Piece/Unity/Plugin/Renderer/Redirection.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_RedirectionTestCase
 
 /**
- * TestCase for Piece_Unity_Plugin_Renderer_Redirection
+ * Some tests for Piece_Unity_Plugin_Renderer_Redirection.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.6.0
@@ -79,15 +78,12 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
     function setUp()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
-        $_SERVER['REQUEST_METHOD'] = 'GET';
     }
 
     function tearDown()
     {
         Piece_Unity_Context::clear();
         Piece_Unity_Plugin_Factory::clearInstances();
-        unset($_GET['_event']);
-        unset($_SERVER['REQUEST_METHOD']);
         Piece_Unity_Error::popCallback();
     }
 
@@ -100,9 +96,8 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $context->setView('http://example.org/foo.php');
         $config = &new Piece_Unity_Config();
         $context->setConfiguration($config);
-        $view = &new Piece_Unity_Plugin_View();
-        $view->invoke();
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $redirection->invoke();
 
         $this->assertEquals($expectedURL, $redirection->_url);
 
@@ -120,9 +115,8 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $context->setProxyPath('/foo');
         $config = &new Piece_Unity_Config();
         $context->setConfiguration($config);
-        $view = &new Piece_Unity_Plugin_View();
-        $view->invoke();
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $redirection->invoke();
 
         $this->assertEquals($expectedURL, $redirection->_url);
 
@@ -142,9 +136,8 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $context->setProxyPath('/foo');
         $config = &new Piece_Unity_Config();
         $context->setConfiguration($config);
-        $view = &new Piece_Unity_Plugin_View();
-        $view->invoke();
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $redirection->invoke();
 
         $this->assertEquals($expectedURL, $redirection->_url);
 
@@ -163,9 +156,8 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $context->setProxyPath('/foo');
         $config = &new Piece_Unity_Config();
         $context->setConfiguration($config);
-        $view = &new Piece_Unity_Plugin_View();
-        $view->invoke();
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $redirection->invoke();
 
         $this->assertEquals($expectedURL, $redirection->_url);
 
@@ -185,9 +177,8 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $context->setProxyPath('/foo');
         $config = &new Piece_Unity_Config();
         $context->setConfiguration($config);
-        $view = &new Piece_Unity_Plugin_View();
-        $view->invoke();
-        $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $redirection = &new Piece_Unity_Plugin_Renderer_Redirection();
+        $redirection->invoke();
 
         $this->assertEquals($expectedURL, $redirection->_url);
 
@@ -208,9 +199,8 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $context->setView('http://example.org/foo.php?__eventNameKey=bar');
         $config = &new Piece_Unity_Config();
         $context->setConfiguration($config);
-        $view = &new Piece_Unity_Plugin_View();
-        $view->invoke();
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $redirection->invoke();
 
         $this->assertEquals($expectedURL, $redirection->_url);
 
@@ -230,14 +220,61 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $context->setView('https://example.org/foo.php');
         $config = &new Piece_Unity_Config();
         $context->setConfiguration($config);
-        $view = &new Piece_Unity_Plugin_View();
-        $view->invoke();
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $redirection->invoke();
 
         $this->assertEquals($expectedURL, $redirection->_url);
 
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
+    }
+
+    /**
+     * @since Method available since Release 1.5.0
+     */
+    function testShouldSupportSelfNotation()
+    {
+        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/foo.php';
+        $_SERVER['SERVER_NAME'] = 'example.org';
+        $_SERVER['SERVER_PORT'] = '80';
+
+        $context = &Piece_Unity_Context::singleton();
+        $context->setView('self://__eventNameKey=goDisplayForm&bar=baz#zip');
+        $config = &new Piece_Unity_Config();
+        $context->setConfiguration($config);
+        $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $redirection->invoke();
+
+        $this->assertEquals('http://example.org/foo.php?__eventNameKey=goDisplayForm&bar=baz#zip', $context->getView());
+
+        unset($_SERVER['SERVER_PORT']);
+        unset($_SERVER['SERVER_NAME']);
+        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+    }
+
+    /**
+     * @since Method available since Release 1.5.0
+     */
+    function testShouldSupportSelfNotationForHTTPS()
+    {
+        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/foo.php';
+        $_SERVER['SERVER_NAME'] = 'example.org';
+        $_SERVER['SERVER_PORT'] = '80';
+
+        $context = &Piece_Unity_Context::singleton();
+        $context->setView('selfs://__eventNameKey=goDisplayForm&bar=baz#zip');
+        $config = &new Piece_Unity_Config();
+        $context->setConfiguration($config);
+        $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $redirection->invoke();
+
+        $this->assertEquals('https://example.org/foo.php?__eventNameKey=goDisplayForm&bar=baz#zip', $context->getView());
+
+        unset($_SERVER['SERVER_PORT']);
+        unset($_SERVER['SERVER_NAME']);
+        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
     }
 
     /**#@-*/

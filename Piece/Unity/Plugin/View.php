@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.1.0
@@ -46,7 +46,7 @@ require_once 'Piece/Unity/URL.php';
  * elements with an appropriate renderer.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
@@ -115,37 +115,28 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
             $this->_context->setView($forcedView);
         }
 
-        /*
-         * Overwrites the extension 'renderer' if the view string start with
-         * http(s)://, since it is considered as a URL to redirect.
-         */
-        $viewString = $this->_context->getView();
-        if (preg_match('!^https?://!', $viewString)) {
-            $config = &$this->_context->getConfiguration();
-            $config->setExtension('View', 'renderer', 'Renderer_Redirection');
+        $config = &$this->_context->getConfiguration();
+        $rendererExtension = $config->getExtension('View', 'renderer');
+        if (strlen($rendererExtension)) {
+            $config->setConfiguration('ViewSchemeHandler',
+                                      'html',
+                                      $rendererExtension
+                                      );
         }
 
-        /*
-         * Self Notation
-         *
-         * Overwrites the extension 'renderer' if the view string start with
-         * self:://, since it is considered as the URL of an entry point
-         * itself to redirect.
-         */
-        if (preg_match('!^selfs?://(.*)!', $viewString, $matches)) {
-            $config = &$this->_context->getConfiguration();
-            $config->setExtension('View', 'renderer', 'Renderer_Redirection');
-            $config->setConfiguration('Renderer_Redirection', 'addFlowExecutionTicket', true);
-
-            if (substr($viewString, 0, 7) == 'self://') {
-                $this->_context->setView('http://example.org' . $this->_context->getScriptName() . '?' . $matches[1]);
-            } elseif (substr($viewString, 0, 8) == 'selfs://') {
-                $this->_context->setView('https://example.org' . $this->_context->getScriptName() . '?' . $matches[1]);
-            }
-        }
-
-        if (preg_match('!^raw:!', $viewString)) {
+        $viewSchemeHandler = &$this->_getExtension('viewSchemeHandler');
+        if (Piece_Unity_Error::hasErrors('exception')) {
             return;
+        }
+
+        $rendererExtension = $viewSchemeHandler->invoke();
+        if (Piece_Unity_Error::hasErrors('exception')) {
+            return;
+        }
+
+        $config = &$this->_context->getConfiguration();
+        if (!strlen($config->getExtension('View', 'renderer'))) {
+            $config->setExtension('View', 'renderer', $rendererExtension);
         }
 
         $renderer = &$this->_getExtension('renderer');
@@ -172,8 +163,9 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
      */
     function _initialize()
     {
-        $this->_addExtensionPoint('renderer', 'Renderer_PHP');
+        $this->_addExtensionPoint('renderer');
         $this->_addConfigurationPoint('forcedView');
+        $this->_addExtensionPoint('viewSchemeHandler', 'ViewSchemeHandler');
     }
 
     /**#@-*/

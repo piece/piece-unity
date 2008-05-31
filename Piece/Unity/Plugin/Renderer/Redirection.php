@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.6.0
@@ -44,7 +44,7 @@ require_once 'Piece/Unity/URL.php';
  * A renderer which is used to redirect requests.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.6.0
@@ -81,6 +81,17 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
     function invoke()
     {
         $isExternal = $this->_getConfiguration('isExternal');
+        $viewString = $this->_context->getView();
+        if (preg_match('!^selfs?://(.*)!', $viewString, $matches)) {
+            $config = &$this->_context->getConfiguration();
+            $config->setConfiguration('Renderer_Redirection', 'addFlowExecutionTicket', true);
+            if (substr($viewString, 0, 7) == 'self://') {
+                $this->_context->setView('http://example.org' . $this->_context->getScriptName() . '?' . $matches[1]);
+            } elseif (substr($viewString, 0, 8) == 'selfs://') {
+                $this->_context->setView('https://example.org' . $this->_context->getScriptName() . '?' . $matches[1]);
+            }
+        }
+
         $viewString = $this->_context->getView();
         $url = &new Piece_Unity_URL($viewString, $isExternal);
 

@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.2.0
@@ -37,8 +37,6 @@
 
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/Plugin/Dispatcher/Simple.php';
-require_once 'Piece/Unity/Plugin/View.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'PHP/Compat.php';
@@ -52,7 +50,7 @@ PHP_Compat::loadFunction('scandir');
  * renderers.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.2.0
@@ -84,7 +82,6 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
     function setUp()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
-        $_SERVER['REQUEST_METHOD'] = 'GET';
         $this->_doSetUp();
     }
 
@@ -95,37 +92,41 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
         Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
         Piece_Unity_Error::popCallback();
-        unset($_GET['_event']);
-        unset($_SERVER['REQUEST_METHOD']);
     }
 
     function testRendering()
     {
-        $viewString = "{$this->_target}Example";
-        $_GET['_event'] = $viewString;
+        $context = &Piece_Unity_Context::singleton();
+        $context->setView("{$this->_target}Example");
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('content', 'This is a dynamic content.');
+        $config = &$this->_getConfig();
+        $context->setConfiguration($config);
 
-        $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $this->_renderWithDispatcher());
+        $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $this->_render());
     }
 
     function testRelativePathVulnerability()
     {
-        $_GET['_event'] = '../RelativePathVulnerability';
+        $context = &Piece_Unity_Context::singleton();
+        $context->setView('../RelativePathVulnerability');
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('content', 'This is a dynamic content.');
+        $config = &$this->_getConfig();
+        $context->setConfiguration($config);
 
-        $this->assertEquals('', $this->_renderWithDispatcher());
+        $this->assertEquals('', $this->_render());
     }
 
     function testKeepingReference()
     {
-        $viewString = "{$this->_target}KeepingReference";
         $context = &Piece_Unity_Context::singleton();
-
-        $config = &$this->_getConfig();
-        $context->setConfiguration($config);
-
+        $context->setView("{$this->_target}KeepingReference");
         $foo = &new stdClass();
         $viewElement = &$context->getViewElement();
         $viewElement->setElementByRef('foo', $foo);
-        $context->setView($viewString);
+        $config = &$this->_getConfig();
+        $context->setConfiguration($config);
         $this->_render();
 
         $this->assertTrue(array_key_exists('bar', $foo));
@@ -135,13 +136,10 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
     function testNonExistingTemplate()
     {
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_DIE . ';'));
-
-        $viewString = "{$this->_target}NonExistingView";
         $context = &Piece_Unity_Context::singleton();
-
+        $context->setView("{$this->_target}NonExistingView");
         $config = &$this->_getConfig();
         $context->setConfiguration($config);
-        $context->setView($viewString);
         $this->_render();
 
         $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
@@ -155,34 +153,24 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
 
     function testLayout()
     {
-        $viewString = "{$this->_target}LayoutContent";
-        $layoutViewString = "{$this->_target}Layout";
         $context = &Piece_Unity_Context::singleton();
-
-        $config = &$this->_getConfig();
-        $config->setConfiguration("Renderer_{$this->_target}", 'useLayout', true);
-        $config->setConfiguration("Renderer_{$this->_target}", 'layoutView', $layoutViewString);
-        $config->setConfiguration("Renderer_{$this->_target}", 'layoutDirectory', "{$this->_cacheDirectory}/templates/Layout");
-        $config->setConfiguration("Renderer_{$this->_target}", 'layoutCompileDirectory', "{$this->_cacheDirectory}/compiled-templates/Layout");
-        $context->setConfiguration($config);
-
+        $context->setView("{$this->_target}LayoutContent");
         $viewElement = &$context->getViewElement();
         $viewElement->setElement('foo', 'This is an element for the content.');
         $viewElement->setElement('bar', 'This is an element for the layout.');
-        $context->setView($viewString);
-
-        $view = &new Piece_Unity_Plugin_View();
-        ob_start();
-        $view->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
+        $config = &$this->_getConfig();
+        $config->setConfiguration("Renderer_{$this->_target}", 'useLayout', true);
+        $config->setConfiguration("Renderer_{$this->_target}", 'layoutView', "{$this->_target}Layout");
+        $config->setConfiguration("Renderer_{$this->_target}", 'layoutDirectory', "{$this->_cacheDirectory}/templates/Layout");
+        $config->setConfiguration("Renderer_{$this->_target}", 'layoutCompileDirectory', "{$this->_cacheDirectory}/compiled-templates/Layout");
+        $context->setConfiguration($config);
 
         $this->assertEquals('<html>
   <body>
     <h1>This is an element for the layout.</h1>
     This is an element for the content.
   </body>
-</html>', rtrim($buffer));
+</html>', trim($this->_render()));
     }
 
     function testTurnOffLayoutByHTTPAcceptSuccess()
@@ -202,23 +190,22 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
 
     function testFallback()
     {
-        $viewString = 'NonExistingView';
         $context = &Piece_Unity_Context::singleton();
-
+        $context->setView('NonExistingView');
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('content', 'This is a dynamic content.');
         $config = &$this->_getConfig();
         $config->setConfiguration("Renderer_{$this->_target}", 'useFallback', true);
         $config->setConfiguration("Renderer_{$this->_target}", 'fallbackView', 'Fallback');
         $config->setConfiguration("Renderer_{$this->_target}", 'fallbackDirectory', "{$this->_cacheDirectory}/templates/Fallback");
         $config->setConfiguration("Renderer_{$this->_target}", 'fallbackCompileDirectory', "{$this->_cacheDirectory}/compiled-templates/Fallback");
         $context->setConfiguration($config);
-        $context->setView($viewString);
-        $buffer = $this->_render();
 
         $this->assertEquals('<html>
   <body>
     <p>This is a test for fallback.</p>
   </body>
-</html>', rtrim($buffer));
+</html>', rtrim($this->_render()));
 
         $this->assertFalse(Piece_Unity_Error::hasErrors());
     }
@@ -228,23 +215,18 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND, false, 'warning');
         Piece_Unity_Error::popCallback();
-        $viewString = "{$this->_target}Example";
-        $_GET['_event'] = $viewString;
-
         $context = &Piece_Unity_Context::singleton();
-
+        $context->setView("{$this->_target}Example");
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('content', 'This is a dynamic content.');
         $config = &$this->_getConfig();
         $config->setConfiguration("Renderer_{$this->_target}", 'useFallback', true);
         $config->setConfiguration("Renderer_{$this->_target}", 'fallbackView', 'Fallback');
         $config->setConfiguration("Renderer_{$this->_target}", 'fallbackDirectory', "{$this->_cacheDirectory}/templates/Fallback");
         $config->setConfiguration("Renderer_{$this->_target}", 'fallbackCompileDirectory', "{$this->_cacheDirectory}/compiled-templates/Fallback");
         $context->setConfiguration($config);
-        $context->setView($viewString);
-        $viewElement = &$context->getViewElement();
-        $viewElement->setElement('content', 'This is a dynamic content.');
-        $buffer = $this->_render();
 
-        $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $buffer);
+        $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $this->_render());
     }
 
     /**
@@ -252,15 +234,14 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
      */
     function testUnderScoresInViewStringShouldBeUsedAsDirectorySeparators()
     {
-        $viewString = 'Foo_Bar_Baz';
         $context = &Piece_Unity_Context::singleton();
-
+        $context->setView('Foo_Bar_Baz');
+        $viewElement = &$context->getViewElement();
+        $viewElement->setElement('content', 'This is a dynamic content.');
         $config = &$this->_getConfigForLayeredStructure();
         $context->setConfiguration($config);
-        $context->setView($viewString);
-        $buffer = $this->_render();
 
-        $this->assertEquals('Hello, World!', rtrim($buffer));
+        $this->assertEquals('Hello, World!', rtrim($this->_render()));
     }
 
     /**
@@ -295,52 +276,25 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
      * @access private
      */
 
-    function _renderWithDispatcher()
-    {
-        $context = &Piece_Unity_Context::singleton();
-
-        $config = &$this->_getConfig();
-        $context->setConfiguration($config);
-
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
-        $context->setView($dispatcher->invoke());
-        return $this->_render();
-    }
-
     function &_getConfig() {}
 
     function _assertTurnOffLayoutByHTTPAccept($turnOffLayoutByHTTPAccept, $result)
     {
-        if ($this->_target == 'PHP') {
-            return;
-        }
-    
-        $viewString = "{$this->_target}LayoutContent";
-        $layoutViewString = "{$this->_target}Layout";
         $context = &Piece_Unity_Context::singleton();
-
-        $_SERVER['HTTP_ACCEPT'] = 'application/x-piece-html-fragment';
-
-        $config = &$this->_getConfig();
-        $config->setConfiguration("Renderer_{$this->_target}", 'turnOffLayoutByHTTPAccept', $turnOffLayoutByHTTPAccept);
-        $config->setConfiguration("Renderer_{$this->_target}", 'useLayout', true);
-        $config->setConfiguration("Renderer_{$this->_target}", 'layoutView', $layoutViewString);
-        $config->setConfiguration("Renderer_{$this->_target}", 'layoutDirectory', "{$this->_cacheDirectory}/templates/Layout");
-        $config->setConfiguration("Renderer_{$this->_target}", 'layoutCompileDirectory', "{$this->_cacheDirectory}/compiled-templates/Layout");
-        $context->setConfiguration($config);
-
+        $context->setView("{$this->_target}LayoutContent");
         $viewElement = &$context->getViewElement();
         $viewElement->setElement('foo', 'This is an element for the content.');
         $viewElement->setElement('bar', 'This is an element for the layout.');
-        $context->setView($viewString);
+        $config = &$this->_getConfig();
+        $config->setConfiguration("Renderer_{$this->_target}", 'turnOffLayoutByHTTPAccept', $turnOffLayoutByHTTPAccept);
+        $config->setConfiguration("Renderer_{$this->_target}", 'useLayout', true);
+        $config->setConfiguration("Renderer_{$this->_target}", 'layoutView', "{$this->_target}Layout");
+        $config->setConfiguration("Renderer_{$this->_target}", 'layoutDirectory', "{$this->_cacheDirectory}/templates/Layout");
+        $config->setConfiguration("Renderer_{$this->_target}", 'layoutCompileDirectory', "{$this->_cacheDirectory}/compiled-templates/Layout");
+        $context->setConfiguration($config);
+        $_SERVER['HTTP_ACCEPT'] = 'application/x-piece-html-fragment';
 
-        $view = &new Piece_Unity_Plugin_View();
-        ob_start();
-        $view->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
-
-        $this->assertEquals($result, rtrim($buffer));
+        $this->assertEquals($result, rtrim($this->_render()));
 
         unset($_SERVER['HTTP_ACCEPT']);
     }
@@ -350,8 +304,7 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
      */
     function _render()
     {
-        $class = "Piece_Unity_Plugin_Renderer_{$this->_target}";
-        $renderer = &new $class();
+        $renderer = &Piece_Unity_Plugin_Factory::factory("Renderer_{$this->_target}");
         ob_start();
         $renderer->invoke();
         $buffer = ob_get_contents();
