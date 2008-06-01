@@ -171,31 +171,11 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
                                       );
         }
 
-        if ($this->_getConfiguration('useFlowMappings')) {
-            do {
-                if (preg_match('!^html:\(.*\)!', $viewString, $matches)) {
-                    $viewString = $matches[1];
-                }
-
-                if (preg_match('!^[^:]+:!', $viewString)) {
-                    break;
-                }
-
-                $flowName = $this->_continuationServer->getActiveFlowSource();
-                if ($this->_getConfiguration('useFullFlowNameAsViewPrefix')) {
-                    $viewString = "{$flowName}_{$viewString}";
-                    break;
-                }
-
-                $positionOfUnderscore = strrpos($flowName, '_');
-                if ($positionOfUnderscore) {
-                    $viewString = substr($flowName, 0, $positionOfUnderscore + 1) .
-                        $viewString;
-                }
-            } while (false);
+        if (!$this->_getConfiguration('useFlowMappings')) {
+            return $viewString;
         }
 
-        return $viewString;
+        return $this->_prefixFlowNameToViewString($viewString);
     }
 
     // }}}
@@ -448,6 +428,43 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $continuationService = &$continuationServer->createService();
         $this->_context->setContinuation($continuationService);
         $this->_continuationServer = &$continuationServer;
+    }
+
+    // }}}
+    // {{{ _prefixFlowNameToViewString()
+
+    /**
+     * Prefixes the active flow name to a given view string.
+     *
+     * @param string $viewString
+     * @return string
+     * @since Method available since Release 1.5.0
+     */
+    function _prefixFlowNameToViewString($viewString)
+    {
+        do {
+            if (preg_match('!^html:\(.*\)!', $viewString, $matches)) {
+                $viewString = $matches[1];
+            }
+
+            if (preg_match('!^[^:]+:!', $viewString)) {
+                break;
+            }
+
+            $flowName = $this->_continuationServer->getActiveFlowSource();
+            if ($this->_getConfiguration('useFullFlowNameAsViewPrefix')) {
+                $viewString = "{$flowName}_{$viewString}";
+                break;
+            }
+
+            $positionOfUnderscore = strrpos($flowName, '_');
+            if ($positionOfUnderscore) {
+                $viewString = substr($flowName, 0, $positionOfUnderscore + 1) .
+                    $viewString;
+            }
+        } while (false);
+
+        return $viewString;
     }
 
     /**#@-*/
