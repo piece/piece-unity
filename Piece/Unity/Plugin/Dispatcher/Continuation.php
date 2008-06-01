@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @see        Piece_Flow_Continuation_Server, Piece_Flow
@@ -65,7 +65,7 @@ $GLOBALS['PIECE_UNITY_Continuation_FlowID'] = null;
  * continuation, and returns a view string.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @see        Piece_Flow_Continuation_Server, Piece_Flow
@@ -145,7 +145,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         }
 
         Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-        $view = $this->_continuationServer->getView();
+        $viewString = $this->_continuationServer->getView();
         Piece_Unity_Error::popCallback();
         if (Piece_Flow_Error::hasErrors('exception')) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
@@ -170,20 +170,29 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         }
 
         if ($this->_getConfiguration('useFlowMappings')) {
-            if (!preg_match('!^https?://!', $view) && !preg_match('!^selfs?://.*!', $view)) {
+            do {
+                if (preg_match('!^html:\(.*\)!', $viewString, $matches)) {
+                    $viewString = $matches[1];
+                }
+
+                if (preg_match('!^[^:]+:!', $viewString)) {
+                    break;
+                }
+
                 $flowName = $this->_continuationServer->getActiveFlowSource();
                 if ($this->_getConfiguration('useFullFlowNameAsViewPrefix')) {
-                    return "{$flowName}_{$view}";
-                } else {
-                    $positionOfUnderscore = strrpos($flowName, '_');
-                    if ($positionOfUnderscore) {
-                        return substr($flowName, 0, $positionOfUnderscore + 1) . $view;
-                    }
+                    $viewString = "{$flowName}_{$viewString}";
+                    break;
                 }
-            }
+
+                $positionOfUnderscore = strrpos($flowName, '_');
+                if ($positionOfUnderscore) {
+                    $viewString = substr($flowName, 0, $positionOfUnderscore + 1) . $viewString;
+                }
+            } while (false);
         }
 
-        return $view;
+        return $viewString;
     }
 
     // }}}
