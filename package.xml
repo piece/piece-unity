@@ -15,8 +15,8 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
   <email>iteman@users.sourceforge.net</email>
   <active>yes</active>
  </lead>
- <date>2008-05-29</date>
- <time>20:10:54</time>
+ <date>2008-06-01</date>
+ <time>16:37:03</time>
  <version>
   <release>1.5.0</release>
   <api>0.7.0</api>
@@ -111,6 +111,9 @@ What&apos;s New in Piece_Unity 1.5.0</notes>
        <file name="PHP.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
+       <file name="Raw.php" role="php">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
        <file name="Redirection.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
@@ -137,6 +140,9 @@ What&apos;s New in Piece_Unity 1.5.0</notes>
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
       <file name="View.php" role="php">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file name="ViewSchemeHandler.php" role="php">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
      </dir> <!-- /Piece/Unity/Plugin -->
@@ -483,6 +489,9 @@ What&apos;s New in Piece_Unity 1.5.0</notes>
        <file name="RelativePathVulnerabilityAction.php" role="test">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
+       <file name="ViewSchemeHandlerTestCase.php" role="test">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
        <file name="ViewTestCase.php" role="test">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
@@ -605,7 +614,7 @@ What&apos;s New in Piece_Unity 1.5.0</notes>
     <release>stable</release>
     <api>stable</api>
    </stability>
-   <date>2008-05-29</date>
+   <date>2008-06-01</date>
    <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
    <notes>A new release of Piece_Unity is now available.
 
