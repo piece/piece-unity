@@ -162,7 +162,9 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
 
         $session = &$this->_context->getSession();
         $session->setPreloadCallback('_Dispatcher_Continuation_ActionLoader', array(__CLASS__, 'loadAction'));
-        foreach (array_keys(Piece_Flow_Action_Factory::getInstances()) as $actionClass) {
+        foreach (array_keys(Piece_Flow_Action_Factory::getInstances())
+                 as $actionClass
+                 ) {
             $session->addPreloadClass('_Dispatcher_Continuation_ActionLoader',
                                       $actionClass,
                                       $this->_continuationServer->getActiveFlowID()
@@ -187,7 +189,8 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
 
                 $positionOfUnderscore = strrpos($flowName, '_');
                 if ($positionOfUnderscore) {
-                    $viewString = substr($flowName, 0, $positionOfUnderscore + 1) . $viewString;
+                    $viewString = substr($flowName, 0, $positionOfUnderscore + 1) .
+                        $viewString;
                 }
             } while (false);
         }
@@ -250,8 +253,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     // {{{ loadAction()
 
     /**
-     * Loads an action for preventing that the action become an
-     * incomplete class.
+     * Loads an action for preventing that the action become an incomplete class.
      *
      * @param string $class
      * @param string $flowID
@@ -268,8 +270,8 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     // {{{ publish()
 
     /**
-     * Publishes the Piece_Flow_Continuation_Service object as a view element
-     * if it exists.
+     * Publishes the Piece_Flow_Continuation_Service object as a view element if it
+     * exists.
      *
      * @since Method available since Release 0.9.0
      * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
@@ -305,10 +307,11 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      */
     function &_createContinuationServer()
     {
-        $continuationServer = &new Piece_Flow_Continuation_Server($this->_getConfiguration('enableSingleFlowMode'),
-                                                                  $this->_getConfiguration('enableGC'),
-                                                                  $this->_getConfiguration('gcExpirationTime')
-                                                                  );
+        $continuationServer =
+            &new Piece_Flow_Continuation_Server($this->_getConfiguration('enableSingleFlowMode'),
+                                                $this->_getConfiguration('enableGC'),
+                                                $this->_getConfiguration('gcExpirationTime')
+                                                );
         $continuationServer->setCacheDirectory($this->_getConfiguration('cacheDirectory'));
         $continuationServer->setEventNameCallback(array(__CLASS__, 'getEventName'));
         $continuationServer->setFlowExecutionTicketCallback(array(__CLASS__, 'getFlowExecutionTicket'));
@@ -373,7 +376,9 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->_addConfigurationPoint('enableSingleFlowMode', false); // deprecated
         $this->_addConfigurationPoint('cacheDirectory');
         $this->_addConfigurationPoint('flowDefinitions', array()); // deprecated
-        $this->_addConfigurationPoint('flowExecutionTicketKey', '_flowExecutionTicket');
+        $this->_addConfigurationPoint('flowExecutionTicketKey',
+                                      '_flowExecutionTicket'
+                                      );
         $this->_addConfigurationPoint('flowNameKey', '_flow'); // deprecated
         $this->_addConfigurationPoint('flowName');             // deprecated
         $this->_addConfigurationPoint('bindActionsWithFlowExecution', true);
@@ -387,20 +392,25 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->_addConfigurationPoint('configExtension', '.flow');
         $this->_addConfigurationPoint('useFullFlowNameAsViewPrefix', true);
 
-        $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey'] = $this->_getConfiguration('flowExecutionTicketKey');
-        $GLOBALS['PIECE_UNITY_Continuation_FlowIDKey'] = $this->_getConfiguration('flowNameKey');
+        $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey'] =
+            $this->_getConfiguration('flowExecutionTicketKey');
+        $GLOBALS['PIECE_UNITY_Continuation_FlowIDKey'] =
+            $this->_getConfiguration('flowNameKey');
 
         if ($this->_getConfiguration('useFlowMappings')) {
             $GLOBALS['PIECE_UNITY_Continuation_FlowID'] = $_SERVER['SCRIPT_NAME'];
         } else {
-            $GLOBALS['PIECE_UNITY_Continuation_FlowID'] = $this->_getConfiguration('flowName');
+            $GLOBALS['PIECE_UNITY_Continuation_FlowID'] =
+                $this->_getConfiguration('flowName');
         }
 
         Piece_Flow_Action_Factory::setActionDirectory($this->_getConfiguration('actionDirectory'));
 
         $viewElement = &$this->_context->getViewElement();
         $viewElement->setElement('__flowExecutionTicketKey', $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey']);
-        $viewElement->setElement('__flowNameKey', $GLOBALS['PIECE_UNITY_Continuation_FlowIDKey']); // deprecated
+        $viewElement->setElement('__flowNameKey', // deprecated
+                                 $GLOBALS['PIECE_UNITY_Continuation_FlowIDKey']
+                                 );
     }
 
     // }}}
@@ -423,9 +433,16 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
                 return;
             }
 
-            $session->setAttributeByRef(PIECE_UNITY_CONTINUATION_SESSIONKEY, $continuationServer);
-            $session->setPreloadCallback('_Dispatcher_Continuation', array('Piece_Unity_Plugin_Factory', 'factory'));
-            $session->addPreloadClass('_Dispatcher_Continuation', 'Dispatcher_Continuation');
+            $session->setAttributeByRef(PIECE_UNITY_CONTINUATION_SESSIONKEY,
+                                        $continuationServer
+                                        );
+            $session->setPreloadCallback('_Dispatcher_Continuation',
+                                         array('Piece_Unity_Plugin_Factory',
+                                               'factory')
+                                         );
+            $session->addPreloadClass('_Dispatcher_Continuation',
+                                      'Dispatcher_Continuation'
+                                      );
         }
 
         $continuationService = &$continuationServer->createService();
