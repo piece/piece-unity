@@ -41,7 +41,7 @@ require_once 'Piece/Unity/ClassLoader.php';
 // {{{ GLOBALS
 
 $GLOBALS['PIECE_UNITY_Plugin_Instances'] = array();
-$GLOBALS['PIECE_UNITY_Plugin_Directories'] = array(dirname(__FILE__) . '/../../..');
+$GLOBALS['PIECE_UNITY_Plugin_Directories'] = array(realpath(dirname(__FILE__) . '/../../..'));
 $GLOBALS['PIECE_UNITY_Plugin_Prefixes'] = array('Piece_Unity_Plugin');
 
 // }}}
@@ -174,7 +174,7 @@ class Piece_Unity_Plugin_Factory
      */
     function addPluginDirectory($pluginDirectory)
     {
-        array_unshift($GLOBALS['PIECE_UNITY_Plugin_Directories'], $pluginDirectory);
+        array_unshift($GLOBALS['PIECE_UNITY_Plugin_Directories'], realpath($pluginDirectory));
     }
 
     // }}}
