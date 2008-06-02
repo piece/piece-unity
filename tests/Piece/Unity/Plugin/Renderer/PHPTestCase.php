@@ -39,6 +39,8 @@ require_once realpath(dirname(__FILE__) . '/../../../../prepare.php');
 require_once 'Piece/Unity/Plugin/Renderer/HTMLTest.php';
 require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
+require_once 'Piece/Unity/Plugin/Factory.php';
+require_once 'Piece/Unity/Context.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_PHPTestCase
 
@@ -73,6 +75,29 @@ class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Rendere
     /**#@+
      * @access public
      */
+
+    /**
+     * @since Method available since Release 1.5.0
+     */
+    function testShouldSupportHtmlComponents()
+    {
+        $oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
+        Piece_Unity_Plugin_Factory::addPluginDirectory($this->_cacheDirectory);
+        $context = &Piece_Unity_Context::singleton();
+        $context->setView("{$this->_target}HTMLComponent");
+        $config = &$this->_getConfig();
+        $config->setExtension("Renderer_{$this->_target}",
+                              'components',
+                              array('HTMLComponent_Example')
+                              );
+        $context->setConfiguration($config);
+
+        $this->assertEquals('This is a html fragment from a HTML Component.',
+                            $this->_render()
+                            );
+
+        $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $oldPluginDirectories;
+    }
 
     /**#@-*/
 
