@@ -15,8 +15,8 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
   <email>iteman@users.sourceforge.net</email>
   <active>yes</active>
  </lead>
- <date>2008-06-01</date>
- <time>16:37:03</time>
+ <date>2008-06-05</date>
+ <time>17:20:41</time>
  <version>
   <release>1.5.0</release>
   <api>0.7.0</api>
@@ -427,9 +427,23 @@ What&apos;s New in Piece_Unity 1.5.0</notes>
            <tasks:replace from="@package_version@" to="version" type="package-info" />
           </file>
          </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/PHPTestCase/actions -->
+         <dir name="Piece">
+          <dir name="Unity">
+           <dir name="Plugin">
+            <dir name="HTMLComponent">
+             <file name="Example.php" role="test">
+              <tasks:replace from="@package_version@" to="version" type="package-info" />
+             </file>
+            </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/PHPTestCase/Piece/Unity/Plugin/HTMLComponent -->
+           </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/PHPTestCase/Piece/Unity/Plugin -->
+          </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/PHPTestCase/Piece/Unity -->
+         </dir> <!-- /tests/Piece/Unity/Plugin/Renderer/PHPTestCase/Piece -->
          <dir name="templates">
           <dir name="Content">
            <file name="PHPExample.php" role="test">
+            <tasks:replace from="@package_version@" to="version" type="package-info" />
+           </file>
+           <file name="PHPHTMLComponent.php" role="test">
             <tasks:replace from="@package_version@" to="version" type="package-info" />
            </file>
            <file name="PHPKeepingReference.php" role="test">
@@ -614,7 +628,7 @@ What&apos;s New in Piece_Unity 1.5.0</notes>
     <release>stable</release>
     <api>stable</api>
    </stability>
-   <date>2008-06-01</date>
+   <date>2008-06-05</date>
    <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
    <notes>A new release of Piece_Unity is now available.
 
