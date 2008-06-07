@@ -73,6 +73,7 @@ class Piece_Unity_URL
 
     var $_url;
     var $_isExternal;
+    var $_isRedirection;
 
     /**#@-*/
 
@@ -88,10 +89,16 @@ class Piece_Unity_URL
      *
      * @param string  $path
      * @param boolean $isExternal
+     * @param boolean $isRedirection
      */
-    function Piece_Unity_URL($path = null, $isExternal = false)
+    function Piece_Unity_URL($path = null,
+                             $isExternal = false,
+                             $isRedirection = false
+                             )
     {
         $this->_isExternal = $isExternal;
+        $this->_isRedirection = $isRedirection;
+
         if (!is_null($path)) {
             $this->initialize($path);
         }
@@ -177,15 +184,19 @@ class Piece_Unity_URL
         }
 
         if (!$useSSL) {
-            $url->protocol = 'http';
-            $url->port= '80';
+            if (!$this->_isRedirection) {
+                $url->protocol = 'http';
+                $url->port= '80';
+            }
         } else {
             if (!in_array($url->host, $GLOBALS['PIECE_UNITY_URL_NonSSLableServers'])) {
                 $url->protocol = 'https';
                 $url->port= '443';
             } else {
-                $url->protocol = 'http';
-                $url->port= '80';
+                if (!$this->_isRedirection) {
+                    $url->protocol = 'http';
+                    $url->port= '80';
+                }
             }
         }
 
@@ -224,7 +235,7 @@ class Piece_Unity_URL
 
         if (!$this->_isExternal) {
             $context = &Piece_Unity_Context::singleton();
-            if ($context->usingProxy() && array_key_exists('HTTP_X_FORWARDED_SERVER', $_SERVER)) {
+            if (!$this->_isRedirection && $context->usingProxy() && array_key_exists('HTTP_X_FORWARDED_SERVER', $_SERVER)) {
                 if ($this->_url->host != $_SERVER['HTTP_X_FORWARDED_SERVER']) {
                     $this->_url->host = $_SERVER['HTTP_X_FORWARDED_SERVER'];
                     $this->_url->protocol = 'http';

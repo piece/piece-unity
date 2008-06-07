@@ -139,7 +139,7 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
     {
         $isExternal = $this->_getConfiguration('isExternal');
         $viewString = $this->_context->getView();
-        $url = &new Piece_Unity_URL($viewString, $isExternal);
+        $url = &new Piece_Unity_URL($viewString, $isExternal, true);
 
         $viewElement = &$this->_context->getViewElement();
         $viewElements = $viewElement->getElements();

@@ -91,7 +91,6 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $expectedURL = 'http://example.org/foo.php';
         $context = &Piece_Unity_Context::singleton();
         $context->setView('http://example.org/foo.php');
         $config = &new Piece_Unity_Config();
@@ -99,7 +98,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
         $redirection->invoke();
 
-        $this->assertEquals($expectedURL, $redirection->_url);
+        $this->assertEquals('http://example.org/foo.php', $redirection->_url);
 
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
@@ -109,7 +108,6 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
     {
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        $expectedURL = 'http://foo.example.org:8201/bar.php';
         $context = &Piece_Unity_Context::singleton();
         $context->setView('http://example.org/foo/bar.php');
         $context->setProxyPath('/foo');
@@ -118,7 +116,9 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
         $redirection->invoke();
 
-        $this->assertEquals($expectedURL, $redirection->_url);
+        $this->assertEquals('http://foo.example.org:8201/bar.php',
+                            $redirection->_url
+                            );
 
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
@@ -130,7 +130,6 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'example.org';
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        $expectedURL = 'http://example.org/foo/bar.php';
         $context = &Piece_Unity_Context::singleton();
         $context->setView('http://example.org/foo/bar.php');
         $context->setProxyPath('/foo');
@@ -139,7 +138,9 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
         $redirection->invoke();
 
-        $this->assertEquals($expectedURL, $redirection->_url);
+        $this->assertEquals('http://foo.example.org:8201/bar.php',
+                            $redirection->_url
+                            );
 
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
@@ -150,7 +151,6 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
     {
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        $expectedURL = 'http://foo.example.org:8201/bar.php';
         $context = &Piece_Unity_Context::singleton();
         $context->setView('https://example.org/foo/bar.php');
         $context->setProxyPath('/foo');
@@ -159,7 +159,9 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
         $redirection->invoke();
 
-        $this->assertEquals($expectedURL, $redirection->_url);
+        $this->assertEquals('http://foo.example.org:8201/bar.php',
+                            $redirection->_url
+                            );
 
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
@@ -171,7 +173,6 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'test.example.org';
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        $expectedURL = 'http://test.example.org/foo/bar.php';
         $context = &Piece_Unity_Context::singleton();
         $context->setView('http://example.org/foo/bar.php');
         $context->setProxyPath('/foo');
@@ -180,7 +181,9 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $redirection = &new Piece_Unity_Plugin_Renderer_Redirection();
         $redirection->invoke();
 
-        $this->assertEquals($expectedURL, $redirection->_url);
+        $this->assertEquals('http://foo.example.org:8201/bar.php',
+                            $redirection->_url
+                            );
 
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
@@ -194,7 +197,6 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $expectedURL = 'http://example.org/foo.php?_event=bar';
         $context = &Piece_Unity_Context::singleton();
         $context->setView('http://example.org/foo.php?__eventNameKey=bar');
         $config = &new Piece_Unity_Config();
@@ -202,7 +204,9 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
         $redirection->invoke();
 
-        $this->assertEquals($expectedURL, $redirection->_url);
+        $this->assertEquals('http://example.org/foo.php?_event=bar',
+                            $redirection->_url
+                            );
 
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
@@ -215,7 +219,6 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $expectedURL = 'https://example.org/foo.php';
         $context = &Piece_Unity_Context::singleton();
         $context->setView('https://example.org/foo.php');
         $config = &new Piece_Unity_Config();
@@ -223,7 +226,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
         $redirection->invoke();
 
-        $this->assertEquals($expectedURL, $redirection->_url);
+        $this->assertEquals('https://example.org/foo.php', $redirection->_url);
 
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
