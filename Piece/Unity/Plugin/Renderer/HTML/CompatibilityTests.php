@@ -43,11 +43,10 @@ require_once 'PHP/Compat.php';
 
 PHP_Compat::loadFunction('scandir');
 
-// {{{ Piece_Unity_Plugin_Renderer_HTMLTest
+// {{{ Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests
 
 /**
- * The base class for compatibility test of Piece_Unity_Plugin_View's
- * renderers.
+ * Renderer_HTML compatibility tests.
  *
  * @package    Piece_Unity
  * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
@@ -55,7 +54,7 @@ PHP_Compat::loadFunction('scandir');
  * @version    Release: @package_version@
  * @since      Class available since Release 0.2.0
  */
-class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
+class Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests extends PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -87,7 +86,7 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
 
     function tearDown()
     {
-        Piece_Unity_Plugin_Renderer_HTMLTest::removeDirectoryRecursively("{$this->_cacheDirectory}/compiled-templates");
+        Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests::removeDirectoryRecursively("{$this->_cacheDirectory}/compiled-templates");
         Piece_Unity_Plugin_Factory::clearInstances();
         Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
@@ -261,7 +260,7 @@ class Piece_Unity_Plugin_Renderer_HTMLTest extends PHPUnit_TestCase
             $file = "$directory/$file";
 
             if (is_dir($file)) {
-                Piece_Unity_Plugin_Renderer_HTMLTest::removeDirectoryRecursively($file);
+                Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests::removeDirectoryRecursively($file);
             } elseif (is_file($file)) {
                 @unlink($file);
             }

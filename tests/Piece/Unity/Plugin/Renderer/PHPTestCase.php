@@ -36,7 +36,7 @@
  */
 
 require_once realpath(dirname(__FILE__) . '/../../../../prepare.php');
-require_once 'Piece/Unity/Plugin/Renderer/HTMLTest.php';
+require_once 'Piece/Unity/Plugin/Renderer/HTML/CompatibilityTests.php';
 require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
@@ -53,7 +53,7 @@ require_once 'Piece/Unity/Context.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Renderer_HTMLTest
+class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests
 {
 
     // {{{ properties
