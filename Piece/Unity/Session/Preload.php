@@ -45,7 +45,7 @@ require_once 'Piece/Unity/Plugin/Factory.php';
  * @package    Piece_Unity
  * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: @package_version@
+ * @version    Release: 1.5.0
  * @since      Class available since Release 0.9.0
  */
 class Piece_Unity_Session_Preload
@@ -80,10 +80,6 @@ class Piece_Unity_Session_Preload
     function __wakeup()
     {
         foreach (array_keys($this->_services) as $service) {
-            if (!array_key_exists('classes', $this->_services[$service])) {
-                continue;
-            }
-
             foreach ($this->_services[$service]['classes'] as $class => $id) {
                 call_user_func($this->_services[$service]['callback'], $class, $id);
             }
@@ -102,10 +98,7 @@ class Piece_Unity_Session_Preload
      */
     function addClass($service, $class, $id = null)
     {
-        if (!array_key_exists('classes', $this->_services[$service])) {
-            $this->_services[$service]['classes'] = array();
-        }
-
+        $this->_initializeService($service);
         $this->_services[$service]['classes'][$class] = $id;
     }
 
@@ -120,6 +113,7 @@ class Piece_Unity_Session_Preload
      */
     function setCallback($service, $callback)
     {
+        $this->_initializeService($service);
         $this->_services[$service]['callback'] = $callback;
     }
 
@@ -128,6 +122,23 @@ class Piece_Unity_Session_Preload
     /**#@+
      * @access private
      */
+
+    // }}}
+    // {{{ _initializeService()
+
+    /**
+     * Initializes the structure for a given service.
+     *
+     * @param string   $service
+     */
+    function _initializeService($service)
+    {
+        if (!array_key_exists($service, $this->_services)) {
+            $this->_services[$service] = array('callback' => null,
+                                               'classes' => array()
+                                               );
+        }
+    }
 
     /**#@-*/
 
