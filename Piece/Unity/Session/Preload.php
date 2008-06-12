@@ -45,7 +45,7 @@ require_once 'Piece/Unity/Plugin/Factory.php';
  * @package    Piece_Unity
  * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    Release: 1.5.0
+ * @version    Release: @package_version@
  * @since      Class available since Release 0.9.0
  */
 class Piece_Unity_Session_Preload
