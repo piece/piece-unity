@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.9.0
@@ -43,7 +43,7 @@ require_once 'Piece/Unity/Plugin/Factory.php';
  * A class *pre*loader for restoring objects in session.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.9.0
@@ -80,10 +80,12 @@ class Piece_Unity_Session_Preload
     function __wakeup()
     {
         foreach (array_keys($this->_services) as $service) {
-            if (array_key_exists('classes', $this->_services[$service])) {
-                foreach ($this->_services[$service]['classes'] as $id => $class) {
-                    call_user_func($this->_services[$service]['callback'], $class, $id);
-                }
+            if (!array_key_exists('classes', $this->_services[$service])) {
+                continue;
+            }
+
+            foreach ($this->_services[$service]['classes'] as $class => $id) {
+                call_user_func($this->_services[$service]['callback'], $class, $id);
             }
         }
     }
@@ -100,11 +102,11 @@ class Piece_Unity_Session_Preload
      */
     function addClass($service, $class, $id = null)
     {
-        if (is_null($id)) {
-            $id = $service;
+        if (!array_key_exists('classes', $this->_services[$service])) {
+            $this->_services[$service]['classes'] = array();
         }
 
-        $this->_services[$service]['classes'][$id] = $class;
+        $this->_services[$service]['classes'][$class] = $id;
     }
 
     // }}}
