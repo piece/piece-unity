@@ -215,7 +215,7 @@ class Piece_Unity_Plugin_Common
         $extensionPoint = strtolower($extensionPoint);
         if (!array_key_exists($extensionPoint, $this->_extensionPoints)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The configuration point  [ $extensionPoint ] not found in the plug-in [ {$this->_name} ].",
+                                    "The configuration point  [ $extensionPoint ] is not found in the plug-in [ {$this->_name} ].",
                                     'exception',
                                     false,
                                     false,
@@ -254,7 +254,7 @@ class Piece_Unity_Plugin_Common
         $configurationPoint = strtolower($configurationPoint);
         if (!array_key_exists($configurationPoint, $this->_configurationPoints)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The configuration point  [ $configurationPoint ] not found in the plug-in [ {$this->_name} ].",
+                                    "The configuration point  [ $configurationPoint ] is not found in the plug-in [ {$this->_name} ].",
                                     'exception',
                                     false,
                                     false,

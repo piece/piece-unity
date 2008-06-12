@@ -249,7 +249,7 @@ class Piece_Unity_Config
         foreach (array_keys($this->_extensions[$plugin]) as $extensionPoint) {
             if (!in_array($extensionPoint, $extensionPoints)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The extension point [ $extensionPoint ] not found in the plug-in [ $plugin ]."
+                                        "The extension point [ $extensionPoint ] is not found in the plug-in [ $plugin ]."
                                         );
                 return;
             }
@@ -278,7 +278,7 @@ class Piece_Unity_Config
         foreach (array_keys($this->_configurations[$plugin]) as $configurationPoint) {
             if (!in_array($configurationPoint, $configurationPoints)) {
                 Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The configuration point [ $configurationPoint ] not found in the plug-in [ $plugin ]."
+                                        "The configuration point [ $configurationPoint ] is not found in the plug-in [ $plugin ]."
                                         );
                 return;
             }

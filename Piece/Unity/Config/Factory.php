@@ -101,7 +101,7 @@ class Piece_Unity_Config_Factory
 
         if (!file_exists($configDirectory)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The configuration directory [ $configDirectory ] not found."
+                                    "The configuration directory [ $configDirectory ] is not found."
                                     );
             $return = null;
             return $return;
@@ -110,7 +110,7 @@ class Piece_Unity_Config_Factory
         $configFile = "$configDirectory/piece-unity-config.yaml";
         if (!file_exists($configFile)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The configuration file [ $configFile ] not found."
+                                    "The configuration file [ $configFile ] is not found."
                                     );
             $return = null;
             return $return;
@@ -131,7 +131,7 @@ class Piece_Unity_Config_Factory
         if (!file_exists($cacheDirectory)) {
             Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The cache directory [ $cacheDirectory ] not found.",
+                                    "The cache directory [ $cacheDirectory ] is not found.",
                                     'warning'
                                     );
             Piece_Unity_Error::popCallback();
