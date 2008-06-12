@@ -15,8 +15,8 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
   <email>iteman@users.sourceforge.net</email>
   <active>yes</active>
  </lead>
- <date>2008-06-05</date>
- <time>17:20:41</time>
+ <date>2008-06-13</date>
+ <time>00:14:35</time>
  <version>
   <release>1.5.0</release>
   <api>0.7.0</api>
@@ -102,10 +102,12 @@ What&apos;s New in Piece_Unity 1.5.0</notes>
        </file>
       </dir> <!-- /Piece/Unity/Plugin/Interceptor -->
       <dir name="Renderer">
+       <dir name="HTML">
+        <file name="CompatibilityTests.php" role="php">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+       </dir> <!-- /Piece/Unity/Plugin/Renderer/HTML -->
        <file name="HTML.php" role="php">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-       </file>
-       <file name="HTMLTest.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
        <file name="PHP.php" role="php">
@@ -628,7 +630,7 @@ What&apos;s New in Piece_Unity 1.5.0</notes>
     <release>stable</release>
     <api>stable</api>
    </stability>
-   <date>2008-06-05</date>
+   <date>2008-06-13</date>
    <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
    <notes>A new release of Piece_Unity is now available.
 
