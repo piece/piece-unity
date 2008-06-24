@@ -180,28 +180,29 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
         Piece_Unity_Error::disableCallback();
         $this->_doRender($isLayout);
         Piece_Unity_Error::enableCallback();
+        if (!Piece_Unity_Error::hasErrors()) {
+            return;
+        }
 
-        if (Piece_Unity_Error::hasErrors()) {
-            $error = Piece_Unity_Error::pop();
-            if ($error['code'] == 'PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND') {
-                if ($this->_getConfiguration('useFallback')) {
-                    $this->_context->setView($this->_getConfiguration('fallbackView'));
-                    $this->_prepareFallback();
-                    $this->_doRender($isLayout);
-                    return;
-                } else {
-                    trigger_error("Failed to render a HTML template with the plugin [ {$this->_name} ].",
-                                  E_USER_WARNING
-                                  );
-                }
-            } else {
-                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                        "Failed to render a HTML template with the plugin [ {$this->_name} ].",
-                                        'exception',
-                                        array(),
-                                        $error
-                                        );
+        $error = Piece_Unity_Error::pop();
+        if ($error['code'] == 'PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND') {
+            trigger_error("Failed to render a HTML template with the plugin [ {$this->_name} ].",
+                          E_USER_WARNING
+                          );
+       
+            if ($this->_getConfiguration('useFallback')) {
+                $this->_context->setView($this->_getConfiguration('fallbackView'));
+                $this->_prepareFallback();
+                $this->_doRender($isLayout);
+                return;
             }
+        } else {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                    "Failed to render a HTML template with the plugin [ {$this->_name} ].",
+                                    'exception',
+                                    array(),
+                                    $error
+                                    );
         }
     }
 

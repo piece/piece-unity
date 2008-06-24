@@ -216,13 +216,23 @@ if (\$code == E_USER_WARNING) {
         $config->setConfiguration("Renderer_{$this->_target}", 'fallbackCompileDirectory', "{$this->_cacheDirectory}/compiled-templates/Fallback");
         $context->setConfiguration($config);
 
+        set_error_handler(create_function('$code, $message, $file, $line', "
+if (\$code == E_USER_WARNING) {
+    \$GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings'] = true;
+}
+"));
+        $output = $this->_render();
+        restore_error_handler();
+
         $this->assertEquals('<html>
   <body>
     <p>This is a test for fallback.</p>
   </body>
-</html>', rtrim($this->_render()));
-
+</html>', rtrim($output));
         $this->assertFalse(Piece_Unity_Error::hasErrors());
+        $this->assertTrue($GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings']);
+
+        $GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings'] = false;
     }
 
     /**
