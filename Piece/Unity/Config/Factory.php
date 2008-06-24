@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.1.0
@@ -54,7 +54,7 @@ require_once 'Piece/Unity/Env.php';
  * A factory class for creating Piece_Unity_Config objects.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
@@ -129,24 +129,16 @@ class Piece_Unity_Config_Factory
         }
 
         if (!file_exists($cacheDirectory)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The cache directory [ $cacheDirectory ] is not found.",
-                                    'warning'
-                                    );
-            Piece_Unity_Error::popCallback();
-
+            trigger_error("The cache directory [ $cacheDirectory ] is not found.",
+                          E_USER_WARNING
+                          );
             return Piece_Unity_Config_Factory::_getConfigurationFromFile($configFile);
         }
 
         if (!is_readable($cacheDirectory) || !is_writable($cacheDirectory)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_READABLE,
-                                    "The cache directory [ $cacheDirectory ] is not readable or writable.",
-                                    'warning'
-                                    );
-            Piece_Unity_Error::popCallback();
-
+            trigger_error("The cache directory [ $cacheDirectory ] is not readable or writable.",
+                          E_USER_WARNING
+                          );
             return Piece_Unity_Config_Factory::_getConfigurationFromFile($configFile);
         }
 
@@ -189,13 +181,9 @@ class Piece_Unity_Config_Factory
          */
         $config = $cache->get($masterFile);
         if (PEAR::isError($config)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_CANNOT_READ,
-                                    "Cannot read the cache file in the directory [ $cacheDirectory ].",
-                                    'warning'
-                                    );
-            Piece_Unity_Error::popCallback();
-
+            trigger_error("Cannot read the cache file in the directory [ $cacheDirectory ].",
+                          E_USER_WARNING
+                          );
             return Piece_Unity_Config_Factory::_getConfigurationFromFile($masterFile);
         }
 
@@ -203,12 +191,9 @@ class Piece_Unity_Config_Factory
             $config = &Piece_Unity_Config_Factory::_getConfigurationFromFile($masterFile);
             $result = $cache->save($config);
             if (PEAR::isError($result)) {
-                Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-                Piece_Unity_Error::push(PIECE_UNITY_ERROR_CANNOT_WRITE,
-                                        "Cannot write the Piece_Unity_Config object to the cache file in the directory [ $cacheDirectory ].",
-                                        'warning'
-                                        );
-                Piece_Unity_Error::popCallback();
+                trigger_error("Cannot write the Piece_Unity_Config object to the cache file in the directory [ $cacheDirectory ].",
+                              E_USER_WARNING
+                              );
             }
         }
 

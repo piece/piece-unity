@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.1.0
@@ -43,6 +43,7 @@ require_once 'Cache/Lite/File.php';
 require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
 require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/Error.php';
+require_once 'PEAR/ErrorStack.php';
 
 // {{{ Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
 
@@ -50,7 +51,7 @@ require_once 'Piece/Unity/Error.php';
  * TestCase for Piece_Unity_Plugin_Dispatcher_Continuation
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
@@ -80,7 +81,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
     function setUp()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+        PEAR_ErrorStack::setDefaultCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SESSION = array();
         $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
@@ -101,13 +102,11 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         unset($_GET['_event']);
         unset($_GET['_flow']);
         unset($_SERVER['REQUEST_METHOD']);
-        Piece_Unity_Error::popCallback();
     }
 
     function testContinuation()
     {
         $_GET['_flow'] = 'Counter';
-
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_cacheDirectory);
@@ -156,9 +155,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
     function testInvalidConfiguration()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $_GET['_flow'] = 'Counter';
-
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'enableSingleFlowMode', true);
@@ -171,23 +168,20 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $context->setConfiguration($config);
         $session = &$context->getSession();
         @$session->start();
-
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+        Piece_Unity_Error::disableCallback();
         $dispatcher->invoke();
+        Piece_Unity_Error::enableCallback();
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
 
         $error = Piece_Unity_Error::pop();
 
         $this->assertEquals(PIECE_UNITY_ERROR_INVALID_CONFIGURATION, $error['code']);
-
-        Piece_Unity_Error::popCallback();
     }
 
     function testFailreToInvoke()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'enableSingleFlowMode', true);
@@ -221,15 +215,15 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $dispatcher->invoke();
         $dispatcher->invoke();
         $dispatcher->invoke();
+        Piece_Unity_Error::disableCallback();
         $dispatcher->invoke();
+        Piece_Unity_Error::enableCallback();
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
 
         $error = Piece_Unity_Error::pop();
 
         $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
-
-        Piece_Unity_Error::popCallback();
     }
 
     function testSettingContinuationServiceObjectAsViewElement()
@@ -263,8 +257,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
     function testMappingURLsToFlows()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
         $_GET['_flow'] = 'Foo';
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
@@ -277,11 +269,12 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         @$session->start();
 
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+        Piece_Unity_Error::disableCallback();
+        $viewString = $dispatcher->invoke();
+        Piece_Unity_Error::enableCallback();
 
-        $this->assertEquals('Counter', $dispatcher->invoke());
-        $this->assertFalse(Piece_Unity_Error::hasErrors('exception'));
-
-        Piece_Unity_Error::popCallback();
+        $this->assertEquals('Counter', $viewString);
+        $this->assertFalse(Piece_Unity_Error::hasErrors());
     }
 
     /**
@@ -395,8 +388,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
      */
     function testAnyExceptionsExceptPieceFlowShouldBeRaisedAgain()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'flowName', 'AnyExceptionsExceptPieceFlow');
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
@@ -407,15 +398,15 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $session = &$context->getSession();
         @$session->start();
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+        Piece_Unity_Error::disableCallback();
         $dispatcher->invoke();
+        Piece_Unity_Error::enableCallback();
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
 
         $error = Piece_Unity_Error::pop();
 
         $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
-
-        Piece_Unity_Error::popCallback();
     }
 
     /**
@@ -459,8 +450,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
      */
     function testURLToFlowMappingsShouldWorkWithReverseProxy()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
         $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'example.org';
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
@@ -485,17 +474,17 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $session = &$context->getSession();
         @$session->start();
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
-        $viewString = $dispatcher->invoke();
+        Piece_Unity_Error::disableCallback();
+        $dispatcher->invoke();
+        Piece_Unity_Error::enableCallback();
 
-        $this->assertFalse(Piece_Unity_Error::hasErrors('exception'));
+        $this->assertFalse(Piece_Unity_Error::hasErrors());
 
         $_SERVER['SCRIPT_NAME'] = $oldScriptName;
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['HTTP_X_FORWARDED_FOR']);
         unset($_SERVER['HTTP_X_FORWARDED_SERVER']);
-
-        Piece_Unity_Error::popCallback();
     }
 
     /**
@@ -503,8 +492,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
      */
     function testURLToFlowMappingsShouldWorkWithBackendServerDirectly()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
         $oldScriptName = $_SERVER['SCRIPT_NAME'];
@@ -526,15 +513,15 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $session = &$context->getSession();
         @$session->start();
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
-        $viewString = $dispatcher->invoke();
+        Piece_Unity_Error::disableCallback();
+        $dispatcher->invoke();
+        Piece_Unity_Error::enableCallback();
 
-        $this->assertFalse(Piece_Unity_Error::hasErrors('exception'));
+        $this->assertFalse(Piece_Unity_Error::hasErrors());
 
         $_SERVER['SCRIPT_NAME'] = $oldScriptName;
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
-
-        Piece_Unity_Error::popCallback();
     }
 
     /**

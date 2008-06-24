@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.1.0
@@ -48,7 +48,7 @@ require_once 'Piece/Unity/ClassLoader.php';
  * and returns an event name as a view string.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
@@ -103,11 +103,10 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
         }
 
         if (!Piece_Unity_ClassLoader::loaded($class)) {
-            Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+            Piece_Unity_Error::disableCallback();
             Piece_Unity_ClassLoader::load($class, $actionDirectory);
-            Piece_Unity_Error::popCallback();
-
-            if (Piece_Unity_Error::hasErrors('exception')) {
+            Piece_Unity_Error::enableCallback();
+            if (Piece_Unity_Error::hasErrors()) {
                 $error = Piece_Unity_Error::pop();
                 if ($error['code'] == PIECE_UNITY_ERROR_NOT_FOUND) {
                     return $eventName;

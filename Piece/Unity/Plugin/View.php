@@ -125,18 +125,18 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
         }
 
         $viewSchemeHandler = &$this->_getExtension('viewSchemeHandler');
-        if (Piece_Unity_Error::hasErrors('exception')) {
+        if (Piece_Unity_Error::hasErrors()) {
             return;
         }
 
         $rendererExtension = $viewSchemeHandler->invoke();
-        if (Piece_Unity_Error::hasErrors('exception')) {
+        if (Piece_Unity_Error::hasErrors()) {
             return;
         }
 
         $config->setExtension('View', 'renderer', $rendererExtension);
         $renderer = &$this->_getExtension('renderer');
-        if (Piece_Unity_Error::hasErrors('exception')) {
+        if (Piece_Unity_Error::hasErrors()) {
             return;
         }
 

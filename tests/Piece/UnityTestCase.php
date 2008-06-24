@@ -75,11 +75,6 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function setUp()
-    {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
-    }
-
     function tearDown()
     {
         unset($_SESSION);
@@ -91,7 +86,6 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
         $cache->clean();
         Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
-        Piece_Unity_Error::popCallback();
     }
 
     function testConfiguration()

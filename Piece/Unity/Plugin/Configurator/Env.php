@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.11.0
@@ -45,7 +45,7 @@ require_once 'Piece/Unity/Error.php';
  * A configurator for env stuff.
  *
  * @package    Piece_Unity
- * @copyright  2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.11.0
@@ -105,12 +105,12 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common
 
         foreach (array_merge($this->_requiredEnvHandlers, $envHandlers) as $extension) {
             $envHandler = &Piece_Unity_Plugin_Factory::factory($extension);
-            if (Piece_Unity_Error::hasErrors('exception')) {
+            if (Piece_Unity_Error::hasErrors()) {
                 return;
             }
 
             $envHandler->invoke(Piece_Unity_Env::isProduction());
-            if (Piece_Unity_Error::hasErrors('exception')) {
+            if (Piece_Unity_Error::hasErrors()) {
                 return;
             }
         }

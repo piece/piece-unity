@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @see        Piece_Right, Piece_Right_Config, Piece_Right_Results
@@ -51,7 +51,7 @@ require_once 'Piece/Right/Config/Factory.php';
  * The validation class for Piece_Unity applications.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @see        Piece_Right, Piece_Right_Config, Piece_Right_Results
@@ -136,16 +136,16 @@ class Piece_Unity_Validation
         $context = &Piece_Unity_Context::singleton();
         $script->setPayload($context);
         $script->setTemplate($this->_template);
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        Piece_Right_Error::disableCallback();
         $this->_results = &$script->run($validationSetName,
                                         $container,
                                         $this->_config,
                                         $keepOriginalFieldValue
                                         );
-        Piece_Unity_Error::popCallback();
-        if (Piece_Right_Error::hasErrors('exception')) {
+        Piece_Right_Error::enableCallback();
+        if (Piece_Right_Error::hasErrors()) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    'Failed to invoke Piece_Right_Validation_Script::run() method for any reasons.',
+                                    'Failed to invoke Piece_Right_Validation_Script::run() for any reasons.',
                                     'exception',
                                     array(),
                                     Piece_Right_Error::pop()
@@ -346,12 +346,12 @@ class Piece_Unity_Validation
                                                      array(__CLASS__, 'getFieldValueFromContext'),
                                                      array(__CLASS__, 'setResultsAsViewElementAndFlowAttribute')
                                                      );
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        Piece_Right_Error::disableCallback();
         $fieldNames = $script->getFieldNames($validationSetName, $this->_config);
-        Piece_Unity_Error::popCallback();
-        if (Piece_Right_Error::hasErrors('exception')) {
+        Piece_Right_Error::enableCallback();
+        if (Piece_Right_Error::hasErrors()) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    'Failed to invoke Piece_Right_Validation_Script::getFieldNames() method for any reasons.',
+                                    'Failed to invoke Piece_Right_Validation_Script::getFieldNames() for any reasons.',
                                     'exception',
                                     array(),
                                     Piece_Right_Error::pop()
@@ -385,16 +385,16 @@ class Piece_Unity_Validation
             $cacheDirectory = $this->_cacheDirectory;
         }
 
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        Piece_Right_Error::disableCallback();
         $config = &Piece_Right_Config_Factory::factory($validationSetName,
                                                        $configDirectory,
                                                        $cacheDirectory,
                                                        $this->_template
                                                        );
-        Piece_Unity_Error::popCallback();
-        if (Piece_Right_Error::hasErrors('exception')) {
+        Piece_Right_Error::enableCallback();
+        if (Piece_Right_Error::hasErrors()) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    'Failed to invoke Piece_Right_Validation_Script::mergeValidationSet() method for any reasons.',
+                                    'Failed to invoke Piece_Right_Validation_Script::mergeValidationSet() for any reasons.',
                                     'exception',
                                     array(),
                                     Piece_Right_Error::pop()

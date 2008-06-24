@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.11.0
@@ -49,7 +49,7 @@ require_once 'Piece/Unity/Plugin/Factory.php';
  * TestCase for Piece_Unity_Plugin_Configurator_Plugin
  *
  * @package    Piece_Unity
- * @copyright  2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.11.0
@@ -80,7 +80,6 @@ class Piece_Unity_Plugin_Configurator_PluginTestCase extends PHPUnit_TestCase
 
     function setUp()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $this->_oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
         $this->_oldPluginPrefixes = $GLOBALS['PIECE_UNITY_Plugin_Prefixes'];
     }
@@ -90,7 +89,6 @@ class Piece_Unity_Plugin_Configurator_PluginTestCase extends PHPUnit_TestCase
         Piece_Unity_Plugin_Factory::clearInstances();
         Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
-        Piece_Unity_Error::popCallback();
     }
 
     function testConfigure()

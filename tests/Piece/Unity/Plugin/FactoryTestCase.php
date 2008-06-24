@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.1.0
@@ -41,6 +41,7 @@ require_once 'Piece/Unity/Plugin/Factory.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/Context.php';
+require_once 'PEAR/ErrorStack.php';
 
 // {{{ Piece_Unity_Plugin_FactoryTestCase
 
@@ -48,7 +49,7 @@ require_once 'Piece/Unity/Context.php';
  * TestCase for Piece_Unity_Plugin_Factory
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
@@ -79,7 +80,7 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
 
     function setUp()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+        PEAR_ErrorStack::setDefaultCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $this->_oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
         Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/FactoryTestCase');
         $this->_oldPluginPrefixes = $GLOBALS['PIECE_UNITY_Plugin_Prefixes'];
@@ -95,37 +96,32 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
         Piece_Unity_Plugin_Factory::clearInstances();
         $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $this->_oldPluginDirectories;
         Piece_Unity_Error::clearErrors();
-        Piece_Unity_Error::popCallback();
     }
 
     function testFailureToCreateByNonExistingFile()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
+        Piece_Unity_Error::disableCallback();
         Piece_Unity_Plugin_Factory::factory('NonExisting');
+        Piece_Unity_Error::enableCallback();
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
 
         $error = Piece_Unity_Error::pop();
 
         $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
-
-        Piece_Unity_Error::popCallback();
     }
 
     function testFailureToCreateByInvalidPlugin()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
+        Piece_Unity_Error::disableCallback();
         Piece_Unity_Plugin_Factory::factory('FactoryTestCase_Invalid');
+        Piece_Unity_Error::enableCallback();
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
 
         $error = Piece_Unity_Error::pop();
 
         $this->assertEquals(PIECE_UNITY_ERROR_INVALID_PLUGIN, $error['code']);
-
-        Piece_Unity_Error::popCallback();
     }
 
     function testFactory()

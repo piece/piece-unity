@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.12.0
@@ -41,6 +41,7 @@ require_once 'Piece/Unity/Plugin/Configurator/AppRoot.php';
 require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'Piece/Unity/Context.php';
+require_once 'PEAR/ErrorStack.php';
 
 // {{{ Piece_Unity_Plugin_Configurator_AppRootTestCase
 
@@ -48,7 +49,7 @@ require_once 'Piece/Unity/Context.php';
  * TestCase for Piece_Unity_Plugin_Configurator_AppRoot
  *
  * @package    Piece_Unity
- * @copyright  2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.12.0
@@ -76,14 +77,13 @@ class Piece_Unity_Plugin_Configurator_AppRootTestCase extends PHPUnit_TestCase
 
     function setUp()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+        PEAR_ErrorStack::setDefaultCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
     }
 
     function tearDown()
     {
         Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
-        Piece_Unity_Error::popCallback();
     }
 
     function testAppRoot()
@@ -101,23 +101,21 @@ class Piece_Unity_Plugin_Configurator_AppRootTestCase extends PHPUnit_TestCase
 
     function testAppRootWithNonExistingDirectory()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-
         $appRoot = '/foo/bar';
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Configurator_AppRoot', 'appRoot', $appRoot);
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $configurator = &new Piece_Unity_Plugin_Configurator_AppRoot();
+        Piece_Unity_Error::disableCallback();
         @$configurator->invoke();
+        Piece_Unity_Error::enableCallback();
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
 
         $error = Piece_Unity_Error::pop();
 
         $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
-
-        Piece_Unity_Error::popCallback();
     }
 
     function testAppRootPath()

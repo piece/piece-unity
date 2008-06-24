@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.9.0
@@ -44,7 +44,7 @@ require_once 'Piece/Unity/Error.php';
  * An abstract renderer which is used to render HTML.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.9.0
@@ -104,12 +104,12 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
 
         foreach ($components as $extension) {
             $component = &Piece_Unity_Plugin_Factory::factory($extension);
-            if (Piece_Unity_Error::hasErrors('exception')) {
+            if (Piece_Unity_Error::hasErrors()) {
                 return;
             }
 
             $component->invoke();
-            if (Piece_Unity_Error::hasErrors('exception')) {
+            if (Piece_Unity_Error::hasErrors()) {
                 return;
             }
         }
@@ -121,7 +121,7 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
 
             ob_start();
             $this->_render(false);
-            if (Piece_Unity_Error::hasErrors('exception')) {
+            if (Piece_Unity_Error::hasErrors()) {
                 ob_end_clean();
                 return;
             }
@@ -177,11 +177,11 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
      */
     function _render($isLayout)
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        Piece_Unity_Error::disableCallback();
         $this->_doRender($isLayout);
-        Piece_Unity_Error::popCallback();
+        Piece_Unity_Error::enableCallback();
 
-        if (Piece_Unity_Error::hasErrors('exception')) {
+        if (Piece_Unity_Error::hasErrors()) {
             $error = Piece_Unity_Error::pop();
             if ($error['code'] == 'PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND') {
                 if ($this->_getConfiguration('useFallback')) {
@@ -190,25 +190,17 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
                     $this->_doRender($isLayout);
                     return;
                 } else {
-                    $level = 'warning';
+                    trigger_error("Failed to render a HTML template with the plugin [ {$this->_name} ].",
+                                  E_USER_WARNING
+                                  );
                 }
             } else {
-                $level = 'exception';
-            }
-
-            if ($level == 'warning') {
-                Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-            }
-
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    "Failed to render a HTML template with the plugin [ {$this->_name} ].",
-                                    $level,
-                                    array(),
-                                    $error
-                                    );
-
-            if ($level == 'warning') {
-                Piece_Unity_Error::popCallback();
+                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
+                                        "Failed to render a HTML template with the plugin [ {$this->_name} ].",
+                                        'exception',
+                                        array(),
+                                        $error
+                                        );
             }
         }
     }

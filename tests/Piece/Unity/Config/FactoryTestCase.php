@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.1.0
@@ -40,14 +40,20 @@ require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Config/Factory.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'Cache/Lite/File.php';
+require_once 'PEAR/ErrorStack.php';
 
+// {{{ GLOBALS
+
+$GLOBALS['PIECE_UNITY_Config_FactoryTestCase_hasWarnings'] = false;
+
+// }}}
 // {{{ Piece_Unity_Config_FactoryTestCase
 
 /**
  * TestCase for Piece_Unity_Config_Factory
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
@@ -77,7 +83,7 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
 
     function setUp()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+        PEAR_ErrorStack::setDefaultCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 
@@ -90,7 +96,6 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
                                       );
         $cache->clean();
         Piece_Unity_Error::clearErrors();
-        Piece_Unity_Error::popCallback();
     }
 
     function testFactoryWithoutConfigurationFile()
@@ -100,44 +105,46 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
 
     function testConfigurationDirectoryNotFound()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        Piece_Unity_Error::disableCallback();
         $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__) . '/foo', $this->_cacheDirectory);
+        Piece_Unity_Error::enableCallback();
 
         $this->assertNull($config);
-        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
 
         $error = Piece_Unity_Error::pop();
 
         $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
-
-        Piece_Unity_Error::popCallback();
     }
 
     function testConfigurationFileNotFound()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        Piece_Unity_Error::disableCallback();
         $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__), $this->_cacheDirectory);
+        Piece_Unity_Error::enableCallback();
 
         $this->assertNull($config);
-        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
 
         $error = Piece_Unity_Error::pop();
 
         $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
-
-        Piece_Unity_Error::popCallback();
     }
 
     function testNoCachingIfCacheDirectoryNotFound()
     {
+        set_error_handler(create_function('$code, $message, $file, $line', "
+if (\$code == E_USER_WARNING) {
+    \$GLOBALS['PIECE_UNITY_Config_FactoryTestCase_hasWarnings'] = true;
+}
+"));
         $config = &Piece_Unity_Config_Factory::factory($this->_cacheDirectory, dirname(__FILE__) . '/foo');
+        restore_error_handler();
 
+        $this->assertTrue($GLOBALS['PIECE_UNITY_Config_FactoryTestCase_hasWarnings']);
         $this->assertEquals(strtolower('Piece_Unity_Config'), strtolower(get_class($config)));
-        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
 
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
+        $GLOBALS['PIECE_UNITY_Config_FactoryTestCase_hasWarnings'] = false;
     }
 
     function testFactoryWithConfigurationFile()

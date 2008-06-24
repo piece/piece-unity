@@ -40,9 +40,15 @@ require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'PHP/Compat.php';
+require_once 'PEAR/ErrorStack.php';
 
 PHP_Compat::loadFunction('scandir');
 
+// {{{ GLOBALS
+
+$GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings'] = false;
+
+// }}}
 // {{{ Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests
 
 /**
@@ -80,7 +86,7 @@ class Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests extends PHPUnit_TestCa
 
     function setUp()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+        PEAR_ErrorStack::setDefaultCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $this->_doSetUp();
     }
 
@@ -90,7 +96,6 @@ class Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests extends PHPUnit_TestCa
         Piece_Unity_Plugin_Factory::clearInstances();
         Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
-        Piece_Unity_Error::popCallback();
     }
 
     function testRendering()
@@ -113,8 +118,18 @@ class Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests extends PHPUnit_TestCa
         $viewElement->setElement('content', 'This is a dynamic content.');
         $config = &$this->_getConfig();
         $context->setConfiguration($config);
+        set_error_handler(create_function('$code, $message, $file, $line', "
+if (\$code == E_USER_WARNING) {
+    \$GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings'] = true;
+}
+"));
+        $output = $this->_render();
+        restore_error_handler();
 
-        $this->assertEquals('', $this->_render());
+        $this->assertEquals('', $output);
+        $this->assertTrue($GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings']);
+
+        $GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings'] = false;
     }
 
     function testKeepingReference()
@@ -134,20 +149,21 @@ class Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests extends PHPUnit_TestCa
 
     function testNonExistingTemplate()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_DIE . ';'));
         $context = &Piece_Unity_Context::singleton();
         $context->setView("{$this->_target}NonExistingView");
         $config = &$this->_getConfig();
         $context->setConfiguration($config);
+        set_error_handler(create_function('$code, $message, $file, $line', "
+if (\$code == E_USER_WARNING) {
+    \$GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings'] = true;
+}
+"));
         $this->_render();
+        restore_error_handler();
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors('warning'));
+        $this->assertTrue($GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings']);
 
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
-
-        Piece_Unity_Error::popCallback();
+        $GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings'] = false;
     }
 
     function testLayout()
@@ -207,25 +223,6 @@ class Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests extends PHPUnit_TestCa
 </html>', rtrim($this->_render()));
 
         $this->assertFalse(Piece_Unity_Error::hasErrors());
-    }
-
-    function testRenderWithWarnings()
-    {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
-        Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND, false, 'warning');
-        Piece_Unity_Error::popCallback();
-        $context = &Piece_Unity_Context::singleton();
-        $context->setView("{$this->_target}Example");
-        $viewElement = &$context->getViewElement();
-        $viewElement->setElement('content', 'This is a dynamic content.');
-        $config = &$this->_getConfig();
-        $config->setConfiguration("Renderer_{$this->_target}", 'useFallback', true);
-        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackView', 'Fallback');
-        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackDirectory', "{$this->_cacheDirectory}/templates/Fallback");
-        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackCompileDirectory', "{$this->_cacheDirectory}/compiled-templates/Fallback");
-        $context->setConfiguration($config);
-
-        $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $this->_render());
     }
 
     /**

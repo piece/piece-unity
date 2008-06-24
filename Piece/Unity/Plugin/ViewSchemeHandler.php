@@ -96,7 +96,7 @@ class Piece_Unity_Plugin_ViewSchemeHandler extends Piece_Unity_Plugin_Common
         $viewScheme = !$positionOfColon ? 'html'
                                         : substr($viewString, 0, $positionOfColon);
         $rendererExtension = $this->_getConfiguration($viewScheme);
-        if (Piece_Unity_Error::hasErrors('exception')) {
+        if (Piece_Unity_Error::hasErrors()) {
             return;
         }
 

@@ -125,7 +125,7 @@ class Piece_Unity
     function dispatch()
     {
         $root = &Piece_Unity_Plugin_Factory::factory($GLOBALS['PIECE_UNITY_Root_Plugin']);
-        if (Piece_Unity_Error::hasErrors('exception')) {
+        if (Piece_Unity_Error::hasErrors()) {
             return;
         }
 

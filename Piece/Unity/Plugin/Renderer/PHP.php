@@ -123,7 +123,7 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
 
         $rendering = &new Piece_Unity_Service_Rendering_PHP();
         $rendering->render($file, $viewElement);
-        if (Piece_Unity_Error::hasErrors('exception')) {
+        if (Piece_Unity_Error::hasErrors()) {
             $error = Piece_Unity_Error::pop();
             Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
                                     $error['message'],

@@ -42,7 +42,6 @@ require_once 'Piece/Flow/Action/Factory.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Flow/Error.php';
 require_once 'Piece/Unity/Error.php';
-require_once 'PEAR/ErrorStack.php';
 
 // {{{ constants
 
@@ -107,14 +106,14 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     function invoke()
     {
         $this->_prepareContinuation();
-        if (Piece_Unity_Error::hasErrors('exception')) {
+        if (Piece_Unity_Error::hasErrors()) {
             return;
         }
 
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        Piece_Flow_Error::disableCallback();
         $flowExecutionTicket = $this->_continuationServer->invoke($this->_context, $this->_getConfiguration('bindActionsWithFlowExecution'));
-        Piece_Unity_Error::popCallback();
-        if (Piece_Flow_Error::hasErrors('exception')) {
+        Piece_Flow_Error::enableCallback();
+        if (Piece_Flow_Error::hasErrors()) {
             $error = Piece_Flow_Error::pop();
             if ($error['code'] == PIECE_FLOW_ERROR_FLOW_EXECUTION_EXPIRED) {
                 if ($this->_getConfiguration('useGCFallback')) {
@@ -131,23 +130,10 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             return;
         }
 
-        if (PEAR_ErrorStack::staticHasErrors(false, 'exception')) {
-            $allErrors = @PEAR_ErrorStack::staticGetErrors(false, 'exception');
-            foreach (array_values($allErrors) as $errors) {
-                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                        "Failed to invoke the plugin [ {$this->_name} ] for any reasons.",
-                                        'exception',
-                                        array(),
-                                        $errors[0]
-                                        );
-                return;
-            }
-        }
-
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+        Piece_Flow_Error::disableCallback();
         $viewString = $this->_continuationServer->getView();
-        Piece_Unity_Error::popCallback();
-        if (Piece_Flow_Error::hasErrors('exception')) {
+        Piece_Flow_Error::enableCallback();
+        if (Piece_Flow_Error::hasErrors()) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
                                     "Failed to invoke the plugin [ {$this->_name} ] for any reasons.",
                                     'exception',
@@ -260,7 +246,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     {
         if (is_null($this->_continuationServer)) {
             $this->_prepareContinuation();
-            if (Piece_Unity_Error::hasErrors('exception')) {
+            if (Piece_Unity_Error::hasErrors()) {
                 return;
             }
         }
@@ -301,13 +287,13 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             $continuationServer->setConfigDirectory($this->_getConfiguration('configDirectory'));
             $continuationServer->setConfigExtension($this->_getConfiguration('configExtension'));
             foreach ($this->_getConfiguration('flowMappings') as $flowMapping) {
-                Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+                Piece_Flow_Error::disableCallback();
                 $continuationServer->addFlow($flowMapping['url'],
                                              $flowMapping['flowName'],
                                              $flowMapping['isExclusive']
                                              );
-                Piece_Unity_Error::popCallback();
-                if (Piece_Flow_Error::hasErrors('exception')) {
+                Piece_Flow_Error::enableCallback();
+                if (Piece_Flow_Error::hasErrors()) {
                     Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
                                             "Failed to configure the plugin [ {$this->_name}.",
                                             'exception',
@@ -320,13 +306,13 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             }
         } else {
             foreach ($this->_getConfiguration('flowDefinitions') as $flowDefinition) {
-                Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
+                Piece_Flow_Error::disableCallback();
                 $continuationServer->addFlow($flowDefinition['name'],
                                              $flowDefinition['file'],
                                              $flowDefinition['isExclusive']
                                              );
-                Piece_Unity_Error::popCallback();
-                if (Piece_Flow_Error::hasErrors('exception')) {
+                Piece_Flow_Error::enableCallback();
+                if (Piece_Flow_Error::hasErrors()) {
                     Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
                                             "Failed to configure the plugin [ {$this->_name}.",
                                             'exception',
@@ -409,7 +395,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $continuationServer = &$session->getAttribute(PIECE_UNITY_CONTINUATION_SESSIONKEY);
         if (is_null($continuationServer)) {
             $continuationServer = &$this->_createContinuationServer();
-            if (Piece_Unity_Error::hasErrors('exception')) {
+            if (Piece_Unity_Error::hasErrors()) {
                 return;
             }
 

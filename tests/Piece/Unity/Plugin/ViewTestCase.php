@@ -75,16 +75,10 @@ class Piece_Unity_Plugin_ViewTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function setUp()
-    {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
-    }
-
     function tearDown()
     {
         Piece_Unity_Context::clear();
         Piece_Unity_Plugin_Factory::clearInstances();
-        Piece_Unity_Error::popCallback();
     }
 
     /**

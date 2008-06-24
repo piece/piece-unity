@@ -41,6 +41,7 @@ require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/Plugin/Factory.php';
 require_once 'Piece/Unity/Plugin/ViewSchemeHandler.php';
+require_once 'PEAR/ErrorStack.php';
 
 // {{{ Piece_Unity_Plugin_ViewSchemeHandlerTestCase
 
@@ -76,7 +77,7 @@ class Piece_Unity_Plugin_ViewSchemeHandlerTestCase extends PHPUnit_TestCase
 
     function setUp()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+        PEAR_ErrorStack::setDefaultCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
     }
 
     function tearDown()
@@ -100,21 +101,20 @@ class Piece_Unity_Plugin_ViewSchemeHandlerTestCase extends PHPUnit_TestCase
 
     function testShouldRaiseAnExceptionIfTheViewStringIsStartedWithColon()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $context = &Piece_Unity_Context::singleton();
         $context->setView(':Foo');
         $config = &new Piece_Unity_Config();
         $context->setConfiguration($config);
         $viewSchemeHandler = &Piece_Unity_Plugin_Factory::factory('ViewSchemeHandler');;
+        Piece_Unity_Error::disableCallback();
         $viewSchemeHandler->invoke();
+        Piece_Unity_Error::enableCallback();
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
 
         $error = Piece_Unity_Error::pop();
 
         $this->assertEquals(PIECE_UNITY_ERROR_UNEXPECTED_VALUE, $error['code']);
-
-        Piece_Unity_Error::popCallback();
     }
 
     /**#@-*/

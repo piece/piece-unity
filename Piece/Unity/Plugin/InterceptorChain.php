@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.4.0
@@ -45,7 +45,7 @@ require_once 'Piece/Unity/Plugin/Factory.php';
  * An interceptor which invokes registerd interceptors successively.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.4.0
@@ -95,7 +95,7 @@ class Piece_Unity_Plugin_InterceptorChain extends Piece_Unity_Plugin_Common
 
         foreach ($interceptors as $extension) {
             $interceptor = &Piece_Unity_Plugin_Factory::factory($extension);
-            if (Piece_Unity_Error::hasErrors('exception')) {
+            if (Piece_Unity_Error::hasErrors()) {
                 return;
             }
 
@@ -106,7 +106,7 @@ class Piece_Unity_Plugin_InterceptorChain extends Piece_Unity_Plugin_Common
              * @return boolean
              */
             $doContinue = $interceptor->invoke();
-            if (Piece_Unity_Error::hasErrors('exception')) {
+            if (Piece_Unity_Error::hasErrors()) {
                 return;
             }
 

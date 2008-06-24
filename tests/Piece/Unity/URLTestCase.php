@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.9.0
@@ -40,6 +40,7 @@ require_once 'PHPUnit.php';
 require_once 'Piece/Unity/URL.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Error.php';
+require_once 'PEAR/ErrorStack.php';
 
 // {{{ Piece_Unity_URLTestCase
 
@@ -47,7 +48,7 @@ require_once 'Piece/Unity/Error.php';
  * TestCase for Piece_Unity_URL
  *
  * @package    Piece_Unity
- * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.9.0
@@ -75,14 +76,13 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
 
     function setUp()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+        PEAR_ErrorStack::setDefaultCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
     }
 
     function tearDown()
     {
         Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
-        Piece_Unity_Error::popCallback();
     }
 
     function testInternalURLWithAbsolutePath()
@@ -206,21 +206,28 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
 
     function testInvalidOperations()
     {
-        Piece_Unity_Error::pushCallback(create_function('$error', 'return ' . PEAR_ERRORSTACK_PUSHANDLOG . ';'));
         $url = &new Piece_Unity_URL();
+        Piece_Unity_Error::disableCallback();
         $url->getQueryString();
+        Piece_Unity_Error::enableCallback();
+
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_INVALID_OPERATION, $error['code']);
+
+        Piece_Unity_Error::disableCallback();
         $url->addQueryString('foo', 'bar');
+        Piece_Unity_Error::enableCallback();
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_INVALID_OPERATION, $error['code']);
+
+        Piece_Unity_Error::disableCallback();
         $url->getURL();
-
-        $this->assertTrue(Piece_Unity_Error::hasErrors('exception'));
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_INVALID_OPERATION, $error['code']);
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_INVALID_OPERATION, $error['code']);
+        Piece_Unity_Error::enableCallback();
 
         $error = Piece_Unity_Error::pop();
 
@@ -229,8 +236,6 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
         $error = Piece_Unity_Error::pop();
 
         $this->assertNull($error);
-
-        Piece_Unity_Error::popCallback();
     }
 
     function testNonSSLableServers()
