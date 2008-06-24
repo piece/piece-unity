@@ -48,7 +48,7 @@ require_once 'Cache/Lite/File.php';
 // {{{ Piece_Unity_Plugin_Configurator_ValidationTestCase
 
 /**
- * TestCase for Piece_Unity_Plugin_Configurator_Validation
+ * Some tests for Piece_Unity_Plugin_Configurator_Validation.
  *
  * @package    Piece_Unity
  * @copyright  2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>

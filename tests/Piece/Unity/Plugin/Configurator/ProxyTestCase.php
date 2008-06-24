@@ -45,7 +45,7 @@ require_once 'Piece/Unity/Error.php';
 // {{{ Piece_Unity_Plugin_Configurator_ProxyTestCase
 
 /**
- * TestCase for Piece_Unity_Plugin_Configurator_Proxy
+ * Some tests for Piece_Unity_Plugin_Configurator_Proxy.
  *
  * @package    Piece_Unity
  * @copyright  2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>

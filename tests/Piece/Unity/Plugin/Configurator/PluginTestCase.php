@@ -46,7 +46,7 @@ require_once 'Piece/Unity/Plugin/Factory.php';
 // {{{ Piece_Unity_Plugin_Configurator_PluginTestCase
 
 /**
- * TestCase for Piece_Unity_Plugin_Configurator_Plugin
+ * Some tests for Piece_Unity_Plugin_Configurator_Plugin.
  *
  * @package    Piece_Unity
  * @copyright  2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>

@@ -45,7 +45,7 @@ require_once 'PEAR/ErrorStack.php';
 // {{{ Piece_Unity_ValidationTestCase
 
 /**
- * TestCase for Piece_Unity_Validation
+ * Some tests for Piece_Unity_Validation.
  *
  * @package    Piece_Unity
  * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>

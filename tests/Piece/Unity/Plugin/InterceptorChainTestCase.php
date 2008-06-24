@@ -46,7 +46,7 @@ require_once 'Piece/Unity/Config.php';
 // {{{ Piece_Unity_Plugin_InterceptorChainTestCase
 
 /**
- * TestCase for Piece_Unity_Plugin_InterceptorChain
+ * Some tests for Piece_Unity_Plugin_InterceptorChain.
  *
  * @package    Piece_Unity
  * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>

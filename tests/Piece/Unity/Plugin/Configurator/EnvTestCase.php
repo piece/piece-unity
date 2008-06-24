@@ -46,7 +46,7 @@ require_once 'Piece/Unity/Error.php';
 // {{{ Piece_Unity_Plugin_Configurator_EnvTestCase
 
 /**
- * TestCase for Piece_Unity_Plugin_Configurator_Env
+ * Some tests for Piece_Unity_Plugin_Configurator_Env.
  *
  * @package    Piece_Unity
  * @copyright  2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>

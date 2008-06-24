@@ -50,7 +50,7 @@ $GLOBALS['PIECE_UNITY_Config_FactoryTestCase_hasWarnings'] = false;
 // {{{ Piece_Unity_Config_FactoryTestCase
 
 /**
- * TestCase for Piece_Unity_Config_Factory
+ * Some tests for Piece_Unity_Config_Factory.
  *
  * @package    Piece_Unity
  * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>

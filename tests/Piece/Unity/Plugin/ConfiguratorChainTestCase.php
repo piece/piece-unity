@@ -47,7 +47,7 @@ require_once 'Piece/Unity/Env.php';
 // {{{ Piece_Unity_Plugin_ConfiguratorChainTestCase
 
 /**
- * TestCase for Piece_Unity_Plugin_ConfiguratorChain
+ * Some tests for Piece_Unity_Plugin_ConfiguratorChain.
  *
  * @package    Piece_Unity
  * @copyright  2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>

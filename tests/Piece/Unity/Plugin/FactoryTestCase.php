@@ -46,7 +46,7 @@ require_once 'PEAR/ErrorStack.php';
 // {{{ Piece_Unity_Plugin_FactoryTestCase
 
 /**
- * TestCase for Piece_Unity_Plugin_Factory
+ * Some tests for Piece_Unity_Plugin_Factory.
  *
  * @package    Piece_Unity
  * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>

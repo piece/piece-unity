@@ -46,7 +46,7 @@ require_once 'PEAR/ErrorStack.php';
 // {{{ Piece_Unity_Plugin_Configurator_AppRootTestCase
 
 /**
- * TestCase for Piece_Unity_Plugin_Configurator_AppRoot
+ * Some tests for Piece_Unity_Plugin_Configurator_AppRoot.
  *
  * @package    Piece_Unity
  * @copyright  2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>

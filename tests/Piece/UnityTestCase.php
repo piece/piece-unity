@@ -46,7 +46,7 @@ require_once 'Piece/Unity/Error.php';
 // {{{ Piece_UnityTestCase
 
 /**
- * TestCase for Piece_Unity
+ * Some tests for Piece_Unity.
  *
  * @package    Piece_Unity
  * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
