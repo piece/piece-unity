@@ -1,1 +1,1 @@
-<?php echo "$foo\n" 
+<?php echo "$foo\n" ?>

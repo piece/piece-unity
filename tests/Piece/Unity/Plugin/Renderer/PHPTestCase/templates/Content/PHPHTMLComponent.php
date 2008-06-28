@@ -1,1 +1,1 @@
-<?php echo $__example->render() 
+<?php echo $__example->render() ?>
