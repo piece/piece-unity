@@ -43,7 +43,6 @@ require_once 'Cache/Lite/File.php';
 require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
 require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/Error.php';
-require_once 'PEAR/ErrorStack.php';
 
 // {{{ Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
 
@@ -81,7 +80,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
     function setUp()
     {
-        PEAR_ErrorStack::setDefaultCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SESSION = array();
         $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');

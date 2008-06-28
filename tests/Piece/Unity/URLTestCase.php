@@ -40,7 +40,6 @@ require_once 'PHPUnit.php';
 require_once 'Piece/Unity/URL.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Error.php';
-require_once 'PEAR/ErrorStack.php';
 
 // {{{ Piece_Unity_URLTestCase
 
@@ -73,11 +72,6 @@ class Piece_Unity_URLTestCase extends PHPUnit_TestCase
     /**#@+
      * @access public
      */
-
-    function setUp()
-    {
-        PEAR_ErrorStack::setDefaultCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
-    }
 
     function tearDown()
     {

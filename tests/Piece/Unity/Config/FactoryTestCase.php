@@ -40,7 +40,6 @@ require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Config/Factory.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'Cache/Lite/File.php';
-require_once 'PEAR/ErrorStack.php';
 
 // {{{ GLOBALS
 
@@ -83,7 +82,6 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
 
     function setUp()
     {
-        PEAR_ErrorStack::setDefaultCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 

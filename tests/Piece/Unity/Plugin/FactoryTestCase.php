@@ -41,7 +41,6 @@ require_once 'Piece/Unity/Plugin/Factory.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/Context.php';
-require_once 'PEAR/ErrorStack.php';
 
 // {{{ Piece_Unity_Plugin_FactoryTestCase
 
@@ -80,7 +79,6 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
 
     function setUp()
     {
-        PEAR_ErrorStack::setDefaultCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $this->_oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
         Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/FactoryTestCase');
         $this->_oldPluginPrefixes = $GLOBALS['PIECE_UNITY_Plugin_Prefixes'];
