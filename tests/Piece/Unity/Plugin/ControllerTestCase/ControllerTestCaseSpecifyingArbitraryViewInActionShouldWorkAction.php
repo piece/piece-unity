@@ -97,4 +97,3 @@ class ControllerTestCaseSpecifyingArbitraryViewInActionShouldWorkAction
  * indent-tabs-mode: nil
  * End:
  */
-?>

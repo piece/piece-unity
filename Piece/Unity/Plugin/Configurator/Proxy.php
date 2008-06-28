@@ -154,4 +154,3 @@ class Piece_Unity_Plugin_Configurator_Proxy extends Piece_Unity_Plugin_Common
  * indent-tabs-mode: nil
  * End:
  */
-?>

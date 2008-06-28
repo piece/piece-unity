@@ -369,4 +369,3 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
  * indent-tabs-mode: nil
  * End:
  */
-?>

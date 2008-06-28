@@ -134,4 +134,3 @@ class Piece_Unity_Service_Rendering_PHP
  * indent-tabs-mode: nil
  * End:
  */
-?>

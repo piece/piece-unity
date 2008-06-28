@@ -97,4 +97,3 @@ class ActionShouldBeAbleToReturnViewStringAction
  * indent-tabs-mode: nil
  * End:
  */
-?>

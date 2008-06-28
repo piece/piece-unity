@@ -99,4 +99,3 @@ class CommonTestCaseAlias_ExceptionShouldBeRaisedWhenUndefinedConfigurationPoint
  * indent-tabs-mode: nil
  * End:
  */
-?>

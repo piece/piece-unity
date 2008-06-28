@@ -670,4 +670,3 @@ class Piece_Unity_Context
  * indent-tabs-mode: nil
  * End:
  */
-?>

@@ -57,4 +57,3 @@ if (isset($__continuation)
  * indent-tabs-mode: nil
  * End:
  */
-?>

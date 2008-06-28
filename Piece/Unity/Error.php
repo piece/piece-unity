@@ -350,4 +350,3 @@ class Piece_Unity_Error
  * indent-tabs-mode: nil
  * End:
  */
-?>

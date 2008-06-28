@@ -102,4 +102,3 @@ class SimpleValidationAction
  * indent-tabs-mode: nil
  * End:
  */
-?>

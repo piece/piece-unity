@@ -103,4 +103,3 @@ class Piece_Unity_Plugin_HTMLComponent_Example extends Piece_Unity_Plugin_Common
  * indent-tabs-mode: nil
  * End:
  */
-?>

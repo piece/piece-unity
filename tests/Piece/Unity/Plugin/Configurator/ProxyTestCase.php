@@ -185,4 +185,3 @@ class Piece_Unity_Plugin_Configurator_ProxyTestCase extends PHPUnit_TestCase
  * indent-tabs-mode: nil
  * End:
  */
-?>

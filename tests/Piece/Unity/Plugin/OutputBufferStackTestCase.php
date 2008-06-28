@@ -193,4 +193,3 @@ class Piece_Unity_Plugin_OutputBufferStackTestCase extends PHPUnit_TestCase
  * indent-tabs-mode: nil
  * End:
  */
-?>

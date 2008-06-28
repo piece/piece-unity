@@ -99,4 +99,3 @@ class CommonTestCaseAlias_ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUs
  * indent-tabs-mode: nil
  * End:
  */
-?>

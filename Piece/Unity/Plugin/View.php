@@ -181,4 +181,3 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
  * indent-tabs-mode: nil
  * End:
  */
-?>

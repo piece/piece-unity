@@ -117,4 +117,3 @@ class Piece_Unity_Plugin_Interceptor_First extends Piece_Unity_Plugin_Common
  * indent-tabs-mode: nil
  * End:
  */
-?>

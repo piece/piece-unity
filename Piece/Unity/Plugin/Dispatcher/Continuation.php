@@ -470,4 +470,3 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
  * indent-tabs-mode: nil
  * End:
  */
-?>

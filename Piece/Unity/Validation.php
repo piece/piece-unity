@@ -481,4 +481,3 @@ class Piece_Unity_Validation
  * indent-tabs-mode: nil
  * End:
  */
-?>

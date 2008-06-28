@@ -55,4 +55,3 @@ PEAR_ErrorStack::setDefaultCallback(create_function('$error', 'var_dump($error);
  * indent-tabs-mode: nil
  * End:
  */
-?>

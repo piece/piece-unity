@@ -238,4 +238,3 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
  * indent-tabs-mode: nil
  * End:
  */
-?>

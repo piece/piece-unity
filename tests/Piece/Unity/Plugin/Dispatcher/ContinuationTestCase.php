@@ -622,4 +622,3 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
  * indent-tabs-mode: nil
  * End:
  */
-?>

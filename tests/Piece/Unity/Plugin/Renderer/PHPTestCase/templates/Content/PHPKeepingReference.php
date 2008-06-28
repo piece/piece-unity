@@ -1,3 +1,2 @@
 <?php
 $foo->bar = 'baz';
-?>

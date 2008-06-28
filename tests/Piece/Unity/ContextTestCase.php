@@ -375,4 +375,3 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
  * indent-tabs-mode: nil
  * End:
  */
-?>

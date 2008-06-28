@@ -242,4 +242,3 @@ class Piece_Unity_Plugin_Factory
  * indent-tabs-mode: nil
  * End:
  */
-?>

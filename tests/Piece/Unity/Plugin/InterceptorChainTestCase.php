@@ -153,4 +153,3 @@ class Piece_Unity_Plugin_InterceptorChainTestCase extends PHPUnit_TestCase
  * indent-tabs-mode: nil
  * End:
  */
-?>

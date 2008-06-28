@@ -269,4 +269,3 @@ class Piece_Unity_Session
  * indent-tabs-mode: nil
  * End:
  */
-?>

@@ -149,4 +149,3 @@ class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Rendere
  * indent-tabs-mode: nil
  * End:
  */
-?>

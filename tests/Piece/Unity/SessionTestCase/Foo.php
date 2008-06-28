@@ -62,4 +62,3 @@ class Piece_Unity_SessionTestCase_Foo {}
  * indent-tabs-mode: nil
  * End:
  */
-?>

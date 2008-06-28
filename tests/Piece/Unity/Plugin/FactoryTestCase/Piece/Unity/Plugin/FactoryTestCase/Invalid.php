@@ -94,4 +94,3 @@ class Piece_Unity_Plugin_FactoryTestCase_Invalid
  * indent-tabs-mode: nil
  * End:
  */
-?>

@@ -150,4 +150,3 @@ class Piece_Unity_Plugin_Configurator_EnvTestCase extends PHPUnit_TestCase
  * indent-tabs-mode: nil
  * End:
  */
-?>

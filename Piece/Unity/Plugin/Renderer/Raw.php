@@ -62,4 +62,3 @@ class Piece_Unity_Plugin_Renderer_Raw extends Piece_Unity_Plugin_Common {}
  * indent-tabs-mode: nil
  * End:
  */
-?>

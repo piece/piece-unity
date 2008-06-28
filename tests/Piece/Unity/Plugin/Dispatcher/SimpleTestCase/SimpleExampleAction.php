@@ -97,4 +97,3 @@ class SimpleExampleAction
  * indent-tabs-mode: nil
  * End:
  */
-?>

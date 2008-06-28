@@ -99,4 +99,3 @@ class ValidationTestCaseAlias_HelloWorld extends Piece_Right_Validator_Common
  * indent-tabs-mode: nil
  * End:
  */
-?>

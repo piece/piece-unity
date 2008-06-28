@@ -107,4 +107,3 @@ class Piece_Unity_Plugin_Configurator_EnvHandler_PieceRight extends Piece_Unity_
  * indent-tabs-mode: nil
  * End:
  */
-?>

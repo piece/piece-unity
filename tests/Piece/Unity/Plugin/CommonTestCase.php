@@ -227,4 +227,3 @@ class Piece_Unity_Plugin_CommonTestCase extends PHPUnit_TestCase
  * indent-tabs-mode: nil
  * End:
  */
-?>

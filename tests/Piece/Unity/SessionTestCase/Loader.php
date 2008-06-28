@@ -69,4 +69,3 @@ class Piece_Unity_SessionTestCase_Loader
  * indent-tabs-mode: nil
  * End:
  */
-?>

@@ -94,4 +94,3 @@ class CommonTestCaseAlias_Qux extends Piece_Unity_Plugin_Common
  * indent-tabs-mode: nil
  * End:
  */
-?>

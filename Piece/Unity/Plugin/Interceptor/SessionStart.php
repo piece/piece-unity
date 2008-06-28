@@ -115,4 +115,3 @@ class Piece_Unity_Plugin_Interceptor_SessionStart extends Piece_Unity_Plugin_Com
  * indent-tabs-mode: nil
  * End:
  */
-?>

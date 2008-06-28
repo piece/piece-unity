@@ -130,4 +130,3 @@ class Piece_Unity_Plugin_Configurator_Event extends Piece_Unity_Plugin_Common
  * indent-tabs-mode: nil
  * End:
  */
-?>

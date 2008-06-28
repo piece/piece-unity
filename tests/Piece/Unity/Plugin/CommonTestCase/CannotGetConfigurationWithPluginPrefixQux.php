@@ -94,4 +94,3 @@ class CannotGetConfigurationWithPluginPrefixQux extends Piece_Unity_Plugin_Commo
  * indent-tabs-mode: nil
  * End:
  */
-?>

@@ -98,4 +98,3 @@ class PHPExampleAction
  * indent-tabs-mode: nil
  * End:
  */
-?>

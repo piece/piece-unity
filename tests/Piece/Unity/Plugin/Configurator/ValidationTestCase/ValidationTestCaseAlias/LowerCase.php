@@ -97,4 +97,3 @@ class ValidationTestCaseAlias_LowerCase
  * indent-tabs-mode: nil
  * End:
  */
-?>
