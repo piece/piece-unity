@@ -568,6 +568,21 @@ class Piece_Unity_Context
         return $this->_appRootPath;
     }
 
+    // }}}
+    // {{{ removeProxyPath()
+
+    /**
+     * Removes the proxy path from a given URL Path.
+     *
+     * @param string $path
+     * @return string
+     * @since Method available since Release 1.5.0
+     */
+    function removeProxyPath($path)
+    {
+        return preg_replace("!^{$this->_proxyPath}!", '', $path);
+    }
+
     /**#@-*/
 
     /**#@+
