@@ -287,7 +287,6 @@ class Piece_Unity_Error
                                 );
     }
 
-
     // }}}
     // {{{ disableCallback()
 
