@@ -36,6 +36,8 @@
  * @since      File available since Release 1.5.0
  */
 
+require_once 'Piece/Unity/Error.php';
+
 // {{{ Piece_Unity_HTTPStatus
 
 /**
@@ -123,6 +125,13 @@ class Piece_Unity_HTTPStatus
      */
     function Piece_Unity_HTTPStatus($statusCode)
     {
+        if (!array_key_exists($statusCode, $this->_reasonPharses)) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
+                                    "Unknown status code [ $statusCode ], be sure the status code is correct."
+                                    );
+            return;
+        }
+
         $this->_statusCode = $statusCode;
     }
 

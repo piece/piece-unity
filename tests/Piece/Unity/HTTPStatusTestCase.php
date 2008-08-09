@@ -38,6 +38,7 @@
 require_once realpath(dirname(__FILE__) . '/../../prepare.php');
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/HTTPStatus.php';
+require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_HTTPStatusTestCase
 
@@ -71,6 +72,11 @@ class Piece_Unity_HTTPStatusTestCase extends PHPUnit_TestCase
      * @access public
      */
 
+    function tearDown()
+    {
+        Piece_Unity_Error::clearErrors();
+    }
+
     function testShouldSendStatusLine()
     {
         $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
@@ -80,6 +86,22 @@ class Piece_Unity_HTTPStatusTestCase extends PHPUnit_TestCase
         $this->assertEquals('HTTP/1.1 404 Not Found',
                             $httpStatus->getSentStatusLine()
                             );
+
+        unset($_SERVER['SERVER_PROTOCOL']);
+    }
+
+    function testShouldRaiseAnExceptionIfAnUnknownStatusCodeIsGiven()
+    {
+        $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
+        Piece_Unity_Error::disableCallback();
+        $httpStatus = &new Piece_Unity_HTTPStatus(32);
+        Piece_Unity_Error::enableCallback();
+
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
 
         unset($_SERVER['SERVER_PROTOCOL']);
     }
