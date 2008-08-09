@@ -114,14 +114,14 @@ class Piece_Unity_HTTPStatus
      */
 
     // }}}
-    // {{{ setStatusCode()
+    // {{{ constructor
 
     /**
      * Sets a status code.
      *
      * @param integer $statusCode
      */
-    function setStatusCode($statusCode)
+    function Piece_Unity_HTTPStatus($statusCode)
     {
         $this->_statusCode = $statusCode;
     }
@@ -134,24 +134,27 @@ class Piece_Unity_HTTPStatus
      */
     function send()
     {
-        @header($this->createStatusLine());
+        $statusLine = sprintf('%s %d %s',
+                              $_SERVER['SERVER_PROTOCOL'],
+                              $this->_statusCode,
+                              $this->_reasonPharses[ $this->_statusCode ]
+                              );
+        @header($statusLine);
+
+        $this->_sentStatusLine = $statusLine;
     }
 
     // }}}
-    // {{{ createStatusLine()
+    // {{{ getSentStatusLine()
 
     /**
-     * Creates a HTTP status line like "HTTP/1.1 404 Not Found".
+     * Gets the sent HTTP status line.
      *
      * @return string
      */
-    function createStatusLine()
+    function getSentStatusLine()
     {
-        return sprintf('%s %d %s',
-                       $_SERVER['SERVER_PROTOCOL'],
-                       $this->_statusCode,
-                       $this->_reasonPharses[ $this->_statusCode ]
-                       );
+        return $this->_sentStatusLine;
     }
 
     /**#@-*/

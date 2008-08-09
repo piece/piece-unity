@@ -74,12 +74,11 @@ class Piece_Unity_HTTPStatusTestCase extends PHPUnit_TestCase
     function testShouldSendStatusLine()
     {
         $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
-        $httpStatus = &new Piece_Unity_HTTPStatus();
-        $httpStatus->setStatusCode(404);
+        $httpStatus = &new Piece_Unity_HTTPStatus(404);
         $httpStatus->send();
 
         $this->assertEquals('HTTP/1.1 404 Not Found',
-                            $httpStatus->createStatusLine()
+                            $httpStatus->getSentStatusLine()
                             );
 
         unset($_SERVER['SERVER_PROTOCOL']);
