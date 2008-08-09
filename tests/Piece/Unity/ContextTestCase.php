@@ -352,6 +352,23 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         unset($_SERVER['REMOTE_ADDR']);
     }
 
+    /**
+     * @since Method available since Release 1.5.0
+     */
+    function testShouldSendStatusLine()
+    {
+        $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
+        $context = &Piece_Unity_Context::singleton();
+        $context->sendHTTPStatus(404);
+
+        $this->assertEquals('HTTP/1.1 404 Not Found',
+                            $GLOBALS['PIECE_UNITY_HTTPStatus_SentStatusLine']
+                            );
+
+        $GLOBALS['PIECE_UNITY_HTTPStatus_SentStatusLine'] = null;
+        unset($_SERVER['SERVER_PROTOCOL']);
+    }
+
     /**#@-*/
 
     /**#@+

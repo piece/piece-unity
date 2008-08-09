@@ -39,6 +39,7 @@ require_once 'Piece/Unity/Request.php';
 require_once 'Piece/Unity/ViewElement.php';
 require_once 'Piece/Unity/Session.php';
 require_once 'Piece/Unity/Validation.php';
+require_once 'Piece/Unity/HTTPStatus.php';
 
 // {{{ GLOBALS
 
@@ -581,6 +582,25 @@ class Piece_Unity_Context
     function removeProxyPath($path)
     {
         return preg_replace("!^{$this->_proxyPath}!", '', $path);
+    }
+
+    // }}}
+    // {{{ sendHTTPStatus()
+
+    /**
+     * Sends a HTTP status line like "HTTP/1.1 404 Not Found".
+     *
+     * @param integer $statusCode
+     * @since Method available since Release 1.5.0
+     */
+    function sendHTTPStatus($statusCode)
+    {
+        $httpStatus = &new Piece_Unity_HTTPStatus($statusCode);
+        if (Piece_Unity_Error::hasErrors()) {
+            return;
+        }
+
+        $httpStatus->send();
     }
 
     /**#@-*/
