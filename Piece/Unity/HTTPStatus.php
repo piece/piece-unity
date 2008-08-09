@@ -38,6 +38,11 @@
 
 require_once 'Piece/Unity/Error.php';
 
+// {{{ GLOBALS
+
+$GLOBALS['PIECE_UNITY_HTTPStatus_SentStatusLine'] = null;
+
+// }}}
 // {{{ Piece_Unity_HTTPStatus
 
 /**
@@ -122,8 +127,8 @@ class Piece_Unity_HTTPStatus
     /**
      * Sets a status code.
      *
-     * @param integer $statusCode
      * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @param integer $statusCode
      */
     function Piece_Unity_HTTPStatus($statusCode)
     {
@@ -152,20 +157,7 @@ class Piece_Unity_HTTPStatus
                               );
         @header($statusLine);
 
-        $this->_sentStatusLine = $statusLine;
-    }
-
-    // }}}
-    // {{{ getSentStatusLine()
-
-    /**
-     * Gets the sent HTTP status line.
-     *
-     * @return string
-     */
-    function getSentStatusLine()
-    {
-        return $this->_sentStatusLine;
+        $GLOBALS['PIECE_UNITY_HTTPStatus_SentStatusLine'] = $statusLine;
     }
 
     /**#@-*/

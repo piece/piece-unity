@@ -84,7 +84,7 @@ class Piece_Unity_HTTPStatusTestCase extends PHPUnit_TestCase
         $httpStatus->send();
 
         $this->assertEquals('HTTP/1.1 404 Not Found',
-                            $httpStatus->getSentStatusLine()
+                            $GLOBALS['PIECE_UNITY_HTTPStatus_SentStatusLine']
                             );
 
         unset($_SERVER['SERVER_PROTOCOL']);
