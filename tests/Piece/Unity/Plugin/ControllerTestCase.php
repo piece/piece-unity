@@ -89,9 +89,10 @@ class Piece_Unity_Plugin_ControllerTestCase extends PHPUnit_TestCase
         unset($_SERVER['REQUEST_METHOD']);
     }
 
-    function testViewShouldBeAbleToOverwriteWithArbitraryViewInAction()
+    function testShouldOverwriteTheViewWithAnArbitraryViewFromAnAction()
     {
         $_GET['_event'] = 'ControllerTestCaseSpecifyingArbitraryViewInActionShouldWork';
+        $oldScriptName = $_SERVER['SCRIPT_NAME'];
         $_SERVER['SCRIPT_NAME'] = '/foo.php';
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
@@ -104,6 +105,10 @@ class Piece_Unity_Plugin_ControllerTestCase extends PHPUnit_TestCase
         $controller->invoke();
 
         $this->assertEquals('http://example.org/', $context->getView());
+
+        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+        unset($_SERVER['SERVER_PORT']);
+        unset($_SERVER['SERVER_NAME']);
     }
 
     /**#@-*/
