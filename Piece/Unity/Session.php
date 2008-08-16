@@ -229,6 +229,10 @@ class Piece_Unity_Session
      */
     function addPreloadClass($service, $class, $id = null)
     {
+        if (is_null($this->_preload)) {
+            return;
+        }
+
         $this->_preload->addClass($service, $class, $id);
     }
 
@@ -243,6 +247,10 @@ class Piece_Unity_Session
      */
     function setPreloadCallback($service, $callback)
     {
+        if (is_null($this->_preload)) {
+            return;
+        }
+
         $this->_preload->setCallback($service, $callback);
     }
 
