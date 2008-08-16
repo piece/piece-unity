@@ -231,6 +231,7 @@ class Piece_Unity_Context
      */
     function clear()
     {
+        unset($GLOBALS['PIECE_UNITY_Context_Instance']);
         $GLOBALS['PIECE_UNITY_Context_Instance'] = null;
     }
 
