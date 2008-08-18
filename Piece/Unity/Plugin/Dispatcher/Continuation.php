@@ -42,6 +42,7 @@ require_once 'Piece/Flow/Action/Factory.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Flow/Error.php';
 require_once 'Piece/Unity/Error.php';
+require_once 'Piece/Unity/Service/Continuation.php';
 
 // {{{ constants
 
@@ -50,7 +51,6 @@ define('PIECE_UNITY_CONTINUATION_SESSIONKEY', '_continuation');
 // }}}
 // {{{ GLOBALS
 
-$GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey'] = null;
 $GLOBALS['PIECE_UNITY_Continuation_FlowIDKey'] = null;
 $GLOBALS['PIECE_UNITY_Continuation_FlowID'] = null;
 
@@ -192,7 +192,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     {
         $context = &Piece_Unity_Context::singleton();
         $request = &$context->getRequest();
-        return $request->hasParameter($GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey']) ? $request->getParameter($GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey']) : null;
+        return $request->hasParameter(Piece_Unity_Service_Continuation::getFlowExecutionTicketKey()) ? $request->getParameter(Piece_Unity_Service_Continuation::getFlowExecutionTicketKey()) : null;
     }
 
     // }}}
@@ -358,8 +358,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->_addConfigurationPoint('configExtension', '.flow');
         $this->_addConfigurationPoint('useFullFlowNameAsViewPrefix', true);
 
-        $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey'] =
-            $this->_getConfiguration('flowExecutionTicketKey');
+        Piece_Unity_Service_Continuation::setFlowExecutionTicketKey($this->_getConfiguration('flowExecutionTicketKey'));
         $GLOBALS['PIECE_UNITY_Continuation_FlowIDKey'] =
             $this->_getConfiguration('flowNameKey');
 
@@ -373,7 +372,9 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         Piece_Flow_Action_Factory::setActionDirectory($this->_getConfiguration('actionDirectory'));
 
         $viewElement = &$this->_context->getViewElement();
-        $viewElement->setElement('__flowExecutionTicketKey', $GLOBALS['PIECE_UNITY_Continuation_FlowExecutionTicketKey']);
+        $viewElement->setElement('__flowExecutionTicketKey',
+                                 Piece_Unity_Service_Continuation::getFlowExecutionTicketKey()
+                                 );
         $viewElement->setElement('__flowNameKey', // deprecated
                                  $GLOBALS['PIECE_UNITY_Continuation_FlowIDKey']
                                  );

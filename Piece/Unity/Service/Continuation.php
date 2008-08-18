@@ -37,9 +37,16 @@
 
 require_once 'Piece/Unity/URL.php';
 
+// {{{ GLOBALS
+
+$GLOBALS['PIECE_UNITY_Service_Continuation_FlowExecutionTicketKey'] = null;
+
+// }}}
 // {{{ Piece_Unity_Service_Continuation
 
 /**
+ * A helper class which make it easy to do continuation stuff.
+ *
  * @package    Piece_Unity
  * @copyright  2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
@@ -65,6 +72,7 @@ class Piece_Unity_Service_Continuation
 
     /**#@+
      * @access public
+     * @static
      */
 
     // }}}
@@ -81,7 +89,7 @@ class Piece_Unity_Service_Continuation
         $context = &Piece_Unity_Context::singleton();
         $continuation = &$context->getContinuation();
         $uri = &new Piece_Unity_URL($context->getScriptName());
-        $uri->addQueryString('_flowExecutionTicket',
+        $uri->addQueryString($GLOBALS['PIECE_UNITY_Service_Continuation_FlowExecutionTicketKey'],
                              $continuation->getActiveFlowExecutionTicket()
                              );
         if (!is_null($eventName)) {
@@ -89,6 +97,33 @@ class Piece_Unity_Service_Continuation
         }
 
         return $uri;
+    }
+
+    // }}}
+    // {{{ getFlowExecutionTicketKey()
+
+    /**
+     * Gets the key which represents the flow execution ticket parameter.
+     *
+     * @return string
+     */
+    function getFlowExecutionTicketKey()
+    {
+        return $GLOBALS['PIECE_UNITY_Service_Continuation_FlowExecutionTicketKey'];
+    }
+
+    // }}}
+    // {{{ setFlowExecutionTicketKey()
+
+    /**
+     * Sets the key which represents the flow execution ticket parameter.
+     *
+     * @param string $flowExecutionTicketKey
+     */
+    function setFlowExecutionTicketKey($flowExecutionTicketKey)
+    {
+        $GLOBALS['PIECE_UNITY_Service_Continuation_FlowExecutionTicketKey'] =
+            $flowExecutionTicketKey;
     }
 
     /**#@-*/
