@@ -599,6 +599,46 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         unset($_SERVER['SERVER_NAME']);
     }
 
+    /**
+     * @since Method available since Release 1.5.0
+     */
+    function testShouldCreateAUriObjectBasedOnTheActiveFlowExecution()
+    {
+        $_SERVER['SERVER_NAME'] = 'example.org';
+        $_SERVER['SERVER_PORT'] = '80';
+        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/entry/new.php';
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'useFlowMappings', true);
+        $config->setConfiguration('Dispatcher_Continuation',
+                                  'flowMappings',
+                                  array(array('url' => $_SERVER['SCRIPT_NAME'],
+                                              'flowName' => 'Entry_New',
+                                              'isExclusive' => false))
+                                  );
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $session = &$context->getSession();
+        @$session->start();
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+        $dispatcher->invoke();
+        $uri = &$context->getAttribute('uri');
+
+        $this->assertEquals(strtolower('Piece_Unity_URL'),
+                            strtolower(get_class($uri))
+                            );
+        $this->assertRegExp('!^http://example\.org/entry/new\.php\?_flowExecutionTicket=[0-9a-f]{40}&_event=baz$!',
+                            $uri->getURL()
+                            );
+
+        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+        unset($_SERVER['SERVER_PORT']);
+        unset($_SERVER['SERVER_NAME']);
+    }
+
     /**#@-*/
 
     /**#@+

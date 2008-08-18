@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,29 +29,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
- * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
- * @since      File available since Release 1.3.0
+ * @since      File available since Release 1.5.0
  */
 
-require_once 'Piece/Unity/Service/FlowAction.php';
-require_once 'Piece/Unity/Service/Continuation.php';
+require_once 'Piece/Unity/URL.php';
 
-// {{{ Entry_NewAction
+// {{{ Piece_Unity_Service_Continuation
 
 /**
- * A class for unit tests.
- *
  * @package    Piece_Unity
- * @copyright  2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
- * @since      Class available since Release 1.3.0
+ * @since      Class available since Release 1.5.0
  */
-class Entry_NewAction extends Piece_Unity_Service_FlowAction
+class Piece_Unity_Service_Continuation
 {
 
     // {{{ properties
@@ -72,12 +67,28 @@ class Entry_NewAction extends Piece_Unity_Service_FlowAction
      * @access public
      */
 
-    function doActivityOnDisplayNew()
-    {
-        $this->_context->setAttribute('foo', 'bar');
+    // }}}
+    // {{{ createURI()
 
-        $uri = &Piece_Unity_Service_Continuation::createURI('baz');
-        $this->_context->setAttributeByRef('uri', $uri);
+    /**
+     * Creates a Piece_Unity_URL object based on the active flow execution.
+     *
+     * @param string $eventName
+     * @return Piece_Unity_URL
+     */
+    function &createURI($eventName = null)
+    {
+        $context = &Piece_Unity_Context::singleton();
+        $continuation = &$context->getContinuation();
+        $uri = &new Piece_Unity_URL($context->getScriptName());
+        $uri->addQueryString('_flowExecutionTicket',
+                             $continuation->getActiveFlowExecutionTicket()
+                             );
+        if (!is_null($eventName)) {
+            $uri->addQueryString($context->getEventNameKey(), $eventName);
+        }
+
+        return $uri;
     }
 
     /**#@-*/
