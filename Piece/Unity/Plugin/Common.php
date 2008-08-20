@@ -84,7 +84,6 @@ class Piece_Unity_Plugin_Common
      * And also the plug-in name is set.
      *
      * @param string $prefix
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
      */
     function Piece_Unity_Plugin_Common($prefix = 'Piece_Unity_Plugin')
     {
@@ -125,9 +124,6 @@ class Piece_Unity_Plugin_Common
      *
      * @param string $extensionPoint
      * @return mixed
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
-     * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
-     * @throws PIECE_UNITY_ERROR_CANNOT_READ
      * @deprecated Method deprecated in Release 0.12.0
      */
     function &getExtension($extensionPoint)
@@ -143,7 +139,6 @@ class Piece_Unity_Plugin_Common
      *
      * @param string $configurationPoint
      * @return string
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
      * @deprecated Method deprecated in Release 0.12.0
      */
     function getConfiguration($configurationPoint)
@@ -206,8 +201,6 @@ class Piece_Unity_Plugin_Common
      * @param string $extensionPoint
      * @return mixed
      * @throws PIECE_UNITY_ERROR_NOT_FOUND
-     * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
-     * @throws PIECE_UNITY_ERROR_CANNOT_READ
      * @since Method available since Release 0.12.0
      */
     function &_getExtension($extensionPoint)

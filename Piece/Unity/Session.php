@@ -158,9 +158,7 @@ class Piece_Unity_Session
      * Starts a new session or restores a session if it already exists, and
      * binds the attribute holder to the $_SESSION superglobal array.
      *
-     * @throws PIECE_UNITY_ERROR_NOT_READABLE
      * @throws PIECE_UNITY_ERROR_NOT_FOUND
-     * @throws PIECE_UNITY_ERROR_CANNOT_READ
      */
     function start()
     {

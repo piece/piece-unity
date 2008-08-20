@@ -76,8 +76,6 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
 
     /**
      * Invokes the plugin specific code.
-     *
-     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      */
     function invoke()
     {

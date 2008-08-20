@@ -114,13 +114,6 @@ class Piece_Unity
 
     /**
      * Dispatches a request.
-     *
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
-     * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
-     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
-     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
-     * @throws PIECE_UNITY_ERROR_NOT_READABLE
-     * @throws PIECE_UNITY_ERROR_CANNOT_READ
      */
     function dispatch()
     {

@@ -100,7 +100,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      * Invokes the plugin specific code.
      *
      * @return string
-     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
     function invoke()
@@ -240,7 +239,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      * exists.
      *
      * @since Method available since Release 0.9.0
-     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      */
     function publish()
     {
@@ -393,7 +391,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      * property and the context.
      *
      * @since Method available since Release 0.9.0
-     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      */
     function _prepareContinuation()
     {

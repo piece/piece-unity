@@ -77,9 +77,6 @@ class Piece_Unity_Plugin_Interceptor_SessionStart extends Piece_Unity_Plugin_Com
      * Invokes the plugin specific code.
      *
      * @return boolean
-     * @throws PIECE_UNITY_ERROR_NOT_READABLE
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
-     * @throws PIECE_UNITY_ERROR_CANNOT_READ
      */
     function invoke()
     {

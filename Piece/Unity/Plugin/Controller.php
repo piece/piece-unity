@@ -77,13 +77,6 @@ class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
 
     /**
      * Invokes the plugin specific code.
-     *
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
-     * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
-     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
-     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
-     * @throws PIECE_UNITY_ERROR_CANNOT_READ
-     * @throws PIECE_UNITY_ERROR_NOT_READABLE
      */
     function invoke()
     {
