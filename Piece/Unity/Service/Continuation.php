@@ -35,7 +35,7 @@
  * @since      File available since Release 1.5.0
  */
 
-require_once 'Piece/Unity/URL.php';
+require_once 'Piece/Unity/URI.php';
 
 // {{{ GLOBALS
 
@@ -79,16 +79,16 @@ class Piece_Unity_Service_Continuation
     // {{{ createURI()
 
     /**
-     * Creates a Piece_Unity_URL object based on the active flow execution.
+     * Creates a Piece_Unity_URI object based on the active flow execution.
      *
      * @param string $eventName
-     * @return Piece_Unity_URL
+     * @return Piece_Unity_URI
      */
     function &createURI($eventName = null)
     {
         $context = &Piece_Unity_Context::singleton();
         $continuation = &$context->getContinuation();
-        $uri = &new Piece_Unity_URL($context->getScriptName());
+        $uri = &new Piece_Unity_URI($context->getScriptName());
         $uri->addQueryString($GLOBALS['PIECE_UNITY_Service_Continuation_FlowExecutionTicketKey'],
                              $continuation->getActiveFlowExecutionTicket()
                              );

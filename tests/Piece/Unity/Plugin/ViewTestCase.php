@@ -94,7 +94,7 @@ class Piece_Unity_Plugin_ViewTestCase extends PHPUnit_TestCase
         $viewElement = &$context->getViewElement();
         $elements = $viewElement->getElements();
 
-        $this->assertEquals(9, count($elements));
+        $this->assertEquals(10, count($elements));
         $this->assertTrue(array_key_exists('__request', $elements));
         $this->assertTrue(array_key_exists('__session', $elements));
         $this->assertTrue(array_key_exists('__eventNameKey', $elements));
@@ -103,6 +103,8 @@ class Piece_Unity_Plugin_ViewTestCase extends PHPUnit_TestCase
         $this->assertTrue(array_key_exists('__sessionName', $elements));
         $this->assertTrue(array_key_exists('__sessionID', $elements));
         $this->assertTrue(array_key_exists('__appRootPath', $elements));
+        $this->assertTrue(array_key_exists('__url', $elements));
+        $this->assertTrue(array_key_exists('__uri', $elements));
     }
 
     /**#@-*/

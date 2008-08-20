@@ -253,7 +253,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals('OK', $buffer);
     }
 
-    function testMappingURLsToFlows()
+    function testMappingURIsToFlows()
     {
         $_GET['_flow'] = 'Foo';
         $config = &new Piece_Unity_Config();
@@ -344,7 +344,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     /**
      * @since Method available since Release 1.1.0
      */
-    function testFallbackURLShouldBeReturnedWhenFlowExecutionHasExpiredAndGCIsEnabled()
+    function testFallbackURIShouldBeReturnedWhenFlowExecutionHasExpiredAndGCIsEnabled()
     {
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'flowName', 'FlowExecutionExpired');
@@ -354,7 +354,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $config->setConfiguration('Dispatcher_Continuation', 'enableGC', true);
         $config->setConfiguration('Dispatcher_Continuation', 'gcExpirationTime', 1);
         $config->setConfiguration('Dispatcher_Continuation', 'useGCFallback', true);
-        $config->setConfiguration('Dispatcher_Continuation', 'gcFallbackURL', 'http://www.example.org/');
+        $config->setConfiguration('Dispatcher_Continuation', 'gcFallbackURI', 'http://www.example.org/');
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $session = &$context->getSession();
@@ -410,7 +410,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     /**
      * @since Method available since Release 1.3.0
      */
-    function testURLToFlowMappingsShouldWorkIfUseFlowMappingsIsTrue()
+    function testURIToFlowMappingsShouldWorkIfUseFlowMappingsIsTrue()
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
@@ -424,7 +424,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $config->setConfiguration('Dispatcher_Continuation', 'useFullFlowNameAsViewPrefix', false);
         $config->setConfiguration('Dispatcher_Continuation',
                                   'flowMappings',
-                                  array(array('url' => '/entry/new.php',
+                                  array(array('uri' => '/entry/new.php',
                                               'flowName' => 'Entry_New',
                                               'isExclusive' => false))
                                   );
@@ -446,7 +446,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     /**
      * @since Method available since Release 1.3.1
      */
-    function testURLToFlowMappingsShouldWorkWithReverseProxy()
+    function testURIToFlowMappingsShouldWorkWithReverseProxy()
     {
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
         $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'example.org';
@@ -461,7 +461,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $config->setConfiguration('Dispatcher_Continuation', 'useFlowMappings', true);
         $config->setConfiguration('Dispatcher_Continuation',
                                   'flowMappings',
-                                  array(array('url' => '/entry/new.php',
+                                  array(array('uri' => '/entry/new.php',
                                               'flowName' => 'Entry_New',
                                               'isExclusive' => false))
                                   );
@@ -488,7 +488,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     /**
      * @since Method available since Release 1.3.1
      */
-    function testURLToFlowMappingsShouldWorkWithBackendServerDirectly()
+    function testURIToFlowMappingsShouldWorkWithBackendServerDirectly()
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
@@ -501,7 +501,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $config->setConfiguration('Dispatcher_Continuation', 'useFlowMappings', true);
         $config->setConfiguration('Dispatcher_Continuation',
                                   'flowMappings',
-                                  array(array('url' => '/entry/new.php',
+                                  array(array('uri' => '/entry/new.php',
                                               'flowName' => 'Entry_New',
                                               'isExclusive' => false))
                                   );
@@ -539,7 +539,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $config->setConfiguration('Dispatcher_Continuation', 'useFullFlowNameAsViewPrefix', true);
         $config->setConfiguration('Dispatcher_Continuation',
                                   'flowMappings',
-                                  array(array('url' => '/entry/new.php',
+                                  array(array('uri' => '/entry/new.php',
                                               'flowName' => 'Entry_New',
                                               'isExclusive' => false))
                                   );
@@ -574,7 +574,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $config->setConfiguration('Dispatcher_Continuation', 'useFlowMappings', true);
         $config->setConfiguration('Dispatcher_Continuation',
                                   'flowMappings',
-                                  array(array('url' => '/exceptions/pass-through.php',
+                                  array(array('uri' => '/exceptions/pass-through.php',
                                               'flowName' => 'Exceptions_PassThrough',
                                               'isExclusive' => false))
                                   );
@@ -615,7 +615,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $config->setConfiguration('Dispatcher_Continuation', 'useFlowMappings', true);
         $config->setConfiguration('Dispatcher_Continuation',
                                   'flowMappings',
-                                  array(array('url' => $_SERVER['SCRIPT_NAME'],
+                                  array(array('uri' => $_SERVER['SCRIPT_NAME'],
                                               'flowName' => 'Entry_New',
                                               'isExclusive' => false))
                                   );
@@ -627,11 +627,11 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $dispatcher->invoke();
         $uri = &$context->getAttribute('uri');
 
-        $this->assertEquals(strtolower('Piece_Unity_URL'),
+        $this->assertEquals(strtolower('Piece_Unity_URI'),
                             strtolower(get_class($uri))
                             );
         $this->assertRegExp('!^http://example\.org/entry/new\.php\?_flowExecutionTicket=[0-9a-f]{40}&_event=baz$!',
-                            $uri->getURL()
+                            $uri->getURI()
                             );
 
         $_SERVER['SCRIPT_NAME'] = $oldScriptName;

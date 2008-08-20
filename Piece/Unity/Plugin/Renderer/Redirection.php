@@ -36,7 +36,7 @@
  */
 
 require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/URL.php';
+require_once 'Piece/Unity/URI.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_Redirection
 
@@ -64,7 +64,7 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
      * @access private
      */
 
-    var $_url;
+    var $_uri;
 
     /**#@-*/
 
@@ -81,10 +81,10 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
     function invoke()
     {
         $this->_replaceSelfNotation();
-        $this->_url = $this->_buildURL();
+        $this->_uri = $this->_buildURI();
 
-        if (!headers_sent() && !is_null($this->_url)) {
-            header("Location: {$this->_url}");
+        if (!headers_sent() && !is_null($this->_uri)) {
+            header("Location: {$this->_uri}");
         }
     }
 
@@ -130,25 +130,25 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
     }
 
     // }}}
-    // {{{ _buildURL()
+    // {{{ _buildURI()
 
     /**
      * @since Method available since Release 1.5.0
      */
-    function _buildURL()
+    function _buildURI()
     {
         $isExternal = $this->_getConfiguration('isExternal');
         $viewString = $this->_context->getView();
-        $url = &new Piece_Unity_URL($viewString, $isExternal, true);
+        $uri = &new Piece_Unity_URI($viewString, $isExternal, true);
 
         $viewElement = &$this->_context->getViewElement();
         $viewElements = $viewElement->getElements();
-        $queryString = $url->getQueryString();
+        $queryString = $uri->getQueryString();
         foreach (array_keys($queryString) as $elementName) {
             if (array_key_exists($elementName, $viewElements)
                 && is_scalar($viewElements[$elementName])
                 ) {
-                $url->addQueryString($elementName,
+                $uri->addQueryString($elementName,
                                      $viewElements[$elementName]
                                      );
             }
@@ -156,14 +156,14 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
 
         if (!$isExternal) {
             if ($this->_getConfiguration('addSessionID')) {
-                $url->addQueryString($viewElements['__sessionName'],
+                $uri->addQueryString($viewElements['__sessionName'],
                                      $viewElements['__sessionID']
                                      );
             }
 
             if ($this->_getConfiguration('addFlowExecutionTicket')) {
                 if (array_key_exists('__flowExecutionTicketKey', $viewElements)) {
-                    $url->addQueryString($viewElements['__flowExecutionTicketKey'],
+                    $uri->addQueryString($viewElements['__flowExecutionTicketKey'],
                                          $viewElements['__flowExecutionTicket']
                                          );
                 }
@@ -173,15 +173,15 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
              * Replaces __eventNameKey with the event name key.
              */
             if (array_key_exists('__eventNameKey', $queryString)) {
-                $url->removeQueryString('__eventNameKey');
-                $url->addQueryString($this->_context->getEventNameKey(), $queryString['__eventNameKey']);
+                $uri->removeQueryString('__eventNameKey');
+                $uri->addQueryString($this->_context->getEventNameKey(), $queryString['__eventNameKey']);
             }
         }
 
         if (substr($viewString, 0, 7) == 'http://') {
-            return $url->getURL();
+            return $uri->getURI();
         } elseif (substr($viewString, 0, 8) == 'https://') {
-            return $url->getURL(true);
+            return $uri->getURI(true);
         }
     }
 

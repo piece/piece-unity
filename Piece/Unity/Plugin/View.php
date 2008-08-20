@@ -37,7 +37,7 @@
 
 require_once 'Piece/Unity/Plugin/Common.php';
 require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/URL.php';
+require_once 'Piece/Unity/URI.php';
 
 // {{{ Piece_Unity_Plugin_View
 
@@ -103,8 +103,9 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
         $viewElement->setElement('__sessionName', session_name());
         $viewElement->setElement('__sessionID', session_id());
         $viewElement->setElement('__appRootPath', $this->_context->getAppRootPath());
-        $url = &new Piece_Unity_URL();
-        $viewElement->setElement('__url', $url);
+        $uri = &new Piece_Unity_URI();
+        $viewElement->setElementByRef('__url', $uri); // deprecated
+        $viewElement->setElementByRef('__uri', $uri);
 
         /*
          * Overwrites the current view with another one which is specified by

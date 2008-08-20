@@ -544,7 +544,7 @@ class Piece_Unity_Context
     // {{{ setAppRootPath()
 
     /**
-     * Sets the URL path that form the top of the document tree of
+     * Sets the URI path that form the top of the document tree of
      * an application visible from the web.
      *
      * @param string $appRootPath
@@ -559,7 +559,7 @@ class Piece_Unity_Context
     // {{{ getAppRootPath()
 
     /**
-     * Gets the URL path that form the top of the document tree of
+     * Gets the URI path that form the top of the document tree of
      * an application visible from the web.
      *
      * @return string
@@ -574,7 +574,7 @@ class Piece_Unity_Context
     // {{{ removeProxyPath()
 
     /**
-     * Removes the proxy path from a given URL Path.
+     * Removes the proxy path from a given URI Path.
      *
      * @param string $path
      * @return string

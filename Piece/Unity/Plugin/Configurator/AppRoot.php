@@ -41,7 +41,7 @@ require_once 'Piece/Unity/Error.php';
 // {{{ Piece_Unity_Plugin_Configurator_AppRoot
 
 /**
- * A configurator for setting the directory and the URL path that form
+ * A configurator for setting the directory and the URI path that form
  * the top of the document tree of an application visible from the web.
  *
  * @package    Piece_Unity

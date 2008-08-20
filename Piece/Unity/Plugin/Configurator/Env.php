@@ -36,7 +36,7 @@
  */
 
 require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/URL.php';
+require_once 'Piece/Unity/URI.php';
 require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_Plugin_Configurator_Env
@@ -154,7 +154,7 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common
         }
 
         foreach ($nonSSLableServers as $nonSSLableServer) {
-            Piece_Unity_URL::addNonSSLableServer($nonSSLableServer);
+            Piece_Unity_URI::addNonSSLableServer($nonSSLableServer);
         }
     }
 

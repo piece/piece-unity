@@ -40,7 +40,7 @@ require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Plugin/Configurator/Env.php';
 require_once 'Piece/Unity/Context.php';
 require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/URL.php';
+require_once 'Piece/Unity/URI.php';
 require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_Plugin_Configurator_EnvTestCase
@@ -107,22 +107,22 @@ class Piece_Unity_Plugin_Configurator_EnvTestCase extends PHPUnit_TestCase
         $configurator->invoke();
 
         $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URL::createSSL('http://example.com/foo/bar/baz.php')
+                            Piece_Unity_URI::createSSL('http://example.com/foo/bar/baz.php')
                             );
         $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URL::createSSL('/foo/bar/baz.php')
+                            Piece_Unity_URI::createSSL('/foo/bar/baz.php')
                             );
 
         $_SERVER['SERVER_PORT'] = '443';
 
         $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URL::create('https://example.com/foo/bar/baz.php')
+                            Piece_Unity_URI::create('https://example.com/foo/bar/baz.php')
                             );
         $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URL::create('/foo/bar/baz.php')
+                            Piece_Unity_URI::create('/foo/bar/baz.php')
                             );
 
-        Piece_Unity_URL::clearNonSSLableServers();
+        Piece_Unity_URI::clearNonSSLableServers();
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
     }

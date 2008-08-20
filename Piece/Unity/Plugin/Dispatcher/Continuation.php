@@ -117,7 +117,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             $error = Piece_Flow_Error::pop();
             if ($error['code'] == PIECE_FLOW_ERROR_FLOW_EXECUTION_EXPIRED) {
                 if ($this->_getConfiguration('useGCFallback')) {
-                    return $this->_getConfiguration('gcFallbackURL');
+                    return $this->_getConfiguration('gcFallbackURI');
                 }
             }
 
@@ -287,8 +287,12 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             $continuationServer->setConfigDirectory($this->_getConfiguration('configDirectory'));
             $continuationServer->setConfigExtension($this->_getConfiguration('configExtension'));
             foreach ($this->_getConfiguration('flowMappings') as $flowMapping) {
+                if (array_key_exists('url', $flowMapping)) {
+                    $flowMapping['uri'] = $flowMapping['url'];
+                }
+
                 Piece_Flow_Error::disableCallback();
-                $continuationServer->addFlow($flowMapping['url'],
+                $continuationServer->addFlow($flowMapping['uri'],
                                              $flowMapping['flowName'],
                                              $flowMapping['isExclusive']
                                              );
@@ -351,12 +355,13 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->_addConfigurationPoint('enableGC', false);
         $this->_addConfigurationPoint('gcExpirationTime', 1440);
         $this->_addConfigurationPoint('useGCFallback', false);
-        $this->_addConfigurationPoint('gcFallbackURL');
+        $this->_addConfigurationPoint('gcFallbackURL'); // deprecated
         $this->_addConfigurationPoint('useFlowMappings', false);
         $this->_addConfigurationPoint('flowMappings', array());
         $this->_addConfigurationPoint('configDirectory');
         $this->_addConfigurationPoint('configExtension', '.flow');
         $this->_addConfigurationPoint('useFullFlowNameAsViewPrefix', true);
+        $this->_addConfigurationPoint('gcFallbackURI', $this->_getConfiguration('gcFallbackURL'));
 
         Piece_Unity_Service_Continuation::setFlowExecutionTicketKey($this->_getConfiguration('flowExecutionTicketKey'));
         $GLOBALS['PIECE_UNITY_Continuation_FlowIDKey'] =

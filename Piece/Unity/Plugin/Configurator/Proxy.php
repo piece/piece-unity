@@ -36,7 +36,7 @@
  */
 
 require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/URL.php';
+require_once 'Piece/Unity/URI.php';
 require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_Plugin_Configurator_Proxy
@@ -55,8 +55,8 @@ require_once 'Piece/Unity/Error.php';
  * <pre>
  * Configuration Point 'proxyPath' in Configurator_Proxy plug-in: /foo
  *
- * Requested URL (front-end): http://example.org/foo/bar/baz.php
- * Requested URL (back-end):  http://back-end.example.org/bar/baz.php
+ * Requested URI (front-end): http://example.org/foo/bar/baz.php
+ * Requested URI (back-end):  http://back-end.example.org/bar/baz.php
  * Base Path (original):     /bar
  * Base Path (adjusted):     /foo/bar
  * Script Name (original):   /bar/baz.php

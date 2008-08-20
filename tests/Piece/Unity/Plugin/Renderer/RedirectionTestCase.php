@@ -92,7 +92,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
         $redirection->invoke();
 
-        $this->assertEquals('http://example.org/foo.php', $redirection->_url);
+        $this->assertEquals('http://example.org/foo.php', $redirection->_uri);
 
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
@@ -111,7 +111,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $redirection->invoke();
 
         $this->assertEquals('http://foo.example.org:8201/bar.php',
-                            $redirection->_url
+                            $redirection->_uri
                             );
 
         unset($_SERVER['SERVER_NAME']);
@@ -133,7 +133,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $redirection->invoke();
 
         $this->assertEquals('http://foo.example.org:8201/bar.php',
-                            $redirection->_url
+                            $redirection->_uri
                             );
 
         unset($_SERVER['SERVER_NAME']);
@@ -154,7 +154,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $redirection->invoke();
 
         $this->assertEquals('http://foo.example.org:8201/bar.php',
-                            $redirection->_url
+                            $redirection->_uri
                             );
 
         unset($_SERVER['SERVER_NAME']);
@@ -176,7 +176,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $redirection->invoke();
 
         $this->assertEquals('http://foo.example.org:8201/bar.php',
-                            $redirection->_url
+                            $redirection->_uri
                             );
 
         unset($_SERVER['SERVER_NAME']);
@@ -199,7 +199,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $redirection->invoke();
 
         $this->assertEquals('http://example.org/foo.php?_event=bar',
-                            $redirection->_url
+                            $redirection->_uri
                             );
 
         unset($_SERVER['SERVER_NAME']);
@@ -220,7 +220,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
         $redirection->invoke();
 
-        $this->assertEquals('https://example.org/foo.php', $redirection->_url);
+        $this->assertEquals('https://example.org/foo.php', $redirection->_uri);
 
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['SERVER_PORT']);
