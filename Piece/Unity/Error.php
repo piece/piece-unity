@@ -249,6 +249,7 @@ class Piece_Unity_Error
      * @param string  $file
      * @param integer $line
      * @throws PIECE_UNITY_ERROR_PHP_ERROR
+     * @deprecated Method deprecated in Release 1.5.0
      */
     function pushPHPError($code, $message, $file, $line)
     {
