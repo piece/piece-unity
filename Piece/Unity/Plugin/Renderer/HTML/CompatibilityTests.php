@@ -86,7 +86,6 @@ class Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests extends PHPUnit_TestCa
 
     function setUp()
     {
-        PEAR_ErrorStack::setDefaultCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
         $this->_doSetUp();
     }
 
@@ -95,7 +94,6 @@ class Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests extends PHPUnit_TestCa
         Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests::removeDirectoryRecursively("{$this->_cacheDirectory}/compiled-templates");
         Piece_Unity_Plugin_Factory::clearInstances();
         Piece_Unity_Context::clear();
-        Piece_Unity_Error::clearErrors();
     }
 
     function testRendering()
