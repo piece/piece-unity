@@ -40,6 +40,7 @@ require_once 'Piece/Unity/ViewElement.php';
 require_once 'Piece/Unity/Session.php';
 require_once 'Piece/Unity/Validation.php';
 require_once 'Piece/Unity/HTTPStatus.php';
+require_once 'Piece/Unity/Plugin/Factory.php';
 
 // {{{ GLOBALS
 
@@ -231,6 +232,7 @@ class Piece_Unity_Context
      */
     function clear()
     {
+        Piece_Unity_Plugin_Factory::clearInstances();
         unset($GLOBALS['PIECE_UNITY_Context_Instance']);
         $GLOBALS['PIECE_UNITY_Context_Instance'] = null;
     }
