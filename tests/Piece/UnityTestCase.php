@@ -77,6 +77,8 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
 
     function tearDown()
     {
+        unset($_GET['_event']);
+        unset($_SERVER['REQUEST_METHOD']);
         unset($_SESSION);
         $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
                                             'masterFile' => '',
@@ -178,6 +180,7 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
     {
         $unity = &new Piece_Unity();
         $unity->setConfiguration($GLOBALS['PIECE_UNITY_Root_Plugin'], 'Bar', 'Baz');
+        $unity->configure();
         $context = &Piece_Unity_Context::singleton();
         $config = &$context->getConfiguration();
 
@@ -191,6 +194,7 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
     {
         $unity = &new Piece_Unity();
         $unity->setExtension($GLOBALS['PIECE_UNITY_Root_Plugin'], 'renderer', 'Foo');
+        $unity->configure();
         $context = &Piece_Unity_Context::singleton();
         $config = &$context->getConfiguration();
 
@@ -202,11 +206,14 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
      */
     function testShouldCreateAPieceUnityObjectByCreateruntime()
     {
-        $runtime = &Piece_Unity::createRuntime(array(&$this, 'configureRuntime'));
-        $context = &Piece_Unity_Context::singleton();
-        $config = &$context->getConfiguration();
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_GET['_event'] = 'foo';
 
-        $this->assertEquals('Foo', $config->getExtension($GLOBALS['PIECE_UNITY_Root_Plugin'], 'renderer'));
+        $runtime = &Piece_Unity::createRuntime(array(&$this, 'configureRuntime'));
+        @$runtime->dispatch();
+        $context = &Piece_Unity_Context::singleton();
+
+        $this->assertEquals('foo', $context->getView());
     }
 
     /**
@@ -214,7 +221,8 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
      */
     function configureRuntime(&$runtime)
     {
-        $runtime->setExtension($GLOBALS['PIECE_UNITY_Root_Plugin'], 'renderer', 'Foo');
+        $runtime->setExtension('controller', 'dispatcher', 'Dispatcher_Simple');
+        $runtime->configure(dirname(__FILE__) . '/../../data', dirname(__FILE__));
     }
 
     /**#@-*/

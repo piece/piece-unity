@@ -71,7 +71,8 @@ class Piece_Unity
      * @access private
      */
 
-    var $_context;
+    var $_config;
+    var $_configured = false;
 
     /**#@-*/
 
@@ -83,30 +84,27 @@ class Piece_Unity
     // {{{ constructor
 
     /**
-     * Configures the application.
-     *
-     * First this method tries to load a configuration from a configuration file in
-     * the given configration directory using Piece_Unity_Config_Factory::factory().
-     * This method creates a new object if the load failed.
-     * Second this method merges the given configuretion into the loaded
-     * configuration.
-     * Finally this method sets the configuration to the current context.
+     * Initializes an object. If one or more arguments are given, the constructor
+     * configures the runtime.
      *
      * @param string             $configDirectory
      * @param string             $cacheDirectory
-     * @param Piece_Unity_Config $dynamicConfig
+     * @param Piece_Unity_Config $config
      */
-    function Piece_Unity($configDirectory = null, $cacheDirectory = null, $dynamicConfig = null)
+    function Piece_Unity($configDirectory = null,
+                         $cacheDirectory = null,
+                         $config = null
+                         )
     {
-        $config = &Piece_Unity_Config_Factory::factory($configDirectory, $cacheDirectory);
-        if (is_a($dynamicConfig, 'Piece_Unity_Config')) {
-            $config->merge($dynamicConfig);
+        if (is_null($config)) {
+            $this->_config = &Piece_Unity_Config_Factory::factory();
+        } else {
+            $this->_config = $config;
         }
 
-        $context = &Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-
-        $this->_context = &$context;
+        if (func_num_args()) {
+            $this->configure($configDirectory, $cacheDirectory);
+        }
     }
 
     // }}}
@@ -114,9 +112,18 @@ class Piece_Unity
 
     /**
      * Dispatches a request.
+     *
+     * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      */
     function dispatch()
     {
+        if (!$this->_configured) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
+                                    __FUNCTION__ . ' method must be called after calling configure().'
+                                    );
+            return;
+        }
+
         $root = &Piece_Unity_Plugin_Factory::factory($GLOBALS['PIECE_UNITY_Root_Plugin']);
         if (Piece_Unity_Error::hasErrors()) {
             return;
@@ -138,8 +145,7 @@ class Piece_Unity
      */
     function setConfiguration($plugin, $configurationPoint, $configuration)
     {
-        $config = &$this->_context->getConfiguration();
-        $config->setConfiguration($plugin, $configurationPoint, $configuration);
+        $this->_config->setConfiguration($plugin, $configurationPoint, $configuration);
     }
 
     // }}}
@@ -155,8 +161,7 @@ class Piece_Unity
      */
     function setExtension($plugin, $extensionPoint, $extension)
     {
-        $config = &$this->_context->getConfiguration();
-        $config->setExtension($plugin, $extensionPoint, $extension);
+        $this->_config->setExtension($plugin, $extensionPoint, $extension);
     }
 
     // }}}
@@ -178,6 +183,37 @@ class Piece_Unity
         }
 
         return $runtime;
+    }
+
+    // }}}
+    // {{{ configure()
+
+    /**
+     * Configures the application.
+     *
+     * First this method tries to load a configuration from a configuration file in
+     * the given configration directory using Piece_Unity_Config_Factory::factory().
+     * This method creates a new object if the load failed.
+     * Second this method merges the given configuretion into the loaded
+     * configuration.
+     * Finally this method sets the configuration to the current context.
+     *
+     * @param string $configDirectory
+     * @param string $cacheDirectory
+     * @since Method available since Release 1.5.0
+     */
+    function configure($configDirectory = null, $cacheDirectory = null)
+    {
+        $config =
+            &Piece_Unity_Config_Factory::factory($configDirectory, $cacheDirectory);
+        if (is_a($this->_config, 'Piece_Unity_Config')) {
+            $config->merge($this->_config);
+        }
+
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+
+        $this->_configured = true;
     }
 
     /**#@-*/
