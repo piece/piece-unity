@@ -15,8 +15,8 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
   <email>iteman@users.sourceforge.net</email>
   <active>yes</active>
  </lead>
- <date>2008-06-13</date>
- <time>00:14:35</time>
+ <date>2008-08-21</date>
+ <time>20:33:45</time>
  <version>
   <release>1.5.0</release>
   <api>0.7.0</api>
@@ -154,6 +154,9 @@ What&apos;s New in Piece_Unity 1.5.0</notes>
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
       </dir> <!-- /Piece/Unity/Service/Rendering -->
+      <file name="Continuation.php" role="php">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
       <file name="FlowAction.php" role="php">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
@@ -178,10 +181,16 @@ What&apos;s New in Piece_Unity 1.5.0</notes>
      <file name="Error.php" role="php">
       <tasks:replace from="@package_version@" to="version" type="package-info" />
      </file>
+     <file name="HTTPStatus.php" role="php">
+      <tasks:replace from="@package_version@" to="version" type="package-info" />
+     </file>
      <file name="Request.php" role="php">
       <tasks:replace from="@package_version@" to="version" type="package-info" />
      </file>
      <file name="Session.php" role="php">
+      <tasks:replace from="@package_version@" to="version" type="package-info" />
+     </file>
+     <file name="URI.php" role="php">
       <tasks:replace from="@package_version@" to="version" type="package-info" />
      </file>
      <file name="URL.php" role="php">
@@ -322,6 +331,14 @@ What&apos;s New in Piece_Unity 1.5.0</notes>
            <tasks:replace from="@package_version@" to="version" type="package-info" />
           </file>
          </dir> <!-- /tests/Piece/Unity/Plugin/Dispatcher/ContinuationTestCase/Entry -->
+         <dir name="Exceptions">
+          <file name="PassThrough.flow" role="test">
+           <tasks:replace from="@package_version@" to="version" type="package-info" />
+          </file>
+          <file name="PassThroughAction.php" role="test">
+           <tasks:replace from="@package_version@" to="version" type="package-info" />
+          </file>
+         </dir> <!-- /tests/Piece/Unity/Plugin/Dispatcher/ContinuationTestCase/Exceptions -->
          <file name="AnyExceptionsExceptPieceFlow.yaml" role="test">
           <tasks:replace from="@package_version@" to="version" type="package-info" />
          </file>
@@ -558,10 +575,16 @@ What&apos;s New in Piece_Unity 1.5.0</notes>
       <file name="ContextTestCase.php" role="test">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
+      <file name="HTTPStatusTestCase.php" role="test">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
       <file name="RequestTestCase.php" role="test">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
       <file name="SessionTestCase.php" role="test">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file name="URITestCase.php" role="test">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
       <file name="URLTestCase.php" role="test">
@@ -595,7 +618,7 @@ What&apos;s New in Piece_Unity 1.5.0</notes>
    <package>
     <name>Piece_Flow</name>
     <channel>pear.piece-framework.com</channel>
-    <min>1.15.0</min>
+    <min>1.16.0</min>
    </package>
    <package>
     <name>Cache_Lite</name>
@@ -615,7 +638,7 @@ What&apos;s New in Piece_Unity 1.5.0</notes>
    <package>
     <name>Piece_Right</name>
     <channel>pear.piece-framework.com</channel>
-    <min>1.8.0</min>
+    <min>1.10.0</min>
    </package>
   </required>
  </dependencies>
@@ -630,7 +653,7 @@ What&apos;s New in Piece_Unity 1.5.0</notes>
     <release>stable</release>
     <api>stable</api>
    </stability>
-   <date>2008-06-13</date>
+   <date>2008-08-21</date>
    <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
    <notes>A new release of Piece_Unity is now available.
 
