@@ -77,7 +77,6 @@ class Piece_Unity_Plugin_ViewSchemeHandlerTestCase extends PHPUnit_TestCase
     function tearDown()
     {
         Piece_Unity_Context::clear();
-        Piece_Unity_Plugin_Factory::clearInstances();
     }
 
     function testShouldRemoveHtmlSchemeStringFromAViewString()

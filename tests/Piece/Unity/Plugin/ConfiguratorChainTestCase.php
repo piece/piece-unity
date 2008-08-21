@@ -93,7 +93,6 @@ class Piece_Unity_Plugin_ConfiguratorChainTestCase extends PHPUnit_TestCase
         $GLOBALS['PIECE_UNITY_Plugin_Prefixes'] = $this->_oldPluginPrefixes;
         unset($_SERVER['REQUEST_METHOD']);
         Piece_Unity_Context::clear();
-        Piece_Unity_Plugin_Factory::clearInstances();
         $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $this->_oldPluginDirectories;
         Piece_Unity_Error::clearErrors();
     }

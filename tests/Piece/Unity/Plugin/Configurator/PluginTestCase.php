@@ -86,7 +86,6 @@ class Piece_Unity_Plugin_Configurator_PluginTestCase extends PHPUnit_TestCase
 
     function tearDown()
     {
-        Piece_Unity_Plugin_Factory::clearInstances();
         Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
     }

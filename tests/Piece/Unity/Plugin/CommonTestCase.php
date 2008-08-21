@@ -88,7 +88,6 @@ class Piece_Unity_Plugin_CommonTestCase extends PHPUnit_TestCase
     {
         Piece_Unity_Context::clear();
         $GLOBALS['PIECE_UNITY_Plugin_Prefixes'] = $this->_oldPluginPrefixes;
-        Piece_Unity_Plugin_Factory::clearInstances();
         $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $this->_oldPluginDirectories;
         Piece_Unity_Error::clearErrors();
     }
