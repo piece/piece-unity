@@ -132,8 +132,6 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
                                   $dynamicConfig
                                   );
         $context = &Piece_Unity_Context::singleton();
-        $config = &$context->getConfiguration();
-
         $masterFile = realpath(dirname(__FILE__) . '/../../data/piece-unity-config.yaml');
         $cache = &new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/',
                                             'masterFile' => $masterFile,
@@ -161,12 +159,10 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_event'] = 'foo';
 
-        $config = &new Piece_Unity_Config();
-        $config->setExtension('controller', 'dispatcher', 'Dispatcher_Simple');
         $unity = &new Piece_Unity(dirname(__FILE__) . '/../../data',
-                                  dirname(__FILE__),
-                                  $config
+                                  dirname(__FILE__)
                                   );
+        $unity->setExtension('controller', 'dispatcher', 'Dispatcher_Simple');
         @$unity->dispatch();
         $context = &Piece_Unity_Context::singleton();
 
@@ -179,8 +175,8 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
     function testApplicationShouldBeAbleToConfigureWithSetConfiguration()
     {
         $unity = &new Piece_Unity();
-        $unity->setConfiguration($GLOBALS['PIECE_UNITY_Root_Plugin'], 'Bar', 'Baz');
         $unity->configure();
+        $unity->setConfiguration($GLOBALS['PIECE_UNITY_Root_Plugin'], 'Bar', 'Baz');
         $context = &Piece_Unity_Context::singleton();
         $config = &$context->getConfiguration();
 
@@ -193,8 +189,8 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
     function testApplicationShouldBeAbleToConfigureWithSetExtension()
     {
         $unity = &new Piece_Unity();
-        $unity->setExtension($GLOBALS['PIECE_UNITY_Root_Plugin'], 'renderer', 'Foo');
         $unity->configure();
+        $unity->setExtension($GLOBALS['PIECE_UNITY_Root_Plugin'], 'renderer', 'Foo');
         $context = &Piece_Unity_Context::singleton();
         $config = &$context->getConfiguration();
 
@@ -221,8 +217,74 @@ class Piece_UnityTestCase extends PHPUnit_TestCase
      */
     function configureRuntime(&$runtime)
     {
-        $runtime->setExtension('controller', 'dispatcher', 'Dispatcher_Simple');
         $runtime->configure(dirname(__FILE__) . '/../../data', dirname(__FILE__));
+        $runtime->setExtension('controller', 'dispatcher', 'Dispatcher_Simple');
+    }
+
+    /**
+     * @since Method available since Release 1.5.0
+     */
+    function testShouldRaiseAnExceptionIfDispatchMethodIsCalledBeforeConfiguring()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_GET['_event'] = 'foo';
+
+        $unity = &new Piece_Unity();
+        Piece_Unity_Error::disableCallback();
+        @$unity->dispatch();
+        Piece_Unity_Error::enableCallback();
+
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_INVALID_OPERATION, $error['code']);
+    }
+
+    /**
+     * @since Method available since Release 1.5.0
+     */
+    function testShouldRaiseAnExceptionIfSetconfigurationMethodIsCalledBeforeConfiguring()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_GET['_event'] = 'foo';
+
+        $unity = &new Piece_Unity();
+        Piece_Unity_Error::disableCallback();
+        $unity->setConfiguration($GLOBALS['PIECE_UNITY_Root_Plugin'],
+                                 'Bar',
+                                 'Baz'
+                                 );
+        Piece_Unity_Error::enableCallback();
+
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_INVALID_OPERATION, $error['code']);
+    }
+
+    /**
+     * @since Method available since Release 1.5.0
+     */
+    function testShouldRaiseAnExceptionIfSetextensionMethodIsCalledBeforeConfiguring()
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_GET['_event'] = 'foo';
+
+        $unity = &new Piece_Unity();
+        Piece_Unity_Error::disableCallback();
+        $unity->setExtension($GLOBALS['PIECE_UNITY_Root_Plugin'],
+                             'renderer',
+                             'Foo'
+                             );
+        Piece_Unity_Error::enableCallback();
+
+        $this->assertTrue(Piece_Unity_Error::hasErrors());
+
+        $error = Piece_Unity_Error::pop();
+
+        $this->assertEquals(PIECE_UNITY_ERROR_INVALID_OPERATION, $error['code']);
     }
 
     /**#@-*/
