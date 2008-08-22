@@ -72,7 +72,6 @@ class Piece_Unity
      */
 
     var $_config;
-    var $_configured = false;
 
     /**#@-*/
 
@@ -89,21 +88,15 @@ class Piece_Unity
      *
      * @param string             $configDirectory
      * @param string             $cacheDirectory
-     * @param Piece_Unity_Config $config
+     * @param Piece_Unity_Config $dynamicConfig
      */
     function Piece_Unity($configDirectory = null,
                          $cacheDirectory = null,
-                         $config = null
+                         $dynamicConfig = null
                          )
     {
-        if (is_null($config)) {
-            $this->_config = &Piece_Unity_Config_Factory::factory();
-        } else {
-            $this->_config = $config;
-        }
-
         if (func_num_args()) {
-            $this->configure($configDirectory, $cacheDirectory);
+            $this->configure($configDirectory, $cacheDirectory, $dynamicConfig);
         }
     }
 
@@ -117,7 +110,7 @@ class Piece_Unity
      */
     function dispatch()
     {
-        if (!$this->_configured) {
+        if (is_null($this->_config)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
                                     __FUNCTION__ . ' method must be called after calling configure().'
                                     );
@@ -141,10 +134,18 @@ class Piece_Unity
      * @param string $plugin
      * @param string $configurationPoint
      * @param string $configuration
+     * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      * @since Method available since Release 1.1.0
      */
     function setConfiguration($plugin, $configurationPoint, $configuration)
     {
+        if (is_null($this->_config)) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
+                                    __FUNCTION__ . ' method must be called after calling configure().'
+                                    );
+            return;
+        }
+
         $this->_config->setConfiguration($plugin, $configurationPoint, $configuration);
     }
 
@@ -157,10 +158,18 @@ class Piece_Unity
      * @param string $plugin
      * @param string $extensionPoint
      * @param string $extension
+     * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      * @since Method available since Release 1.1.0
      */
     function setExtension($plugin, $extensionPoint, $extension)
     {
+        if (is_null($this->_config)) {
+            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
+                                    __FUNCTION__ . ' method must be called after calling configure().'
+                                    );
+            return;
+        }
+
         $this->_config->setExtension($plugin, $extensionPoint, $extension);
     }
 
@@ -198,22 +207,24 @@ class Piece_Unity
      * configuration.
      * Finally this method sets the configuration to the current context.
      *
-     * @param string $configDirectory
-     * @param string $cacheDirectory
+     * @param string             $configDirectory
+     * @param string             $cacheDirectory
+     * @param Piece_Unity_Config $dynamicConfig
      * @since Method available since Release 1.5.0
      */
-    function configure($configDirectory = null, $cacheDirectory = null)
+    function configure($configDirectory = null,
+                       $cacheDirectory = null,
+                       $dynamicConfig = null
+                       )
     {
-        $config =
+        $this->_config =
             &Piece_Unity_Config_Factory::factory($configDirectory, $cacheDirectory);
-        if (is_a($this->_config, 'Piece_Unity_Config')) {
-            $config->merge($this->_config);
+        if (is_a($dynamicConfig, 'Piece_Unity_Config')) {
+            $this->_config->merge($dynamicConfig);
         }
 
         $context = &Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-
-        $this->_configured = true;
+        $context->setConfiguration($this->_config);
     }
 
     /**#@-*/
