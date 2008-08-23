@@ -66,8 +66,9 @@ Kernel:
 - Added Piece_Unity_HTTPStatus. (Ticket #113)
 - Added sendHTTPStatus() to send a HTTP status line like "HTTP/1.1 404 Not Found". (Piece_Unity_Context)
 - Changed the behavior of clear() so as to unset() a single instance before setting null. (Piece_Unity_Context)
-- Added Piece_Unity_Service_Continuation::createURI() to create a Piece_Unity_URL object based on the active flow execution. (Ticket #110)
+- Added Piece_Unity_Service_Continuation::createURI() to create a Piece_Unity_URI object based on the active flow execution or a given flow ID. (Ticket #110)
 - Changed code so as to use "URI" instead of URL. (Ticket #119)
+- Changed the behavior of initialize() so that $context->getAppRootPath() to be added to the beginning of a given URI if the URI is internal and not starting with http(s). (Piece_Unity_URI)
 
 Plug-ins:
 
