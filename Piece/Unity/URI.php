@@ -226,13 +226,17 @@ class Piece_Unity_URI
      */
     function initialize($path)
     {
+        $context = &Piece_Unity_Context::singleton();
+        if (!$this->_isExternal && !preg_match('/^https?/', $path)) {
+            $path = $context->getAppRootPath() . $path;
+        }
+
         $this->_url = &new Net_URL($path);
 
         if ($this->_isExternal) {
             return;
         }
 
-        $context = &Piece_Unity_Context::singleton();
         if (!$this->_isRedirection
             && $context->usingProxy()
             && array_key_exists('HTTP_X_FORWARDED_SERVER', $_SERVER)
