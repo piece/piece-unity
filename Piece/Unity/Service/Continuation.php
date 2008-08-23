@@ -79,22 +79,25 @@ class Piece_Unity_Service_Continuation
     // {{{ createURI()
 
     /**
-     * Creates a Piece_Unity_URI object based on the active flow execution.
+     * Creates a Piece_Unity_URI object based on the active flow execution or a given
+     * flow ID.
      *
      * @param string $eventName
+     * @param string $flowID
      * @return Piece_Unity_URI
      */
-    function &createURI($eventName = null)
+    function &createURI($eventName, $flowID = null)
     {
         $context = &Piece_Unity_Context::singleton();
         $continuation = &$context->getContinuation();
-        $uri = &new Piece_Unity_URI($context->getScriptName());
+        $uri = &new Piece_Unity_URI(is_null($flowID) ? $context->getScriptName()
+                                                     : $flowID
+                                    );
         $uri->addQueryString($GLOBALS['PIECE_UNITY_Service_Continuation_FlowExecutionTicketKey'],
-                             $continuation->getActiveFlowExecutionTicket()
+                             is_null($flowID) ? $continuation->getActiveFlowExecutionTicket()
+                                              : $continuation->getFlowExecutionTicketByFlowID($flowID)
                              );
-        if (!is_null($eventName)) {
-            $uri->addQueryString($context->getEventNameKey(), $eventName);
-        }
+        $uri->addQueryString($context->getEventNameKey(), $eventName);
 
         return $uri;
     }

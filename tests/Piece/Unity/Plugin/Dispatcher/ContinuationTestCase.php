@@ -43,6 +43,7 @@ require_once 'Cache/Lite/File.php';
 require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
 require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/Error.php';
+require_once 'Piece/Unity/Service/Continuation.php';
 
 // {{{ Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
 
@@ -633,6 +634,72 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertRegExp('!^http://example\.org/entry/new\.php\?_flowExecutionTicket=[0-9a-f]{40}&_event=baz$!',
                             $uri->getURI()
                             );
+
+        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+        unset($_SERVER['SERVER_PORT']);
+        unset($_SERVER['SERVER_NAME']);
+    }
+
+    /**
+     * @since Method available since Release 1.5.0
+     */
+    function testShouldCreateAUriObjectBasedOnAGivenPathAndFlowExecutionTicket()
+    {
+        $_SERVER['SERVER_NAME'] = 'example.org';
+        $_SERVER['SERVER_PORT'] = '80';
+        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/user/authentication.php';
+        $config = &new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_cacheDirectory);
+        $config->setConfiguration('Dispatcher_Continuation', 'useFlowMappings', true);
+        $config->setConfiguration('Dispatcher_Continuation',
+                                  'flowMappings',
+                                  array(array('uri' => '/entry/new.php',
+                                              'flowName' => 'Entry_New',
+                                              'isExclusive' => false),
+                                        array('uri' => '/user/authentication.php',
+                                              'flowName' => 'Entry_New',
+                                              'isExclusive' => true),
+                                        )
+                                  );
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $session = &$context->getSession();
+        @$session->start();
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+        $dispatcher->invoke();
+        Piece_Unity_Context::clear();
+        $_SERVER['SCRIPT_NAME'] = '/entry/new.php';
+        $_GET['_event'] = null;
+        $_GET['_flowExecutionTicket'] = null;
+        $context = &Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
+        $session = &$context->getSession();
+        @$session->start();
+        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
+        $dispatcher->invoke();
+        $uri1 = &$context->getAttribute('uri');
+        $uri2 = &Piece_Unity_Service_Continuation::createURI('qux', '/user/authentication.php');
+
+        $this->assertEquals(strtolower('Piece_Unity_URI'),
+                            strtolower(get_class($uri1))
+                            );
+        $this->assertRegExp('!^http://example\.org/entry/new\.php\?_flowExecutionTicket=[0-9a-f]{40}&_event=baz$!',
+                            $uri1->getURI()
+                            );
+        $this->assertEquals(strtolower('Piece_Unity_URI'),
+                            strtolower(get_class($uri2))
+                            );
+        $this->assertRegExp('!^http://example\.org/user/authentication\.php\?_flowExecutionTicket=[0-9a-f]{40}&_event=qux$!',
+                            $uri2->getURI()
+                            );
+
+        $queryString1 = $uri1->getQueryString();
+        $queryString2 = $uri2->getQueryString();
+
+        $this->assertTrue($queryString1['_flowExecutionTicket'] != $queryString2['_flowExecutionTicket']);
 
         $_SERVER['SCRIPT_NAME'] = $oldScriptName;
         unset($_SERVER['SERVER_PORT']);
