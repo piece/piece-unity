@@ -48,45 +48,35 @@ $notes = 'A new release of Piece_Unity is now available.
 
 What\'s New in Piece_Unity 1.5.0
 
+ * HTML component system: The Renderer_HTML plug-in allows you to deploy any ready-to-use HTML components as view elements using "components" extension point.
+ * View Scheme: "View Scheme" is a feature that the appropriate renderer is automatically determined by the scheme part in the current view string such like "http:", "json:", "html:", etc.
+ * Raw Rendering support: This allows you to print any contents directly in an action such like file downloading without a dummy HTML view. If you use this, set "raw:" to the view.
+ * Improved error handling: The behavior of internal error handling has been changed so as to handle only own and "exception" level errors.
+
 See the following release notes for details.
 
 Enhancements
 ============
 
-Kernel:
-
+- Added support for Raw Rendering which does nothing. (View plug-in)
 - Added Piece_Unity_Service_Rendering_PHP as a rendering service.
+- Added an extension point "components" to deploy HTML components before it is required. (Renderer_HTML plug-in)
+- Added a feature named "View Scheme" that the appropriate renderer is automatically determined by the view scheme in the current view string such like "http:", "json:", "html:", etc. (Ticket #105) (View plug-in, ViewSchemeHandler plug-in)
 - Added createRuntime() to create a Piece_Unity object and invokes a given callback for any configuration. (Ticket #99) (Piece_Unity)
 - Changed code so that a plug-in directory is always converted to absolute path. (Piece_Unity_Plugin_Factory)
-- Changed the behavior of the Piece_Unity_URL class to always return the backend URL if redirection is enabled. (Ticket #102) (Piece_Unity_URL)
-- Changed the behavior of addClass() that "id" does not set the same value as "service" even though "id" is null. (Piece_Unity_Session_Preload)
-- Changed the structure of the $_service property. (Piece_Unity_Session_Preload)
+- Changed the behavior of the Piece_Unity_URL class to always return the backend URI if redirection is enabled. (Ticket #102) (Piece_Unity_URL, Renderer_Redirection plug-in)
 - Changed the behavior of internal error handling so as to handle only own and "exception" level errors.
-- Added removeProxyPath() to remove the proxy path from a given URL Path. (Piece_Unity_Context)
+- Added removeProxyPath() to remove the proxy path from a given URI Path. (Piece_Unity_Context)
 - Added Piece_Unity_HTTPStatus. (Ticket #113)
 - Added sendHTTPStatus() to send a HTTP status line like "HTTP/1.1 404 Not Found". (Piece_Unity_Context)
-- Changed the behavior of clear() so as to unset() a single instance before setting null. (Piece_Unity_Context)
 - Added Piece_Unity_Service_Continuation::createURI() to create a Piece_Unity_URI object based on the active flow execution or a given flow ID. (Ticket #110)
-- Changed code so as to use "URI" instead of URL. (Ticket #119)
-- Changed the behavior of initialize() so that $context->getAppRootPath() to be added to the beginning of a given URI if the URI is internal and not starting with http(s). (Piece_Unity_URI)
-
-Plug-ins:
-
-- Added support for Raw Rendering which does nothing. (View)
-- Added an extension point "components" to deploy html components before it is required. (Renderer_HTML)
-- Added a feature named "View Scheme" that the appropriate renderer is automatically determined by the view scheme in the current view string such like "http:", "json:", "html:", etc. (Ticket #105) (View, ViewSchemeHandler)
-- Changed invoke() so that a view string is replaced only if the view scheme is the html:. (Dispatcher_Continuation)
-- Changed the behavior of the Piece_Unity_URL class to always return the backend URL if redirection is enabled. (Ticket #102) (Renderer_Redirection)
-- Changed the behavior of internal error handling so as to handle only own and "exception" level errors.
-- Changed code so as to use "URI" instead of URL. (Ticket #119)
+- Changed code so as to use "URI" instead of "URL". (Ticket #119)
 - Marked pushPHPError() as deprecated. (Piece_Unity_Error)
 - Added configure() to configure the runtime after object instantiation. (Piece_Unity)
-- Changed the behavior of dispatch()/setConfiguration()/setExtension() so that an exception to be raised if they are called before configuring the runtime. (Piece_Unity)
+- Changed the behavior of initialize() so that $context->getAppRootPath() to be added to the beginning of a given URI if the URI is internal and not starting with http(s). (Piece_Unity_URI)
 
 Defect Fixes
 ============
-
-Kernel:
 
 - Fixed a defect that a fatal error to be raised if session is not used. (Ticket #118) (Piece_Unity_Session)';
 
@@ -102,8 +92,8 @@ $package->setOptions(array('filelistgenerator' => 'file',
 
 $package->setPackage('Piece_Unity');
 $package->setPackageType('php');
-$package->setSummary('A stateful and secure web application framework for PHP');
-$package->setDescription('Piece_Unity is a stateful and secure web application framework for PHP.
+$package->setSummary('A web application framework');
+$package->setDescription('Piece_Unity is a web application framework.
 
 Piece_Unity allows stateful programming without thinking about sessions by storing and restoring states with a technology known as continuation server. It also provides high security and eases the burden of implementing security measures for applications by application flow control.');
 $package->setChannel('pear.piece-framework.com');
