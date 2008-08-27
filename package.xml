@@ -15,11 +15,11 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
   <email>iteman@users.sourceforge.net</email>
   <active>yes</active>
  </lead>
- <date>2008-08-27</date>
- <time>23:11:50</time>
+ <date>2008-08-28</date>
+ <time>01:52:07</time>
  <version>
   <release>1.5.0</release>
-  <api>0.7.0</api>
+  <api>1.5.0</api>
  </version>
  <stability>
   <release>stable</release>
@@ -34,6 +34,11 @@ What&apos;s New in Piece_Unity 1.5.0
  * View Scheme: &quot;View Scheme&quot; is a feature that the appropriate renderer is automatically determined by the scheme part in the current view string such like &quot;http:&quot;, &quot;json:&quot;, &quot;html:&quot;, etc.
  * Raw Rendering support: This allows you to print any contents directly in an action such like file downloading without a dummy HTML view. If you use this, set &quot;raw:&quot; to the view.
  * Improved error handling: The behavior of internal error handling has been changed so as to handle only own and &quot;exception&quot; level errors.
+
+Backward Compatibility
+
+ * Piece_Unity_Component_Smarty: Piece_Unity_Component_Smarty 1.1.0 or less does not work properly with Piece_Unity 1.5.0. Upgrade to the upcoming version 1.2.0.
+ * PEAR_ErrorStack: Piece_Unity 1.5.0 does not work properly with PEAR_ErrorStack::staticPushCallback(). Use PEAR_ErrorStack::setDefaultCallback() instead.
 
 See the following release notes for details.
 
@@ -679,13 +684,13 @@ Defect Fixes
   <release>
    <version>
     <release>1.5.0</release>
-    <api>0.7.0</api>
+    <api>1.5.0</api>
    </version>
    <stability>
     <release>stable</release>
     <api>stable</api>
    </stability>
-   <date>2008-08-27</date>
+   <date>2008-08-28</date>
    <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
    <notes>A new release of Piece_Unity is now available.
 
@@ -695,6 +700,11 @@ What&apos;s New in Piece_Unity 1.5.0
  * View Scheme: &quot;View Scheme&quot; is a feature that the appropriate renderer is automatically determined by the scheme part in the current view string such like &quot;http:&quot;, &quot;json:&quot;, &quot;html:&quot;, etc.
  * Raw Rendering support: This allows you to print any contents directly in an action such like file downloading without a dummy HTML view. If you use this, set &quot;raw:&quot; to the view.
  * Improved error handling: The behavior of internal error handling has been changed so as to handle only own and &quot;exception&quot; level errors.
+
+Backward Compatibility
+
+ * Piece_Unity_Component_Smarty: Piece_Unity_Component_Smarty 1.1.0 or less does not work properly with Piece_Unity 1.5.0. Upgrade to the upcoming version 1.2.0.
+ * PEAR_ErrorStack: Piece_Unity 1.5.0 does not work properly with PEAR_ErrorStack::staticPushCallback(). Use PEAR_ErrorStack::setDefaultCallback() instead.
 
 See the following release notes for details.
 

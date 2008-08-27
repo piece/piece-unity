@@ -42,7 +42,7 @@ PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'va
 
 $releaseVersion = '1.5.0';
 $releaseStability = 'stable';
-$apiVersion = '0.7.0';
+$apiVersion = '1.5.0';
 $apiStability = 'stable';
 $notes = 'A new release of Piece_Unity is now available.
 
@@ -52,6 +52,11 @@ What\'s New in Piece_Unity 1.5.0
  * View Scheme: "View Scheme" is a feature that the appropriate renderer is automatically determined by the scheme part in the current view string such like "http:", "json:", "html:", etc.
  * Raw Rendering support: This allows you to print any contents directly in an action such like file downloading without a dummy HTML view. If you use this, set "raw:" to the view.
  * Improved error handling: The behavior of internal error handling has been changed so as to handle only own and "exception" level errors.
+
+Backward Compatibility
+
+ * Piece_Unity_Component_Smarty: Piece_Unity_Component_Smarty 1.1.0 or less does not work properly with Piece_Unity 1.5.0. Upgrade to the upcoming version 1.2.0.
+ * PEAR_ErrorStack: Piece_Unity 1.5.0 does not work properly with PEAR_ErrorStack::staticPushCallback(). Use PEAR_ErrorStack::setDefaultCallback() instead.
 
 See the following release notes for details.
 
