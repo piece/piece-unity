@@ -38,6 +38,7 @@
 require_once realpath(dirname(__FILE__) . '/../../prepare.php');
 require_once 'PHPUnit.php';
 require_once 'Piece/Unity/Context.php';
+require_once 'Piece/Unity/HTTPStatus.php';
 
 // {{{ Piece_Unity_ContextTestCase
 
