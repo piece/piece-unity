@@ -44,6 +44,7 @@ require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
 require_once 'Piece/Unity/Config.php';
 require_once 'Piece/Unity/Error.php';
 require_once 'Piece/Unity/Service/Continuation.php';
+require_once 'Piece/Unity/HTTPStatus.php';
 
 // {{{ Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
 
@@ -347,6 +348,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
      */
     function testFallbackURIShouldBeReturnedWhenFlowExecutionHasExpiredAndGCIsEnabled()
     {
+        $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'flowName', 'FlowExecutionExpired');
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
@@ -380,6 +382,15 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         sleep(2);
 
         $this->assertEquals('http://www.example.org/', $dispatcher->invoke());
+        $this->assertEquals('HTTP/1.1 302 Found',
+                            $GLOBALS['PIECE_UNITY_HTTPStatus_SentStatusLine']
+                            );
+        $this->assertTrue($session->hasAttribute('_flowExecutionExpired'));
+        $this->assertTrue($session->getAttribute('_flowExecutionExpired'));
+
+        $session->removeAttribute('_flowExecutionExpired');
+        $GLOBALS['PIECE_UNITY_HTTPStatus_SentStatusLine'] = null;
+        unset($_SERVER['SERVER_PROTOCOL']);
     }
 
     /**

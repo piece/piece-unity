@@ -116,6 +116,9 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             $error = Piece_Flow_Error::pop();
             if ($error['code'] == PIECE_FLOW_ERROR_FLOW_EXECUTION_EXPIRED) {
                 if ($this->_getConfiguration('useGCFallback')) {
+                    $session = &$this->_context->getSession();
+                    $session->setAttribute('_flowExecutionExpired', true);
+                    $this->_context->sendHTTPStatus(302);
                     return $this->_getConfiguration('gcFallbackURI');
                 }
             }
