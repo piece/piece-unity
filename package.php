@@ -79,6 +79,8 @@ Enhancements
 - Marked pushPHPError() as deprecated. (Piece_Unity_Error)
 - Added configure() to configure the runtime after object instantiation. (Piece_Unity)
 - Changed the behavior of initialize() so that $context->getAppRootPath() to be added to the beginning of a given URI if the URI is internal and not starting with http(s). (Piece_Unity_URI)
+- Changed the behavior of GC fallback so as to set true to the session variable "_flowExecutionExpired". (Dispatcher_Continuation plug-in)
+- Changed the behavior of GC fallback so as to send HTTP status 302 Found. (Dispatcher_Continuation plug-in)
 
 Defect Fixes
 ============

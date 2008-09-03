@@ -15,8 +15,8 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
   <email>iteman@users.sourceforge.net</email>
   <active>yes</active>
  </lead>
- <date>2008-08-28</date>
- <time>01:52:07</time>
+ <date>2008-09-03</date>
+ <time>22:31:35</time>
  <version>
   <release>1.5.0</release>
   <api>1.5.0</api>
@@ -61,6 +61,8 @@ Enhancements
 - Marked pushPHPError() as deprecated. (Piece_Unity_Error)
 - Added configure() to configure the runtime after object instantiation. (Piece_Unity)
 - Changed the behavior of initialize() so that $context-&gt;getAppRootPath() to be added to the beginning of a given URI if the URI is internal and not starting with http(s). (Piece_Unity_URI)
+- Changed the behavior of GC fallback so as to set true to the session variable &quot;_flowExecutionExpired&quot;. (Dispatcher_Continuation plug-in)
+- Changed the behavior of GC fallback so as to send HTTP status 302 Found. (Dispatcher_Continuation plug-in)
 
 Defect Fixes
 ============
@@ -690,7 +692,7 @@ Defect Fixes
     <release>stable</release>
     <api>stable</api>
    </stability>
-   <date>2008-08-28</date>
+   <date>2008-09-03</date>
    <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
    <notes>A new release of Piece_Unity is now available.
 
@@ -727,6 +729,8 @@ Enhancements
 - Marked pushPHPError() as deprecated. (Piece_Unity_Error)
 - Added configure() to configure the runtime after object instantiation. (Piece_Unity)
 - Changed the behavior of initialize() so that $context-&gt;getAppRootPath() to be added to the beginning of a given URI if the URI is internal and not starting with http(s). (Piece_Unity_URI)
+- Changed the behavior of GC fallback so as to set true to the session variable &quot;_flowExecutionExpired&quot;. (Dispatcher_Continuation plug-in)
+- Changed the behavior of GC fallback so as to send HTTP status 302 Found. (Dispatcher_Continuation plug-in)
 
 Defect Fixes
 ============
