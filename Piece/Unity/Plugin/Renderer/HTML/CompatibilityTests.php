@@ -251,27 +251,37 @@ if (\$code == E_USER_WARNING) {
     /**
      * @since Method available since Release 1.3.0
      */
-    function removeDirectoryRecursively($directory)
+    function removeDirectoryRecursively($directory, $rootDirectory = null)
     {
+        if (is_null($rootDirectory)) {
+            $rootDirectory = $directory;
+        }
+
         if (!is_dir($directory)) {
             return;
         }
 
         foreach (scandir($directory) as $file) {
-            if ($file == '.' || $file == '..' || $file == 'README') {
+            if ($file == '.'
+                || $file == '..'
+                || $file == 'README'
+                || $file == '.svn'
+                ) {
                 continue;
             }
 
             $file = "$directory/$file";
 
             if (is_dir($file)) {
-                Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests::removeDirectoryRecursively($file);
+                Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests::removeDirectoryRecursively($file, $rootDirectory);
             } elseif (is_file($file)) {
                 @unlink($file);
             }
         }
 
-        @rmdir($directory);
+        if ($directory != $rootDirectory) {
+            @rmdir($directory);
+        }
     }
 
     /**#@-*/
