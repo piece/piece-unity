@@ -33,6 +33,7 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.9.0
+ * @deprecated File deprecated in Release 1.5.0
  */
 
 require_once 'Net/URL.php';
@@ -55,6 +56,7 @@ $GLOBALS['PIECE_UNITY_URL_NonSSLableServers'] = array();
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.9.0
+ * @deprecated Class deprecated in Release 1.5.0
  */
 class Piece_Unity_URL
 {
