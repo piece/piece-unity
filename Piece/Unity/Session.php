@@ -69,7 +69,6 @@ class Piece_Unity_Session
      * @access private
      */
 
-    var $_attributes = array();
     var $_preload;
 
     /**#@-*/
@@ -89,7 +88,7 @@ class Piece_Unity_Session
      */
     function setAttribute($name, $value)
     {
-        $this->_attributes[$name] = $value;
+        $_SESSION[$name] = $value;
     }
 
     // }}}
@@ -103,7 +102,7 @@ class Piece_Unity_Session
      */
     function setAttributeByRef($name, &$value)
     {
-        $this->_attributes[$name] = &$value;
+        $_SESSION[$name] = &$value;
     }
 
     // }}}
@@ -118,7 +117,7 @@ class Piece_Unity_Session
      */
     function hasAttribute($name)
     {
-        return array_key_exists($name, $this->_attributes);
+        return array_key_exists($name, $_SESSION);
     }
 
     // }}}
@@ -132,7 +131,7 @@ class Piece_Unity_Session
      */
     function &getAttribute($name)
     {
-        return $this->_attributes[$name];
+        return $_SESSION[$name];
     }
 
     // }}}
@@ -181,7 +180,6 @@ class Piece_Unity_Session
         }
 
         session_start();
-        $this->_attributes = &$_SESSION;
 
         if ($this->hasAttribute('_Piece_Unity_Session_Preload')) {
             $this->_preload = &$this->getAttribute('_Piece_Unity_Session_Preload');
@@ -201,7 +199,7 @@ class Piece_Unity_Session
      */
     function removeAttribute($name)
     {
-        unset($this->_attributes[$name]);
+        unset($_SESSION[$name]);
     }
 
     // }}}
@@ -212,7 +210,7 @@ class Piece_Unity_Session
      */
     function clearAttributes()
     {
-        $this->_attributes = array();
+        $_SESSION = array();
     }
 
     // }}}
@@ -250,6 +248,22 @@ class Piece_Unity_Session
         }
 
         $this->_preload->setCallback($service, $callback);
+    }
+
+    // }}}
+    // {{{ restart()
+
+    /**
+     * Destroys the existing session and starts a new session.
+     *
+     * @link http://www.php.net/session_destroy
+     * @since Method available since Release 1.6.0
+     */
+    function restart()
+    {
+        session_regenerate_id();
+        session_destroy();
+        $this->start();
     }
 
     /**#@-*/
