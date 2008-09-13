@@ -33,6 +33,7 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.5.0
+ * @deprecated File deprecated in Release 1.6.0
  */
 
 require_once 'Piece/Unity/Plugin/Common.php';
@@ -48,6 +49,7 @@ require_once 'Piece/Unity/Error.php';
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.5.0
+ * @deprecated Class deprecated in Release 1.6.0
  */
 class Piece_Unity_Plugin_Interceptor_SessionStart extends Piece_Unity_Plugin_Common
 {
