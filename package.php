@@ -40,52 +40,15 @@ require_once 'PEAR.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$releaseVersion = '1.5.0';
+$releaseVersion = '1.6.0';
 $releaseStability = 'stable';
 $apiVersion = '1.5.0';
 $apiStability = 'stable';
 $notes = 'A new release of Piece_Unity is now available.
 
-What\'s New in Piece_Unity 1.5.0
+What\'s New in Piece_Unity 1.6.0
 
- * HTML component system: The Renderer_HTML plug-in allows you to deploy any ready-to-use HTML components as view elements using "components" extension point.
- * View Scheme: "View Scheme" is a feature that the appropriate renderer is automatically determined by the scheme part in the current view string such like "http:", "json:", "html:", etc.
- * Raw Rendering support: This allows you to print any contents directly in an action such like file downloading without a dummy HTML view. If you use this, set "raw:" to the view.
- * Improved error handling: The behavior of internal error handling has been changed so as to handle only own and "exception" level errors.
-
-Backward Compatibility
-
- * Piece_Unity_Component_Smarty: Piece_Unity_Component_Smarty 1.1.0 or less does not work properly with Piece_Unity 1.5.0. Upgrade to the upcoming version 1.2.0.
- * PEAR_ErrorStack: Piece_Unity 1.5.0 does not work properly with PEAR_ErrorStack::staticPushCallback(). Use PEAR_ErrorStack::setDefaultCallback() instead.
-
-See the following release notes for details.
-
-Enhancements
-============
-
-- Added support for Raw Rendering which does nothing. (View plug-in)
-- Added Piece_Unity_Service_Rendering_PHP as a rendering service.
-- Added an extension point "components" to deploy HTML components before it is required. (Renderer_HTML plug-in)
-- Added a feature named "View Scheme" that the appropriate renderer is automatically determined by the view scheme in the current view string such like "http:", "json:", "html:", etc. (Ticket #105) (View plug-in, ViewSchemeHandler plug-in)
-- Added createRuntime() to create a Piece_Unity object and invokes a given callback for any configuration. (Ticket #99) (Piece_Unity)
-- Changed code so that a plug-in directory is always converted to absolute path. (Piece_Unity_Plugin_Factory)
-- Changed the behavior of the Piece_Unity_URL class to always return the backend URI if redirection is enabled. (Ticket #102) (Piece_Unity_URL, Renderer_Redirection plug-in)
-- Changed the behavior of internal error handling so as to handle only own and "exception" level errors.
-- Added removeProxyPath() to remove the proxy path from a given URI Path. (Piece_Unity_Context)
-- Added Piece_Unity_HTTPStatus. (Ticket #113)
-- Added sendHTTPStatus() to send a HTTP status line like "HTTP/1.1 404 Not Found". (Piece_Unity_Context)
-- Added Piece_Unity_Service_Continuation::createURI() to create a Piece_Unity_URI object based on the active flow execution or a given flow ID. (Ticket #110)
-- Changed code so as to use "URI" instead of "URL". (Ticket #119)
-- Marked pushPHPError() as deprecated. (Piece_Unity_Error)
-- Added configure() to configure the runtime after object instantiation. (Piece_Unity)
-- Changed the behavior of initialize() so that $context->getAppRootPath() to be added to the beginning of a given URI if the URI is internal and not starting with http(s). (Piece_Unity_URI)
-- Changed the behavior of GC fallback so as to set true to the session variable "_flowExecutionExpired". (Dispatcher_Continuation plug-in)
-- Changed the behavior of GC fallback so as to send HTTP status 302 Found. (Dispatcher_Continuation plug-in)
-
-Defect Fixes
-============
-
-- Fixed a defect that a fatal error to be raised if session is not used. (Ticket #118) (Piece_Unity_Session)';
+ * Session expiration: Piece_Unity 1.6.0 supports session expiration by new plug-in "Interceptor_Session". the Interceptor_Session plug-in is the successor to the Interceptor_SessionStart plug-in, and the Interceptor_SessionStart plug-in is marked as deprecated. And also the default value of the "interceptors" extension point in the InterceptorChain plug-in has been changed to the Interceptor_Session plug-in.';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'file',
@@ -110,7 +73,7 @@ $package->setAPIStability($apiStability);
 $package->setReleaseVersion($releaseVersion);
 $package->setReleaseStability($releaseStability);
 $package->setNotes($notes);
-$package->setPhpDep('4.3.0');
+$package->setPhpDep('4.3.3');
 $package->setPearinstallerDep('1.4.3');
 $package->addPackageDepWithChannel('required', 'Piece_Flow', 'pear.piece-framework.com', '1.16.0');
 $package->addPackageDepWithChannel('required', 'Cache_Lite', 'pear.php.net', '1.7.0');

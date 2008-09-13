@@ -15,10 +15,10 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
   <email>iteman@users.sourceforge.net</email>
   <active>yes</active>
  </lead>
- <date>2008-09-03</date>
- <time>22:31:35</time>
+ <date>2008-09-13</date>
+ <time>14:08:33</time>
  <version>
-  <release>1.5.0</release>
+  <release>1.6.0</release>
   <api>1.5.0</api>
  </version>
  <stability>
@@ -28,46 +28,9 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
  <notes>A new release of Piece_Unity is now available.
 
-What&apos;s New in Piece_Unity 1.5.0
+What&apos;s New in Piece_Unity 1.6.0
 
- * HTML component system: The Renderer_HTML plug-in allows you to deploy any ready-to-use HTML components as view elements using &quot;components&quot; extension point.
- * View Scheme: &quot;View Scheme&quot; is a feature that the appropriate renderer is automatically determined by the scheme part in the current view string such like &quot;http:&quot;, &quot;json:&quot;, &quot;html:&quot;, etc.
- * Raw Rendering support: This allows you to print any contents directly in an action such like file downloading without a dummy HTML view. If you use this, set &quot;raw:&quot; to the view.
- * Improved error handling: The behavior of internal error handling has been changed so as to handle only own and &quot;exception&quot; level errors.
-
-Backward Compatibility
-
- * Piece_Unity_Component_Smarty: Piece_Unity_Component_Smarty 1.1.0 or less does not work properly with Piece_Unity 1.5.0. Upgrade to the upcoming version 1.2.0.
- * PEAR_ErrorStack: Piece_Unity 1.5.0 does not work properly with PEAR_ErrorStack::staticPushCallback(). Use PEAR_ErrorStack::setDefaultCallback() instead.
-
-See the following release notes for details.
-
-Enhancements
-============
-
-- Added support for Raw Rendering which does nothing. (View plug-in)
-- Added Piece_Unity_Service_Rendering_PHP as a rendering service.
-- Added an extension point &quot;components&quot; to deploy HTML components before it is required. (Renderer_HTML plug-in)
-- Added a feature named &quot;View Scheme&quot; that the appropriate renderer is automatically determined by the view scheme in the current view string such like &quot;http:&quot;, &quot;json:&quot;, &quot;html:&quot;, etc. (Ticket #105) (View plug-in, ViewSchemeHandler plug-in)
-- Added createRuntime() to create a Piece_Unity object and invokes a given callback for any configuration. (Ticket #99) (Piece_Unity)
-- Changed code so that a plug-in directory is always converted to absolute path. (Piece_Unity_Plugin_Factory)
-- Changed the behavior of the Piece_Unity_URL class to always return the backend URI if redirection is enabled. (Ticket #102) (Piece_Unity_URL, Renderer_Redirection plug-in)
-- Changed the behavior of internal error handling so as to handle only own and &quot;exception&quot; level errors.
-- Added removeProxyPath() to remove the proxy path from a given URI Path. (Piece_Unity_Context)
-- Added Piece_Unity_HTTPStatus. (Ticket #113)
-- Added sendHTTPStatus() to send a HTTP status line like &quot;HTTP/1.1 404 Not Found&quot;. (Piece_Unity_Context)
-- Added Piece_Unity_Service_Continuation::createURI() to create a Piece_Unity_URI object based on the active flow execution or a given flow ID. (Ticket #110)
-- Changed code so as to use &quot;URI&quot; instead of &quot;URL&quot;. (Ticket #119)
-- Marked pushPHPError() as deprecated. (Piece_Unity_Error)
-- Added configure() to configure the runtime after object instantiation. (Piece_Unity)
-- Changed the behavior of initialize() so that $context-&gt;getAppRootPath() to be added to the beginning of a given URI if the URI is internal and not starting with http(s). (Piece_Unity_URI)
-- Changed the behavior of GC fallback so as to set true to the session variable &quot;_flowExecutionExpired&quot;. (Dispatcher_Continuation plug-in)
-- Changed the behavior of GC fallback so as to send HTTP status 302 Found. (Dispatcher_Continuation plug-in)
-
-Defect Fixes
-============
-
-- Fixed a defect that a fatal error to be raised if session is not used. (Ticket #118) (Piece_Unity_Session)</notes>
+ * Session expiration: Piece_Unity 1.6.0 supports session expiration by new plug-in &quot;Interceptor_Session&quot;. the Interceptor_Session plug-in is the successor to the Interceptor_SessionStart plug-in, and the Interceptor_SessionStart plug-in is marked as deprecated. And also the default value of the &quot;interceptors&quot; extension point in the InterceptorChain plug-in has been changed to the Interceptor_Session plug-in.</notes>
  <contents>
   <dir baseinstalldir="/" name="/">
    <dir name="data">
@@ -136,6 +99,9 @@ Defect Fixes
        </file>
       </dir> <!-- /Piece/Unity/Plugin/Dispatcher -->
       <dir name="Interceptor">
+       <file name="Session.php" role="php">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+       </file>
        <file name="SessionStart.php" role="php">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
        </file>
@@ -469,6 +435,9 @@ Defect Fixes
         <file name="Second.php" role="test">
          <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
+        <file name="SessionTestCase.php" role="test">
+         <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
        </dir> <!-- /tests/Piece/Unity/Plugin/Interceptor -->
        <dir name="OutputFilter">
         <file name="First.php" role="test">
@@ -649,7 +618,7 @@ Defect Fixes
  <dependencies>
   <required>
    <php>
-    <min>4.3.0</min>
+    <min>4.3.3</min>
    </php>
    <pearinstaller>
     <min>1.4.3</min>
@@ -683,6 +652,23 @@ Defect Fixes
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>1.6.0</release>
+    <api>1.5.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2008-09-13</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+   <notes>A new release of Piece_Unity is now available.
+
+What&apos;s New in Piece_Unity 1.6.0
+
+ * Session expiration: Piece_Unity 1.6.0 supports session expiration by new plug-in &quot;Interceptor_Session&quot;. the Interceptor_Session plug-in is the successor to the Interceptor_SessionStart plug-in, and the Interceptor_SessionStart plug-in is marked as deprecated. And also the default value of the &quot;interceptors&quot; extension point in the InterceptorChain plug-in has been changed to the Interceptor_Session plug-in.</notes>
+  </release>
   <release>
    <version>
     <release>1.5.0</release>
