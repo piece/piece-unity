@@ -128,7 +128,7 @@ class Piece_Unity_Plugin_InterceptorChain extends Piece_Unity_Plugin_Common
      */
     function _initialize()
     {
-        $this->_addExtensionPoint('interceptors', array('Interceptor_SessionStart'));
+        $this->_addExtensionPoint('interceptors', array('Interceptor_Session'));
     }
  
     /**#@-*/
