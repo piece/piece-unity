@@ -86,12 +86,14 @@ class Piece_Unity_Plugin_Interceptor_Session extends Piece_Unity_Plugin_Common
             return;
         }
 
-        if ($this->_getConfiguration('enableExpiration')
-            && $session->hasAttribute('_sessionUpdatedAt')
+        if (!$this->_getConfiguration('enableExpiration')) {
+            return true;
+        }
+
+        if ($session->hasAttribute('_sessionUpdatedAt')
+            && !$this->_handleExpiration()
             ) {
-            if (!$this->_handleExpiration()) {
-                return false;
-            }
+            return false;
         }
 
         $session->setAttribute('_sessionUpdatedAt', time());
