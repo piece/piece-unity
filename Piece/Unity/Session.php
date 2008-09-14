@@ -261,9 +261,9 @@ class Piece_Unity_Session
      */
     function restart()
     {
-        session_regenerate_id();
         session_destroy();
         $this->start();
+        session_regenerate_id();
     }
 
     /**#@-*/
