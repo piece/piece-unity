@@ -15,10 +15,10 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
   <email>iteman@users.sourceforge.net</email>
   <active>yes</active>
  </lead>
- <date>2008-09-13</date>
- <time>14:32:25</time>
+ <date>2008-09-14</date>
+ <time>13:54:13</time>
  <version>
-  <release>1.6.0</release>
+  <release>1.6.1</release>
   <api>1.5.0</api>
  </version>
  <stability>
@@ -28,9 +28,9 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
  <notes>A new release of Piece_Unity is now available.
 
-What&apos;s New in Piece_Unity 1.6.0
+What&apos;s New in Piece_Unity 1.6.1
 
- * Session expiration: Piece_Unity 1.6.0 supports session expiration by new plug-in &quot;Interceptor_Session&quot;. the Interceptor_Session plug-in is the successor to the Interceptor_SessionStart plug-in, and the Interceptor_SessionStart plug-in is marked as deprecated. And also the default value of the &quot;interceptors&quot; extension point in the InterceptorChain plug-in has been changed to the Interceptor_Session plug-in.</notes>
+ * Session expiration: Piece_Unity 1.6.1 supports session expiration by new plug-in &quot;Interceptor_Session&quot;. the Interceptor_Session plug-in is the successor to the Interceptor_SessionStart plug-in, and the Interceptor_SessionStart plug-in is marked as deprecated. And also the default value of the &quot;interceptors&quot; extension point in the InterceptorChain plug-in has been changed to the Interceptor_Session plug-in.</notes>
  <contents>
   <dir baseinstalldir="/" name="/">
    <dir name="data">
@@ -654,20 +654,20 @@ What&apos;s New in Piece_Unity 1.6.0
  <changelog>
   <release>
    <version>
-    <release>1.6.0</release>
+    <release>1.6.1</release>
     <api>1.5.0</api>
    </version>
    <stability>
     <release>stable</release>
     <api>stable</api>
    </stability>
-   <date>2008-09-13</date>
+   <date>2008-09-14</date>
    <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
    <notes>A new release of Piece_Unity is now available.
 
-What&apos;s New in Piece_Unity 1.6.0
+What&apos;s New in Piece_Unity 1.6.1
 
- * Session expiration: Piece_Unity 1.6.0 supports session expiration by new plug-in &quot;Interceptor_Session&quot;. the Interceptor_Session plug-in is the successor to the Interceptor_SessionStart plug-in, and the Interceptor_SessionStart plug-in is marked as deprecated. And also the default value of the &quot;interceptors&quot; extension point in the InterceptorChain plug-in has been changed to the Interceptor_Session plug-in.</notes>
+ * Session expiration: Piece_Unity 1.6.1 supports session expiration by new plug-in &quot;Interceptor_Session&quot;. the Interceptor_Session plug-in is the successor to the Interceptor_SessionStart plug-in, and the Interceptor_SessionStart plug-in is marked as deprecated. And also the default value of the &quot;interceptors&quot; extension point in the InterceptorChain plug-in has been changed to the Interceptor_Session plug-in.</notes>
   </release>
   <release>
    <version>

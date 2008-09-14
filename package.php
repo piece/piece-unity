@@ -40,15 +40,15 @@ require_once 'PEAR.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$releaseVersion = '1.6.0';
+$releaseVersion = '1.6.1';
 $releaseStability = 'stable';
 $apiVersion = '1.5.0';
 $apiStability = 'stable';
 $notes = 'A new release of Piece_Unity is now available.
 
-What\'s New in Piece_Unity 1.6.0
+What\'s New in Piece_Unity 1.6.1
 
- * Session expiration: Piece_Unity 1.6.0 supports session expiration by new plug-in "Interceptor_Session". the Interceptor_Session plug-in is the successor to the Interceptor_SessionStart plug-in, and the Interceptor_SessionStart plug-in is marked as deprecated. And also the default value of the "interceptors" extension point in the InterceptorChain plug-in has been changed to the Interceptor_Session plug-in.';
+ * Session expiration: Piece_Unity 1.6.1 supports session expiration by new plug-in "Interceptor_Session". the Interceptor_Session plug-in is the successor to the Interceptor_SessionStart plug-in, and the Interceptor_SessionStart plug-in is marked as deprecated. And also the default value of the "interceptors" extension point in the InterceptorChain plug-in has been changed to the Interceptor_Session plug-in.';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'file',
