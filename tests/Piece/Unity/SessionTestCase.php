@@ -96,6 +96,7 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
 
     function testSettingAttribute()
     {
+        @$this->_session->start();
         $this->_session->setAttribute('foo', 'bar');
 
         $this->assertTrue($this->_session->hasAttribute('foo'));
@@ -136,6 +137,7 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
 
     function testRemovingAttribute()
     {
+        @$this->_session->start();
         $this->_session->setAttribute('foo', 'bar');
 
         $this->assertTrue($this->_session->hasAttribute('foo'));
@@ -147,16 +149,21 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
 
     function testClearingAttributes()
     {
+        @$this->_session->start();
         $this->_session->setAttribute('foo', 'bar');
         $this->_session->setAttribute('bar', 'baz');
 
         $this->assertTrue($this->_session->hasAttribute('foo'));
         $this->assertTrue($this->_session->hasAttribute('bar'));
+        $this->assertTrue(array_key_exists('foo', $_SESSION));
+        $this->assertTrue(array_key_exists('bar', $_SESSION));
 
         $this->_session->clearAttributes();
 
         $this->assertFalse($this->_session->hasAttribute('foo'));
         $this->assertFalse($this->_session->hasAttribute('bar'));
+        $this->assertFalse(array_key_exists('foo', $_SESSION));
+        $this->assertFalse(array_key_exists('bar', $_SESSION));
     }
 
     /**
