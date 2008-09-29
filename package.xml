@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package packagerversion="1.7.1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+<package packagerversion="1.7.2" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
     http://pear.php.net/dtd/tasks-1.0.xsd
     http://pear.php.net/dtd/package-2.0
     http://pear.php.net/dtd/package-2.0.xsd">
@@ -15,10 +15,10 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
   <email>iteman@users.sourceforge.net</email>
   <active>yes</active>
  </lead>
- <date>2008-09-14</date>
- <time>13:54:13</time>
+ <date>2008-09-29</date>
+ <time>20:30:29</time>
  <version>
-  <release>1.6.1</release>
+  <release>1.6.2</release>
   <api>1.5.0</api>
  </version>
  <stability>
@@ -28,9 +28,9 @@ Piece_Unity allows stateful programming without thinking about sessions by stori
  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
  <notes>A new release of Piece_Unity is now available.
 
-What&apos;s New in Piece_Unity 1.6.1
+What&apos;s New in Piece_Unity 1.6.2
 
- * Session expiration: Piece_Unity 1.6.1 supports session expiration by new plug-in &quot;Interceptor_Session&quot;. the Interceptor_Session plug-in is the successor to the Interceptor_SessionStart plug-in, and the Interceptor_SessionStart plug-in is marked as deprecated. And also the default value of the &quot;interceptors&quot; extension point in the InterceptorChain plug-in has been changed to the Interceptor_Session plug-in.</notes>
+ * A defect fix: A defect has been fixed so as to not be able to access the session attributes by the $_attributes property.</notes>
  <contents>
   <dir baseinstalldir="/" name="/">
    <dir name="data">
@@ -652,6 +652,23 @@ What&apos;s New in Piece_Unity 1.6.1
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>1.6.2</release>
+    <api>1.5.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2008-09-29</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License (revised)</license>
+   <notes>A new release of Piece_Unity is now available.
+
+What&apos;s New in Piece_Unity 1.6.2
+
+ * A defect fix: A defect has been fixed so as to not be able to access the session attributes by the $_attributes property.</notes>
+  </release>
   <release>
    <version>
     <release>1.6.1</release>
