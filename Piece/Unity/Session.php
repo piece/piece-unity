@@ -70,6 +70,7 @@ class Piece_Unity_Session
      */
 
     var $_preload;
+    var $_attributes;
 
     /**#@-*/
 
@@ -88,7 +89,7 @@ class Piece_Unity_Session
      */
     function setAttribute($name, $value)
     {
-        $_SESSION[$name] = $value;
+        $this->_attributes[$name] = $value;
     }
 
     // }}}
@@ -102,7 +103,7 @@ class Piece_Unity_Session
      */
     function setAttributeByRef($name, &$value)
     {
-        $_SESSION[$name] = &$value;
+        $this->_attributes[$name] = &$value;
     }
 
     // }}}
@@ -117,7 +118,7 @@ class Piece_Unity_Session
      */
     function hasAttribute($name)
     {
-        return array_key_exists($name, $_SESSION);
+        return array_key_exists($name, $this->_attributes);
     }
 
     // }}}
@@ -131,7 +132,7 @@ class Piece_Unity_Session
      */
     function &getAttribute($name)
     {
-        return $_SESSION[$name];
+        return $this->_attributes[$name];
     }
 
     // }}}
@@ -181,6 +182,8 @@ class Piece_Unity_Session
 
         session_start();
 
+        $this->_attributes = &$_SESSION;
+
         if ($this->hasAttribute('_Piece_Unity_Session_Preload')) {
             $this->_preload = &$this->getAttribute('_Piece_Unity_Session_Preload');
         } else {
@@ -199,7 +202,7 @@ class Piece_Unity_Session
      */
     function removeAttribute($name)
     {
-        unset($_SESSION[$name]);
+        unset($this->_attributes[$name]);
     }
 
     // }}}
@@ -210,7 +213,7 @@ class Piece_Unity_Session
      */
     function clearAttributes()
     {
-        $_SESSION = array();
+        $this->_attributes = array();
     }
 
     // }}}

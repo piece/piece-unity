@@ -195,6 +195,18 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
         unset($GLOBALS['loadCount']);
     }
 
+    /**
+     * @since Method available since Release 1.6.2
+     */
+    function testShouldPublishTheAttributesByAProperty()
+    {
+        @$this->_session->start();
+        $this->_session->setAttribute('foo', 'bar');
+
+        $this->assertTrue(array_key_exists('foo', $this->_session->_attributes));
+        $this->assertEquals($this->_session->_attributes['foo'], 'bar');
+    }
+
     /**#@-*/
 
     /**#@+
