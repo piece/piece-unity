@@ -43,6 +43,7 @@ require_once 'Piece/Unity/Plugin/Factory.php';
 // {{{ GLOBALS
 
 $GLOBALS['PIECE_UNITY_Root_Plugin'] = 'Root';
+$GLOBALS['PIECE_UNITY_ConfigurationCallback'] = null;
 
 // }}}
 // {{{ Piece_Unity
@@ -177,8 +178,8 @@ class Piece_Unity
     // {{{ createRuntime()
 
     /**
-     * Creates a Piece_Unity object and invokes a given callback for any
-     * configuration.
+     * Creates the Piece_Unity object for the current request, and invokes the given
+     * callback for any configuration.
      *
      * @param callback $callback
      * @return Piece_Unity
@@ -187,8 +188,14 @@ class Piece_Unity
     function &createRuntime($callback = null)
     {
         $runtime = &new Piece_Unity();
-        if (is_callable($callback)) {
+        if (!is_null($callback)) {
             call_user_func_array($callback, array(&$runtime));
+        } else {
+            if (!is_null($GLOBALS['PIECE_UNITY_ConfigurationCallback'])) {
+                call_user_func_array($GLOBALS['PIECE_UNITY_ConfigurationCallback'],
+                                     array(&$runtime)
+                                     );
+            }
         }
 
         return $runtime;
@@ -225,6 +232,21 @@ class Piece_Unity
 
         $context = &Piece_Unity_Context::singleton();
         $context->setConfiguration($this->_config);
+    }
+
+    // }}}
+    // {{{ setConfigurationCallback()
+
+    /**
+     * Sets the given callback as the callback for Piece_Unity::createRuntime().
+     *
+     * @param callback $callback
+     * @throws PIECE_UNITY_ERROR_UNEXPECTED_VALUE
+     * @since Method available since Release 1.7.0
+     */
+    function setConfigurationCallback($callback)
+    {
+        $GLOBALS['PIECE_UNITY_ConfigurationCallback'] = $callback;
     }
 
     /**#@-*/
