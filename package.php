@@ -62,8 +62,8 @@ $package->setOptions(array('filelistgenerator' => 'file',
 
 $package->setPackage('Piece_Unity');
 $package->setPackageType('php');
-$package->setSummary('A web application framework');
-$package->setDescription('Piece_Unity is a web application framework.
+$package->setSummary('A Web application framework');
+$package->setDescription('Piece_Unity is a Web application framework.
 
 Piece_Unity allows stateful programming without thinking about sessions by storing and restoring states with a technology known as continuation server. It also provides high security and eases the burden of implementing security measures for applications by application flow control.');
 $package->setChannel('pear.piece-framework.com');
