@@ -227,7 +227,10 @@ class Piece_Unity_URI
     function initialize($path)
     {
         $context = &Piece_Unity_Context::singleton();
-        if (!$this->_isExternal && !preg_match('/^https?/', $path)) {
+        if (!$this->_isExternal
+            && !preg_match('/^https?/', $path)
+            && !$context->usingProxy()
+            ) {
             $path = $context->getAppRootPath() . $path;
         }
 
