@@ -35,7 +35,7 @@
  * @since      File available since Release 0.12.0
  */
 
-// {{{ Piece_Unity_Plugin_Configurator_AppRootTestCase
+// {{{ Piece_Unity_Plugin_Configurator_AppRootTest
 
 /**
  * Some tests for Piece_Unity_Plugin_Configurator_AppRoot.
@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.12.0
  */
-class Piece_Unity_Plugin_Configurator_AppRootTestCase extends PHPUnit_Framework_TestCase
+class Piece_Unity_Plugin_Configurator_AppRootTest extends PHPUnit_Framework_TestCase
 {
 
     // {{{ properties
