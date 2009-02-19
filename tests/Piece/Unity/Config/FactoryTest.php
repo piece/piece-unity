@@ -35,11 +35,6 @@
  * @since      File available since Release 0.1.0
  */
 
-// {{{ GLOBALS
-
-$GLOBALS['PIECE_UNITY_Config_FactoryTestCase_hasWarnings'] = false;
-
-// }}}
 // {{{ Piece_Unity_Config_FactoryTestCase
 
 /**
@@ -51,7 +46,7 @@ $GLOBALS['PIECE_UNITY_Config_FactoryTestCase_hasWarnings'] = false;
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Config_FactoryTestCase extends PHPUnit_Framework_TestCase
+class Piece_Unity_Config_FactoryTest extends PHPUnit_Framework_TestCase
 {
 
     // {{{ properties
@@ -75,6 +70,7 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_Framework_TestCase
      */
 
     private $_cacheDirectory;
+    private $_hasWarnings = false;
 
     /**#@-*/
 
@@ -100,7 +96,7 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_Framework_TestCase
 
     public function testFactoryWithoutConfigurationFile()
     {
-        $this->assertEquals(strtolower('Piece_Unity_Config'), strtolower(get_class(Piece_Unity_Config_Factory::factory())));
+        $this->assertType('Piece_Unity_Config', Piece_Unity_Config_Factory::factory());
     }
 
     public function testConfigurationDirectoryNotFound()
@@ -133,25 +129,26 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_Framework_TestCase
 
     public function testNoCachingIfCacheDirectoryNotFound()
     {
-        set_error_handler(create_function('$code, $message, $file, $line', "
-if (\$code == E_USER_WARNING) {
-    \$GLOBALS['PIECE_UNITY_Config_FactoryTestCase_hasWarnings'] = true;
-}
-"));
+        set_error_handler(array($this, 'handleWarning'));
         $config = Piece_Unity_Config_Factory::factory($this->_cacheDirectory, dirname(__FILE__) . '/foo');
         restore_error_handler();
 
-        $this->assertTrue($GLOBALS['PIECE_UNITY_Config_FactoryTestCase_hasWarnings']);
-        $this->assertEquals(strtolower('Piece_Unity_Config'), strtolower(get_class($config)));
+        $this->assertTrue($this->_hasWarnings);
+        $this->assertType('Piece_Unity_Config', $config);
+    }
 
-        $GLOBALS['PIECE_UNITY_Config_FactoryTestCase_hasWarnings'] = false;
+    public function handleWarning($code, $message, $file, $line)
+    {
+       if ($code == E_USER_WARNING) {
+           $this->_hasWarnings = true;
+       }
     }
 
     public function testFactoryWithConfigurationFile()
     {
         $config = Piece_Unity_Config_Factory::factory($this->_cacheDirectory, $this->_cacheDirectory);
 
-        $this->assertEquals(strtolower('Piece_Unity_Config'), strtolower(get_class($config)));
+        $this->assertType('Piece_Unity_Config', $config);
         $this->assertEquals('View', $config->getExtension('Controller', 'view'));
         $this->assertEquals('Dispatcher_Simple', $config->getExtension('Controller', 'dispatcher'));
         $this->assertEquals('../webapp/actions', $config->getConfiguration('Dispatcher_Continuation', 'actionDirectory'));
