@@ -35,7 +35,7 @@
  * @since      File available since Release 0.1.0
  */
 
-// {{{ Piece_Unity_ConfigTestCase
+// {{{ Piece_Unity_ConfigTest
 
 /**
  * Some tests for Piece_Unity_Config.
@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_ConfigTestCase extends PHPUnit_Framework_TestCase
+class Piece_Unity_ConfigTest extends PHPUnit_Framework_TestCase
 {
 
     // {{{ properties
