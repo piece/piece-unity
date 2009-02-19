@@ -2,9 +2,9 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
- * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2009 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,24 +29,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2009 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.1.0
  */
 
-require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Cache/Lite/File.php';
-require_once 'PEAR.php';
-
-if (version_compare(phpversion(), '5.0.0', '<')) {
-    require_once 'spyc.php';
-} else {
-    require_once 'spyc.php5';
-}
-
-require_once 'Piece/Unity/Env.php';
+require_once dirname(__FILE__) . '/../../../../data/pear.piece-framework.com/Piece_Unity/spyc/spyc.php5';
 
 // {{{ Piece_Unity_Config_Factory
 
@@ -54,7 +43,7 @@ require_once 'Piece/Unity/Env.php';
  * A factory class for creating Piece_Unity_Config objects.
  *
  * @package    Piece_Unity
- * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2009 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
@@ -66,6 +55,12 @@ class Piece_Unity_Config_Factory
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -90,21 +85,18 @@ class Piece_Unity_Config_Factory
      * @param string $configDirectory
      * @param string $cacheDirectory
      * @return Piece_Unity_Config
-     * @static
      */
-    function &factory($configDirectory = null, $cacheDirectory = null)
+    public static function factory($configDirectory = null, $cacheDirectory = null)
     {
         if (is_null($configDirectory)) {
-            $config = &new Piece_Unity_Config();
-            return $config;
+            return new Piece_Unity_Config();
         }
 
         if (!file_exists($configDirectory)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                     "The configuration directory [ $configDirectory ] is not found."
                                     );
-            $return = null;
-            return $return;
+            return;
         }
 
         $configFile = "$configDirectory/piece-unity-config.yaml";
@@ -112,16 +104,14 @@ class Piece_Unity_Config_Factory
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                     "The configuration file [ $configFile ] is not found."
                                     );
-            $return = null;
-            return $return;
+            return;
         }
 
         if (!is_readable($configFile)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_READABLE,
                                     "The configuration file [ $configFile ] is not readable."
                                     );
-            $return = null;
-            return $return;
+            return;
         }
 
         if (is_null($cacheDirectory)) {
@@ -148,8 +138,13 @@ class Piece_Unity_Config_Factory
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
-     * @static
      */
 
     // }}}
@@ -162,14 +157,14 @@ class Piece_Unity_Config_Factory
      * @param string $cacheDirectory
      * @return Piece_Unity_Config
      */
-    function &_getConfiguration($masterFile, $cacheDirectory)
+    private function _getConfiguration($masterFile, $cacheDirectory)
     {
         $masterFile = realpath($masterFile);
-        $cache = &new Cache_Lite_File(array('cacheDir' => "$cacheDirectory/",
-                                            'masterFile' => $masterFile,
-                                            'automaticSerialization' => true,
-                                            'errorHandlingAPIBreak' => true)
-                                      );
+        $cache = new Cache_Lite_File(array('cacheDir' => "$cacheDirectory/",
+                                           'masterFile' => $masterFile,
+                                           'automaticSerialization' => true,
+                                           'errorHandlingAPIBreak' => true)
+                                     );
 
         if (!Piece_Unity_Env::isProduction()) {
             $cache->remove($masterFile);
@@ -188,7 +183,7 @@ class Piece_Unity_Config_Factory
         }
 
         if (!$config) {
-            $config = &Piece_Unity_Config_Factory::_getConfigurationFromFile($masterFile);
+            $config = Piece_Unity_Config_Factory::_getConfigurationFromFile($masterFile);
             $result = $cache->save($config);
             if (PEAR::isError($result)) {
                 trigger_error("Cannot write the Piece_Unity_Config object to the cache file in the directory [ $cacheDirectory ].",
@@ -209,9 +204,9 @@ class Piece_Unity_Config_Factory
      * @param string $file
      * @return Piece_Unity_Config
      */
-    function &_getConfigurationFromFile($file)
+    private function _getConfigurationFromFile($file)
     {
-        $config = &new Piece_Unity_Config();
+        $config = new Piece_Unity_Config();
         $yaml = Spyc::YAMLLoad($file);
         foreach ($yaml as $plugin) {
             foreach ($plugin['point'] as $point) {

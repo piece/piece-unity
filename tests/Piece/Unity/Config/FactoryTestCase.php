@@ -2,9 +2,9 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
- * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2009 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,17 +29,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2009 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.1.0
  */
-
-require_once realpath(dirname(__FILE__) . '/../../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Config/Factory.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Cache/Lite/File.php';
 
 // {{{ GLOBALS
 
@@ -52,12 +46,12 @@ $GLOBALS['PIECE_UNITY_Config_FactoryTestCase_hasWarnings'] = false;
  * Some tests for Piece_Unity_Config_Factory.
  *
  * @package    Piece_Unity
- * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2009 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
+class Piece_Unity_Config_FactoryTestCase extends PHPUnit_Framework_TestCase
 {
 
     // {{{ properties
@@ -69,10 +63,18 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    protected $backupGlobals = false;
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
-    var $_cacheDirectory;
+    private $_cacheDirectory;
 
     /**#@-*/
 
@@ -80,14 +82,14 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function setUp()
+    public function setUp()
     {
         $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 
-    function tearDown()
+    public function tearDown()
     {
-        $cache = &new Cache_Lite_File(array('cacheDir' => "{$this->_cacheDirectory}/",
+        $cache = new Cache_Lite_File(array('cacheDir' => "{$this->_cacheDirectory}/",
                                             'masterFile' => '',
                                             'automaticSerialization' => true,
                                             'errorHandlingAPIBreak' => true)
@@ -96,15 +98,15 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
         Piece_Unity_Error::clearErrors();
     }
 
-    function testFactoryWithoutConfigurationFile()
+    public function testFactoryWithoutConfigurationFile()
     {
         $this->assertEquals(strtolower('Piece_Unity_Config'), strtolower(get_class(Piece_Unity_Config_Factory::factory())));
     }
 
-    function testConfigurationDirectoryNotFound()
+    public function testConfigurationDirectoryNotFound()
     {
         Piece_Unity_Error::disableCallback();
-        $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__) . '/foo', $this->_cacheDirectory);
+        $config = Piece_Unity_Config_Factory::factory(dirname(__FILE__) . '/foo', $this->_cacheDirectory);
         Piece_Unity_Error::enableCallback();
 
         $this->assertNull($config);
@@ -115,10 +117,10 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
         $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
     }
 
-    function testConfigurationFileNotFound()
+    public function testConfigurationFileNotFound()
     {
         Piece_Unity_Error::disableCallback();
-        $config = &Piece_Unity_Config_Factory::factory(dirname(__FILE__), $this->_cacheDirectory);
+        $config = Piece_Unity_Config_Factory::factory(dirname(__FILE__), $this->_cacheDirectory);
         Piece_Unity_Error::enableCallback();
 
         $this->assertNull($config);
@@ -129,14 +131,14 @@ class Piece_Unity_Config_FactoryTestCase extends PHPUnit_TestCase
         $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
     }
 
-    function testNoCachingIfCacheDirectoryNotFound()
+    public function testNoCachingIfCacheDirectoryNotFound()
     {
         set_error_handler(create_function('$code, $message, $file, $line', "
 if (\$code == E_USER_WARNING) {
     \$GLOBALS['PIECE_UNITY_Config_FactoryTestCase_hasWarnings'] = true;
 }
 "));
-        $config = &Piece_Unity_Config_Factory::factory($this->_cacheDirectory, dirname(__FILE__) . '/foo');
+        $config = Piece_Unity_Config_Factory::factory($this->_cacheDirectory, dirname(__FILE__) . '/foo');
         restore_error_handler();
 
         $this->assertTrue($GLOBALS['PIECE_UNITY_Config_FactoryTestCase_hasWarnings']);
@@ -145,9 +147,9 @@ if (\$code == E_USER_WARNING) {
         $GLOBALS['PIECE_UNITY_Config_FactoryTestCase_hasWarnings'] = false;
     }
 
-    function testFactoryWithConfigurationFile()
+    public function testFactoryWithConfigurationFile()
     {
-        $config = &Piece_Unity_Config_Factory::factory($this->_cacheDirectory, $this->_cacheDirectory);
+        $config = Piece_Unity_Config_Factory::factory($this->_cacheDirectory, $this->_cacheDirectory);
 
         $this->assertEquals(strtolower('Piece_Unity_Config'), strtolower(get_class($config)));
         $this->assertEquals('View', $config->getExtension('Controller', 'view'));
@@ -169,7 +171,7 @@ if (\$code == E_USER_WARNING) {
     /**
      * @since Method available since Release 1.2.0
      */
-    function testCacheIDsShouldUniqueInOneCacheDirectory()
+    public function testCacheIdsShouldUniqueInOneCacheDirectory()
     {
         $oldDirectory = getcwd();
         chdir("{$this->_cacheDirectory}/CacheIDsShouldBeUniqueInOneCacheDirectory1");
@@ -188,13 +190,19 @@ if (\$code == E_USER_WARNING) {
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
     /**
      * @since Method available since Release 1.2.0
      */
-    function _getCacheFileCount($directory)
+    private function _getCacheFileCount($directory)
     {
         $cacheFileCount = 0;
         if ($dh = opendir($directory)) {
