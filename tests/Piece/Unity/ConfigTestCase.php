@@ -2,9 +2,9 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
- * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2009 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,16 +29,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2009 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    SVN: $Id$
  * @since      File available since Release 0.1.0
  */
-
-require_once realpath(dirname(__FILE__) . '/../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_ConfigTestCase
 
@@ -46,12 +41,12 @@ require_once 'Piece/Unity/Error.php';
  * Some tests for Piece_Unity_Config.
  *
  * @package    Piece_Unity
- * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2009 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_ConfigTestCase extends PHPUnit_TestCase
+class Piece_Unity_ConfigTestCase extends PHPUnit_Framework_TestCase
 {
 
     // {{{ properties
@@ -63,10 +58,16 @@ class Piece_Unity_ConfigTestCase extends PHPUnit_TestCase
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
-    var $_config;
+    private $_config;
 
     /**#@-*/
 
@@ -74,51 +75,57 @@ class Piece_Unity_ConfigTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function setUp()
+    public function setUp()
     {
-        $this->_config = &new Piece_Unity_Config();
+        $this->_config = new Piece_Unity_Config();
     }
 
-    function tearDown()
+    public function tearDown()
     {
         $this->_config = null;
         Piece_Unity_Error::clearErrors();
     }
 
-    function testSettingExtension()
+    public function testSettingExtension()
     {
         $this->_config->setExtension('Foo', 'bar', 'Bar');
 
         $this->assertEquals('Bar', $this->_config->getExtension('Foo', 'bar'));
     }
 
-    function testSettingConfiguration()
+    public function testSettingConfiguration()
     {
         $this->_config->setConfiguration('Foo', 'bar', 'Bar');
 
         $this->assertEquals('Bar', $this->_config->getConfiguration('Foo', 'bar'));
     }
 
-    function testGettingExtensionWithInvalidPlugin()
+    public function testGettingExtensionWithInvalidPlugin()
     {
         $this->_config->setExtension('Foo', 'bar', 'Bar');
 
         $this->assertNull($this->_config->getExtension('Bar', 'bar'));
     }
 
-    function testGettingExtensionWithInvalidExtensionPoint()
+    public function testGettingExtensionWithInvalidExtensionPoint()
     {
         $this->_config->setExtension('Foo', 'bar', 'Bar');
 
         $this->assertNull($this->_config->getExtension('Foo', 'baz'));
     }
 
-    function testGettingConfigurationWithInvalidConfigurationPoint()
+    public function testGettingConfigurationWithInvalidConfigurationPoint()
     {
         $this->_config->setConfiguration('Foo', 'bar', 'Bar');
 
         $this->assertNull($this->_config->getConfiguration('Foo', 'baz'));
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
