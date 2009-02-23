@@ -1,36 +1,36 @@
-[submodule "components/piece-unity-component-authorization"]
-	path = components/piece-unity-component-authorization
-	url = git@github.com:piece/piece-unity-component-authorization.git
 [submodule "components/piece-unity-component-authentication"]
 	path = components/piece-unity-component-authentication
-	url = git@github.com:piece/piece-unity-component-authentication.git
+	url = git://github.com/piece/piece-unity-component-authentication.git
+[submodule "components/piece-unity-component-authorization"]
+	path = components/piece-unity-component-authorization
+	url = git://github.com/piece/piece-unity-component-authorization.git
 [submodule "components/piece-unity-component-contentlength"]
 	path = components/piece-unity-component-contentlength
-	url = git@github.com:piece/piece-unity-component-contentlength.git
+	url = git://github.com/piece/piece-unity-component-contentlength.git
 [submodule "components/piece-unity-component-flexy"]
 	path = components/piece-unity-component-flexy
-	url = git@github.com:piece/piece-unity-component-flexy.git
+	url = git://github.com/piece/piece-unity-component-flexy.git
 [submodule "components/piece-unity-component-japanesez2h"]
 	path = components/piece-unity-component-japanesez2h
-	url = git@github.com:piece/piece-unity-component-japanesez2h.git
+	url = git://github.com/piece/piece-unity-component-japanesez2h.git
 [submodule "components/piece-unity-component-json"]
 	path = components/piece-unity-component-json
-	url = git@github.com:piece/piece-unity-component-json.git
+	url = git://github.com/piece/piece-unity-component-json.git
 [submodule "components/piece-unity-component-kernelconfigurator"]
 	path = components/piece-unity-component-kernelconfigurator
-	url = git@github.com:piece/piece-unity-component-kernelconfigurator.git
+	url = git://github.com/piece/piece-unity-component-kernelconfigurator.git
 [submodule "components/piece-unity-component-nullbyteattackpreventation"]
 	path = components/piece-unity-component-nullbyteattackpreventation
-	url = git@github.com:piece/piece-unity-component-nullbyteattackpreventation.git
+	url = git://github.com/piece/piece-unity-component-nullbyteattackpreventation.git
 [submodule "components/piece-unity-component-pagination"]
 	path = components/piece-unity-component-pagination
-	url = git@github.com:piece/piece-unity-component-pagination.git
+	url = git://github.com/piece/piece-unity-component-pagination.git
 [submodule "components/piece-unity-component-pieceorm"]
 	path = components/piece-unity-component-pieceorm
-	url = git@github.com:piece/piece-unity-component-pieceorm.git
+	url = git://github.com/piece/piece-unity-component-pieceorm.git
 [submodule "components/piece-unity-component-proxybasepath"]
 	path = components/piece-unity-component-proxybasepath
-	url = git@github.com:piece/piece-unity-component-proxybasepath.git
+	url = git://github.com/piece/piece-unity-component-proxybasepath.git
 [submodule "components/piece-unity-component-smarty"]
 	path = components/piece-unity-component-smarty
-	url = git@github.com:piece/piece-unity-component-smarty.git
+	url = git://github.com/piece/piece-unity-component-smarty.git
