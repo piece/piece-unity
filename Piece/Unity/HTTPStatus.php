@@ -31,7 +31,7 @@
  * @package    Piece_Unity
  * @copyright  2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id$
+ * @version    GIT: $Id$
  * @link       http://www.studyinghttp.net/cgi-bin/rfc.cgi?2616#Sec6.1.1
  * @since      File available since Release 1.5.0
  */
