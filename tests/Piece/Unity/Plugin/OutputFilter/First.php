@@ -31,7 +31,7 @@
  * @package    Piece_Unity
  * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    SVN: $Id$
+ * @version    GIT: $Id$
  * @see        Piece_Unity_Plugin_OutputBufferStackTestCase
  * @since      File available since Release 0.4.0
  */
