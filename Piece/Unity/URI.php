@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2009 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2009 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
  * @since      File available since Release 0.9.0
@@ -51,7 +51,7 @@ $GLOBALS['PIECE_UNITY_URI_NonSSLableServers'] = array();
  * a relative/absolute URI.
  *
  * @package    Piece_Unity
- * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2009 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.9.0
@@ -153,11 +153,11 @@ class Piece_Unity_URI
     /**
      * Gets the absolute URI.
      *
-     * @param boolean $useSSL
+     * @param boolean $forceSSL
      * @return string
      * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      */
-    function getURI($useSSL = false)
+    function getURI($forceSSL = false)
     {
         if (is_null($this->_url)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
@@ -170,28 +170,43 @@ class Piece_Unity_URI
             return $this->_url->getURL();
         }
 
-        $context = &Piece_Unity_Context::singleton();
-        if (!$context->usingProxy()
-            && $_SERVER['SERVER_PORT'] != 80
-            && $_SERVER['SERVER_PORT'] != 443
-            ) {
-            return $this->_url->getURL();
-        }
-
         if (version_compare(phpversion(), '5.0.0', '<')) {
             $url = $this->_url;
         } else {
             $url = clone($this->_url);
         }
 
-        if ($useSSL
-            && !in_array($url->host, $GLOBALS['PIECE_UNITY_URI_NonSSLableServers'])
+        $context = &Piece_Unity_Context::singleton();
+        if (!in_array($this->_url->host, $GLOBALS['PIECE_UNITY_URI_NonSSLableServers'])
+            && ($forceSSL || $this->_usingSSL())
             ) {
             $url->protocol = 'https';
-            $url->port= '443';
-        } elseif (!$this->_isRedirection) {
+
+            do {
+                if ($context->usingProxy()) {
+                    $url->port = '443';
+                    break;
+                }
+
+                if ($_SERVER['SERVER_PORT'] == 80 || $_SERVER['SERVER_PORT'] == 443) {
+                    $url->port = '443';
+                    break;
+                }
+            } while (false);
+        } else {
             $url->protocol = 'http';
-            $url->port= '80';
+
+            do {
+                if ($context->usingProxy()) {
+                    $url->port = '80';
+                    break;
+                }
+
+                if ($_SERVER['SERVER_PORT'] == 80 || $_SERVER['SERVER_PORT'] == 443) {
+                    $url->port = '80';
+                    break;
+                }
+            } while (false);
         }
 
         return $url->getURL();
@@ -246,13 +261,9 @@ class Piece_Unity_URI
             ) {
             if ($this->_url->host != $_SERVER['HTTP_X_FORWARDED_SERVER']) {
                 $this->_url->host = $_SERVER['HTTP_X_FORWARDED_SERVER'];
-                $this->_url->protocol = 'http';
             }
 
-            $this->_url->port = 80;
         } else {
-            $this->_url->protocol = $_SERVER['SERVER_PORT'] != 443 ? 'http'
-                                                                   : 'https';
             $this->_url->host = $_SERVER['SERVER_NAME'];
             $this->_url->port = $_SERVER['SERVER_PORT'];
             $this->_url->path = $context->removeProxyPath($this->_url->path);
@@ -331,6 +342,19 @@ class Piece_Unity_URI
     /**#@+
      * @access private
      */
+
+    // }}}
+    // {{{ _usingSSL()
+
+    /**
+     * @return boolean
+     * @link http://www.kirit.com/Blog:/2008-08-13/HTTPS%20detection%20in%20Django%20under%20PyISAPIe
+     * @since Method available since Release 1.6.3
+     */
+    function _usingSSL()
+    {
+        return array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] == 'on';
+    }
 
     /**#@-*/
 
