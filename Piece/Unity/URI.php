@@ -152,12 +152,15 @@ class Piece_Unity_URI
 
     /**
      * Gets the absolute URI.
+     * The standard port of the URI scheme is set when using reverse-proxy.
      *
-     * @param boolean $forceSSL
+     * @param string|boolean $protocol The protocol for the URI. The protocol MUST be
+     *                                 one of: https, http, or pass.
+     *                                 (deprecated) true is https and false is http.
      * @return string
      * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      */
-    function getURI($forceSSL = false)
+    function getURI($protocol = 'http')
     {
         if (is_null($this->_url)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
@@ -170,43 +173,58 @@ class Piece_Unity_URI
             return $this->_url->getURL();
         }
 
+        $context = &Piece_Unity_Context::singleton();
+        if (!$this->_isRedirection
+            && $context->usingProxy()
+            && array_key_exists('HTTP_X_FORWARDED_SERVER', $_SERVER)
+            ) {
+            if ($this->_url->host != $_SERVER['HTTP_X_FORWARDED_SERVER']) {
+                $this->_url->host = $_SERVER['HTTP_X_FORWARDED_SERVER'];
+            }
+        } else {
+            $this->_url->host = $_SERVER['SERVER_NAME'];
+            $this->_url->port = $_SERVER['SERVER_PORT'];
+            $this->_url->path = $context->removeProxyPath($this->_url->path);
+        }
+
         if (version_compare(phpversion(), '5.0.0', '<')) {
             $url = $this->_url;
         } else {
             $url = clone($this->_url);
         }
 
-        $context = &Piece_Unity_Context::singleton();
-        if (!in_array($this->_url->host, $GLOBALS['PIECE_UNITY_URI_NonSSLableServers'])
-            && ($forceSSL || $this->_usingSSL())
-            ) {
-            $url->protocol = 'https';
+        if (is_bool($protocol)) {
+            $protocol = $protocol ? 'https' : 'http';
+        }
 
-            do {
-                if ($context->usingProxy()) {
-                    $url->port = '443';
-                    break;
+        if (!in_array($protocol, array('https', 'http', 'pass'))) {
+            $protocol = 'pass';
+        }
+
+        if ($protocol == 'pass') {
+            $protocol = $url->protocol;
+        }
+
+        if ($protocol == 'https') {
+            if (!in_array($url->host, $GLOBALS['PIECE_UNITY_URI_NonSSLableServers'])) {
+                $url->protocol = $protocol;
+                if (($context->usingProxy() && !$this->_isRedirection) || $context->isRunningOnStandardPort()) {
+                    $url->port= '443';
                 }
 
-                if ($_SERVER['SERVER_PORT'] == 80 || $_SERVER['SERVER_PORT'] == 443) {
-                    $url->port = '443';
-                    break;
-                }
-            } while (false);
-        } else {
-            $url->protocol = 'http';
+                return $url->getURL();
+            }
 
-            do {
-                if ($context->usingProxy()) {
-                    $url->port = '80';
-                    break;
-                }
+            $protocol = 'http';
+        }
 
-                if ($_SERVER['SERVER_PORT'] == 80 || $_SERVER['SERVER_PORT'] == 443) {
-                    $url->port = '80';
-                    break;
-                }
-            } while (false);
+        if ($protocol == 'http') {
+            $url->protocol = $protocol;
+            if (($context->usingProxy() && !$this->_isRedirection) || $context->isRunningOnStandardPort()) {
+                $url->port= '80';
+            }
+
+            return $url->getURL();
         }
 
         return $url->getURL();
@@ -227,7 +245,7 @@ class Piece_Unity_URI
     function create($path)
     {
         $uri = &new Piece_Unity_URI($path);
-        return $uri->getURI();
+        return $uri->getURI('http');
     }
 
     // }}}
@@ -250,24 +268,6 @@ class Piece_Unity_URI
         }
 
         $this->_url = &new Net_URL($path);
-
-        if ($this->_isExternal) {
-            return;
-        }
-
-        if (!$this->_isRedirection
-            && $context->usingProxy()
-            && array_key_exists('HTTP_X_FORWARDED_SERVER', $_SERVER)
-            ) {
-            if ($this->_url->host != $_SERVER['HTTP_X_FORWARDED_SERVER']) {
-                $this->_url->host = $_SERVER['HTTP_X_FORWARDED_SERVER'];
-            }
-
-        } else {
-            $this->_url->host = $_SERVER['SERVER_NAME'];
-            $this->_url->port = $_SERVER['SERVER_PORT'];
-            $this->_url->path = $context->removeProxyPath($this->_url->path);
-        }
     }
 
     // }}}
@@ -285,7 +285,7 @@ class Piece_Unity_URI
     function createSSL($path)
     {
         $uri = &new Piece_Unity_URI($path);
-        return $uri->getURI(true);
+        return $uri->getURI('https');
     }
 
     // }}}
@@ -342,19 +342,6 @@ class Piece_Unity_URI
     /**#@+
      * @access private
      */
-
-    // }}}
-    // {{{ _usingSSL()
-
-    /**
-     * @return boolean
-     * @link http://www.kirit.com/Blog:/2008-08-13/HTTPS%20detection%20in%20Django%20under%20PyISAPIe
-     * @since Method available since Release 1.6.3
-     */
-    function _usingSSL()
-    {
-        return array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] == 'on';
-    }
 
     /**#@-*/
 
