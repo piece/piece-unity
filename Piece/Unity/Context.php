@@ -610,12 +610,29 @@ class Piece_Unity_Context
     // {{{ isRunningOnStandardPort()
 
     /**
+     * Checks whether or not the current process is running on standard port either 80
+     * or 443.
+     *
      * @return boolean
      * @since Method available since Release 1.7.0
      */
     function isRunningOnStandardPort()
     {
         return $_SERVER['SERVER_PORT'] == '80' || $_SERVER['SERVER_PORT'] == '443';
+    }
+
+    // }}}
+    // {{{ isSecure()
+
+    /**
+     * Checks whether the current connection is secure or not.
+     *
+     * @return boolean
+     * @since Method available since Release 1.7.0
+     */
+    function isSecure()
+    {
+        return array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] == 'on';
     }
 
     /**#@-*/
