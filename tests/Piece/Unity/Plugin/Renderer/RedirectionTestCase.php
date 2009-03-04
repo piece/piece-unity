@@ -230,8 +230,8 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
      */
     function testShouldSupportSelfNotation()
     {
-        $oldScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = '/foo.php';
+        $oldScriptName = $_SERVER['REQUEST_URI'];
+        $_SERVER['REQUEST_URI'] = '/foo.php';
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
 
@@ -246,7 +246,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
 
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
-        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+        $_SERVER['REQUEST_URI'] = $oldScriptName;
     }
 
     /**
@@ -254,8 +254,8 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
      */
     function testShouldSupportSelfNotationForHTTPS()
     {
-        $oldScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = '/foo.php';
+        $oldScriptName = $_SERVER['REQUEST_URI'];
+        $_SERVER['REQUEST_URI'] = '/foo.php';
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
 
@@ -270,7 +270,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
 
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
-        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+        $_SERVER['REQUEST_URI'] = $oldScriptName;
     }
 
     /**#@-*/

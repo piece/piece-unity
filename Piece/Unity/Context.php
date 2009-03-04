@@ -652,7 +652,7 @@ class Piece_Unity_Context
         $this->_request = &new Piece_Unity_Request();
         $this->_viewElement = &new Piece_Unity_ViewElement();
         $this->_session = &new Piece_Unity_Session();
-        $this->_scriptName = str_replace('//', '/', $_SERVER['SCRIPT_NAME']);
+        $this->_scriptName = str_replace('//', '/', @$_SERVER['REQUEST_URI']);
 
         $positionOfSlash = strrpos($this->_scriptName, '/');
         if ($positionOfSlash) {

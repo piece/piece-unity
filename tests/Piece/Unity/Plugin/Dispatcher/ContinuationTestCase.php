@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2009 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2009 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
  * @since      File available since Release 0.1.0
@@ -52,7 +52,7 @@ require_once 'Piece/Unity/HTTPStatus.php';
  * Some tests for Piece_Unity_Plugin_Dispatcher_Continuation.
  *
  * @package    Piece_Unity
- * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2009 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
@@ -426,8 +426,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $oldScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = '/entry/new.php';
+        $oldScriptName = $_SERVER['REQUEST_URI'];
+        $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_cacheDirectory);
@@ -450,7 +450,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals('Entry_New', $viewString);
         $this->assertEquals('bar', $context->getAttribute('foo'));
 
-        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+        $_SERVER['REQUEST_URI'] = $oldScriptName;
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
     }
@@ -464,8 +464,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'example.org';
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        $oldScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = '/entry/new.php';
+        $oldScriptName = $_SERVER['REQUEST_URI'];
+        $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_cacheDirectory);
@@ -490,7 +490,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
         $this->assertFalse(Piece_Unity_Error::hasErrors());
 
-        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+        $_SERVER['REQUEST_URI'] = $oldScriptName;
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
         unset($_SERVER['HTTP_X_FORWARDED_FOR']);
@@ -504,8 +504,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $oldScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = '/entry/new.php';
+        $oldScriptName = $_SERVER['REQUEST_URI'];
+        $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_cacheDirectory);
@@ -529,7 +529,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
         $this->assertFalse(Piece_Unity_Error::hasErrors());
 
-        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+        $_SERVER['REQUEST_URI'] = $oldScriptName;
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
     }
@@ -541,8 +541,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $oldScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = '/entry/new.php';
+        $oldScriptName = $_SERVER['REQUEST_URI'];
+        $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_cacheDirectory);
@@ -565,7 +565,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $this->assertEquals('Entry_New_New', $viewString);
         $this->assertEquals('bar', $context->getAttribute('foo'));
 
-        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+        $_SERVER['REQUEST_URI'] = $oldScriptName;
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
     }
@@ -577,8 +577,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $oldScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = '/exceptions/pass-through.php';
+        $oldScriptName = $_SERVER['REQUEST_URI'];
+        $_SERVER['REQUEST_URI'] = '/exceptions/pass-through.php';
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_cacheDirectory);
@@ -606,7 +606,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
         $this->assertEquals(-1, $error['code']);
 
-        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+        $_SERVER['REQUEST_URI'] = $oldScriptName;
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
     }
@@ -618,8 +618,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $oldScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = '/entry/new.php';
+        $oldScriptName = $_SERVER['REQUEST_URI'];
+        $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_cacheDirectory);
@@ -627,7 +627,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $config->setConfiguration('Dispatcher_Continuation', 'useFlowMappings', true);
         $config->setConfiguration('Dispatcher_Continuation',
                                   'flowMappings',
-                                  array(array('uri' => $_SERVER['SCRIPT_NAME'],
+                                  array(array('uri' => $_SERVER['REQUEST_URI'],
                                               'flowName' => 'Entry_New',
                                               'isExclusive' => false))
                                   );
@@ -646,7 +646,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
                             $uri->getURI()
                             );
 
-        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+        $_SERVER['REQUEST_URI'] = $oldScriptName;
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
     }
@@ -658,8 +658,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $oldScriptName = $_SERVER['SCRIPT_NAME'];
-        $_SERVER['SCRIPT_NAME'] = '/user/authentication.php';
+        $oldScriptName = $_SERVER['REQUEST_URI'];
+        $_SERVER['REQUEST_URI'] = '/user/authentication.php';
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_cacheDirectory);
@@ -682,7 +682,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Continuation();
         $dispatcher->invoke();
         Piece_Unity_Context::clear();
-        $_SERVER['SCRIPT_NAME'] = '/entry/new.php';
+        $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $_GET['_event'] = null;
         $_GET['_flowExecutionTicket'] = null;
         $context = &Piece_Unity_Context::singleton();
@@ -712,7 +712,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
 
         $this->assertTrue($queryString1['_flowExecutionTicket'] != $queryString2['_flowExecutionTicket']);
 
-        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
+        $_SERVER['REQUEST_URI'] = $oldScriptName;
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
     }
