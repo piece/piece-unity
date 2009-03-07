@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
  * @since      File available since Release 0.7.0
@@ -47,7 +47,7 @@ require_once 'Cache/Lite/File.php';
  * Some tests for Piece_Unity_Validation.
  *
  * @package    Piece_Unity
- * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.7.0
@@ -101,7 +101,7 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
     {
         $_POST['login_name'] = 'iteman';
         $_POST['password'] = 'iteman30';
-        $_POST['email'] = 'iteman@users.sourceforge.net';
+        $_POST['email'] = 'kubo@iteman.jp';
 
         $validation = &new Piece_Unity_Validation();
         $validation->setConfigDirectory($this->_cacheDirectory);
@@ -145,7 +145,7 @@ class Piece_Unity_ValidationTestCase extends PHPUnit_TestCase
     {
         $_POST['login_name'] = ' iteman ';
         $_POST['password'] = 'itema';
-        $_POST['email'] = 'iteman@users.sourceforge.net';
+        $_POST['email'] = 'kubo@iteman.jp';
 
         $validation = &new Piece_Unity_Validation();
         $validation->setConfigDirectory($this->_cacheDirectory);

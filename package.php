@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
  * @since      File available since Release 0.1.0
@@ -40,15 +40,38 @@ require_once 'PEAR.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$releaseVersion = '1.6.2';
+$releaseVersion = '1.7.0';
 $releaseStability = 'stable';
 $apiVersion = '1.5.0';
 $apiStability = 'stable';
 $notes = 'A new release of Piece_Unity is now available.
 
-What\'s New in Piece_Unity 1.6.2
+What\'s New in Piece_Unity 1.7.0
 
- * A defect fix: A defect has been fixed so as to not be able to access the session attributes by the $_attributes property.';
+ * Two defect fixes: A defect has been fixed that caused a URI scheme for redirection to be "http" on SSL by non-standard port. And another defect has been fixed.
+ * Some improvements: A method setConfigurationCallback() has been added to set the callback for createRuntime(), and the behavior of createRuntime() has been changed so as to call the callback by setConfigurationCallback() if the callback by the argument is not given. And there are a few more improvements.
+
+Backward Compatibility
+
+ * Redirection to internal URIs: When redirecting to a internal URI, the scheme of the given URI (http/https) is always kept.
+ * Piece_Unity_Component_Authentication: Piece_Unity_Component_Authentication 1.1.1 or less does not work properly with Piece_Unity 1.7.0. Upgrade to the upcoming version 1.1.2.
+
+See the following release notes for details.
+
+Enhancements
+============
+
+- Added a method setConfigurationCallback() to set the callback for createRuntime(). (Piece_Unity)
+- Changed the behavior of createRuntime() so as to call the callback by setConfigurationCallback() if the callback by the argument is not given. (Piece_Unity)
+- Changed the behavior of getURI() so that the given URI scheme is kept by the argument "pass". Also the Renderer_Redirection plug-in always use "pass". (Piece_Unity_URI)
+- Added isSecure() to check whether the current connection is secure or not. (Piece_Unity_Context)
+- Replaced $_SERVER[\'SCRIPT_NAME\'] with $_SERVER[\'REQUEST_URI\'] for URI mappings by mod_rewrite. (Ticket #287)
+
+Defect Fixes
+============
+
+- Fixed a defect so that the proxy path was included twice in the URI by Piece_Unity_Service_Continuation::createURI(). (Piece_Unity_URI)
+- Fixed a defect that caused a URI scheme for redirection to be "http" on SSL by non-standard port. (Ticket #288)';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'file',
@@ -57,6 +80,10 @@ $package->setOptions(array('filelistgenerator' => 'file',
                            'baseinstalldir'    => '/',
                            'packagefile'       => 'package.xml',
                            'packagedirectory'  => '.',
+                           'dir_roles'         => array('docs' => 'doc',
+                                                        'Piece' => 'php',
+                                                        'tests' => 'test',
+                                                        'data' => 'data'),
                            'ignore'            => array('package.php', 'components/'))
                      );
 
@@ -80,7 +107,7 @@ $package->addPackageDepWithChannel('required', 'Cache_Lite', 'pear.php.net', '1.
 $package->addPackageDepWithChannel('required', 'PEAR', 'pear.php.net', '1.4.3');
 $package->addPackageDepWithChannel('required', 'Net_URL', 'pear.php.net', '1.0.14');
 $package->addPackageDepWithChannel('required', 'Piece_Right', 'pear.piece-framework.com', '1.10.0');
-$package->addMaintainer('lead', 'iteman', 'KUBO Atsuhiro', 'iteman@users.sourceforge.net');
+$package->addMaintainer('lead', 'iteman', 'KUBO Atsuhiro', 'kubo@iteman.jp');
 $package->addGlobalReplacement('package-info', '@package_version@', 'version');
 $package->generateContents();
 
