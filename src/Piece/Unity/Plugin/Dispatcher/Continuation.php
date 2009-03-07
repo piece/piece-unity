@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
+ * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
  * @see        Piece_Flow_Continuation_Server, Piece_Flow
@@ -64,7 +64,7 @@ $GLOBALS['PIECE_UNITY_Continuation_FlowID'] = null;
  * continuation, and returns a view string.
  *
  * @package    Piece_Unity
- * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
+ * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @see        Piece_Flow_Continuation_Server, Piece_Flow
@@ -369,7 +369,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             $this->_getConfiguration('flowNameKey');
 
         if ($this->_getConfiguration('useFlowMappings')) {
-            $GLOBALS['PIECE_UNITY_Continuation_FlowID'] = $_SERVER['SCRIPT_NAME'];
+            $GLOBALS['PIECE_UNITY_Continuation_FlowID'] = $_SERVER['REQUEST_URI'];
         } else {
             $GLOBALS['PIECE_UNITY_Continuation_FlowID'] =
                 $this->_getConfiguration('flowName');
