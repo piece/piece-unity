@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2007-2009 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2007-2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
  * @since      File available since Release 0.11.0
@@ -51,7 +51,7 @@ require_once 'Cache/Lite/File.php';
  * Some tests for Piece_Unity_Plugin_Configurator_Validation.
  *
  * @package    Piece_Unity
- * @copyright  2007-2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.11.0
@@ -110,7 +110,7 @@ class Piece_Unity_Plugin_Configurator_ValidationTestCase extends PHPUnit_TestCas
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_POST['login_name'] = 'iteman';
         $_POST['password'] = 'iteman30';
-        $_POST['email'] = 'kubo@iteman.jp';
+        $_POST['email'] = 'iteman@users.sourceforge.net';
         $_POST['greeting'] = 'Hello World';
 
         $config = &new Piece_Unity_Config();

@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
  * @since      File available since Release 0.1.0
@@ -46,7 +46,7 @@ require_once 'Piece/Unity/HTTPStatus.php';
  * TestCase for Piece_Unity_Context
  *
  * @package    Piece_Unity
- * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2006-2007 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
@@ -158,26 +158,26 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
 
     function testGettingScriptName()
     {
-        $previousScriptName = @$_SERVER['REQUEST_URI'];
-        $_SERVER['REQUEST_URI'] = '/path/to/foo.php';
+        $previousScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/path/to/foo.php';
 
         $context = &Piece_Unity_Context::singleton();
 
         $this->assertEquals('/path/to/foo.php', $context->getScriptName());
 
-        $_SERVER['REQUEST_URI'] = $previousScriptName;
+        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
 
     function testGettingBasePath()
     {
-        $previousScriptName = $_SERVER['REQUEST_URI'];
-        $_SERVER['REQUEST_URI'] = '/path/to/foo.php';
+        $previousScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/path/to/foo.php';
 
         $context = &Piece_Unity_Context::singleton();
 
         $this->assertEquals('/path/to', $context->getBasePath());
 
-        $_SERVER['REQUEST_URI'] = $previousScriptName;
+        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
 
     /**
@@ -185,8 +185,8 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
      */
     function testSettingScriptName()
     {
-        $previousScriptName = $_SERVER['REQUEST_URI'];
-        $_SERVER['REQUEST_URI'] = '/path/to/foo.php';
+        $previousScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/path/to/foo.php';
 
         $context = &Piece_Unity_Context::singleton();
 
@@ -196,7 +196,7 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
 
         $this->assertEquals('/path/to/foo/bar.php', $context->getScriptName());
 
-        $_SERVER['REQUEST_URI'] = $previousScriptName;
+        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
 
     /**
@@ -204,8 +204,8 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
      */
     function testSettingBasePath()
     {
-        $previousScriptName = $_SERVER['REQUEST_URI'];
-        $_SERVER['REQUEST_URI'] = '/path/to/foo.php';
+        $previousScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/path/to/foo.php';
 
         $context = &Piece_Unity_Context::singleton();
 
@@ -215,7 +215,7 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
 
         $this->assertEquals('/path/to/foo/bar', $context->getBasePath());
 
-        $_SERVER['REQUEST_URI'] = $previousScriptName;
+        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
 
     /**
@@ -223,14 +223,14 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
      */
     function testGettingBasePathWithWindows()
     {
-        $previousScriptName = $_SERVER['REQUEST_URI'];
-        $_SERVER['REQUEST_URI'] = '//path/to/foo.php';
+        $previousScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '//path/to/foo.php';
 
         $context = &Piece_Unity_Context::singleton();
 
         $this->assertEquals('/path/to', $context->getBasePath());
 
-        $_SERVER['REQUEST_URI'] = $previousScriptName;
+        $_SERVER['SCRIPT_NAME'] = $previousScriptName;
     }
 
     /**

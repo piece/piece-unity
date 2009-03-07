@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
  * @since      File available since Release 0.2.0
@@ -55,7 +55,7 @@ $GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings'] = fa
  * Renderer_HTML compatibility tests.
  *
  * @package    Piece_Unity
- * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.2.0
@@ -274,7 +274,7 @@ if (\$code == E_USER_WARNING) {
 
             if (is_dir($file)) {
                 Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests::removeDirectoryRecursively($file, $rootDirectory);
-            } elseif (is_file($file) && substr(basename($file), 0, 1) != '.') {
+            } elseif (is_file($file)) {
                 @unlink($file);
             }
         }

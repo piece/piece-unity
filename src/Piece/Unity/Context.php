@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
  * @since      File available since Release 0.1.0
@@ -53,7 +53,7 @@ $GLOBALS['PIECE_UNITY_Context_Instance'] = null;
  * The application context holder for Piece_Unity applications.
  *
  * @package    Piece_Unity
- * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
@@ -606,35 +606,6 @@ class Piece_Unity_Context
         $httpStatus->send();
     }
 
-    // }}}
-    // {{{ isRunningOnStandardPort()
-
-    /**
-     * Checks whether or not the current process is running on standard port either 80
-     * or 443.
-     *
-     * @return boolean
-     * @since Method available since Release 1.7.0
-     */
-    function isRunningOnStandardPort()
-    {
-        return $_SERVER['SERVER_PORT'] == '80' || $_SERVER['SERVER_PORT'] == '443';
-    }
-
-    // }}}
-    // {{{ isSecure()
-
-    /**
-     * Checks whether the current connection is secure or not.
-     *
-     * @return boolean
-     * @since Method available since Release 1.7.0
-     */
-    function isSecure()
-    {
-        return array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] == 'on';
-    }
-
     /**#@-*/
 
     /**#@+
@@ -652,7 +623,7 @@ class Piece_Unity_Context
         $this->_request = &new Piece_Unity_Request();
         $this->_viewElement = &new Piece_Unity_ViewElement();
         $this->_session = &new Piece_Unity_Session();
-        $this->_scriptName = str_replace('//', '/', @$_SERVER['REQUEST_URI']);
+        $this->_scriptName = str_replace('//', '/', $_SERVER['SCRIPT_NAME']);
 
         $positionOfSlash = strrpos($this->_scriptName, '/');
         if ($positionOfSlash) {

@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2007-2009 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2007-2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
  * @since      File available since Release 0.12.0
@@ -49,7 +49,7 @@ require_once 'Piece/Unity/Error.php';
  * servers.
  *
  * The base path and the script name are both relative paths since they are
- * based on REQUEST_URI environment variable. The following is a example of
+ * based on SCRIPT_NAME environment variable. The following is a example of
  * a context change when 'proxyPath' configuration point is set to '/foo'.
  *
  * <pre>
@@ -64,7 +64,7 @@ require_once 'Piece/Unity/Error.php';
  * </pre>
  *
  * @package    Piece_Unity
- * @copyright  2007-2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2007-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.12.0

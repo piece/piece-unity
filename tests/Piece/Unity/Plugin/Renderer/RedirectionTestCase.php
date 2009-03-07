@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
  * @since      File available since Release 0.6.0
@@ -49,7 +49,7 @@ require_once 'Piece/Unity/Plugin/Renderer/Redirection.php';
  * Some tests for Piece_Unity_Plugin_Renderer_Redirection.
  *
  * @package    Piece_Unity
- * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.6.0
@@ -152,7 +152,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
         $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
         $redirection->invoke();
 
-        $this->assertEquals('https://foo.example.org:8201/bar.php',
+        $this->assertEquals('http://foo.example.org:8201/bar.php',
                             $redirection->_uri
                             );
 
@@ -230,8 +230,8 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
      */
     function testShouldSupportSelfNotation()
     {
-        $oldScriptName = $_SERVER['REQUEST_URI'];
-        $_SERVER['REQUEST_URI'] = '/foo.php';
+        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/foo.php';
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
 
@@ -246,7 +246,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
 
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
-        $_SERVER['REQUEST_URI'] = $oldScriptName;
+        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
     }
 
     /**
@@ -254,8 +254,8 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
      */
     function testShouldSupportSelfNotationForHTTPS()
     {
-        $oldScriptName = $_SERVER['REQUEST_URI'];
-        $_SERVER['REQUEST_URI'] = '/foo.php';
+        $oldScriptName = $_SERVER['SCRIPT_NAME'];
+        $_SERVER['SCRIPT_NAME'] = '/foo.php';
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
 
@@ -270,7 +270,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
 
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
-        $_SERVER['REQUEST_URI'] = $oldScriptName;
+        $_SERVER['SCRIPT_NAME'] = $oldScriptName;
     }
 
     /**#@-*/

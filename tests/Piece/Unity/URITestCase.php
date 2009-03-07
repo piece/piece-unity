@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
  * @since      File available since Release 0.9.0
@@ -47,7 +47,7 @@ require_once 'Piece/Unity/Error.php';
  * Some tests for Piece_Unity_URI.
  *
  * @package    Piece_Unity
- * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.9.0
@@ -156,13 +156,13 @@ class Piece_Unity_URITestCase extends PHPUnit_TestCase
 
         $uri = &new Piece_Unity_URI('http://example.com/foo/bar/baz.php', false);
 
-        $this->assertEquals('https://foo.example.org:8201/bar/baz.php', $uri->getURI(true));
+        $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $uri->getURI(true));
         $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $uri->getURI(false));
         $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $uri->getURI());
 
         $uri = &new Piece_Unity_URI('https://example.com/foo/bar/baz.php', false);
 
-        $this->assertEquals('https://foo.example.org:8201/bar/baz.php', $uri->getURI(true));
+        $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $uri->getURI(true));
         $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $uri->getURI(false));
         $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $uri->getURI());
 
@@ -368,36 +368,6 @@ class Piece_Unity_URITestCase extends PHPUnit_TestCase
         $uri = &new Piece_Unity_URI('http://example.org/foo.php?bar=%E4%B9%85%E4%BF%9D%E6%95%A6%E5%95%93', true);
 
         $this->assertEquals('http://example.org/foo.php?bar=%E4%B9%85%E4%BF%9D%E6%95%A6%E5%95%93', $uri->getURI());
-    }
-
-    /**
-     * @since Method available since Release 1.7.0
-     */
-    function testPassTheGivenProtocol()
-    {
-        $_SERVER['SERVER_NAME'] = 'example.org';
-        $_SERVER['SERVER_PORT'] = '80';
-        $uri = &new Piece_Unity_URI('https://example.com/foo/bar.php', false);
-
-        $this->assertEquals('https://example.org/foo/bar.php', $uri->getURI('pass'));
-
-        $_SERVER['SERVER_PORT'] = '443';
-        $uri = &new Piece_Unity_URI('https://example.com/foo/bar.php', false);
-
-        $this->assertEquals('https://example.org/foo/bar.php', $uri->getURI('pass'));
-
-        $_SERVER['SERVER_PORT'] = '8080';
-        $uri = &new Piece_Unity_URI('https://example.com/foo/bar.php', false);
-
-        $this->assertEquals('https://example.org:8080/foo/bar.php', $uri->getURI('pass'));
-
-        $_SERVER['SERVER_PORT'] = '8443';
-        $uri = &new Piece_Unity_URI('https://example.com/foo/bar.php', false);
-
-        $this->assertEquals('https://example.org:8443/foo/bar.php', $uri->getURI('pass'));
-
-        unset($_SERVER['SERVER_PORT']);
-        unset($_SERVER['SERVER_NAME']);
     }
 
     /**#@-*/

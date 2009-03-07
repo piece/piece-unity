@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
  * @since      File available since Release 0.9.0
@@ -51,7 +51,7 @@ $GLOBALS['PIECE_UNITY_URI_NonSSLableServers'] = array();
  * a relative/absolute URI.
  *
  * @package    Piece_Unity
- * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2006-2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.9.0
@@ -152,15 +152,12 @@ class Piece_Unity_URI
 
     /**
      * Gets the absolute URI.
-     * The standard port of the URI scheme is set when using reverse-proxy.
      *
-     * @param string|boolean $protocol The protocol for the URI. The protocol MUST be
-     *                                 one of: https, http, or pass.
-     *                                 (deprecated) true is https and false is http.
+     * @param boolean $useSSL
      * @return string
      * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      */
-    function getURI($protocol = 'http')
+    function getURI($useSSL = false)
     {
         if (is_null($this->_url)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
@@ -174,17 +171,11 @@ class Piece_Unity_URI
         }
 
         $context = &Piece_Unity_Context::singleton();
-        if (!$this->_isRedirection
-            && $context->usingProxy()
-            && array_key_exists('HTTP_X_FORWARDED_SERVER', $_SERVER)
+        if (!$context->usingProxy()
+            && $_SERVER['SERVER_PORT'] != 80
+            && $_SERVER['SERVER_PORT'] != 443
             ) {
-            if ($this->_url->host != $_SERVER['HTTP_X_FORWARDED_SERVER']) {
-                $this->_url->host = $_SERVER['HTTP_X_FORWARDED_SERVER'];
-            }
-        } else {
-            $this->_url->host = $_SERVER['SERVER_NAME'];
-            $this->_url->port = $_SERVER['SERVER_PORT'];
-            $this->_url->path = $context->removeProxyPath($this->_url->path);
+            return $this->_url->getURL();
         }
 
         if (version_compare(phpversion(), '5.0.0', '<')) {
@@ -193,38 +184,14 @@ class Piece_Unity_URI
             $url = clone($this->_url);
         }
 
-        if (is_bool($protocol)) {
-            $protocol = $protocol ? 'https' : 'http';
-        }
-
-        if (!in_array($protocol, array('https', 'http', 'pass'))) {
-            $protocol = 'pass';
-        }
-
-        if ($protocol == 'pass') {
-            $protocol = $url->protocol;
-        }
-
-        if ($protocol == 'https') {
-            if (!in_array($url->host, $GLOBALS['PIECE_UNITY_URI_NonSSLableServers'])) {
-                $url->protocol = $protocol;
-                if (($context->usingProxy() && !$this->_isRedirection) || $context->isRunningOnStandardPort()) {
-                    $url->port= '443';
-                }
-
-                return $url->getURL();
-            }
-
-            $protocol = 'http';
-        }
-
-        if ($protocol == 'http') {
-            $url->protocol = $protocol;
-            if (($context->usingProxy() && !$this->_isRedirection) || $context->isRunningOnStandardPort()) {
-                $url->port= '80';
-            }
-
-            return $url->getURL();
+        if ($useSSL
+            && !in_array($url->host, $GLOBALS['PIECE_UNITY_URI_NonSSLableServers'])
+            ) {
+            $url->protocol = 'https';
+            $url->port= '443';
+        } elseif (!$this->_isRedirection) {
+            $url->protocol = 'http';
+            $url->port= '80';
         }
 
         return $url->getURL();
@@ -245,7 +212,7 @@ class Piece_Unity_URI
     function create($path)
     {
         $uri = &new Piece_Unity_URI($path);
-        return $uri->getURI('http');
+        return $uri->getURI();
     }
 
     // }}}
@@ -268,6 +235,28 @@ class Piece_Unity_URI
         }
 
         $this->_url = &new Net_URL($path);
+
+        if ($this->_isExternal) {
+            return;
+        }
+
+        if (!$this->_isRedirection
+            && $context->usingProxy()
+            && array_key_exists('HTTP_X_FORWARDED_SERVER', $_SERVER)
+            ) {
+            if ($this->_url->host != $_SERVER['HTTP_X_FORWARDED_SERVER']) {
+                $this->_url->host = $_SERVER['HTTP_X_FORWARDED_SERVER'];
+                $this->_url->protocol = 'http';
+            }
+
+            $this->_url->port = 80;
+        } else {
+            $this->_url->protocol = $_SERVER['SERVER_PORT'] != 443 ? 'http'
+                                                                   : 'https';
+            $this->_url->host = $_SERVER['SERVER_NAME'];
+            $this->_url->port = $_SERVER['SERVER_PORT'];
+            $this->_url->path = $context->removeProxyPath($this->_url->path);
+        }
     }
 
     // }}}
@@ -285,7 +274,7 @@ class Piece_Unity_URI
     function createSSL($path)
     {
         $uri = &new Piece_Unity_URI($path);
-        return $uri->getURI('https');
+        return $uri->getURI(true);
     }
 
     // }}}

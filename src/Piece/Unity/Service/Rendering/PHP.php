@@ -4,7 +4,7 @@
 /**
  * PHP versions 4 and 5
  *
- * Copyright (c) 2008-2009 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2008 KUBO Atsuhiro <iteman@users.sourceforge.net>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2008-2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
  * @since      File available since Release 1.5.0
@@ -43,7 +43,7 @@ require_once 'Piece/Unity/Error.php';
  * A rendering service which uses PHP itself as a template engine.
  *
  * @package    Piece_Unity
- * @copyright  2008-2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2008 KUBO Atsuhiro <iteman@users.sourceforge.net>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 1.5.0
