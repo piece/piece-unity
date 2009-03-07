@@ -35,7 +35,7 @@
  * @since      File available since Release 0.1.0
  */
 
-// {{{ Piece_Unity_Config_FactoryTestCase
+// {{{ Piece_Unity_Config_FactoryTest
 
 /**
  * Some tests for Piece_Unity_Config_Factory.
