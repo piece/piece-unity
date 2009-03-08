@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,18 +35,6 @@
  * @since      File available since Release 0.1.0
  */
 
-require_once 'Piece/Unity/Request.php';
-require_once 'Piece/Unity/ViewElement.php';
-require_once 'Piece/Unity/Session.php';
-require_once 'Piece/Unity/Validation.php';
-require_once 'Piece/Unity/HTTPStatus.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
-
-// {{{ GLOBALS
-
-$GLOBALS['PIECE_UNITY_Context_Instance'] = null;
-
-// }}}
 // {{{ Piece_Unity_Context
 
 /**
@@ -70,32 +58,39 @@ class Piece_Unity_Context
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
-    var $_config;
-    var $_view;
-    var $_request;
-    var $_viewElement;
-    var $_eventName;
-    var $_session;
-    var $_eventNameImported = false;
-    var $_eventNameKey = '_event';
-    var $_scriptName;
-    var $_basePath = '';
-    var $_attributes = array();
-    var $_proxyPath;
-    var $_continuation;
-    var $_validation;
-    var $_proxyMeasures = array('HTTP_X_FORWARDED_FOR',
-                                'HTTP_X_FORWARDED',
-                                'HTTP_FORWARDED_FOR',
-                                'HTTP_FORWARDED',
-                                'HTTP_VIA',
-                                'HTTP_X_COMING_FROM',
-                                'HTTP_COMING_FROM'
-                                );
-    var $_appRootPath = '';
+    private $_config;
+    private $_view;
+    private $_request;
+    private $_viewElement;
+    private $_eventName;
+    private $_session;
+    private $_eventNameImported = false;
+    private $_eventNameKey = '_event';
+    private $_scriptName;
+    private $_basePath = '';
+    private $_attributes = array();
+    private $_proxyPath;
+    private $_continuation;
+    private $_validation;
+    private $_proxyMeasures = array('HTTP_X_FORWARDED_FOR',
+                                    'HTTP_X_FORWARDED',
+                                    'HTTP_FORWARDED_FOR',
+                                    'HTTP_FORWARDED',
+                                    'HTTP_VIA',
+                                    'HTTP_X_COMING_FROM',
+                                    'HTTP_COMING_FROM'
+                                    );
+    private $_appRootPath = '';
+    private static $_soleInstance;
 
     /**#@-*/
 
@@ -104,23 +99,34 @@ class Piece_Unity_Context
      */
 
     // }}}
+    // {{{ __clone()
+
+    /**
+     * Prevents users to clone the instance.
+     *
+     * @throws Piece_Unity_Exception
+     */
+    public function __clone()
+    {
+        throw new Piece_Unity_Exception('Clone is not allowed');
+    }
+
+    // }}}
     // {{{ singleton()
 
     /**
-     * Returns the Piece_Unity_Context instance if it exists. If it not
-     * exists, a new instance of Piece_Unity_Context will be created and
-     * returned.
+     * Returns the Piece_Unity_Context instance if it exists. If it not exists, a new
+     * instance of Piece_Unity_Context will be created and returned.
      *
      * @return Piece_Unity_Context
-     * @static
      */
-    function &singleton()
+    public function singleton()
     {
-        if (is_null($GLOBALS['PIECE_UNITY_Context_Instance'])) {
-            $GLOBALS['PIECE_UNITY_Context_Instance'] = &new Piece_Unity_Context();
+        if (is_null(self::$_soleInstance)) {
+            self::$_soleInstance = new self();
         }
 
-        return $GLOBALS['PIECE_UNITY_Context_Instance'];
+        return self::$_soleInstance;
     }
 
     // }}}
@@ -129,11 +135,11 @@ class Piece_Unity_Context
     /**
      * Sets a Piece_Unity_Config object.
      *
-     * @param Piece_Unity_Config &$config
+     * @param Piece_Unity_Config $config
      */
-    function setConfiguration(&$config)
+    public function setConfiguration($config)
     {
-        $this->_config = &$config;
+        $this->_config = $config;
     }
 
     // }}}
@@ -144,7 +150,7 @@ class Piece_Unity_Context
      *
      * @param string $view
      */
-    function setView($view)
+    public function setView($view)
     {
         $this->_view = $view;
     }
@@ -157,7 +163,7 @@ class Piece_Unity_Context
      *
      * @return Piece_Unity_Config
      */
-    function &getConfiguration()
+    public function getConfiguration()
     {
         return $this->_config;
     }
@@ -170,7 +176,7 @@ class Piece_Unity_Context
      *
      * @return string
      */
-    function getView()
+    public function getView()
     {
         return $this->_view;
     }
@@ -183,7 +189,7 @@ class Piece_Unity_Context
      *
      * @return Piece_Unity_Request
      */
-    function &getRequest()
+    public function getRequest()
     {
         return $this->_request;
     }
@@ -196,7 +202,7 @@ class Piece_Unity_Context
      *
      * @return Piece_Unity_ViewElement
      */
-    function &getViewElement()
+    public function getViewElement()
     {
         return $this->_viewElement;
     }
@@ -209,7 +215,7 @@ class Piece_Unity_Context
      *
      * @return string
      */
-    function getEventName()
+    public function getEventName()
     {
         if (!$this->_eventNameImported) {
             $this->_importEventNameFromSubmit();
@@ -226,15 +232,12 @@ class Piece_Unity_Context
     // {{{ clear()
 
     /**
-     * Removed a single instance safely.
-     *
-     * @static
+     * Removed the sole instance safely.
      */
-    function clear()
+    public function clear()
     {
         Piece_Unity_Plugin_Factory::clearInstances();
-        unset($GLOBALS['PIECE_UNITY_Context_Instance']);
-        $GLOBALS['PIECE_UNITY_Context_Instance'] = null;
+        self::$_soleInstance = null;
     }
 
     // }}}
@@ -245,7 +248,7 @@ class Piece_Unity_Context
      *
      * @return mixed
      */
-    function &getSession()
+    public function getSession()
     {
         return $this->_session;
     }
@@ -258,7 +261,7 @@ class Piece_Unity_Context
      *
      * @param string $eventNameKey
      */
-    function setEventNameKey($eventNameKey)
+    public function setEventNameKey($eventNameKey)
     {
         $this->_eventNameKey = $eventNameKey;
     }
@@ -271,7 +274,7 @@ class Piece_Unity_Context
      *
      * @return string
      */
-    function getEventNameKey()
+    public function getEventNameKey()
     {
         return $this->_eventNameKey;
     }
@@ -284,7 +287,7 @@ class Piece_Unity_Context
      *
      * @param string $eventName
      */
-    function setEventName($eventName)
+    public function setEventName($eventName)
     {
         $this->_eventNameImported = true;
         $this->_eventName = $eventName;
@@ -298,7 +301,7 @@ class Piece_Unity_Context
      *
      * @return string
      */
-    function getScriptName()
+    public function getScriptName()
     {
         return $this->_scriptName;
     }
@@ -311,7 +314,7 @@ class Piece_Unity_Context
      *
      * @return string
      */
-    function getBasePath()
+    public function getBasePath()
     {
         return $this->_basePath;
     }
@@ -325,7 +328,7 @@ class Piece_Unity_Context
      * @param string $scriptName
      * @since Method available since Release 0.5.0
      */
-    function setScriptName($scriptName)
+    public function setScriptName($scriptName)
     {
         $this->_scriptName = $scriptName;
     }
@@ -339,7 +342,7 @@ class Piece_Unity_Context
      * @param string $basePath
      * @since Method available since Release 0.5.0
      */
-    function setBasePath($basePath)
+    public function setBasePath($basePath)
     {
         $this->_basePath = $basePath;
     }
@@ -354,7 +357,7 @@ class Piece_Unity_Context
      * @param mixed  $value
      * @since Method available since Release 0.6.0
      */
-    function setAttribute($name, $value)
+    public function setAttribute($name, $value)
     {
         $this->_attributes[$name] = $value;
     }
@@ -369,7 +372,7 @@ class Piece_Unity_Context
      * @param mixed  &$value
      * @since Method available since Release 0.6.0
      */
-    function setAttributeByRef($name, &$value)
+    public function setAttributeByRef($name, &$value)
     {
         $this->_attributes[$name] = &$value;
     }
@@ -384,7 +387,7 @@ class Piece_Unity_Context
      * @return boolean
      * @since Method available since Release 0.6.0
      */
-    function hasAttribute($name)
+    public function hasAttribute($name)
     {
         return array_key_exists($name, $this->_attributes);
     }
@@ -399,7 +402,7 @@ class Piece_Unity_Context
      * @return mixed
      * @since Method available since Release 0.6.0
      */
-    function &getAttribute($name)
+    public function &getAttribute($name)
     {
         return $this->_attributes[$name];
     }
@@ -413,7 +416,7 @@ class Piece_Unity_Context
      * @param string $name
      * @since Method available since Release 0.6.0
      */
-    function removeAttribute($name)
+    public function removeAttribute($name)
     {
         unset($this->_attributes[$name]);
     }
@@ -426,7 +429,7 @@ class Piece_Unity_Context
      *
      * @since Method available since Release 0.6.0
      */
-    function clearAttributes()
+    public function clearAttributes()
     {
         $this->_attributes = array();
     }
@@ -440,7 +443,7 @@ class Piece_Unity_Context
      * @param string $proxyPath
      * @since Method available since Release 0.6.0
      */
-    function setProxyPath($proxyPath)
+    public function setProxyPath($proxyPath)
     {
         $this->_proxyPath = $proxyPath;
     }
@@ -454,7 +457,7 @@ class Piece_Unity_Context
      * @return string
      * @since Method available since Release 0.6.0
      */
-    function getProxyPath()
+    public function getProxyPath()
     {
         return $this->_proxyPath;
     }
@@ -467,7 +470,7 @@ class Piece_Unity_Context
      *
      * @return boolean
      */
-    function usingProxy()
+    public function usingProxy()
     {
         foreach ($this->_proxyMeasures as $proxyMeasure) {
             if (array_key_exists($proxyMeasure, $_SERVER)) {
@@ -484,12 +487,12 @@ class Piece_Unity_Context
     /**
      * Sets the Piece_Flow_Continuation object for the current session.
      *
-     * @param Piece_Flow_Continuation &$continuation
+     * @param Piece_Flow_Continuation $continuation
      * @since Method available since Release 0.6.0
      */
-    function setContinuation(&$continuation)
+    public function setContinuation($continuation)
     {
-        $this->_continuation = &$continuation;
+        $this->_continuation = $continuation;
     }
 
     // }}}
@@ -501,7 +504,7 @@ class Piece_Unity_Context
      * @return Piece_Flow_Continuation
      * @since Method available since Release 0.6.0
      */
-    function &getContinuation()
+    public function getContinuation()
     {
         return $this->_continuation;
     }
@@ -515,7 +518,7 @@ class Piece_Unity_Context
      * @return Piece_Unity_Validation
      * @since Method available since Release 0.7.0
      */
-    function &getValidation()
+    public function getValidation()
     {
         return $this->_validation;
     }
@@ -529,16 +532,16 @@ class Piece_Unity_Context
      * @return string
      * @since Method available since Release 0.12.0
      */
-    function getRemoteAddr()
+    public function getRemoteAddr()
     {
-        if ($this->usingProxy()) {
-            foreach ($this->_proxyMeasures as $proxyMeasure) {
-                if (array_key_exists($proxyMeasure, $_SERVER)) {
-                    return $_SERVER[$proxyMeasure];
-                }
-            }
-        } else {
+        if (!$this->usingProxy()) {
             return $_SERVER['REMOTE_ADDR'];
+        }
+
+        foreach ($this->_proxyMeasures as $proxyMeasure) {
+            if (array_key_exists($proxyMeasure, $_SERVER)) {
+                return $_SERVER[$proxyMeasure];
+            }
         }
     }
 
@@ -546,13 +549,13 @@ class Piece_Unity_Context
     // {{{ setAppRootPath()
 
     /**
-     * Sets the URI path that form the top of the document tree of
-     * an application visible from the web.
+     * Sets the URI path that form the top of the document tree of an application
+     * visible from the web.
      *
      * @param string $appRootPath
      * @since Method available since Release 0.12.0
      */
-    function setAppRootPath($appRootPath)
+    public function setAppRootPath($appRootPath)
     {
         $this->_appRootPath = $appRootPath;
     }
@@ -561,13 +564,13 @@ class Piece_Unity_Context
     // {{{ getAppRootPath()
 
     /**
-     * Gets the URI path that form the top of the document tree of
-     * an application visible from the web.
+     * Gets the URI path that form the top of the document tree of an application
+     * visible from the web.
      *
      * @return string
      * @since Method available since Release 0.12.0
      */
-    function getAppRootPath()
+    public function getAppRootPath()
     {
         return $this->_appRootPath;
     }
@@ -582,7 +585,7 @@ class Piece_Unity_Context
      * @return string
      * @since Method available since Release 1.5.0
      */
-    function removeProxyPath($path)
+    public function removeProxyPath($path)
     {
         return preg_replace("!^{$this->_proxyPath}!", '', $path);
     }
@@ -596,9 +599,9 @@ class Piece_Unity_Context
      * @param integer $statusCode
      * @since Method available since Release 1.5.0
      */
-    function sendHTTPStatus($statusCode)
+    public function sendHTTPStatus($statusCode)
     {
-        $httpStatus = &new Piece_Unity_HTTPStatus($statusCode);
+        $httpStatus = new Piece_Unity_HTTPStatus($statusCode);
         if (Piece_Unity_Error::hasErrors()) {
             return;
         }
@@ -616,7 +619,7 @@ class Piece_Unity_Context
      * @return boolean
      * @since Method available since Release 1.7.0
      */
-    function isRunningOnStandardPort()
+    public function isRunningOnStandardPort()
     {
         return $_SERVER['SERVER_PORT'] == '80' || $_SERVER['SERVER_PORT'] == '443';
     }
@@ -630,10 +633,16 @@ class Piece_Unity_Context
      * @return boolean
      * @since Method available since Release 1.7.0
      */
-    function isSecure()
+    public function isSecure()
     {
         return array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] == 'on';
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
@@ -642,16 +651,16 @@ class Piece_Unity_Context
      */
 
     // }}}
-    // {{{ constructor
+    // {{{ __construct()
 
     /**
      * Creates a Piece_Unity_Request object and sets an event to the context.
      */
-    function Piece_Unity_Context()
+    private function __construct()
     {
-        $this->_request = &new Piece_Unity_Request();
-        $this->_viewElement = &new Piece_Unity_ViewElement();
-        $this->_session = &new Piece_Unity_Session();
+        $this->_request = new Piece_Unity_Request();
+        $this->_viewElement = new Piece_Unity_ViewElement();
+        $this->_session = new Piece_Unity_Session();
         $this->_scriptName = str_replace('//', '/', @$_SERVER['REQUEST_URI']);
 
         $positionOfSlash = strrpos($this->_scriptName, '/');
@@ -659,7 +668,7 @@ class Piece_Unity_Context
             $this->_basePath = substr($this->_scriptName, 0, $positionOfSlash);
         }
 
-        $this->_validation = &new Piece_Unity_Validation();
+        $this->_validation = new Piece_Unity_Validation();
     }
 
     // }}}
@@ -670,7 +679,7 @@ class Piece_Unity_Context
      *
      * @since Method available since Release 0.9.0
      */
-    function _importEventNameFromSubmit()
+    private function _importEventNameFromSubmit()
     {
         $xFound = false;
         $yFound = false;
@@ -714,7 +723,7 @@ class Piece_Unity_Context
      *
      * @since Method available since Release 0.9.0
      */
-    function _importEventNameFromRequest()
+    private function _importEventNameFromRequest()
     {
         $eventName = $this->_request->hasParameter($this->_eventNameKey) ? $this->_request->getParameter($this->_eventNameKey) : null;
         $this->setEventName($eventName);

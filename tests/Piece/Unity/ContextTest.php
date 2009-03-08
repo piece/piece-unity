@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,12 +35,7 @@
  * @since      File available since Release 0.1.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/HTTPStatus.php';
-
-// {{{ Piece_Unity_ContextTestCase
+// {{{ Piece_Unity_ContextTest
 
 /**
  * TestCase for Piece_Unity_Context
@@ -51,13 +46,19 @@ require_once 'Piece/Unity/HTTPStatus.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
+class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -72,173 +73,180 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function setUp()
+    public function setUp()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_event'] = 'foo';
     }
 
-    function tearDown()
+    public function tearDown()
     {
-        unset($_GET['_event']);
-        unset($_SERVER['REQUEST_METHOD']);
         Piece_Unity_Context::clear();
     }
 
-    function testSettingView()
+    /**
+     * @test
+     */
+    public function setTheView()
     {
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setView('foo');
 
         $this->assertEquals('foo', $context->getView());
     }
 
-    function testInitializingProperties()
+    /**
+     * @test
+     */
+    public function initializeProperties()
     {
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
 
-        $this->assertTrue(is_a($context->getRequest(), 'Piece_Unity_Request'));
+        $this->assertType('Piece_Unity_Request', $context->getRequest());
         $this->assertEquals('foo', $context->getEventName());
-        $this->assertTrue(is_a($context->getViewElement(), 'Piece_Unity_ViewElement'));
-        $this->assertTrue(is_a($context->getSession(), 'Piece_Unity_Session'));
+        $this->assertType('Piece_Unity_ViewElement', $context->getViewElement());
+        $this->assertType('Piece_Unity_Session', $context->getSession());
     }
 
-    function testImportingEventNameFromRequestParameters()
+    /**
+     * @test
+     */
+    public function importTheEventNameFromRequestParameters()
     {
         $_GET['_event_bar'] = null;
 
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
 
         $this->assertEquals('bar', $context->getEventName());
-
-        unset($_GET['_event_bar']);
     }
 
-    function testSettingEventNameKey()
+    /**
+     * @test
+     */
+    public function setTheEventNameKey()
     {
         $_GET['_foo'] = 'bar';
 
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setEventNameKey('_foo');
 
         $this->assertEquals('bar', $context->getEventName());
-
-        unset($_GET['_foo']);
     }
 
-    function testImportingEventNameFromRequestParametersWithSpecifiedEventNameKey()
+    /**
+     * @test
+     */
+    public function importTheEventNameFromRequestParametersWithAGivenEventNameKey()
     {
         $_GET['_foo'] = 'bar';
         $_GET['_foo_baz'] = null;
 
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setEventNameKey('_foo');
 
         $this->assertEquals('baz', $context->getEventName());
-
-        unset($_GET['_foo_baz']);
-        unset($_GET['_foo']);
     }
 
-    function testGettingEventNameKey()
+    /**
+     * @test
+     */
+    public function getTheEventNameKey()
     {
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setEventNameKey('_foo');
 
         $this->assertEquals('_foo', $context->getEventNameKey());
     }
 
-    function testEventNameFixation()
+    /**
+     * @test
+     */
+    public function setTheEventNameBySeteventname()
     {
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setEventName('bar');
 
         $this->assertEquals('bar', $context->getEventName());
     }
 
-    function testGettingScriptName()
+    /**
+     * @test
+     */
+    public function getTheRequestUri()
     {
-        $previousScriptName = @$_SERVER['REQUEST_URI'];
         $_SERVER['REQUEST_URI'] = '/path/to/foo.php';
 
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
 
         $this->assertEquals('/path/to/foo.php', $context->getScriptName());
-
-        $_SERVER['REQUEST_URI'] = $previousScriptName;
-    }
-
-    function testGettingBasePath()
-    {
-        $previousScriptName = $_SERVER['REQUEST_URI'];
-        $_SERVER['REQUEST_URI'] = '/path/to/foo.php';
-
-        $context = &Piece_Unity_Context::singleton();
-
-        $this->assertEquals('/path/to', $context->getBasePath());
-
-        $_SERVER['REQUEST_URI'] = $previousScriptName;
     }
 
     /**
-     * @since Method available since Release 0.5.0
+     * @test
      */
-    function testSettingScriptName()
+    public function getTheBasePathOfTheRequestUri()
     {
-        $previousScriptName = $_SERVER['REQUEST_URI'];
         $_SERVER['REQUEST_URI'] = '/path/to/foo.php';
 
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
+
+        $this->assertEquals('/path/to', $context->getBasePath());
+    }
+
+    /**
+     * @test
+     * @since Method available since Release 0.5.0
+     */
+    public function setTheRequestUri()
+    {
+        $_SERVER['REQUEST_URI'] = '/path/to/foo.php';
+
+        $context = Piece_Unity_Context::singleton();
 
         $this->assertEquals('/path/to/foo.php', $context->getScriptName());
 
         $context->setScriptName('/path/to/foo/bar.php');
 
         $this->assertEquals('/path/to/foo/bar.php', $context->getScriptName());
-
-        $_SERVER['REQUEST_URI'] = $previousScriptName;
     }
 
     /**
+     * @test
      * @since Method available since Release 0.5.0
      */
-    function testSettingBasePath()
+    public function setTheBasePathOfTheRequestUri()
     {
-        $previousScriptName = $_SERVER['REQUEST_URI'];
         $_SERVER['REQUEST_URI'] = '/path/to/foo.php';
 
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
 
         $this->assertEquals('/path/to', $context->getBasePath());
 
         $context->setBasePath('/path/to/foo/bar');
 
         $this->assertEquals('/path/to/foo/bar', $context->getBasePath());
-
-        $_SERVER['REQUEST_URI'] = $previousScriptName;
     }
 
     /**
+     * @test
      * @since Method available since Release 0.5.0
      */
-    function testGettingBasePathWithWindows()
+    public function setTheBasePathOfTheRequestUriOnWindows()
     {
-        $previousScriptName = $_SERVER['REQUEST_URI'];
         $_SERVER['REQUEST_URI'] = '//path/to/foo.php';
 
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
 
         $this->assertEquals('/path/to', $context->getBasePath());
-
-        $_SERVER['REQUEST_URI'] = $previousScriptName;
     }
 
     /**
+     * @test
      * @since Method available since Release 0.6.0
      */
-    function testSettingAttribute()
+    public function setAnAttribute()
     {
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setAttribute('foo', 'bar');
 
         $this->assertTrue($context->hasAttribute('foo'));
@@ -246,29 +254,31 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
     }
 
     /**
+     * @test
      * @since Method available since Release 0.6.0
      */
-    function testSettingAttributeByReference()
+    public function setAnAttributeByReference()
     {
-        $foo1 = &new stdClass();
-        $context = &Piece_Unity_Context::singleton();
+        $foo1 = array('bar' => 'baz');
+        $context = Piece_Unity_Context::singleton();
         $context->setAttributeByRef('foo', $foo1);
-        $foo1->bar = 'baz';
+        $foo1['bar'] = 'qux';
 
         $this->assertTrue($context->hasAttribute('foo'));
 
-        $foo2 = &$context->getAttribute('foo');
+        $foo2 = $context->getAttribute('foo');
 
-        $this->assertTrue(array_key_exists('bar', $foo2));
-        $this->assertEquals('baz', $foo2->bar);
+        $this->assertArrayHasKey('bar', $foo2);
+        $this->assertEquals('qux', $foo2['bar']);
     }
 
     /**
+     * @test
      * @since Method available since Release 0.6.0
      */
-    function testRemovingAttribute()
+    public function removeAnAttribute()
     {
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setAttribute('foo', 'bar');
 
         $this->assertTrue($context->hasAttribute('foo'));
@@ -279,11 +289,12 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
     }
 
     /**
+     * @test
      * @since Method available since Release 0.6.0
      */
-    function testClearingAttributes()
+    public function clearAllAttributes()
     {
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setAttribute('foo', 'bar');
         $context->setAttribute('bar', 'baz');
 
@@ -297,9 +308,10 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
     }
 
     /**
+     * @test
      * @since Method available since Release 0.9.0
      */
-    function testImageInputType()
+    public function supportEventNamesByImageInputType()
     {
         unset($_GET['_event']);
 
@@ -307,18 +319,16 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $_POST['_event_foo_x'] = '19';
         $_POST['_event_foo_y'] = '99';
 
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
 
         $this->assertEquals('foo', $context->getEventName());
-
-        unset($_POST['_event_foo_x']);
-        unset($_POST['_event_foo_y']);
     }
 
     /**
+     * @test
      * @since Method available since Release 0.9.0
      */
-    function testBrokenImageInputType()
+    public function workWithBrokenEventNames()
     {
         unset($_GET['_event']);
 
@@ -326,49 +336,48 @@ class Piece_Unity_ContextTestCase extends PHPUnit_TestCase
         $_POST['_event_foo_x'] = '19';
         $_POST['_event_foo_z'] = '99';
 
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
 
         $this->assertEquals('foo_z', $context->getEventName());
-
-        unset($_POST['_event_foo_x']);
-        unset($_POST['_event_foo_z']);
     }
 
     /**
+     * @test
      * @since Method available since Release 0.12.0
      */
-    function testGetRemoteAddr()
+    public function getTheIpAddressOfTheClient()
     {
         $_SERVER['REMOTE_ADDR'] = '1.2.3.4';
 
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
 
         $this->assertEquals('1.2.3.4', $context->getRemoteAddr());
 
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '5.6.7.8';
 
         $this->assertEquals('5.6.7.8', $context->getRemoteAddr());
-
-        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
-        unset($_SERVER['REMOTE_ADDR']);
     }
 
     /**
+     * @test
      * @since Method available since Release 1.5.0
      */
-    function testShouldSendStatusLine()
+    public function sendTheStatusLineOfTheResponse()
     {
         $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->sendHTTPStatus(404);
 
         $this->assertEquals('HTTP/1.1 404 Not Found',
                             $GLOBALS['PIECE_UNITY_HTTPStatus_SentStatusLine']
                             );
-
-        $GLOBALS['PIECE_UNITY_HTTPStatus_SentStatusLine'] = null;
-        unset($_SERVER['SERVER_PROTOCOL']);
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
