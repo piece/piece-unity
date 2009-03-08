@@ -86,35 +86,50 @@ class Piece_Unity_ConfigTest extends PHPUnit_Framework_TestCase
         Piece_Unity_Error::clearErrors();
     }
 
-    public function testSettingExtension()
+    /**
+     * @test
+     */
+    public function setAnExtension()
     {
         $this->_config->setExtension('Foo', 'bar', 'Bar');
 
         $this->assertEquals('Bar', $this->_config->getExtension('Foo', 'bar'));
     }
 
-    public function testSettingConfiguration()
+    /**
+     * @test
+     */
+    public function setAConfiguration()
     {
         $this->_config->setConfiguration('Foo', 'bar', 'Bar');
 
         $this->assertEquals('Bar', $this->_config->getConfiguration('Foo', 'bar'));
     }
 
-    public function testGettingExtensionWithInvalidPlugin()
+    /**
+     * @test
+     */
+    public function returnNullFromGetextensionIfTheGivenPluginIsNotDefined()
     {
         $this->_config->setExtension('Foo', 'bar', 'Bar');
 
         $this->assertNull($this->_config->getExtension('Bar', 'bar'));
     }
 
-    public function testGettingExtensionWithInvalidExtensionPoint()
+    /**
+     * @test
+     */
+    public function returnNullFromGetextensionIfTheGivenExtensionPointIsNotDefined()
     {
         $this->_config->setExtension('Foo', 'bar', 'Bar');
 
         $this->assertNull($this->_config->getExtension('Foo', 'baz'));
     }
 
-    public function testGettingConfigurationWithInvalidConfigurationPoint()
+    /**
+     * @test
+     */
+    public function returnNullFromGetconfigurationIfTheGivenConfigurationPointIsNotDefined()
     {
         $this->_config->setConfiguration('Foo', 'bar', 'Bar');
 
