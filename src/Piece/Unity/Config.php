@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -58,11 +58,17 @@ class Piece_Unity_Config
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
-    var $_extensions = array();
-    var $_configurations = array();
+    private $_extensions = array();
+    private $_configurations = array();
 
     /**#@-*/
 
@@ -80,7 +86,7 @@ class Piece_Unity_Config
      * @param string $extensionPoint
      * @param string $extension
      */
-    function setExtension($plugin, $extensionPoint, $extension)
+    public function setExtension($plugin, $extensionPoint, $extension)
     {
         $this->_extensions[ strtolower($plugin) ][ strtolower($extensionPoint) ] = $extension;
     }
@@ -95,7 +101,7 @@ class Piece_Unity_Config
      * @param string $configurationPoint
      * @param string $configuration
      */
-    function setConfiguration($plugin, $configurationPoint, $configuration)
+    public function setConfiguration($plugin, $configurationPoint, $configuration)
     {
         $this->_configurations[ strtolower($plugin) ][ strtolower($configurationPoint) ] = $configuration;
     }
@@ -110,7 +116,7 @@ class Piece_Unity_Config
      * @param string $extensionPoint
      * @return string
      */
-    function getExtension($plugin, $extensionPoint)
+    public function getExtension($plugin, $extensionPoint)
     {
         $plugin = strtolower($plugin);
         $extensionPoint = strtolower($extensionPoint);
@@ -135,7 +141,7 @@ class Piece_Unity_Config
      * @param string $configurationPoint
      * @return string
      */
-    function getConfiguration($plugin, $configurationPoint)
+    public function getConfiguration($plugin, $configurationPoint)
     {
         $plugin = strtolower($plugin);
         $configurationPoint = strtolower($configurationPoint);
@@ -156,28 +162,27 @@ class Piece_Unity_Config
     /**
      * Merges the given configuretion into the existing configuration.
      *
-     * @param Piece_Unity_Config &$config
+     * @param Piece_Unity_Config $config
      */
-    function merge(&$config)
+    public function merge(Piece_Unity_Config $config)
     {
         $extensions = $config->getExtensions();
-        array_walk($extensions, array(&$this, 'mergeExtensions'));
+        array_walk($extensions, array($this, 'mergeExtensions'));
 
         $configurations = $config->getConfigurations();
-        array_walk($configurations, array(&$this, 'mergeConfigurations'));
+        array_walk($configurations, array($this, 'mergeConfigurations'));
     }
 
     // }}}
     // {{{ mergeExtensions()
 
     /**
-     * A callback that will be called by array_walk() function in merge()
-     * method.
+     * A callback that will be called by array_walk() function in merge() method.
      *
      * @param string $extensions
      * @param string $plugin
      */
-    function mergeExtensions($extensions, $plugin)
+    public function mergeExtensions($extensions, $plugin)
     {
         foreach ($extensions as $extensionPoint => $extension) {
             $this->_extensions[ strtolower($plugin) ][ strtolower($extensionPoint) ] = $extension;
@@ -188,13 +193,12 @@ class Piece_Unity_Config
     // {{{ mergeConfigurations()
 
     /**
-     * A callback that will be called by array_walk() function in merge()
-     * method.
+     * A callback that will be called by array_walk() function in merge() method.
      *
      * @param string $configurations
      * @param string $plugin
      */
-    function mergeConfigurations($configurations, $plugin)
+    public function mergeConfigurations($configurations, $plugin)
     {
         foreach ($configurations as $configurationPoint => $configuration) {
             $this->_configurations[ strtolower($plugin) ][ strtolower($configurationPoint) ] = $configuration;
@@ -209,7 +213,7 @@ class Piece_Unity_Config
      *
      * @return array
      */
-    function getExtensions()
+    public function getExtensions()
     {
         return $this->_extensions;
     }
@@ -222,7 +226,7 @@ class Piece_Unity_Config
      *
      * @return array
      */
-    function getConfigurations()
+    public function getConfigurations()
     {
         return $this->_configurations;
     }
@@ -231,15 +235,15 @@ class Piece_Unity_Config
     // {{{ validateExtensionPoints()
 
     /**
-     * Validates whether all extension points in the current configuration
-     * can be found in the given plug-in.
+     * Validates whether all extension points in the current configuration can be
+     * found in the given plug-in.
      *
      * @param string $plugin
      * @param array  $extensionPoints
      * @throws PIECE_UNITY_ERROR_NOT_FOUND
      * @since Method available since Release 1.1.0
      */
-    function validateExtensionPoints($plugin, $extensionPoints)
+    public function validateExtensionPoints($plugin, $extensionPoints)
     {
         $plugin = strtolower($plugin);
         if (!array_key_exists($plugin, $this->_extensions)) {
@@ -260,15 +264,15 @@ class Piece_Unity_Config
     // {{{ validateConfigurationPoints()
 
     /**
-     * Validates whether all configuration points in the current
-     * configuration can be found in the given plug-in.
+     * Validates whether all configuration points in the current configuration can be
+     * found in the given plug-in.
      *
      * @param string $plugin
      * @param array  $configurationPoints
      * @throws PIECE_UNITY_ERROR_NOT_FOUND
      * @since Method available since Release 1.1.0
      */
-    function validateConfigurationPoints($plugin, $configurationPoints)
+    public function validateConfigurationPoints($plugin, $configurationPoints)
     {
         $plugin = strtolower($plugin);
         if (!array_key_exists($plugin, $this->_configurations)) {
@@ -284,6 +288,12 @@ class Piece_Unity_Config
             }
         }
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
