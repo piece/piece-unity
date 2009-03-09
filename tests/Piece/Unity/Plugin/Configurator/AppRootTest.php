@@ -61,8 +61,6 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends PHPUnit_Framework_Test
      * @access protected
      */
 
-    protected $backupGlobals = false;
-
     /**#@-*/
     
     /**#@+
