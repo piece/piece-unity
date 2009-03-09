@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2008-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,11 +35,6 @@
  * @since      File available since Release 0.1.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/HTTPStatus.php';
-require_once 'Piece/Unity/Error.php';
-
 // {{{ Piece_Unity_HTTPStatusTestCase
 
 /**
@@ -51,13 +46,19 @@ require_once 'Piece/Unity/Error.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_HTTPStatusTestCase extends PHPUnit_TestCase
+class Piece_Unity_HTTPStatusTestCase extends PHPUnit_Framework_TestCase
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -72,29 +73,33 @@ class Piece_Unity_HTTPStatusTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function tearDown()
+    public function tearDown()
     {
         Piece_Unity_Error::clearErrors();
     }
 
-    function testShouldSendStatusLine()
+    /**
+     * @test
+     */
+    public function sendStatusLine()
     {
         $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
-        $httpStatus = &new Piece_Unity_HTTPStatus(404);
+        $httpStatus = new Piece_Unity_HTTPStatus(404);
         $httpStatus->send();
 
         $this->assertEquals('HTTP/1.1 404 Not Found',
-                            $GLOBALS['PIECE_UNITY_HTTPStatus_SentStatusLine']
+                            $this->readAttribute($httpStatus, '_sentStatusLine')
                             );
-
-        unset($_SERVER['SERVER_PROTOCOL']);
     }
 
-    function testShouldRaiseAnExceptionIfAnUnknownStatusCodeIsGiven()
+    /**
+     * @test
+     */
+    public function raiseAnExceptionIfAnUnknownStatusCodeIsGiven()
     {
         $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
         Piece_Unity_Error::disableCallback();
-        $httpStatus = &new Piece_Unity_HTTPStatus(32);
+        $httpStatus = new Piece_Unity_HTTPStatus(32);
         Piece_Unity_Error::enableCallback();
 
         $this->assertTrue(Piece_Unity_Error::hasErrors());
@@ -102,9 +107,13 @@ class Piece_Unity_HTTPStatusTestCase extends PHPUnit_TestCase
         $error = Piece_Unity_Error::pop();
 
         $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
-
-        unset($_SERVER['SERVER_PROTOCOL']);
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
