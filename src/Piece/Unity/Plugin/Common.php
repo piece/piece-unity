@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,9 +35,6 @@
  * @since      File available since Release 0.1.0
  */
 
-require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
-
 // {{{ Piece_Unity_Plugin_Common
 
 /**
@@ -49,7 +46,7 @@ require_once 'Piece/Unity/Plugin/Factory.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Plugin_Common
+abstract class Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
@@ -61,13 +58,20 @@ class Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    protected $_context;
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
-    var $_context;
-    var $_extensionPoints = array();
-    var $_configurationPoints = array();
-    var $_name;
+    private $_extensionPoints = array();
+    private $_configurationPoints = array();
+    private $_name;
 
     /**#@-*/
 
@@ -76,16 +80,16 @@ class Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ constructor
+    // {{{ __construct()
 
     /**
-     * Sets a single instance of Piece_Unity_Context class to a plugin, and
-     * defines extension points and configuration points for the plugin.
-     * And also the plug-in name is set.
+     * Sets a single instance of Piece_Unity_Context class to a plugin, and defines
+     * extension points and configuration points for the plugin. And also the plug-in
+     * name is set.
      *
      * @param string $prefix
      */
-    function Piece_Unity_Plugin_Common($prefix = 'Piece_Unity_Plugin')
+    public function __construct($prefix = 'Piece_Unity_Plugin')
     {
         if (strlen($prefix)) {
             $this->_name = str_replace(strtolower("{$prefix}_"), '', strtolower(get_class($this)));
@@ -93,11 +97,11 @@ class Piece_Unity_Plugin_Common
             $this->_name = strtolower(get_class($this));
         }
 
-        $this->_context = &Piece_Unity_Context::singleton();
+        $this->_context = Piece_Unity_Context::singleton();
 
         $this->_initialize();
 
-        $config = &$this->_context->getConfiguration();
+        $config = $this->_context->getConfiguration();
         $config->validateExtensionPoints($this->_name, array_keys($this->_extensionPoints));
         if (Piece_Unity_Error::hasErrors()) {
             return;
@@ -111,45 +115,13 @@ class Piece_Unity_Plugin_Common
 
     /**
      * Invokes the plugin specific code.
-     *
-     * @abstract
      */
-    function invoke() {}
-
-    // }}}
-    // {{{ getExtension()
-
-    /**
-     * Gets the extension of the given extension point.
-     *
-     * @param string $extensionPoint
-     * @return mixed
-     * @deprecated Method deprecated in Release 0.12.0
-     */
-    function &getExtension($extensionPoint)
-    {
-        return $this->_getExtension($extensionPoint);
-    }
-
-    // }}}
-    // {{{ getConfiguration()
-
-    /**
-     * Gets the configuration of the given configuration point.
-     *
-     * @param string $configurationPoint
-     * @return string
-     * @deprecated Method deprecated in Release 0.12.0
-     */
-    function getConfiguration($configurationPoint)
-    {
-        return $this->_getConfiguration($configurationPoint);
-    }
+    abstract public function invoke();
 
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
     // }}}
@@ -162,7 +134,7 @@ class Piece_Unity_Plugin_Common
      * @param string $extensionPoint
      * @param string $default
      */
-    function _addExtensionPoint($extensionPoint, $default = null)
+    protected function _addExtensionPoint($extensionPoint, $default = null)
     {
         $this->_extensionPoints[ strtolower($extensionPoint) ] = $default;
     }
@@ -177,7 +149,7 @@ class Piece_Unity_Plugin_Common
      * @param string $configurationPoint
      * @param string $default
      */
-    function _addConfigurationPoint($configurationPoint, $default = null)
+    protected function _addConfigurationPoint($configurationPoint, $default = null)
     {
         $this->_configurationPoints[ strtolower($configurationPoint) ] = $default;
     }
@@ -190,7 +162,7 @@ class Piece_Unity_Plugin_Common
      *
      * @since Method available since Release 0.6.0
      */
-    function _initialize() {}
+    protected function _initialize() {}
 
     // }}}
     // {{{ _getExtension()
@@ -203,7 +175,7 @@ class Piece_Unity_Plugin_Common
      * @throws PIECE_UNITY_ERROR_NOT_FOUND
      * @since Method available since Release 0.12.0
      */
-    function &_getExtension($extensionPoint)
+    protected function _getExtension($extensionPoint)
     {
         $extensionPoint = strtolower($extensionPoint);
         if (!array_key_exists($extensionPoint, $this->_extensionPoints)) {
@@ -214,12 +186,11 @@ class Piece_Unity_Plugin_Common
                                     false,
                                     debug_backtrace()
                                     );
-            $return = null;
-            return $return;
+            return;
         }
 
-        $config = &$this->_context->getConfiguration();
-        $extension = $config->getExtension($this->_name, $extensionPoint);
+        $extension = $this->_context->getConfiguration()
+                                    ->getExtension($this->_name, $extensionPoint);
         if (is_null($extension)) {
             $extension = $this->_extensionPoints[$extensionPoint];
         }
@@ -242,7 +213,7 @@ class Piece_Unity_Plugin_Common
      * @throws PIECE_UNITY_ERROR_NOT_FOUND
      * @since Method available since Release 0.12.0
      */
-    function _getConfiguration($configurationPoint)
+    protected function _getConfiguration($configurationPoint)
     {
         $configurationPoint = strtolower($configurationPoint);
         if (!array_key_exists($configurationPoint, $this->_configurationPoints)) {
@@ -256,14 +227,22 @@ class Piece_Unity_Plugin_Common
             return;
         }
 
-        $config = &$this->_context->getConfiguration();
-        $configuration = $config->getConfiguration($this->_name, $configurationPoint);
+        $configuration = $this->_context->getConfiguration()
+                                        ->getConfiguration($this->_name,
+                                                           $configurationPoint
+                                                           );
         if (is_null($configuration)) {
             $configuration = $this->_configurationPoints[$configurationPoint];
         }
 
         return $configuration;
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
 
     /**#@-*/
 
