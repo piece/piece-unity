@@ -61,8 +61,6 @@ class Piece_Unity_Config_FactoryTest extends PHPUnit_Framework_TestCase
      * @access protected
      */
 
-    protected $backupGlobals = false;
-
     /**#@-*/
 
     /**#@+
@@ -94,12 +92,18 @@ class Piece_Unity_Config_FactoryTest extends PHPUnit_Framework_TestCase
         Piece_Unity_Error::clearErrors();
     }
 
-    public function testFactoryWithoutConfigurationFile()
+    /**
+     * @test
+     */
+    public function createAnObjectWithoutConfigurationFile()
     {
         $this->assertType('Piece_Unity_Config', Piece_Unity_Config_Factory::factory());
     }
 
-    public function testConfigurationDirectoryNotFound()
+    /**
+     * @test
+     */
+    public function raiseAnExceptionWhenTheGivenConfigurationDirectoryIsNotFound()
     {
         Piece_Unity_Error::disableCallback();
         $config = Piece_Unity_Config_Factory::factory(dirname(__FILE__) . '/foo', $this->_cacheDirectory);
@@ -113,7 +117,10 @@ class Piece_Unity_Config_FactoryTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
     }
 
-    public function testConfigurationFileNotFound()
+    /**
+     * @test
+     */
+    public function raiseAnExceptionWhenTheGivenConfigurationFileIsNotFound()
     {
         Piece_Unity_Error::disableCallback();
         $config = Piece_Unity_Config_Factory::factory(dirname(__FILE__), $this->_cacheDirectory);
@@ -127,7 +134,10 @@ class Piece_Unity_Config_FactoryTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
     }
 
-    public function testNoCachingIfCacheDirectoryNotFound()
+    /**
+     * @test
+     */
+    public function createAnObjectEvenThoughTheGivenCacheDirectoryIsNotFound()
     {
         set_error_handler(array($this, 'handleWarning'));
         $config = Piece_Unity_Config_Factory::factory($this->_cacheDirectory, dirname(__FILE__) . '/foo');
@@ -144,7 +154,10 @@ class Piece_Unity_Config_FactoryTest extends PHPUnit_Framework_TestCase
        }
     }
 
-    public function testFactoryWithConfigurationFile()
+    /**
+     * @test
+     */
+    public function createAnObjectByTheGivenConfigurationFile()
     {
         $config = Piece_Unity_Config_Factory::factory($this->_cacheDirectory, $this->_cacheDirectory);
 
@@ -166,9 +179,10 @@ class Piece_Unity_Config_FactoryTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @test
      * @since Method available since Release 1.2.0
      */
-    public function testCacheIdsShouldUniqueInOneCacheDirectory()
+    public function createUniqueCacheIdsInOneCacheDirectory()
     {
         $oldDirectory = getcwd();
         chdir("{$this->_cacheDirectory}/CacheIDsShouldBeUniqueInOneCacheDirectory1");
