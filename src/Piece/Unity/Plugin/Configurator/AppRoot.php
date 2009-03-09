@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,14 +35,11 @@
  * @since      File available since Release 0.12.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/Error.php';
-
 // {{{ Piece_Unity_Plugin_Configurator_AppRoot
 
 /**
- * A configurator for setting the directory and the URI path that form
- * the top of the document tree of an application visible from the web.
+ * A configurator for setting the directory and the URI path that form the top of
+ * the document tree of an application visible from the web.
  *
  * @package    Piece_Unity
  * @copyright  2007-2009 KUBO Atsuhiro <kubo@iteman.jp>
@@ -57,6 +54,12 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -79,7 +82,7 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common
      *
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
-    function invoke()
+    public function invoke()
     {
         $appRoot = $this->_getConfiguration('appRoot');
         if (!is_null($appRoot)) {
@@ -101,7 +104,7 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
     // }}}
@@ -110,11 +113,17 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common
     /**
      * Defines and initializes extension points and configuration points.
      */
-    function _initialize()
+    protected function _initialize()
     {
         $this->_addConfigurationPoint('appRoot');
         $this->_addConfigurationPoint('appRootPath');
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
 
     /**#@-*/
 
