@@ -71,48 +71,47 @@ class Piece_Unity_HTTPStatus
      */
 
     private $_statusCode;
-    private $_statusCodes = array(100 => 'Continue',
-                                  101 => 'Switching Protocols',
-                                  200 => 'OK',
-                                  201 => 'Created',
-                                  202 => 'Accepted',
-                                  203 => 'Non-Authoritative Information',
-                                  204 => 'No Content',
-                                  205 => 'Reset Content',
-                                  206 => 'Partial Content',
-                                  300 => 'Multiple Choices',
-                                  301 => 'Moved Permanently',
-                                  302 => 'Found',
-                                  303 => 'See Other',
-                                  304 => 'Not Modified',
-                                  305 => 'Use Proxy',
-                                  307 => 'Temporary Redirect',
-                                  400 => 'Bad Request',
-                                  401 => 'Unauthorized',
-                                  402 => 'Payment Required',
-                                  403 => 'Forbidden',
-                                  404 => 'Not Found',
-                                  405 => 'Method Not Allowed',
-                                  406 => 'Not Acceptable',
-                                  407 => 'Proxy Authentication Required',
-                                  408 => 'Request Time-out',
-                                  409 => 'Conflict',
-                                  410 => 'Gone',
-                                  411 => 'Length Required',
-                                  412 => 'Precondition Failed',
-                                  413 => 'Request Entity Too Large',
-                                  414 => 'Request-URI Too Large',
-                                  415 => 'Unsupported Media Type',
-                                  416 => 'Requested range not satisfiable',
-                                  417 => 'Expectation Failed',
-                                  500 => 'Internal Server Error',
-                                  501 => 'Not Implemented',
-                                  502 => 'Bad Gateway',
-                                  503 => 'Service Unavailable',
-                                  504 => 'Gateway Time-out',
-                                  505 => 'HTTP Version not supported'
-                                  );
-    private $_sentStatusLine;
+    private static $_statusCodes = array(100 => 'Continue',
+                                         101 => 'Switching Protocols',
+                                         200 => 'OK',
+                                         201 => 'Created',
+                                         202 => 'Accepted',
+                                         203 => 'Non-Authoritative Information',
+                                         204 => 'No Content',
+                                         205 => 'Reset Content',
+                                         206 => 'Partial Content',
+                                         300 => 'Multiple Choices',
+                                         301 => 'Moved Permanently',
+                                         302 => 'Found',
+                                         303 => 'See Other',
+                                         304 => 'Not Modified',
+                                         305 => 'Use Proxy',
+                                         307 => 'Temporary Redirect',
+                                         400 => 'Bad Request',
+                                         401 => 'Unauthorized',
+                                         402 => 'Payment Required',
+                                         403 => 'Forbidden',
+                                         404 => 'Not Found',
+                                         405 => 'Method Not Allowed',
+                                         406 => 'Not Acceptable',
+                                         407 => 'Proxy Authentication Required',
+                                         408 => 'Request Time-out',
+                                         409 => 'Conflict',
+                                         410 => 'Gone',
+                                         411 => 'Length Required',
+                                         412 => 'Precondition Failed',
+                                         413 => 'Request Entity Too Large',
+                                         414 => 'Request-URI Too Large',
+                                         415 => 'Unsupported Media Type',
+                                         416 => 'Requested range not satisfiable',
+                                         417 => 'Expectation Failed',
+                                         500 => 'Internal Server Error',
+                                         501 => 'Not Implemented',
+                                         502 => 'Bad Gateway',
+                                         503 => 'Service Unavailable',
+                                         504 => 'Gateway Time-out',
+                                         505 => 'HTTP Version not supported'
+                                         );
 
     /**#@-*/
 
@@ -131,7 +130,7 @@ class Piece_Unity_HTTPStatus
      */
     public function __construct($statusCode)
     {
-        if (!array_key_exists($statusCode, $this->_statusCodes)) {
+        if (!array_key_exists($statusCode, self::$_statusCodes)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                     "Unknown status code [ $statusCode ], be sure the status code is correct."
                                     );
@@ -147,16 +146,9 @@ class Piece_Unity_HTTPStatus
     /**
      * Sends a HTTP status line like "HTTP/1.1 404 Not Found".
      */
-    function send()
+    public function send()
     {
-        $statusLine = sprintf('%s %d %s',
-                              $_SERVER['SERVER_PROTOCOL'],
-                              $this->_statusCode,
-                              $this->_statusCodes[ $this->_statusCode ]
-                              );
-        @header($statusLine);
-
-        $this->_sentStatusLine = $statusLine;
+        @header($this->createStatusLine());
     }
 
     /**#@-*/
@@ -164,6 +156,23 @@ class Piece_Unity_HTTPStatus
     /**#@+
      * @access protected
      */
+
+    // }}}
+    // {{{ createStatusLine()
+
+    /**
+     * Creates a HTTP status line like "HTTP/1.1 404 Not Found".
+     *
+     * @since Method available since Release 2.0.0dev1
+     */
+    protected function createStatusLine()
+    {
+        return sprintf('%s %d %s',
+                       $_SERVER['SERVER_PROTOCOL'],
+                       $this->_statusCode,
+                       self::$_statusCodes[ $this->_statusCode ]
+                       );
+    }
 
     /**#@-*/
 
