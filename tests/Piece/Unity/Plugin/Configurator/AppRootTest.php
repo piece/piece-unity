@@ -81,7 +81,10 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends PHPUnit_Framework_Test
         Piece_Unity_Error::clearErrors();
     }
 
-    public function testAppRoot()
+    /**
+     * @test
+     */
+    public function changeTheCurrentDirectory()
     {
         $appRoot = realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..');
         $config = new Piece_Unity_Config();
@@ -94,7 +97,10 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends PHPUnit_Framework_Test
         $this->assertEquals($appRoot, getcwd());
     }
 
-    public function testAppRootWithNonExistingDirectory()
+    /**
+     * @test
+     */
+    public function raiseAnExceptionIfTheGivenDirectoryIsNotFound()
     {
         $appRoot = '/foo/bar';
         $config = new Piece_Unity_Config();
@@ -113,7 +119,10 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends PHPUnit_Framework_Test
         $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
     }
 
-    public function testAppRootPath()
+    /**
+     * @test
+     */
+    public function setTheAppRootPath()
     {
         $appRootPath = '/foo/bar';
         $config = new Piece_Unity_Config();
