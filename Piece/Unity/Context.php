@@ -82,6 +82,7 @@ class Piece_Unity_Context
     var $_eventNameImported = false;
     var $_eventNameKey = '_event';
     var $_scriptName;
+    var $_originalScriptName;
     var $_basePath = '';
     var $_attributes = array();
     var $_proxyPath;
@@ -301,6 +302,20 @@ class Piece_Unity_Context
     function getScriptName()
     {
         return $this->_scriptName;
+    }
+
+    // }}}
+    // {{{ getOriginalScriptName()
+
+    /**
+     * Gets the original script name of the current request.
+     *
+     * @return string
+     * @since Method available since Release 1.7.1
+     */
+    function getOriginalScriptName()
+    {
+        return $this->_originalScriptName;
     }
 
     // }}}
@@ -652,7 +667,7 @@ class Piece_Unity_Context
         $this->_request = &new Piece_Unity_Request();
         $this->_viewElement = &new Piece_Unity_ViewElement();
         $this->_session = &new Piece_Unity_Session();
-        $this->_scriptName = $this->_getScriptName();
+        $this->_scriptName = $this->_originalScriptName = $this->_getScriptName();
         $this->_basePath = $this->_getBasePath();
         $this->_validation = &new Piece_Unity_Validation();
     }
