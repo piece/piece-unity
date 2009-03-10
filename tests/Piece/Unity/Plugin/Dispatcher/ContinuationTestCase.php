@@ -426,7 +426,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $oldScriptName = $_SERVER['REQUEST_URI'];
+        $oldScriptName = @$_SERVER['REQUEST_URI'];
         $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
@@ -464,7 +464,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
         $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'example.org';
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        $oldScriptName = $_SERVER['REQUEST_URI'];
+        $oldScriptName = @$_SERVER['REQUEST_URI'];
         $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
@@ -504,7 +504,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $oldScriptName = $_SERVER['REQUEST_URI'];
+        $oldScriptName = @$_SERVER['REQUEST_URI'];
         $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
@@ -541,7 +541,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $oldScriptName = $_SERVER['REQUEST_URI'];
+        $oldScriptName = @$_SERVER['REQUEST_URI'];
         $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
@@ -577,7 +577,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $oldScriptName = $_SERVER['REQUEST_URI'];
+        $oldScriptName = @$_SERVER['REQUEST_URI'];
         $_SERVER['REQUEST_URI'] = '/exceptions/pass-through.php';
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
@@ -618,7 +618,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $oldScriptName = $_SERVER['REQUEST_URI'];
+        $oldScriptName = @$_SERVER['REQUEST_URI'];
         $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
@@ -658,7 +658,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTestCase extends PHPUnit_TestCas
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $oldScriptName = $_SERVER['REQUEST_URI'];
+        $oldScriptName = @$_SERVER['REQUEST_URI'];
         $_SERVER['REQUEST_URI'] = '/user/authentication.php';
         $config = &new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_cacheDirectory);
