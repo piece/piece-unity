@@ -154,19 +154,37 @@ class Piece_Unity_Request
      */
     function importPathInfo()
     {
-        if (PHP_SAPI != 'cgi') {
-            if (array_key_exists('PATH_INFO', $_SERVER)) {
-                $pathInfo = $_SERVER['PATH_INFO'];
-            }
-        } else {
-            if (array_key_exists('ORIG_PATH_INFO', $_SERVER)) {
-                $pathInfo = $_SERVER['ORIG_PATH_INFO'];
-            }
+        $pathInfo = Piece_Unity_Request::getPathInfo();
+        if (is_null($pathInfo)) {
+            return;
         }
 
         $pathInfoParameters = explode('/', trim($pathInfo, '/'));
         for ($i = 0, $count = count($pathInfoParameters); $i < $count; $i += 2) {
             $this->_parameters[ $pathInfoParameters[$i] ] = @$pathInfoParameters[$i + 1];
+        }
+    }
+
+    // }}}
+    // {{{ getPathInfo()
+
+    /**
+     * Gets PATH_INFO string.
+     *
+     * @return string
+     * @since Method available since Release 1.7.1
+     * @static
+     */
+    function getPathInfo()
+    {
+        if (PHP_SAPI != 'cgi') {
+            if (array_key_exists('PATH_INFO', $_SERVER)) {
+                return $_SERVER['PATH_INFO'];
+            }
+        }
+
+        if (array_key_exists('ORIG_PATH_INFO', $_SERVER)) {
+            return $_SERVER['ORIG_PATH_INFO'];
         }
     }
 
