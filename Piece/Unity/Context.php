@@ -652,7 +652,7 @@ class Piece_Unity_Context
         $this->_request = &new Piece_Unity_Request();
         $this->_viewElement = &new Piece_Unity_ViewElement();
         $this->_session = &new Piece_Unity_Session();
-        $this->_scriptName = str_replace('//', '/', @$_SERVER['REQUEST_URI']);
+        $this->_scriptName = $this->_getScriptName(@$_SERVER['REQUEST_URI']);
 
         $positionOfSlash = strrpos($this->_scriptName, '/');
         if ($positionOfSlash) {
@@ -718,6 +718,47 @@ class Piece_Unity_Context
     {
         $eventName = $this->_request->hasParameter($this->_eventNameKey) ? $this->_request->getParameter($this->_eventNameKey) : null;
         $this->setEventName($eventName);
+    }
+
+    // }}}
+    // {{{ _getScriptName()
+
+    /**
+     * Gets the script name from the REQUEST_URI variable.
+     *
+     * @param string $requestURI
+     * @return string
+     * @since Method available since Release 1.7.1
+     */
+    function _getScriptName($requestURI)
+    {
+        $requestURI = str_replace('//', '/', $requestURI);
+        $positionOfQuestion = strpos($requestURI, '?');
+        if ($positionOfQuestion) {
+            $scriptName = substr($requestURI, 0, $positionOfQuestion);
+        } else {
+            $scriptName = $requestURI;
+        }
+
+        $pathInfo = null;
+        if (PHP_SAPI != 'cgi') {
+            if (array_key_exists('PATH_INFO', $_SERVER)) {
+                $pathInfo = $_SERVER['PATH_INFO'];
+            }
+        } else {
+            if (array_key_exists('ORIG_PATH_INFO', $_SERVER)) {
+                $pathInfo = $_SERVER['ORIG_PATH_INFO'];
+            }
+        }
+
+        if (!is_null($pathInfo)) {
+            $positionOfPathInfo = strrpos($scriptName, $pathInfo);
+            if ($positionOfPathInfo) {
+                $scriptName = substr($scriptName, 0, $positionOfPathInfo);
+            }
+        }
+
+        return $scriptName;
     }
 
     /**#@-*/
