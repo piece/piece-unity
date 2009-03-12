@@ -316,7 +316,7 @@ class Piece_Unity_Context
      * @return string
      * @since Method available since Release 1.7.1
      */
-    function getOriginalScriptName()
+    public function getOriginalScriptName()
     {
         return $this->_originalScriptName;
     }
@@ -748,7 +748,7 @@ class Piece_Unity_Context
      * @return string
      * @since Method available since Release 1.7.1
      */
-    function _getScriptName()
+    private function _getScriptName()
     {
         $requestURI = str_replace('//', '/', @$_SERVER['REQUEST_URI']);
 
@@ -781,7 +781,7 @@ class Piece_Unity_Context
      * @return string
      * @since Method available since Release 1.7.1
      */
-    function _getBasePath()
+    private function _getBasePath()
     {
         $positionOfSlash = strrpos($this->_scriptName, '/');
         if (!$positionOfSlash) {
