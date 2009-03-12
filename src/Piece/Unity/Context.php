@@ -100,6 +100,22 @@ class Piece_Unity_Context
      */
 
     // }}}
+    // {{{ __construct()
+
+    /**
+     * Creates a Piece_Unity_Request object and sets an event to the context.
+     */
+    public function __construct()
+    {
+        $this->_request = new Piece_Unity_Request();
+        $this->_viewElement = new Piece_Unity_ViewElement();
+        $this->_session = new Piece_Unity_Session();
+        $this->_scriptName = $this->_originalScriptName = $this->_getScriptName();
+        $this->_basePath = $this->_getBasePath();
+        $this->_validation = new Piece_Unity_Validation();
+    }
+
+    // }}}
     // {{{ __clone()
 
     /**
@@ -121,7 +137,7 @@ class Piece_Unity_Context
      *
      * @return Piece_Unity_Context
      */
-    public function singleton()
+    public static function singleton()
     {
         if (is_null(self::$_soleInstance)) {
             self::$_soleInstance = new self();
@@ -616,12 +632,26 @@ class Piece_Unity_Context
      */
     public function sendHTTPStatus($statusCode)
     {
-        $httpStatus = new Piece_Unity_HTTPStatus($statusCode);
+        $httpStatus = $this->createHTTPStatus($statusCode);
         if (Piece_Unity_Error::hasErrors()) {
             return;
         }
 
         $httpStatus->send();
+    }
+
+    // }}}
+    // {{{ createHTTPStatus()
+
+    /**
+     * Creates a Piece_Unity_HTTPStatus object.
+     *
+     * @param integer $statusCode
+     * @since Method available since Release 2.0.0dev1
+     */
+    public function createHTTPStatus($statusCode)
+    {
+        return new Piece_Unity_HTTPStatus($statusCode);
     }
 
     // }}}
@@ -664,22 +694,6 @@ class Piece_Unity_Context
     /**#@+
      * @access private
      */
-
-    // }}}
-    // {{{ __construct()
-
-    /**
-     * Creates a Piece_Unity_Request object and sets an event to the context.
-     */
-    private function __construct()
-    {
-        $this->_request = new Piece_Unity_Request();
-        $this->_viewElement = new Piece_Unity_ViewElement();
-        $this->_session = new Piece_Unity_Session();
-        $this->_scriptName = $this->_originalScriptName = $this->_getScriptName();
-        $this->_basePath = $this->_getBasePath();
-        $this->_validation = new Piece_Unity_Validation();
-    }
 
     // }}}
     // {{{ _importEventNameFromSubmit()
