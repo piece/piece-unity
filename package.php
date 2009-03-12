@@ -40,38 +40,15 @@ require_once 'PEAR.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$releaseVersion = '1.7.0';
+$releaseVersion = '1.7.1';
 $releaseStability = 'stable';
 $apiVersion = '1.5.0';
 $apiStability = 'stable';
-$notes = 'A new release of Piece_Unity is now available.
+$notes = 'A new release of Piece_Unity is now available. If you have used Piece_Unity 1.7.0, you *must* upgrade to this version.
 
-What\'s New in Piece_Unity 1.7.0
+What\'s New in Piece_Unity 1.7.1
 
- * Two defect fixes: A defect has been fixed that caused a URI scheme for redirection to be "http" on SSL by non-standard port. And another defect has been fixed.
- * Some improvements: A method setConfigurationCallback() has been added to set the callback for createRuntime(), and the behavior of createRuntime() has been changed so as to call the callback by setConfigurationCallback() if the callback by the argument is not given. And there are a few more improvements.
-
-Backward Compatibility
-
- * Redirection to internal URIs: When redirecting to a internal URI, the scheme of the given URI (http/https) is always kept.
- * Piece_Unity_Component_Authentication: Piece_Unity_Component_Authentication 1.1.1 or less does not work properly with Piece_Unity 1.7.0. Upgrade to the upcoming version 1.1.2.
-
-See the following release notes for details.
-
-Enhancements
-============
-
-- Added a method setConfigurationCallback() to set the callback for createRuntime(). (Piece_Unity)
-- Changed the behavior of createRuntime() so as to call the callback by setConfigurationCallback() if the callback by the argument is not given. (Piece_Unity)
-- Changed the behavior of getURI() so that the given URI scheme is kept by the argument "pass". Also the Renderer_Redirection plug-in always use "pass". (Piece_Unity_URI)
-- Added isSecure() to check whether the current connection is secure or not. (Piece_Unity_Context)
-- Replaced $_SERVER[\'SCRIPT_NAME\'] with $_SERVER[\'REQUEST_URI\'] for URI mappings by mod_rewrite. (Ticket #287)
-
-Defect Fixes
-============
-
-- Fixed a defect so that the proxy path was included twice in the URI by Piece_Unity_Service_Continuation::createURI(). (Piece_Unity_URI)
-- Fixed a defect that caused a URI scheme for redirection to be "http" on SSL by non-standard port. (Ticket #288)';
+ * A defect fix: A blocker defect has been fixed so that an application cannot be continue if the requested URI contains query variables. (See Ticket #291) And also since Piece_Unity_Component_Authentication 1.1.2 has a related defect, Upgrade to the upcoming version 1.1.3 if you have used it.';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'file',

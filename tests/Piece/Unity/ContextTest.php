@@ -373,6 +373,53 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
                             );
     }
 
+    /**
+     * @since Method available since Release 1.7.1
+     */
+    function testShouldRemoveQueryVariablesFromRequestUri()
+    {
+        $previousScriptName = @$_SERVER['REQUEST_URI'];
+        $_SERVER['REQUEST_URI'] = '/foo.php?bar=baz';
+
+        $context = &Piece_Unity_Context::singleton();
+
+        $this->assertEquals('/foo.php', $context->getScriptName());
+
+        $_SERVER['REQUEST_URI'] = $previousScriptName;
+    }
+
+    /**
+     * @since Method available since Release 1.7.1
+     */
+    function testShouldRemovePathInfoFromRequestUri()
+    {
+        $previousScriptName = @$_SERVER['REQUEST_URI'];
+        $_SERVER['REQUEST_URI'] = '/foo.php/bar/baz';
+        $_SERVER['PATH_INFO'] = '/bar/baz';
+
+        $context = &Piece_Unity_Context::singleton();
+
+        $this->assertEquals('/foo.php', $context->getScriptName());
+
+        $_SERVER['REQUEST_URI'] = $previousScriptName;
+    }
+
+    /**
+     * @since Method available since Release 1.7.1
+     */
+    function testShouldRemoveQueryVariablesAndPathInfoFromRequestUri()
+    {
+        $previousScriptName = @$_SERVER['REQUEST_URI'];
+        $_SERVER['REQUEST_URI'] = '/foo.php/bar/baz?bar=baz';
+        $_SERVER['PATH_INFO'] = '/bar/baz';
+
+        $context = &Piece_Unity_Context::singleton();
+
+        $this->assertEquals('/foo.php', $context->getScriptName());
+
+        $_SERVER['REQUEST_URI'] = $previousScriptName;
+    }
+
     /**#@-*/
 
     /**#@+

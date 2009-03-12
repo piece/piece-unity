@@ -76,6 +76,7 @@ class Piece_Unity_Context
     private $_eventNameImported = false;
     private $_eventNameKey = '_event';
     private $_scriptName;
+    private $_originalScriptName;
     private $_basePath = '';
     private $_attributes = array();
     private $_proxyPath;
@@ -304,6 +305,20 @@ class Piece_Unity_Context
     public function getScriptName()
     {
         return $this->_scriptName;
+    }
+
+    // }}}
+    // {{{ getOriginalScriptName()
+
+    /**
+     * Gets the original script name of the current request.
+     *
+     * @return string
+     * @since Method available since Release 1.7.1
+     */
+    function getOriginalScriptName()
+    {
+        return $this->_originalScriptName;
     }
 
     // }}}
@@ -661,13 +676,8 @@ class Piece_Unity_Context
         $this->_request = new Piece_Unity_Request();
         $this->_viewElement = new Piece_Unity_ViewElement();
         $this->_session = new Piece_Unity_Session();
-        $this->_scriptName = str_replace('//', '/', @$_SERVER['REQUEST_URI']);
-
-        $positionOfSlash = strrpos($this->_scriptName, '/');
-        if ($positionOfSlash) {
-            $this->_basePath = substr($this->_scriptName, 0, $positionOfSlash);
-        }
-
+        $this->_scriptName = $this->_originalScriptName = $this->_getScriptName();
+        $this->_basePath = $this->_getBasePath();
         $this->_validation = new Piece_Unity_Validation();
     }
 
@@ -727,6 +737,58 @@ class Piece_Unity_Context
     {
         $eventName = $this->_request->hasParameter($this->_eventNameKey) ? $this->_request->getParameter($this->_eventNameKey) : null;
         $this->setEventName($eventName);
+    }
+
+    // }}}
+    // {{{ _getScriptName()
+
+    /**
+     * Gets the script name from the REQUEST_URI variable.
+     *
+     * @return string
+     * @since Method available since Release 1.7.1
+     */
+    function _getScriptName()
+    {
+        $requestURI = str_replace('//', '/', @$_SERVER['REQUEST_URI']);
+
+        $positionOfQuestion = strpos($requestURI, '?');
+        if ($positionOfQuestion) {
+            $scriptName = substr($requestURI, 0, $positionOfQuestion);
+        } else {
+            $scriptName = $requestURI;
+        }
+
+        $pathInfo = Piece_Unity_Request::getPathInfo();
+        if (is_null($pathInfo)) {
+            return $scriptName;
+        }
+
+        $positionOfPathInfo = strrpos($scriptName, $pathInfo);
+        if ($positionOfPathInfo) {
+            return substr($scriptName, 0, $positionOfPathInfo);
+        }
+
+        return $scriptName;
+    }
+
+    // }}}
+    // {{{ _getBasePath()
+
+    /**
+     * Gets the base path from the script name.
+     *
+     * @return string
+     * @since Method available since Release 1.7.1
+     */
+    function _getBasePath()
+    {
+        $positionOfSlash = strrpos($this->_scriptName, '/');
+        if (!$positionOfSlash) {
+            return $this->_scriptName;
+        }
+
+        return substr($this->_scriptName, 0, $positionOfSlash);
     }
 
     /**#@-*/

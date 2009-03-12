@@ -369,7 +369,8 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             $this->_getConfiguration('flowNameKey');
 
         if ($this->_getConfiguration('useFlowMappings')) {
-            $GLOBALS['PIECE_UNITY_Continuation_FlowID'] = $_SERVER['REQUEST_URI'];
+            $GLOBALS['PIECE_UNITY_Continuation_FlowID'] =
+                $this->_context->getOriginalScriptName();
         } else {
             $GLOBALS['PIECE_UNITY_Continuation_FlowID'] =
                 $this->_getConfiguration('flowName');
