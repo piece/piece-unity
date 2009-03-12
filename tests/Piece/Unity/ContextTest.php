@@ -115,9 +115,9 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
     {
         $_GET['_event_bar'] = null;
 
-        $context = Piece_Unity_Context::singleton();
-
-        $this->assertEquals('bar', $context->getEventName());
+        $this->assertEquals('bar',
+                            Piece_Unity_Context::singleton()->getEventName()
+                            );
     }
 
     /**
@@ -176,9 +176,9 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
     {
         $_SERVER['REQUEST_URI'] = '/path/to/foo.php';
 
-        $context = Piece_Unity_Context::singleton();
-
-        $this->assertEquals('/path/to/foo.php', $context->getScriptName());
+        $this->assertEquals('/path/to/foo.php',
+                            Piece_Unity_Context::singleton()->getScriptName()
+                            );
     }
 
     /**
@@ -188,9 +188,9 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
     {
         $_SERVER['REQUEST_URI'] = '/path/to/foo.php';
 
-        $context = Piece_Unity_Context::singleton();
-
-        $this->assertEquals('/path/to', $context->getBasePath());
+        $this->assertEquals('/path/to',
+                            Piece_Unity_Context::singleton()->getBasePath()
+                            );
     }
 
     /**
@@ -235,9 +235,9 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
     {
         $_SERVER['REQUEST_URI'] = '//path/to/foo.php';
 
-        $context = Piece_Unity_Context::singleton();
-
-        $this->assertEquals('/path/to', $context->getBasePath());
+        $this->assertEquals('/path/to',
+                            Piece_Unity_Context::singleton()->getBasePath()
+                            );
     }
 
     /**
@@ -319,9 +319,9 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
         $_POST['_event_foo_x'] = '19';
         $_POST['_event_foo_y'] = '99';
 
-        $context = Piece_Unity_Context::singleton();
-
-        $this->assertEquals('foo', $context->getEventName());
+        $this->assertEquals('foo',
+                            Piece_Unity_Context::singleton()->getEventName()
+                            );
     }
 
     /**
@@ -336,9 +336,9 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
         $_POST['_event_foo_x'] = '19';
         $_POST['_event_foo_z'] = '99';
 
-        $context = Piece_Unity_Context::singleton();
-
-        $this->assertEquals('foo_z', $context->getEventName());
+        $this->assertEquals('foo_z',
+                            Piece_Unity_Context::singleton()->getEventName()
+                            );
     }
 
     /**
@@ -365,8 +365,7 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
     public function sendTheStatusLineOfTheResponse()
     {
         $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
-        $context = Piece_Unity_Context::singleton();
-        $context->sendHTTPStatus(404);
+        Piece_Unity_Context::singleton()->sendHTTPStatus(404);
 
         $this->assertEquals('HTTP/1.1 404 Not Found',
                             $GLOBALS['PIECE_UNITY_HTTPStatus_SentStatusLine']
@@ -374,50 +373,44 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @test
      * @since Method available since Release 1.7.1
      */
-    function testShouldRemoveQueryVariablesFromRequestUri()
+    public function removeQueryVariablesFromRequestUri()
     {
-        $previousScriptName = @$_SERVER['REQUEST_URI'];
         $_SERVER['REQUEST_URI'] = '/foo.php?bar=baz';
 
-        $context = &Piece_Unity_Context::singleton();
-
-        $this->assertEquals('/foo.php', $context->getScriptName());
-
-        $_SERVER['REQUEST_URI'] = $previousScriptName;
+        $this->assertEquals('/foo.php',
+                            Piece_Unity_Context::singleton()->getScriptName()
+                            );
     }
 
     /**
+     * @test
      * @since Method available since Release 1.7.1
      */
-    function testShouldRemovePathInfoFromRequestUri()
+    public function removePathInfoFromRequestUri()
     {
-        $previousScriptName = @$_SERVER['REQUEST_URI'];
         $_SERVER['REQUEST_URI'] = '/foo.php/bar/baz';
         $_SERVER['PATH_INFO'] = '/bar/baz';
 
-        $context = &Piece_Unity_Context::singleton();
-
-        $this->assertEquals('/foo.php', $context->getScriptName());
-
-        $_SERVER['REQUEST_URI'] = $previousScriptName;
+        $this->assertEquals('/foo.php',
+                            Piece_Unity_Context::singleton()->getScriptName()
+                            );
     }
 
     /**
+     * @test
      * @since Method available since Release 1.7.1
      */
-    function testShouldRemoveQueryVariablesAndPathInfoFromRequestUri()
+    public function removeQueryVariablesAndPathInfoFromRequestUri()
     {
-        $previousScriptName = @$_SERVER['REQUEST_URI'];
         $_SERVER['REQUEST_URI'] = '/foo.php/bar/baz?bar=baz';
         $_SERVER['PATH_INFO'] = '/bar/baz';
 
-        $context = &Piece_Unity_Context::singleton();
-
-        $this->assertEquals('/foo.php', $context->getScriptName());
-
-        $_SERVER['REQUEST_URI'] = $previousScriptName;
+        $this->assertEquals('/foo.php',
+                            Piece_Unity_Context::singleton()->getScriptName()
+                            );
     }
 
     /**#@-*/
