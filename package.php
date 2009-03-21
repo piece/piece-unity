@@ -30,8 +30,8 @@
  *
  * @package    Piece_Unity
  * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
+ * @version    Release: @package_version@
  * @since      File available since Release 0.1.0
  */
 
@@ -40,15 +40,15 @@ require_once 'PEAR.php';
 
 PEAR::staticPushErrorHandling(PEAR_ERROR_CALLBACK, create_function('$error', 'var_dump($error); exit();'));
 
-$releaseVersion = '1.7.1';
-$releaseStability = 'stable';
-$apiVersion = '1.5.0';
-$apiStability = 'stable';
-$notes = 'A new release of Piece_Unity is now available. If you have used Piece_Unity 1.7.0, you *must* upgrade to this version.
+$releaseVersion = '2.0.0dev1';
+$releaseStability = 'devel';
+$apiVersion = '2.0.0dev1';
+$apiStability = 'devel';
+$notes = 'A new release of Piece_Unity is now available. This is the first development release of Piece_Unity 2.x.
 
-What\'s New in Piece_Unity 1.7.1
+What\'s New in Piece_Unity 2.0.0dev1
 
- * A defect fix: A blocker defect has been fixed so that an application cannot be continue if the requested URI contains query variables. (See Ticket #291) And also since Piece_Unity_Component_Authentication 1.1.2 has a related defect, Upgrade to the upcoming version 1.1.3 if you have used it.';
+ * Migration to PHP 5: Piece_Unity now works with PHP 5.0.0 or greater.';
 
 $package = new PEAR_PackageFileManager2();
 $package->setOptions(array('filelistgenerator' => 'file',
@@ -71,19 +71,20 @@ $package->setDescription('Piece_Unity is a Web application framework.
 
 Piece_Unity allows stateful programming without thinking about sessions by storing and restoring states with a technology known as continuation server. It also provides high security and eases the burden of implementing security measures for applications by application flow control.');
 $package->setChannel('pear.piece-framework.com');
-$package->setLicense('BSD License (revised)', 'http://www.opensource.org/licenses/bsd-license.php');
+$package->setLicense('New BSD License', 'http://www.opensource.org/licenses/bsd-license.php');
 $package->setAPIVersion($apiVersion);
 $package->setAPIStability($apiStability);
 $package->setReleaseVersion($releaseVersion);
 $package->setReleaseStability($releaseStability);
 $package->setNotes($notes);
-$package->setPhpDep('4.3.3');
+$package->setPhpDep('5.0.0');
 $package->setPearinstallerDep('1.4.3');
 $package->addPackageDepWithChannel('required', 'Piece_Flow', 'pear.piece-framework.com', '1.16.0');
 $package->addPackageDepWithChannel('required', 'Cache_Lite', 'pear.php.net', '1.7.0');
 $package->addPackageDepWithChannel('required', 'PEAR', 'pear.php.net', '1.4.3');
 $package->addPackageDepWithChannel('required', 'Net_URL', 'pear.php.net', '1.0.14');
 $package->addPackageDepWithChannel('required', 'Piece_Right', 'pear.piece-framework.com', '1.10.0');
+$package->addPackageDepWithChannel('required', 'Stagehand_HTTP_Status', 'pear.piece-framework.com', '1.0.0');
 $package->addMaintainer('lead', 'iteman', 'KUBO Atsuhiro', 'kubo@iteman.jp');
 $package->addGlobalReplacement('package-info', '@package_version@', 'version');
 $package->generateContents();
