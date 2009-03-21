@@ -30,8 +30,8 @@
  *
  * @package    Piece_Unity
  * @copyright  2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
+ * @version    Release: @package_version@
  * @see        Piece_Unity_ContextTest
  * @since      File available since Release 2.0.0dev1
  */
@@ -43,12 +43,12 @@
  *
  * @package    Piece_Unity
  * @copyright  2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @version    Release: @package_version@
  * @see        Piece_Unity_ContextTest
  * @since      Class available since Release 2.0.0dev1
  */
-class Piece_Unity_ContextTest_MockHTTPStatus extends Piece_Unity_HTTPStatus
+class Piece_Unity_ContextTest_MockHTTPStatus extends Stagehand_HTTP_Status
 {
 
     // {{{ properties
