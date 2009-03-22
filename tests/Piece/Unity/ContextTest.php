@@ -367,28 +367,13 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
     public function sendTheStatusLineOfTheResponse()
     {
         $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
-
-        $context = $this->getMock('Piece_Unity_Context',
-                                  array('createHTTPStatus')
-                                  );
-        $context->expects($this->any())
-                ->method('createHTTPStatus')
-                ->will($this->returnCallback(array($this, 'createHTTPStatus')));
-
+        $context = Piece_Unity_Context::singleton();
         $context->sendHTTPStatus(404);
 
-        $this->assertEquals('HTTP/1.1 404 Not Found',
-                            $this->readAttribute($this->_httpStatus, '_sentStatusLine')
-                            );
-    }
-
-    /**
-     * @since Method available since Release 2.0.0dev1
-     */
-    public function createHTTPStatus($statusCode)
-    {
-        $this->_httpStatus = new Piece_Unity_ContextTest_MockHTTPStatus($statusCode);
-        return $this->_httpStatus;
+        $this->assertAttributeEquals('HTTP/1.1 404 Not Found',
+                                     '_sentStatusLine',
+                                     'Stagehand_HTTP_Status'
+                                     );
     }
 
     /**

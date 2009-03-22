@@ -84,7 +84,7 @@ $package->addPackageDepWithChannel('required', 'Cache_Lite', 'pear.php.net', '1.
 $package->addPackageDepWithChannel('required', 'PEAR', 'pear.php.net', '1.4.3');
 $package->addPackageDepWithChannel('required', 'Net_URL', 'pear.php.net', '1.0.14');
 $package->addPackageDepWithChannel('required', 'Piece_Right', 'pear.piece-framework.com', '1.10.0');
-$package->addPackageDepWithChannel('required', 'Stagehand_HTTP_Status', 'pear.piece-framework.com', '1.0.0');
+$package->addPackageDepWithChannel('required', 'Stagehand_HTTP_Status', 'pear.piece-framework.com', '1.1.0');
 $package->addMaintainer('lead', 'iteman', 'KUBO Atsuhiro', 'kubo@iteman.jp');
 $package->addGlobalReplacement('package-info', '@package_version@', 'version');
 $package->generateContents();

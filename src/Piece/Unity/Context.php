@@ -632,26 +632,7 @@ class Piece_Unity_Context
      */
     public function sendHTTPStatus($statusCode)
     {
-        $httpStatus = $this->createHTTPStatus($statusCode);
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
-
-        $httpStatus->send();
-    }
-
-    // }}}
-    // {{{ createHTTPStatus()
-
-    /**
-     * Creates a Piece_Unity_HTTPStatus object.
-     *
-     * @param integer $statusCode
-     * @since Method available since Release 2.0.0dev1
-     */
-    public function createHTTPStatus($statusCode)
-    {
-        return new Stagehand_HTTP_Status($statusCode);
+        Stagehand_HTTP_Status::send($statusCode);
     }
 
     // }}}
