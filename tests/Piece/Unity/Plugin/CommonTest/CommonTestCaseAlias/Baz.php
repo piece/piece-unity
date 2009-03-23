@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -30,33 +30,37 @@
  *
  * @package    Piece_Unity
  * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_CommonTestCase
- * @since      File available since Release 1.0.0
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
+ * @version    Release: @package_version@
+ * @see        Piece_Unity_Plugin_CommonTest
+ * @since      File available since Release 0.12.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-
-// {{{ CommonTestCaseAlias_ExceptionShouldBeRaisedWhenUndefinedConfigurationPointIsUsed
+// {{{ CommonTestCaseAlias_Baz
 
 /**
  * A class for unit tests.
  *
  * @package    Piece_Unity
  * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_CommonTestCase
- * @since      Class available since Release 1.0.0
+ * @see        Piece_Unity_Plugin_CommonTest
+ * @since      Class available since Release 0.12.0
  */
-class CommonTestCaseAlias_ExceptionShouldBeRaisedWhenUndefinedConfigurationPointIsUsed extends Piece_Unity_Plugin_Common
+class CommonTestCaseAlias_Baz extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -71,10 +75,11 @@ class CommonTestCaseAlias_ExceptionShouldBeRaisedWhenUndefinedConfigurationPoint
      * @access public
      */
 
-    function invoke()
-    {
-        $this->_getConfiguration('foo');
-    }
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

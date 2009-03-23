@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -30,27 +30,25 @@
  *
  * @package    Piece_Unity
  * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_CommonTestCase
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
+ * @version    Release: @package_version@
+ * @see        Piece_Unity_Plugin_CommonTest
  * @since      File available since Release 0.12.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-
-// {{{ CommonTestCaseAlias_Foo
+// {{{ CannotGetConfigurationWithPluginPrefixQux
 
 /**
  * A class for unit tests.
  *
  * @package    Piece_Unity
  * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_CommonTestCase
+ * @see        Piece_Unity_Plugin_CommonTest
  * @since      Class available since Release 0.12.0
  */
-class CommonTestCaseAlias_Foo extends Piece_Unity_Plugin_Common
+class CannotGetConfigurationWithPluginPrefixQux extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
@@ -62,11 +60,14 @@ class CommonTestCaseAlias_Foo extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
-    var $_bar;
-    var $_baz;
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
 
     /**#@-*/
 
@@ -74,23 +75,19 @@ class CommonTestCaseAlias_Foo extends Piece_Unity_Plugin_Common
      * @access public
      */
 
-    function invoke()
-    {
-        $this->_bar = $this->_getConfiguration('bar');
-        $this->_baz = &$this->_getExtension('baz');
-    }
+    public function invoke() {}
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
     /**#@+
      * @access private
      */
-
-    function _initialize()
-    {
-        $this->_addConfigurationPoint('bar', 'bar');
-        $this->_addExtensionPoint('baz', 'Baz');
-    }
 
     /**#@-*/
 
