@@ -98,14 +98,14 @@ class Piece_Unity_Plugin_CommonTest extends PHPUnit_Framework_TestCase
         $config->setConfiguration('CannotGetConfigurationWithPluginPrefixFoo', 'bar', 'baz');
         $config->setExtension('CannotGetConfigurationWithPluginPrefixFoo', 'baz', 'CannotGetConfigurationWithPluginPrefixQux');
         Piece_Unity_Context::singleton()->setConfiguration($config);
-        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestCaseAlias');
+        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestAlias');
         Piece_Unity_Plugin_Factory::addPluginPrefix('');
 
         $foo = Piece_Unity_Plugin_Factory::factory('Foo');
         $foo->invoke();
 
         $this->assertEquals('baz', $this->readAttribute($foo, '_bar'));
-        $this->assertType('CommonTestCaseAlias_Qux',
+        $this->assertType('CommonTestAlias_Qux',
                           $this->readAttribute($foo, '_baz')
                           );
 
@@ -125,7 +125,7 @@ class Piece_Unity_Plugin_CommonTest extends PHPUnit_Framework_TestCase
     public function raiseAnExceptionWhenAnUndefinedExtensionPointIsUsed()
     {
         Piece_Unity_Context::singleton()->setConfiguration(new Piece_Unity_Config());
-        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestCaseAlias');
+        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestAlias');
         $plugin = Piece_Unity_Plugin_Factory::factory('ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsed');
         Piece_Unity_Error::disableCallback();
         $plugin->invoke();
@@ -145,7 +145,7 @@ class Piece_Unity_Plugin_CommonTest extends PHPUnit_Framework_TestCase
     public function raiseAnExceptionWhenAnUndefinedConfigurationPointIsUsed()
     {
         Piece_Unity_Context::singleton()->setConfiguration(new Piece_Unity_Config());
-        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestCaseAlias');
+        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestAlias');
         $plugin = Piece_Unity_Plugin_Factory::factory('ExceptionShouldBeRaisedWhenUndefinedConfigurationPointIsUsed');
         Piece_Unity_Error::disableCallback();
         $plugin->invoke();
@@ -167,7 +167,7 @@ class Piece_Unity_Plugin_CommonTest extends PHPUnit_Framework_TestCase
         $config = new Piece_Unity_Config();
         $config->setExtension('ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsedInConfiguration', 'bar', 'baz');
         Piece_Unity_Context::singleton()->setConfiguration($config);
-        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestCaseAlias');
+        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestAlias');
         Piece_Unity_Error::disableCallback();
         $plugin = Piece_Unity_Plugin_Factory::factory('ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsedInConfiguration');
         Piece_Unity_Error::enableCallback();
@@ -189,7 +189,7 @@ class Piece_Unity_Plugin_CommonTest extends PHPUnit_Framework_TestCase
         $config = new Piece_Unity_Config();
         $config->setConfiguration('ExceptionShouldBeRaisedWhenUndefinedConfigurationPointIsUsedInConfiguration', 'bar', 'baz');
         Piece_Unity_Context::singleton()->setConfiguration($config);
-        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestCaseAlias');
+        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestAlias');
         Piece_Unity_Error::disableCallback();
         $plugin = Piece_Unity_Plugin_Factory::factory('ExceptionShouldBeRaisedWhenUndefinedConfigurationPointIsUsedInConfiguration');
         Piece_Unity_Error::enableCallback();

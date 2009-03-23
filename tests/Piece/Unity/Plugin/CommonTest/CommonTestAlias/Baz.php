@@ -36,7 +36,7 @@
  * @since      File available since Release 0.12.0
  */
 
-// {{{ CommonTestCaseAlias_Foo
+// {{{ CommonTestAlias_Baz
 
 /**
  * A class for unit tests.
@@ -48,7 +48,7 @@
  * @see        Piece_Unity_Plugin_CommonTest
  * @since      Class available since Release 0.12.0
  */
-class CommonTestCaseAlias_Foo extends Piece_Unity_Plugin_Common
+class CommonTestAlias_Baz extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
@@ -69,32 +69,17 @@ class CommonTestCaseAlias_Foo extends Piece_Unity_Plugin_Common
      * @access private
      */
 
-    private $_bar;
-    private $_baz;
-
     /**#@-*/
 
     /**#@+
      * @access public
      */
 
-    public function invoke()
-    {
-        $this->_bar = $this->_getConfiguration('bar');
-        $this->_baz = $this->_getExtension('baz');
-    }
-
     /**#@-*/
 
     /**#@+
      * @access protected
      */
-
-    protected function _initialize()
-    {
-        $this->_addConfigurationPoint('bar', 'bar');
-        $this->_addExtensionPoint('baz', 'Baz');
-    }
 
     /**#@-*/
 

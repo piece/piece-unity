@@ -33,10 +33,10 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @version    Release: @package_version@
  * @see        Piece_Unity_Plugin_CommonTest
- * @since      File available since Release 1.1.0
+ * @since      File available since Release 1.0.0
  */
 
-// {{{ CommonTestCaseAlias_ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsedInConfiguration
+// {{{ CommonTestAlias_ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsed
 
 /**
  * A class for unit tests.
@@ -46,9 +46,9 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @version    Release: @package_version@
  * @see        Piece_Unity_Plugin_CommonTest
- * @since      Class available since Release 1.1.0
+ * @since      Class available since Release 1.0.0
  */
-class CommonTestCaseAlias_ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsedInConfiguration extends Piece_Unity_Plugin_Common
+class CommonTestAlias_ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsed extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
@@ -75,7 +75,10 @@ class CommonTestCaseAlias_ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUs
      * @access public
      */
 
-    public function invoke() {}
+    public function invoke()
+    {
+        $this->_getExtension('foo');
+    }
 
     /**#@-*/
 
