@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -30,21 +30,11 @@
  *
  * @package    Piece_Unity
  * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
+ * @version    Release: @package_version@
  * @since      File available since Release 0.1.0
  */
 
-require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/ClassLoader.php';
-
-// {{{ GLOBALS
-
-$GLOBALS['PIECE_UNITY_Plugin_Instances'] = array();
-$GLOBALS['PIECE_UNITY_Plugin_Directories'] = array(realpath(dirname(__FILE__) . '/../../..'));
-$GLOBALS['PIECE_UNITY_Plugin_Prefixes'] = array('Piece_Unity_Plugin');
-
-// }}}
 // {{{ Piece_Unity_Plugin_Factory
 
 /**
@@ -52,7 +42,7 @@ $GLOBALS['PIECE_UNITY_Plugin_Prefixes'] = array('Piece_Unity_Plugin');
  *
  * @package    Piece_Unity
  * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
  */
@@ -68,8 +58,18 @@ class Piece_Unity_Plugin_Factory
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
+
+    private static $_pluginInstances = array();
+    private static $_pluginDirectories = array();
+    private static $_pluginPrefixes = array();
 
     /**#@-*/
 
@@ -90,11 +90,11 @@ class Piece_Unity_Plugin_Factory
      * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
      * @throws PIECE_UNITY_ERROR_CANNOT_READ
      */
-    function &factory($pluginName)
+    public static function factory($pluginName)
     {
-        if (!array_key_exists($pluginName, $GLOBALS['PIECE_UNITY_Plugin_Instances'])) {
+        if (!array_key_exists($pluginName, self::$_pluginInstances)) {
             $found = false;
-            foreach ($GLOBALS['PIECE_UNITY_Plugin_Prefixes'] as $prefixAlias) {
+            foreach (self::$_pluginPrefixes as $prefixAlias) {
                 $pluginClass = Piece_Unity_Plugin_Factory::_getPluginClass($pluginName, $prefixAlias);
                 if (Piece_Unity_ClassLoader::loaded($pluginClass)) {
                     $found = true;
@@ -103,8 +103,8 @@ class Piece_Unity_Plugin_Factory
             }
 
             if (!$found) {
-                foreach ($GLOBALS['PIECE_UNITY_Plugin_Directories'] as $pluginDirectory) {
-                    foreach ($GLOBALS['PIECE_UNITY_Plugin_Prefixes'] as $prefixAlias) {
+                foreach (self::$_pluginDirectories as $pluginDirectory) {
+                    foreach (self::$_pluginPrefixes as $prefixAlias) {
                         $pluginClass = Piece_Unity_Plugin_Factory::_getPluginClass($pluginName, $prefixAlias);
 
                         Piece_Unity_Error::disableCallback();
@@ -136,14 +136,14 @@ class Piece_Unity_Plugin_Factory
                 if (!$found) {
                     Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
                                             "The plugin [ $pluginName ] is not found in the following directories:\n" .
-                                            implode("\n", $GLOBALS['PIECE_UNITY_Plugin_Directories'])
+                                            implode("\n", self::$_pluginDirectories)
                                             );
                     $return = null;
                     return $return;
                 }
             }
 
-            $plugin = &new $pluginClass($prefixAlias);
+            $plugin = new $pluginClass($prefixAlias);
             if (Piece_Unity_Error::hasErrors()) {
                 $return = null;
                 return $return;
@@ -157,10 +157,10 @@ class Piece_Unity_Plugin_Factory
                 return $return;
             }
 
-            $GLOBALS['PIECE_UNITY_Plugin_Instances'][$pluginName] = &$plugin;
+            self::$_pluginInstances[$pluginName] = $plugin;
         }
 
-        return $GLOBALS['PIECE_UNITY_Plugin_Instances'][$pluginName];
+        return self::$_pluginInstances[$pluginName];
     }
 
     // }}}
@@ -171,20 +171,34 @@ class Piece_Unity_Plugin_Factory
      *
      * @param string $pluginDirectory
      */
-    function addPluginDirectory($pluginDirectory)
+    public static function addPluginDirectory($pluginDirectory)
     {
-        array_unshift($GLOBALS['PIECE_UNITY_Plugin_Directories'], realpath($pluginDirectory));
+        array_unshift(self::$_pluginDirectories, realpath($pluginDirectory));
+    }
+
+    // }}}
+    // {{{ initializePluginDirectories()
+
+    /**
+     * Clears the plug-in paths.
+     *
+     * @since Method available since Release 2.0.0dev1
+     */
+    public static function initializePluginDirectories()
+    {
+        self::$_pluginDirectories = array();
+        Piece_Unity_Plugin_Factory::addPluginDirectory(realpath(dirname(__FILE__) . '/../../..'));
     }
 
     // }}}
     // {{{ clearInstances()
 
     /**
-     * Clears the plug-in instances.
+     * Initializes the plug-in instances.
      */
-    function clearInstances()
+    public static function clearInstances()
     {
-        $GLOBALS['PIECE_UNITY_Plugin_Instances'] = array();
+        self::$_pluginInstances = array();
     }
 
     // }}}
@@ -195,10 +209,30 @@ class Piece_Unity_Plugin_Factory
      *
      * @param string $pluginPrefix
      */
-    function addPluginPrefix($pluginPrefix)
+    public static function addPluginPrefix($pluginPrefix)
     {
-        array_unshift($GLOBALS['PIECE_UNITY_Plugin_Prefixes'], $pluginPrefix);
+        array_unshift(self::$_pluginPrefixes, $pluginPrefix);
     }
+
+    // }}}
+    // {{{ initializePluginPrefixes()
+
+    /**
+     * Initializes the plug-in prefixes.
+     *
+     * @since Method available since Release 2.0.0dev1
+     */
+    public static function initializePluginPrefixes()
+    {
+        self::$_pluginPrefixes = array();
+        Piece_Unity_Plugin_Factory::addPluginPrefix('Piece_Unity_Plugin');
+    }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
@@ -216,7 +250,7 @@ class Piece_Unity_Plugin_Factory
      * @param string $prefixAlias
      * @return string
      */
-    function _getPluginClass($pluginName, $prefixAlias)
+    private static function _getPluginClass($pluginName, $prefixAlias)
     {
         if ($prefixAlias) {
             return "{$prefixAlias}_{$pluginName}";
@@ -231,6 +265,9 @@ class Piece_Unity_Plugin_Factory
 }
 
 // }}}
+
+Piece_Unity_Plugin_Factory::initializePluginDirectories();
+Piece_Unity_Plugin_Factory::initializePluginPrefixes();
 
 /*
  * Local Variables:
