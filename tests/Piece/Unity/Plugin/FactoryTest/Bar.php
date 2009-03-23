@@ -2,9 +2,9 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
- * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,34 +29,38 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_FactoryTestCase
- * @since      File available since Release 0.9.0
+ * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
+ * @version    Release: @package_version@
+ * @see        Piece_Unity_Plugin_FactoryTest
+ * @since      File available since Release 0.11.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-
-// {{{ Piece_Unity_Plugin_FactoryTestCase_Invalid
+// {{{ Bar
 
 /**
  * A class for unit tests.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
+ * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_FactoryTestCase
- * @since      Class available since Release 0.9.0
+ * @see        Piece_Unity_Plugin_FactoryTest
+ * @since      Class available since Release 0.11.0
  */
-class Piece_Unity_Plugin_FactoryTestCase_Invalid
+class Bar extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -70,6 +74,23 @@ class Piece_Unity_Plugin_FactoryTestCase_Invalid
     /**#@+
      * @access public
      */
+
+    public function invoke()
+    {
+        ++$GLOBALS[strtolower(__CLASS__) . strtolower(__FUNCTION__) . 'Called'];
+        $this->getExtension('bar')->invoke();
+    }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
+
+    protected function _initialize()
+    {
+        $this->_addExtensionPoint('bar');
+    }
 
     /**#@-*/
 

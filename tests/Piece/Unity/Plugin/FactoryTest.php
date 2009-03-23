@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -30,30 +30,23 @@
  *
  * @package    Piece_Unity
  * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
+ * @version    Release: @package_version@
  * @since      File available since Release 0.1.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/Context.php';
-
-// {{{ Piece_Unity_Plugin_FactoryTestCase
+// {{{ Piece_Unity_Plugin_FactoryTest
 
 /**
  * Some tests for Piece_Unity_Plugin_Factory.
  *
  * @package    Piece_Unity
  * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
+class Piece_Unity_Plugin_FactoryTest extends PHPUnit_Framework_TestCase
 {
 
     // {{{ properties
@@ -65,11 +58,14 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
-    var $_oldPluginDirectories;
-    var $_oldPluginPrefixes;
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
 
     /**#@-*/
 
@@ -77,25 +73,27 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function setUp()
+    public function setUp()
     {
-        $this->_oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
-        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/FactoryTestCase');
-        $this->_oldPluginPrefixes = $GLOBALS['PIECE_UNITY_Plugin_Prefixes'];
-        $config = &new Piece_Unity_Config();
-        $context = &Piece_Unity_Context::singleton();
+        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
+        $config = new Piece_Unity_Config();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
     }
 
-    function tearDown()
+    public function tearDown()
     {
+        Piece_Unity_Plugin_Factory::initializePluginDirectories();
+        Piece_Unity_Plugin_Factory::initializePluginPrefixes();
+        Piece_Unity_Plugin_Factory::clearInstances();
         Piece_Unity_Context::clear();
-        $GLOBALS['PIECE_UNITY_Plugin_Prefixes'] = $this->_oldPluginPrefixes;
-        $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $this->_oldPluginDirectories;
         Piece_Unity_Error::clearErrors();
     }
 
-    function testFailureToCreateByNonExistingFile()
+    /**
+     * @test
+     */
+    public function raiseAnExceptionWhenCreatingAPluginObjectByANonExistingPluginName()
     {
         Piece_Unity_Error::disableCallback();
         Piece_Unity_Plugin_Factory::factory('NonExisting');
@@ -108,10 +106,13 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
         $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
     }
 
-    function testFailureToCreateByInvalidPlugin()
+    /**
+     * @test
+     */
+    public function raiseAnExceptionWhenTheGivenPluginIsInvalid()
     {
         Piece_Unity_Error::disableCallback();
-        Piece_Unity_Plugin_Factory::factory('FactoryTestCase_Invalid');
+        Piece_Unity_Plugin_Factory::factory('FactoryTest_Invalid');
         Piece_Unity_Error::enableCallback();
 
         $this->assertTrue(Piece_Unity_Error::hasErrors());
@@ -121,59 +122,69 @@ class Piece_Unity_Plugin_FactoryTestCase extends PHPUnit_TestCase
         $this->assertEquals(PIECE_UNITY_ERROR_INVALID_PLUGIN, $error['code']);
     }
 
-    function testFactory()
+    /**
+     * @test
+     */
+    public function createAPluginObject()
     {
-        $fooPlugin = &Piece_Unity_Plugin_Factory::factory('FactoryTestCase_Foo');
+        $fooPlugin1 = Piece_Unity_Plugin_Factory::factory('FactoryTest_Foo');
 
-        $this->assertTrue(is_a($fooPlugin, 'Piece_Unity_Plugin_FactoryTestCase_Foo'));
+        $this->assertType('Piece_Unity_Plugin_FactoryTest_Foo', $fooPlugin1);
+        $this->assertType('Piece_Unity_Plugin_FactoryTest_Bar',
+                          Piece_Unity_Plugin_Factory::factory('FactoryTest_Bar')
+                          );
 
-        $barPlugin = &Piece_Unity_Plugin_Factory::factory('FactoryTestCase_Bar');
+        $fooPlugin1->baz = 'qux';
+        $fooPlugin2 = Piece_Unity_Plugin_Factory::factory('FactoryTest_Foo');
 
-        $this->assertTrue(is_a($barPlugin, 'Piece_Unity_Plugin_FactoryTestCase_Bar'));
-
-        $fooPlugin->baz = 'qux';
-
-        $plugin = &Piece_Unity_Plugin_Factory::factory('FactoryTestCase_Foo');
-
-        $this->assertTrue(array_key_exists('baz', $fooPlugin));
+        $this->assertObjectHasAttribute('baz', $fooPlugin2);
     }
 
     /**
+     * @test
      * @since Method available since Release 0.11.0
      */
-    function testAlias()
+    public function addAPrefixOfPluginClasses()
     {
-        Piece_Unity_Plugin_Factory::addPluginPrefix('FactoryTestCaseAlias');
-        $foo = &Piece_Unity_Plugin_Factory::factory('Foo');
+        Piece_Unity_Plugin_Factory::addPluginPrefix('FactoryTestAlias');
+        $foo = Piece_Unity_Plugin_Factory::factory('Foo');
 
-        $this->assertTrue(is_object($foo));
-        $this->assertTrue(is_a($foo, 'FactoryTestCaseAlias_Foo'));
+        $this->assertType('Piece_Unity_Plugin_Common', $foo);
+        $this->assertType('FactoryTestAlias_Foo', $foo);
     }
 
     /**
+     * @test
      * @since Method available since Release 0.11.0
      */
-    function testAliasWithEmptyPrefix()
+    public function addAnEmptyStringAsAPrefixOfPluginClasses()
     {
         Piece_Unity_Plugin_Factory::addPluginPrefix('');
-        $bar = &Piece_Unity_Plugin_Factory::factory('Bar');
+        $bar = Piece_Unity_Plugin_Factory::factory('Bar');
 
-        $this->assertTrue(is_object($bar));
-        $this->assertTrue(is_a($bar, 'Bar'));
+        $this->assertType('Piece_Unity_Plugin_Common', $bar);
+        $this->assertType('Bar', $bar);
     }
 
     /**
+     * @test
      * @since Method available since Release 0.11.0
      */
-    function testCreateExistingClass()
+    public function returnTheExistingPluginObjectIfItIsAlreadyInstantiated()
     {
-        Piece_Unity_Plugin_Factory::addPluginPrefix('FactoryTestCaseAlias');
-        $foo = &Piece_Unity_Plugin_Factory::factory('FactoryTestCase_Foo');
+        Piece_Unity_Plugin_Factory::factory('FactoryTest_Foo');
+        Piece_Unity_Plugin_Factory::addPluginPrefix('FactoryTestAlias');
+        $foo = Piece_Unity_Plugin_Factory::factory('FactoryTest_Foo');
 
-        $this->assertTrue(is_object($foo));
-        $this->assertFalse(is_a($foo, 'FactoryTestCaseAlias_FactoryTestCase_Foo'));
-        $this->assertTrue(is_a($foo, 'Piece_Unity_Plugin_FactoryTestCase_Foo'));
+        $this->assertType('Piece_Unity_Plugin_Common', $foo);
+        $this->assertType('Piece_Unity_Plugin_FactoryTest_Foo', $foo);
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
