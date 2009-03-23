@@ -45,7 +45,9 @@ set_include_path(realpath(dirname(__FILE__)) . PATH_SEPARATOR .
 require_once 'PHPUnit/Framework.php';
 require_once 'Stagehand/Autoload/PEAR.php';
 
-PEAR_ErrorStack::setDefaultCallback(create_function('$error', 'var_dump($error); return ' . PEAR_ERRORSTACK_DIE . ';'));
+Stagehand_LegacyError_PHPError::enableConversion();
+Stagehand_LegacyError_PEARError::enableConversion();
+Stagehand_LegacyError_PEARErrorStack::enableConversion();
 
 /*
  * Local Variables:
