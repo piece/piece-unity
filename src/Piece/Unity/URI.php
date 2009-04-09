@@ -154,7 +154,6 @@ class Piece_Unity_URI
      *
      * @param string|boolean $protocol The protocol for the URI. The protocol MUST be
      *                                 one of: https, http, or pass.
-     *                                 (deprecated) true is https and false is http.
      * @return string
      * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      */
@@ -189,10 +188,6 @@ class Piece_Unity_URI
             $url = $this->_url;
         } else {
             $url = clone($this->_url);
-        }
-
-        if (is_bool($protocol)) {
-            $protocol = $protocol ? 'https' : 'http';
         }
 
         if (!in_array($protocol, array('https', 'http', 'pass'))) {
