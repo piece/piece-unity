@@ -125,17 +125,17 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
      */
     private function _replaceSelfNotationWithURI()
     {
-        $viewString = $this->_context->getView();
+        $viewString = $this->context->getView();
         if (!preg_match('!^selfs?://(.*)!', $viewString, $matches)) {
             return;
         }
 
-        $this->_context->getConfiguration()
-            ->setConfiguration('Renderer_Redirection', 'addFlowExecutionTicket', true);
+        $this->context->getConfiguration()
+                      ->setConfiguration('Renderer_Redirection', 'addFlowExecutionTicket', true);
         if (substr($viewString, 0, 7) == 'self://') {
-            $this->_context->setView('http://example.org' . $this->_context->getScriptName() . '?' . $matches[1]);
+            $this->context->setView('http://example.org' . $this->context->getScriptName() . '?' . $matches[1]);
         } elseif (substr($viewString, 0, 8) == 'selfs://') {
-            $this->_context->setView('https://example.org' . $this->_context->getScriptName() . '?' . $matches[1]);
+            $this->context->setView('https://example.org' . $this->context->getScriptName() . '?' . $matches[1]);
         }
     }
 
@@ -148,11 +148,11 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
     private function _buildURI()
     {
         $isExternal = $this->getConfiguration('isExternal');
-        $uri = new Piece_Unity_URI($this->_context->getView());
+        $uri = new Piece_Unity_URI($this->context->getView());
         $uri->setIsRedirection(true);
         $uri->setIsExternal($isExternal);
 
-        $viewElements = $this->_context->getViewElement()->getElements();
+        $viewElements = $this->context->getViewElement()->getElements();
         $queryString = $uri->getQueryString();
         foreach (array_keys($queryString) as $elementName) {
             if (array_key_exists($elementName, $viewElements)
@@ -184,7 +184,7 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
              */
             if (array_key_exists('__eventNameKey', $queryString)) {
                 $uri->removeQueryString('__eventNameKey');
-                $uri->addQueryString($this->_context->getEventNameKey(), $queryString['__eventNameKey']);
+                $uri->addQueryString($this->context->getEventNameKey(), $queryString['__eventNameKey']);
             }
         }
 
