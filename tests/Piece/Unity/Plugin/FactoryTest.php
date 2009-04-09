@@ -76,9 +76,7 @@ class Piece_Unity_Plugin_FactoryTest extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
-        $config = new Piece_Unity_Config();
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
+        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Unity_Config());
     }
 
     public function tearDown()
@@ -87,39 +85,24 @@ class Piece_Unity_Plugin_FactoryTest extends PHPUnit_Framework_TestCase
         Piece_Unity_Plugin_Factory::initializePluginPrefixes();
         Piece_Unity_Plugin_Factory::clearInstances();
         Piece_Unity_Context::clear();
-        Piece_Unity_Error::clearErrors();
     }
 
     /**
      * @test
+     * @expectedException Piece_Unity_Exception
      */
     public function raiseAnExceptionWhenCreatingAPluginObjectByANonExistingPluginName()
     {
-        Piece_Unity_Error::disableCallback();
         Piece_Unity_Plugin_Factory::factory('NonExisting');
-        Piece_Unity_Error::enableCallback();
-
-        $this->assertTrue(Piece_Unity_Error::hasErrors());
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
     }
 
     /**
      * @test
+     * @expectedException Piece_Unity_Exception
      */
     public function raiseAnExceptionWhenTheGivenPluginIsInvalid()
     {
-        Piece_Unity_Error::disableCallback();
         Piece_Unity_Plugin_Factory::factory('FactoryTest_Invalid');
-        Piece_Unity_Error::enableCallback();
-
-        $this->assertTrue(Piece_Unity_Error::hasErrors());
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_INVALID_PLUGIN, $error['code']);
     }
 
     /**

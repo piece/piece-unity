@@ -75,7 +75,6 @@ class Piece_Unity_Plugin_Factory
 
     /**#@+
      * @access public
-     * @static
      */
 
     // }}}
@@ -86,16 +85,14 @@ class Piece_Unity_Plugin_Factory
      *
      * @param string $pluginName
      * @return mixed
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
-     * @throws PIECE_UNITY_ERROR_INVALID_PLUGIN
-     * @throws PIECE_UNITY_ERROR_CANNOT_READ
+     * @throws Piece_Unity_Exception
      */
     public static function factory($pluginName)
     {
         if (!array_key_exists($pluginName, self::$_pluginInstances)) {
             $found = false;
             foreach (self::$_pluginPrefixes as $prefixAlias) {
-                $pluginClass = Piece_Unity_Plugin_Factory::_getPluginClass($pluginName, $prefixAlias);
+                $pluginClass = self::_getPluginClass($pluginName, $prefixAlias);
                 if (Piece_Unity_ClassLoader::loaded($pluginClass)) {
                     $found = true;
                     break;
@@ -105,25 +102,12 @@ class Piece_Unity_Plugin_Factory
             if (!$found) {
                 foreach (self::$_pluginDirectories as $pluginDirectory) {
                     foreach (self::$_pluginPrefixes as $prefixAlias) {
-                        $pluginClass = Piece_Unity_Plugin_Factory::_getPluginClass($pluginName, $prefixAlias);
+                        $pluginClass = self::_getPluginClass($pluginName, $prefixAlias);
 
-                        Piece_Unity_Error::disableCallback();
-                        Piece_Unity_ClassLoader::load($pluginClass, $pluginDirectory);
-                        Piece_Unity_Error::enableCallback();
-                        if (Piece_Unity_Error::hasErrors()) {
-                            $error = Piece_Unity_Error::pop();
-                            if ($error['code'] == PIECE_UNITY_ERROR_NOT_FOUND) {
-                                continue;
-                            }
-
-                            Piece_Unity_Error::push(PIECE_UNITY_ERROR_CANNOT_READ,
-                                                    "Failed to read the plugin [ $pluginName ] for any reasons.",
-                                                    'exception',
-                                                    array(),
-                                                    $error
-                                                    );
-                            $return = null;
-                            return $return;
+                        try {
+                            Piece_Unity_ClassLoader::load($pluginClass, $pluginDirectory);
+                        } catch (Piece_Unity_ClassLoader_Exception $e) {
+                            continue;
                         }
 
                         if (Piece_Unity_ClassLoader::loaded($pluginClass)) {
@@ -134,27 +118,15 @@ class Piece_Unity_Plugin_Factory
                 }
 
                 if (!$found) {
-                    Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                            "The plugin [ $pluginName ] is not found in the following directories:\n" .
-                                            implode("\n", self::$_pluginDirectories)
-                                            );
-                    $return = null;
-                    return $return;
+                    throw new Piece_Unity_Exception("The plugin [ $pluginName ] is not found in the following directories:\n" .
+                                                    implode("\n", self::$_pluginDirectories)
+                                                    );
                 }
             }
 
             $plugin = new $pluginClass($prefixAlias);
-            if (Piece_Unity_Error::hasErrors()) {
-                $return = null;
-                return $return;
-            }
-
-            if (!is_subclass_of($plugin, 'Piece_Unity_Plugin_Common')) {
-                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_PLUGIN,
-                                        "The plugin [ $pluginName ] is invalid."
-                                        );
-                $return = null;
-                return $return;
+            if (!$plugin instanceof Piece_Unity_Plugin_Common) {
+                throw new Piece_Unity_Exception("The plugin [ $pluginName ] must be subclass of Piece_Unity_Plugin_Common");
             }
 
             self::$_pluginInstances[$pluginName] = $plugin;
@@ -187,7 +159,7 @@ class Piece_Unity_Plugin_Factory
     public static function initializePluginDirectories()
     {
         self::$_pluginDirectories = array();
-        Piece_Unity_Plugin_Factory::addPluginDirectory(realpath(dirname(__FILE__) . '/../../..'));
+        self::addPluginDirectory(realpath(dirname(__FILE__) . '/../../..'));
     }
 
     // }}}
@@ -225,7 +197,7 @@ class Piece_Unity_Plugin_Factory
     public static function initializePluginPrefixes()
     {
         self::$_pluginPrefixes = array();
-        Piece_Unity_Plugin_Factory::addPluginPrefix('Piece_Unity_Plugin');
+        self::addPluginPrefix('Piece_Unity_Plugin');
     }
 
     /**#@-*/
