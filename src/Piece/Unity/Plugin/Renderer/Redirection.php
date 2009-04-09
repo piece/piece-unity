@@ -67,7 +67,7 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
      * @access private
      */
 
-    private $_uri;
+    private $_sentURI;
 
     /**#@-*/
 
@@ -83,10 +83,10 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
     public function render()
     {
         $this->_replaceSelfNotationWithURI();
-        $this->_uri = $this->_buildURI();
+        $uri = $this->_buildURI();
 
-        if (!headers_sent() && !is_null($this->_uri)) {
-            header("Location: {$this->_uri}");
+        if (!headers_sent() && !is_null($uri)) {
+            header("Location: $uri");
         }
     }
 
@@ -104,7 +104,7 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
      *
      * @since Method available since Release 0.6.0
      */
-    function initialize()
+    protected function initialize()
     {
         $this->addConfigurationPoint('addSessionID', false);
         $this->addConfigurationPoint('isExternal', false);
@@ -123,7 +123,7 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
     /**
      * @since Method available since Release 1.5.0
      */
-    function _replaceSelfNotationWithURI()
+    private function _replaceSelfNotationWithURI()
     {
         $viewString = $this->_context->getView();
         if (!preg_match('!^selfs?://(.*)!', $viewString, $matches)) {
@@ -145,7 +145,7 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
     /**
      * @since Method available since Release 1.5.0
      */
-    function _buildURI()
+    private function _buildURI()
     {
         $isExternal = $this->getConfiguration('isExternal');
         $viewString = $this->_context->getView();
@@ -189,7 +189,9 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
             }
         }
 
-        return $uri->getURI('pass');
+        $this->_sentURI = $uri->getURI('pass');
+
+        return $this->_sentURI;
     }
 
     /**#@-*/

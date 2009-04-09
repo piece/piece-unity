@@ -91,9 +91,10 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_Framework_
         $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
         $redirection->render();
 
-        $this->assertEquals('http://example.org/foo.php',
-                            $this->readAttribute($redirection, '_uri')
-                            );
+        $this->assertAttributeEquals('http://example.org/foo.php',
+                                     '_sentURI',
+                                     $redirection
+                                     );
     }
 
     /**
@@ -111,7 +112,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_Framework_
         $redirection->render();
 
         $this->assertEquals('http://foo.example.org:8201/bar.php',
-                            $this->readAttribute($redirection, '_uri')
+                            $this->readAttribute($redirection, '_sentURI')
                             );
     }
 
@@ -131,9 +132,10 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_Framework_
         $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
         $redirection->render();
 
-        $this->assertEquals('http://foo.example.org:8201/bar.php',
-                            $this->readAttribute($redirection, '_uri')
-                            );
+        $this->assertAttributeEquals('http://foo.example.org:8201/bar.php',
+                                     '_sentURI',
+                                     $redirection
+                                     );
     }
 
     /**
@@ -150,9 +152,10 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_Framework_
         $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
         $redirection->render();
 
-        $this->assertEquals('https://foo.example.org:8201/bar.php',
-                            $this->readAttribute($redirection, '_uri')
-                            );
+        $this->assertAttributeEquals('https://foo.example.org:8201/bar.php',
+                                     '_sentURI',
+                                     $redirection
+                                     );
     }
 
     /**
@@ -171,9 +174,10 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_Framework_
         $redirection = new Piece_Unity_Plugin_Renderer_Redirection();
         $redirection->render();
 
-        $this->assertEquals('http://foo.example.org:8201/bar.php',
-                            $this->readAttribute($redirection, '_uri')
-                            );
+        $this->assertAttributeEquals('http://foo.example.org:8201/bar.php',
+                                     '_sentURI',
+                                     $redirection
+                                     );
     }
 
     /**
@@ -190,9 +194,10 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_Framework_
         $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
         $redirection->render();
 
-        $this->assertEquals('http://example.org/foo.php?_event=bar',
-                            $this->readAttribute($redirection, '_uri')
-                            );
+        $this->assertAttributeEquals('http://example.org/foo.php?_event=bar',
+                                     '_sentURI',
+                                     $redirection
+                                     );
     }
 
     /**
@@ -209,9 +214,10 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_Framework_
         $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
         $redirection->render();
 
-        $this->assertEquals('https://example.org/foo.php',
-                            $this->readAttribute($redirection, '_uri')
-                            );
+        $this->assertAttributeEquals('https://example.org/foo.php',
+                                     '_sentURI',
+                                     $redirection
+                                     );
     }
 
     /**
