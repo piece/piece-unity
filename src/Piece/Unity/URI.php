@@ -173,12 +173,12 @@ class Piece_Unity_URI
      * Gets the absolute URI.
      * The standard port of the URI scheme is set when using reverse-proxy.
      *
-     * @param string $protocol The protocol for the URI. The protocol MUST be one of:
-     *                         https, http, or pass (default).
+     * @param string $scheme The scheme for the URI. The scheme MUST be one of:
+     *                       https, http, or pass (default).
      * @return string
      * @throws Piece_Unity_Exception
      */
-    public function getURI($protocol = 'pass')
+    public function getURI($scheme = 'pass')
     {
         if (is_null($this->_url)) {
             throw new Piece_Unity_Exception(__METHOD__ . ' method must be called after initializing');
@@ -204,19 +204,19 @@ class Piece_Unity_URI
 
         $url = clone($this->_url);
 
-        if (!in_array($protocol, array('https', 'http', 'pass'))) {
-            $protocol = 'pass';
+        if (!in_array($scheme, array('https', 'http', 'pass'))) {
+            $scheme = 'pass';
         }
 
-        if ($protocol == 'pass') {
-            $protocol = $this->_url->getScheme();
+        if ($scheme == 'pass') {
+            $scheme = $this->_url->getScheme();
             $port = $this->_url->getPort();
         }
 
-        if ($protocol == 'https') {
+        if ($scheme == 'https') {
             $url->setScheme('https');
             $port = 443;
-        } elseif ($protocol == 'http') {
+        } elseif ($scheme == 'http') {
             $url->setScheme('http');
             $port = 80;
         } else {
@@ -241,14 +241,14 @@ class Piece_Unity_URI
      * This method cannot use to create external URIs.
      *
      * @param string $path
-     * @param string $protocol The protocol for the URI. The protocol MUST be one of:
-     *                         https, http, or pass (default).
+     * @param string $scheme The scheme for the URI. The scheme MUST be one of:
+     *                       https, http, or pass (default).
      * @return string
      */
-    public static function create($path, $protocol = 'pass')
+    public static function create($path, $scheme = 'pass')
     {
         $uri = new Piece_Unity_URI($path);
-        return $uri->getURI($protocol);
+        return $uri->getURI($scheme);
     }
 
     // }}}
