@@ -189,10 +189,10 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
         $_SERVER['SERVER_PORT'] = '80';
 
         $this->assertEquals('https://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::createSSL('http://example.com/foo/bar/baz.php')
+                            Piece_Unity_URI::create('http://example.com/foo/bar/baz.php', 'https')
                             );
         $this->assertEquals('https://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::createSSL('/foo/bar/baz.php')
+                            Piece_Unity_URI::create('/foo/bar/baz.php', 'https')
                             );
         $this->assertEquals('http://example.org/foo/bar/baz.php',
                             Piece_Unity_URI::create('http://example.com/foo/bar/baz.php')
@@ -204,7 +204,7 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
         $uri = new Piece_Unity_URI();
 
         $this->assertEquals('https://example.org/foo/bar/baz.php',
-                            $uri->createSSL('http://example.com/foo/bar/baz.php')
+                            $uri->create('http://example.com/foo/bar/baz.php', 'https')
                             );
 
         unset($_SERVER['SERVER_PORT']);
@@ -258,10 +258,10 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
         Piece_Unity_URI::addNonSSLableServer('example.org');
 
         $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::createSSL('http://example.com/foo/bar/baz.php')
+                            Piece_Unity_URI::create('http://example.com/foo/bar/baz.php', 'https')
                             );
         $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::createSSL('/foo/bar/baz.php')
+                            Piece_Unity_URI::create('/foo/bar/baz.php', 'https')
                             );
 
         $_SERVER['SERVER_PORT'] = '443';
@@ -291,10 +291,10 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
         Piece_Unity_URI::addNonSSLableServer('example.org');
 
         $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::createSSL('http://example.com/foo/bar/baz.php')
+                            Piece_Unity_URI::create('http://example.com/foo/bar/baz.php', 'https')
                             );
         $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::createSSL('/foo/bar/baz.php')
+                            Piece_Unity_URI::create('/foo/bar/baz.php', 'https')
                             );
         $this->assertEquals('http://example.org/foo/bar/baz.php',
                             Piece_Unity_URI::create('https://example.com/foo/bar/baz.php')

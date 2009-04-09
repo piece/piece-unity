@@ -232,12 +232,14 @@ class Piece_Unity_URI
      * This method cannot use to create external URIs.
      *
      * @param string $path
+     * @param string $protocol The protocol for the URI. The protocol MUST be one of:
+     *                         https, http, or pass (default).
      * @return string
      */
-    public static function create($path)
+    public static function create($path, $protocol = 'pass')
     {
         $uri = new Piece_Unity_URI($path);
-        return $uri->getURI('http');
+        return $uri->getURI($protocol);
     }
 
     // }}}
@@ -260,23 +262,6 @@ class Piece_Unity_URI
         }
 
         $this->_url = new Net_URL($path);
-    }
-
-    // }}}
-    // {{{ createSSL()
-
-    /**
-     * A utility to get the appropriate HTTPS URI immediately.
-     *
-     * This method cannot use to create external URIs.
-     *
-     * @param string $path
-     * @return string
-     */
-    public static function createSSL($path)
-    {
-        $uri = new Piece_Unity_URI($path);
-        return $uri->getURI('https');
     }
 
     // }}}
