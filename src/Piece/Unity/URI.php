@@ -69,7 +69,7 @@ class Piece_Unity_URI
      */
 
     private $_url;
-    private $_isExternal;
+    private $_isExternal = false;
     private $_isRedirection = false;
 
     /**#@-*/
@@ -84,13 +84,10 @@ class Piece_Unity_URI
     /**
      * Initializes a Net_URL object if the path is given.
      *
-     * @param string  $path
-     * @param boolean $isExternal
+     * @param string $path
      */
-    public function __construct($path = null, $isExternal = false)
+    public function __construct($path = null)
     {
-        $this->_isExternal = $isExternal;
-
         if (!is_null($path)) {
             $this->initialize($path);
         }
@@ -274,6 +271,18 @@ class Piece_Unity_URI
     public function setIsRedirection($isRedirection)
     {
         $this->_isRedirection = $isRedirection;
+    }
+
+    // }}}
+    // {{{ setIsExternal()
+
+    /**
+     * @param boolean $isExternal
+     * @since Method available since Release 2.0.0dev1
+     */
+    public function setIsExternal($isExternal)
+    {
+        $this->_isExternal = $isExternal;
     }
 
     /**#@-*/

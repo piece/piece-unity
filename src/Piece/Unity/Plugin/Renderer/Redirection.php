@@ -148,12 +148,11 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
     private function _buildURI()
     {
         $isExternal = $this->getConfiguration('isExternal');
-        $viewString = $this->_context->getView();
-        $uri = new Piece_Unity_URI($viewString, $isExternal);
+        $uri = new Piece_Unity_URI($this->_context->getView());
         $uri->setIsRedirection(true);
+        $uri->setIsExternal($isExternal);
 
-        $viewElement = $this->_context->getViewElement();
-        $viewElements = $viewElement->getElements();
+        $viewElements = $this->_context->getViewElement()->getElements();
         $queryString = $uri->getQueryString();
         foreach (array_keys($queryString) as $elementName) {
             if (array_key_exists($elementName, $viewElements)
