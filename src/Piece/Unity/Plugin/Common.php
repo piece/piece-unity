@@ -97,11 +97,11 @@ abstract class Piece_Unity_Plugin_Common
             $this->_name = strtolower(get_class($this));
         }
 
-        $this->_context = Piece_Unity_Context::singleton();
+        $this->context = Piece_Unity_Context::singleton();
 
         $this->initialize();
 
-        $config = $this->_context->getConfiguration();
+        $config = $this->context->getConfiguration();
         $config->validateExtensionPoints($this->_name, array_keys($this->_extensionPoints));
         $config->validateConfigurationPoints($this->_name, array_keys($this->_configurationPoints));
     }
@@ -170,8 +170,8 @@ abstract class Piece_Unity_Plugin_Common
             throw new Piece_Unity_Exception("The configuration point  [ $extensionPoint ] is not found in the plug-in [ {$this->_name} ]");
         }
 
-        $extension = $this->_context->getConfiguration()
-                                    ->getExtension($this->_name, $extensionPoint);
+        $extension = $this->context->getConfiguration()
+                                   ->getExtension($this->_name, $extensionPoint);
         if (is_null($extension)) {
             $extension = $this->_extensionPoints[$extensionPoint];
         }
@@ -201,10 +201,10 @@ abstract class Piece_Unity_Plugin_Common
             throw new Piece_Unity_Exception("The configuration point  [ $configurationPoint ] is not found in the plug-in [ {$this->_name} ]");
         }
 
-        $configuration = $this->_context->getConfiguration()
-                                        ->getConfiguration($this->_name,
-                                                           $configurationPoint
-                                                           );
+        $configuration = $this->context->getConfiguration()
+                                       ->getConfiguration($this->_name,
+                                                          $configurationPoint
+                                                          );
         if (is_null($configuration)) {
             $configuration = $this->_configurationPoints[$configurationPoint];
         }
