@@ -76,7 +76,6 @@ class Piece_Unity_Plugin_Configurator_EnvTest extends PHPUnit_Framework_TestCase
     public function tearDown()
     {
         Piece_Unity_Context::clear();
-        Piece_Unity_URI::clearNonSSLableServers();
     }
 
     /**
@@ -93,37 +92,6 @@ class Piece_Unity_Plugin_Configurator_EnvTest extends PHPUnit_Framework_TestCase
         $configurator->configure();
 
         $this->assertEquals('/foo/bar', $context->getProxyPath());
-    }
-
-    /**
-     * @test
-     */
-    public function setNonSslableServers()
-    {
-        $_SERVER['SERVER_NAME'] = 'example.org';
-        $_SERVER['SERVER_PORT'] = '80';
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_Env', 'nonSSLableServers', array('example.org'));
-        Piece_Unity_Context::singleton()->setConfiguration($config);
-
-        $configurator = new Piece_Unity_Plugin_Configurator_Env();
-        $configurator->configure();
-
-        $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::create('http://example.com/foo/bar/baz.php', 'https')
-                            );
-        $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::create('/foo/bar/baz.php', 'https')
-                            );
-
-        $_SERVER['SERVER_PORT'] = '443';
-
-        $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::create('https://example.com/foo/bar/baz.php', 'https')
-                            );
-        $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::create('/foo/bar/baz.php', 'https')
-                            );
     }
 
     /**#@-*/

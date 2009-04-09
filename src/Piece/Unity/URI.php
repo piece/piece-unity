@@ -71,7 +71,6 @@ class Piece_Unity_URI
     private $_url;
     private $_isExternal;
     private $_isRedirection;
-    private static $_nonSSLableServers = array();
 
     /**#@-*/
 
@@ -190,16 +189,12 @@ class Piece_Unity_URI
         }
 
         if ($protocol == 'https') {
-            if (!in_array($url->host, self::$_nonSSLableServers)) {
-                $url->protocol = $protocol;
-                if ((Stagehand_HTTP_ServerEnv::usingProxy() && !$this->_isRedirection) || Stagehand_HTTP_ServerEnv::isRunningOnStandardPort()) {
-                    $url->port= '443';
-                }
-
-                return $url->getURL();
+            $url->protocol = $protocol;
+            if ((Stagehand_HTTP_ServerEnv::usingProxy() && !$this->_isRedirection) || Stagehand_HTTP_ServerEnv::isRunningOnStandardPort()) {
+                $url->port= '443';
             }
 
-            $protocol = 'http';
+            return $url->getURL();
         }
 
         if ($protocol == 'http') {
@@ -253,30 +248,6 @@ class Piece_Unity_URI
         }
 
         $this->_url = new Net_URL($path);
-    }
-
-    // }}}
-    // {{{ addNonSSLableServer()
-
-    /**
-     * Adds a server name which is forced to be non-SSL request.
-     *
-     * @param string $serverName
-     */
-    public static function addNonSSLableServer($serverName)
-    {
-        self::$_nonSSLableServers[] = $serverName;
-    }
-
-    // }}}
-    // {{{ clearNonSSLableServers()
-
-    /**
-     * Clears the list of non-SSLable servers.
-     */
-    public static function clearNonSSLableServers()
-    {
-        self::$_nonSSLableServers = array();
     }
 
     // }}}

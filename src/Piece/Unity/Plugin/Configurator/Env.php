@@ -92,8 +92,6 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common impl
             $this->_context->setProxyPath($proxyPath);
         }
 
-        $this->_setNonSSLableServers();
-
         $envHandlers = $this->getExtension('envHandlers');
         if (!is_array($envHandlers)) {
             throw new Piece_Unity_Exception("The value of the extension point [ envHandlers ] on the plug-in [ {$this->_name} ] should be an array.");
@@ -119,7 +117,6 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common impl
     protected function initialize()
     {
         $this->addConfigurationPoint('proxyPath');
-        $this->addConfigurationPoint('nonSSLableServers', array());
         $this->addExtensionPoint('envHandlers', array());
     }
 
@@ -128,26 +125,6 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common impl
     /**#@+
      * @access private
      */
-
-    // }}}
-    // {{{ _setNonSSLableServers()
-
-    /**
-     * Makes a list of non-SSLable servers.
-     *
-     * @throws Piece_Unity_Exception
-     */
-    function _setNonSSLableServers()
-    {
-        $nonSSLableServers = $this->getConfiguration('nonSSLableServers');
-        if (!is_array($nonSSLableServers)) {
-            throw new Piece_Unity_Exception("The value of the configuration point [ nonSSLableServers ] on the plug-in [ {$this->_name} ] should be an array.");
-        }
-
-        foreach ($nonSSLableServers as $nonSSLableServer) {
-            Piece_Unity_URI::addNonSSLableServer($nonSSLableServer);
-        }
-    }
 
     /**#@-*/
 

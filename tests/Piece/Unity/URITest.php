@@ -243,68 +243,6 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
-     */
-    public function buildAnInternalUrlForNonSslableServers()
-    {
-        $_SERVER['SERVER_NAME'] = 'example.org';
-        $_SERVER['SERVER_PORT'] = '80';
-        Piece_Unity_URI::addNonSSLableServer('example.org');
-
-        $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::create('http://example.com/foo/bar/baz.php', 'https')
-                            );
-        $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::create('/foo/bar/baz.php', 'https')
-                            );
-
-        $_SERVER['SERVER_PORT'] = '443';
-
-        $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::create('https://example.com/foo/bar/baz.php')
-                            );
-        $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::create('/foo/bar/baz.php')
-                            );
-
-        Piece_Unity_URI::clearNonSSLableServers();
-        unset($_SERVER['SERVER_PORT']);
-        unset($_SERVER['SERVER_NAME']);
-    }
-
-    /**
-     * @test
-     */
-    public function buildAnInternalUrlForNonSslableServersAndProxy()
-    {
-        $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
-        $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'example.org';
-        $_SERVER['SERVER_NAME'] = 'foo.example.org';
-        $_SERVER['SERVER_PORT'] = '8201';
-        Piece_Unity_Context::singleton()->setProxyPath('/foo');
-        Piece_Unity_URI::addNonSSLableServer('example.org');
-
-        $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::create('http://example.com/foo/bar/baz.php', 'https')
-                            );
-        $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::create('/foo/bar/baz.php', 'https')
-                            );
-        $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::create('https://example.com/foo/bar/baz.php')
-                            );
-        $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::create('/foo/bar/baz.php')
-                            );
-
-        Piece_Unity_URI::clearNonSSLableServers();
-        unset($_SERVER['SERVER_PORT']);
-        unset($_SERVER['SERVER_NAME']);
-        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
-        unset($_SERVER['HTTP_X_FORWARDED_SERVER']);
-    }
-
-    /**
-     * @test
      * @since Method available since Release 0.11.0
      */
     public function buildAnInternalUrlForEZwebMobilePhones()
