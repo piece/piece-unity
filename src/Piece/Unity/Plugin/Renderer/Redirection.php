@@ -158,24 +158,22 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
             if (array_key_exists($elementName, $viewElements)
                 && is_scalar($viewElements[$elementName])
                 ) {
-                $uri->addQueryString($elementName,
-                                     $viewElements[$elementName]
-                                     );
+                $uri->setQueryVariable($elementName, $viewElements[$elementName]);
             }
         }
 
         if (!$isExternal) {
             if ($this->getConfiguration('addSessionID')) {
-                $uri->addQueryString($viewElements['__sessionName'],
-                                     $viewElements['__sessionID']
-                                     );
+                $uri->setQueryVariable($viewElements['__sessionName'],
+                                       $viewElements['__sessionID']
+                                       );
             }
 
             if ($this->getConfiguration('addFlowExecutionTicket')) {
                 if (array_key_exists('__flowExecutionTicketKey', $viewElements)) {
-                    $uri->addQueryString($viewElements['__flowExecutionTicketKey'],
-                                         $viewElements['__flowExecutionTicket']
-                                         );
+                    $uri->setQueryVariable($viewElements['__flowExecutionTicketKey'],
+                                           $viewElements['__flowExecutionTicket']
+                                           );
                 }
             }
 
@@ -183,8 +181,10 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
              * Replaces __eventNameKey with the event name key.
              */
             if (array_key_exists('__eventNameKey', $queryVariables)) {
-                $uri->removeQueryString('__eventNameKey');
-                $uri->addQueryString($this->context->getEventNameKey(), $queryVariables['__eventNameKey']);
+                $uri->removeQueryVariable('__eventNameKey');
+                $uri->setQueryVariable($this->context->getEventNameKey(),
+                                       $queryVariables['__eventNameKey']
+                                       );
             }
         }
 

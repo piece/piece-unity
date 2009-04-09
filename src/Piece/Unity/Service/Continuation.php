@@ -93,11 +93,11 @@ class Piece_Unity_Service_Continuation
         $uri = &new Piece_Unity_URI(is_null($flowID) ? $context->getScriptName()
                                                      : $flowID
                                     );
-        $uri->addQueryString($GLOBALS['PIECE_UNITY_Service_Continuation_FlowExecutionTicketKey'],
-                             is_null($flowID) ? $continuation->getActiveFlowExecutionTicket()
-                                              : $continuation->getFlowExecutionTicketByFlowID($flowID)
-                             );
-        $uri->addQueryString($context->getEventNameKey(), $eventName);
+        $uri->setQueryVariable($GLOBALS['PIECE_UNITY_Service_Continuation_FlowExecutionTicketKey'],
+                               is_null($flowID) ? $continuation->getActiveFlowExecutionTicket()
+                                                : $continuation->getFlowExecutionTicketByFlowID($flowID)
+                               );
+        $uri->setQueryVariable($context->getEventNameKey(), $eventName);
 
         return $uri;
     }

@@ -112,7 +112,7 @@ class Piece_Unity_URI
     }
 
     // }}}
-    // {{{ addQueryString()
+    // {{{ setQueryVariable()
 
     /**
      * Adds a name/value pair to the query string.
@@ -121,7 +121,7 @@ class Piece_Unity_URI
      * @param string $value
      * @throws Piece_Unity_Exception
      */
-    public function addQueryString($name, $value)
+    public function setQueryVariable($name, $value)
     {
         if (is_null($this->_url)) {
             throw new Piece_Unity_Exception(__METHOD__ . ' method must be called after initializing');
@@ -131,7 +131,7 @@ class Piece_Unity_URI
     }
 
     // }}}
-    // {{{ removeQueryString()
+    // {{{ removeQueryVariable()
 
     /**
      * Removes a name/value pair from the query string.
@@ -140,7 +140,7 @@ class Piece_Unity_URI
      * @since Method available since Release 0.11.0
      * @throws Piece_Unity_Exception
      */
-    public function removeQueryString($name)
+    public function removeQueryVariable($name)
     {
         if (is_null($this->_url)) {
             throw new Piece_Unity_Exception(__METHOD__ . ' method must be called after initializing');

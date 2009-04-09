@@ -211,7 +211,7 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
     public function raiseAnExceptionWhenAddquerystringIsCalledBeforeInitializing()
     {
         $uri = new Piece_Unity_URI();
-        $uri->addQueryString('foo', 'bar');
+        $uri->setQueryVariable('foo', 'bar');
     }
 
     /**
