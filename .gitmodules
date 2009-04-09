@@ -16,9 +16,6 @@
 [submodule "components/piece-unity-component-json"]
 	path = components/piece-unity-component-json
 	url = git://github.com/piece/piece-unity-component-json.git
-[submodule "components/piece-unity-component-kernelconfigurator"]
-	path = components/piece-unity-component-kernelconfigurator
-	url = git://github.com/piece/piece-unity-component-kernelconfigurator.git
 [submodule "components/piece-unity-component-nullbyteattackpreventation"]
 	path = components/piece-unity-component-nullbyteattackpreventation
 	url = git://github.com/piece/piece-unity-component-nullbyteattackpreventation.git
@@ -28,9 +25,6 @@
 [submodule "components/piece-unity-component-pieceorm"]
 	path = components/piece-unity-component-pieceorm
 	url = git://github.com/piece/piece-unity-component-pieceorm.git
-[submodule "components/piece-unity-component-proxybasepath"]
-	path = components/piece-unity-component-proxybasepath
-	url = git://github.com/piece/piece-unity-component-proxybasepath.git
 [submodule "components/piece-unity-component-smarty"]
 	path = components/piece-unity-component-smarty
 	url = git://github.com/piece/piece-unity-component-smarty.git
