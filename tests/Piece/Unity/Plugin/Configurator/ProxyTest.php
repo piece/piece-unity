@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -31,18 +31,11 @@
  * @package    Piece_Unity
  * @copyright  2007-2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
+ * @version    Release: @package_version@
  * @since      File available since Release 0.12.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Plugin/Configurator/Proxy.php';
-require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/Error.php';
-
-// {{{ Piece_Unity_Plugin_Configurator_ProxyTestCase
+// {{{ Piece_Unity_Plugin_Configurator_ProxyTest
 
 /**
  * Some tests for Piece_Unity_Plugin_Configurator_Proxy.
@@ -53,13 +46,19 @@ require_once 'Piece/Unity/Error.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.12.0
  */
-class Piece_Unity_Plugin_Configurator_ProxyTestCase extends PHPUnit_TestCase
+class Piece_Unity_Plugin_Configurator_ProxyTest extends PHPUnit_Framework_TestCase
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -74,40 +73,45 @@ class Piece_Unity_Plugin_Configurator_ProxyTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function tearDown()
+    public function tearDown()
     {
         Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
     }
 
-    function testSetProxyPath()
+    /**
+     * @test
+     */
+    public function setTheProxyPath()
     {
-        $config = &new Piece_Unity_Config();
+        $config = new Piece_Unity_Config();
         $config->setConfiguration('Configurator_Proxy', 'proxyPath', '/foo/bar');
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
-        $configurator = &new Piece_Unity_Plugin_Configurator_Proxy();
+        $configurator = new Piece_Unity_Plugin_Configurator_Proxy();
         $configurator->invoke();
 
         $this->assertEquals('/foo/bar', $context->getProxyPath());
     }
 
-    function testProxy()
+    /**
+     * @test
+     */
+    public function adjustTheProxyPathForProxy()
     {
-        $previousScriptName = $_SERVER['REQUEST_URI'];
         $_SERVER['REQUEST_URI'] = '/baz/qux.php';
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
-        $previousSessionCookiePath = ini_get('session.cookie_path');
+        $oldSessionCookiePath = ini_get('session.cookie_path');
         ini_set('session.cookie_path', '/baz');
 
-        $config = &new Piece_Unity_Config();
+        $config = new Piece_Unity_Config();
         $config->setConfiguration('Configurator_Proxy', 'proxyPath', '/bar');
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $context->setAppRootPath('/foo');
 
-        $interceptor = &new Piece_Unity_Plugin_Configurator_Proxy();
+        $interceptor = new Piece_Unity_Plugin_Configurator_Proxy();
         $interceptor->invoke();
 
         $this->assertEquals('/bar/baz', $context->getBasePath());
@@ -115,52 +119,57 @@ class Piece_Unity_Plugin_Configurator_ProxyTestCase extends PHPUnit_TestCase
         $this->assertEquals('/bar/baz', ini_get('session.cookie_path'));
         $this->assertEquals('/bar/foo', $context->getAppRootPath());
 
-        ini_set('session.cookie_path', $previousSessionCookiePath);
-        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
-        $_SERVER['REQUEST_URI'] = $previousScriptName;
+        ini_set('session.cookie_path', $oldSessionCookiePath);
     }
 
-    function testNonProxy()
+    /**
+     * @test
+     */
+    public function adjustTheProxyPathForDirectAccessToBackendServer()
     {
-        $previousScriptName = $_SERVER['REQUEST_URI'];
         $_SERVER['REQUEST_URI'] = '/baz/qux.php';
 
-        $config = &new Piece_Unity_Config();
+        $config = new Piece_Unity_Config();
         $config->setConfiguration('Configurator_Proxy', 'proxyPath', '/bar');
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $context->setAppRootPath('/foo');
 
-        $interceptor = &new Piece_Unity_Plugin_Configurator_Proxy();
+        $interceptor = new Piece_Unity_Plugin_Configurator_Proxy();
         $interceptor->invoke();
 
         $this->assertEquals('/baz', $context->getBasePath());
         $this->assertEquals('/baz/qux.php', $context->getScriptName());
         $this->assertEquals('/foo', $context->getAppRootPath());
-
-        $_SERVER['REQUEST_URI'] = $previousScriptName;
     }
 
-    function testAdjustingSessionCookiePathToOff()
+    /**
+     * @test
+     */
+    public function NotAdjustTheSessionCookiePathByConfiguration()
     {
-        $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
-        $previousSessionCookiePath = ini_get('session.cookie_path');
+        $oldSessionCookiePath = ini_get('session.cookie_path');
         ini_set('session.cookie_path', '/bar');
 
-        $config = &new Piece_Unity_Config();
+        $config = new Piece_Unity_Config();
         $config->setConfiguration('Configurator_Proxy', 'proxyPath', '/foo');
         $config->setConfiguration('Configurator_Proxy', 'adjustSessionCookiePath', false);
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
-        $interceptor = &new Piece_Unity_Plugin_Configurator_Proxy();
+        $interceptor = new Piece_Unity_Plugin_Configurator_Proxy();
         $interceptor->invoke();
 
         $this->assertEquals('/bar', ini_get('session.cookie_path'));
 
-        ini_set('session.cookie_path', $previousSessionCookiePath);
-        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
+        ini_set('session.cookie_path', $oldSessionCookiePath);
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

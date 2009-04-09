@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -31,13 +31,9 @@
  * @package    Piece_Unity
  * @copyright  2007-2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
+ * @version    Release: @package_version@
  * @since      File available since Release 0.12.0
  */
-
-require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/URI.php';
-require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_Plugin_Configurator_Proxy
 
@@ -81,6 +77,12 @@ class Piece_Unity_Plugin_Configurator_Proxy extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -96,12 +98,12 @@ class Piece_Unity_Plugin_Configurator_Proxy extends Piece_Unity_Plugin_Common
     /**
      * Invokes the plugin specific code.
      */
-    function invoke()
+    public function invoke()
     {
         $proxyPath = $this->_getConfiguration('proxyPath');
         $this->_context->setProxyPath($proxyPath);
 
-        if (!$this->_context->usingProxy()) {
+        if (!Stagehand_HTTP_ServerEnv::usingProxy()) {
             return;
         }
 
@@ -122,7 +124,7 @@ class Piece_Unity_Plugin_Configurator_Proxy extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
     // }}}
@@ -131,11 +133,17 @@ class Piece_Unity_Plugin_Configurator_Proxy extends Piece_Unity_Plugin_Common
     /**
      * Defines and initializes extension points and configuration points.
      */
-    function _initialize()
+    protected function _initialize()
     {
         $this->_addConfigurationPoint('proxyPath');
         $this->_addConfigurationPoint('adjustSessionCookiePath', true);
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
 
     /**#@-*/
 
