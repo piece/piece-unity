@@ -160,7 +160,7 @@ class Piece_Unity_Request
      */
     public function importPathInfo()
     {
-        $pathInfo = self::getPathInfo();
+        $pathInfo = Stagehand_HTTP_ServerEnv::getPathInfo();
         if (is_null($pathInfo)) {
             return;
         }
