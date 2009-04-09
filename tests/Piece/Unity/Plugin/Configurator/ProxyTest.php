@@ -98,7 +98,7 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends PHPUnit_Framework_TestCa
     /**
      * @test
      */
-    public function adjustTheProxyPathForProxy()
+    public function adjustTheProxyPathForAProxy()
     {
         $_SERVER['REQUEST_URI'] = '/baz/qux.php';
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
@@ -125,7 +125,7 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends PHPUnit_Framework_TestCa
     /**
      * @test
      */
-    public function adjustTheProxyPathForDirectAccessToBackendServer()
+    public function adjustTheProxyPathForDirectAccessToABackendServer()
     {
         $_SERVER['REQUEST_URI'] = '/baz/qux.php';
 

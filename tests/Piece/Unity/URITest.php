@@ -130,7 +130,7 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function buildAnInternalUriForProxy()
+    public function buildAnInternalUriForAProxy()
     {
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
         $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'example.org';
@@ -158,7 +158,7 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function buildAnInternalUriForDirectAccessToBackendServer()
+    public function buildAnInternalUriForDirectAccessToABackendServer()
     {
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
