@@ -109,15 +109,12 @@ class Piece_Unity_URI
      * Gets the query string of a URI.
      *
      * @return boolean
-     * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
+     * @throws Piece_Unity_Exception
      */
     public function getQueryString()
     {
         if (is_null($this->_url)) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
-                                    __METHOD__ . ' method must be called after initializing.'
-                                    );
-            return;
+            throw new Piece_Unity_Exception(__METHOD__ . ' method must be called after initializing');
         }
 
         return $this->_url->querystring;
@@ -131,15 +128,12 @@ class Piece_Unity_URI
      *
      * @param string $name
      * @param string $value
-     * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
+     * @throws Piece_Unity_Exception
      */
     public function addQueryString($name, $value)
     {
         if (is_null($this->_url)) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
-                                    __METHOD__ . ' method must be called after initializing.'
-                                    );
-            return;
+            throw new Piece_Unity_Exception(__METHOD__ . ' method must be called after initializing');
         }
 
         $this->_url->addQueryString($name, $value);
@@ -155,15 +149,12 @@ class Piece_Unity_URI
      * @param string $protocol The protocol for the URI. The protocol MUST be one of:
      *                         https, http, or pass (default).
      * @return string
-     * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
+     * @throws Piece_Unity_Exception
      */
     public function getURI($protocol = 'pass')
     {
         if (is_null($this->_url)) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
-                                    __METHOD__ . ' method must be called after initializing.'
-                                    );
-            return;
+            throw new Piece_Unity_Exception(__METHOD__ . ' method must be called after initializing');
         }
 
         if ($this->_isExternal) {
@@ -296,15 +287,12 @@ class Piece_Unity_URI
      *
      * @param string $name
      * @since Method available since Release 0.11.0
-     * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
+     * @throws Piece_Unity_Exception
      */
     public function removeQueryString($name)
     {
         if (is_null($this->_url)) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
-                                    __METHOD__ . ' method must be called after initializing.'
-                                    );
-            return;
+            throw new Piece_Unity_Exception(__METHOD__ . ' method must be called after initializing');
         }
 
         $this->_url->removeQueryString($name);

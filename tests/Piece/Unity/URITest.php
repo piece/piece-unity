@@ -213,39 +213,32 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @expectedException Piece_Unity_Exception
      */
-    public function raiseAnExceptionWhenAnInvalidOperationIsPerformed()
+    public function raiseAnExceptionWhenGetquerystringIsCalledBeforeInitializing()
     {
         $uri = new Piece_Unity_URI();
-        Piece_Unity_Error::disableCallback();
         $uri->getQueryString();
-        Piece_Unity_Error::enableCallback();
+    }
 
-        $this->assertTrue(Piece_Unity_Error::hasErrors());
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_INVALID_OPERATION, $error['code']);
-
-        Piece_Unity_Error::disableCallback();
+    /**
+     * @test
+     * @expectedException Piece_Unity_Exception
+     */
+    public function raiseAnExceptionWhenAddquerystringIsCalledBeforeInitializing()
+    {
+        $uri = new Piece_Unity_URI();
         $uri->addQueryString('foo', 'bar');
-        Piece_Unity_Error::enableCallback();
+    }
 
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_INVALID_OPERATION, $error['code']);
-
-        Piece_Unity_Error::disableCallback();
+    /**
+     * @test
+     * @expectedException Piece_Unity_Exception
+     */
+    public function raiseAnExceptionWhenGeturiIsCalledBeforeInitializing()
+    {
+        $uri = new Piece_Unity_URI();
         $uri->getURI();
-        Piece_Unity_Error::enableCallback();
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_INVALID_OPERATION, $error['code']);
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertNull($error);
     }
 
     /**
