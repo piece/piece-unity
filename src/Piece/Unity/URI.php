@@ -70,7 +70,7 @@ class Piece_Unity_URI
 
     private $_url;
     private $_isExternal;
-    private $_isRedirection;
+    private $_isRedirection = false;
 
     /**#@-*/
 
@@ -86,15 +86,10 @@ class Piece_Unity_URI
      *
      * @param string  $path
      * @param boolean $isExternal
-     * @param boolean $isRedirection
      */
-    public function __construct($path = null,
-                                $isExternal = false,
-                                $isRedirection = false
-                                )
+    public function __construct($path = null, $isExternal = false)
     {
         $this->_isExternal = $isExternal;
-        $this->_isRedirection = $isRedirection;
 
         if (!is_null($path)) {
             $this->initialize($path);
@@ -267,6 +262,18 @@ class Piece_Unity_URI
         }
 
         $this->_url->removeQueryString($name);
+    }
+
+    // }}}
+    // {{{ setIsRedirection()
+
+    /**
+     * @param boolean $isRedirection
+     * @since Method available since Release 2.0.0dev1
+     */
+    public function setIsRedirection($isRedirection)
+    {
+        $this->_isRedirection = $isRedirection;
     }
 
     /**#@-*/
