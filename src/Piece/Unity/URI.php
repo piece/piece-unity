@@ -89,7 +89,7 @@ class Piece_Unity_URI
     public function __construct($path = null)
     {
         if (!is_null($path)) {
-            $this->initialize($path);
+            $this->_initialize($path);
         }
     }
 
@@ -252,28 +252,6 @@ class Piece_Unity_URI
     }
 
     // }}}
-    // {{{ initialize()
-
-    /**
-     * Creates a Net_URL object with the given path, and replaces some pieces of
-     * a URI when the URI is not external.
-     *
-     * @param string $path
-     */
-    public function initialize($path)
-    {
-        $context = Piece_Unity_Context::singleton();
-        if (!$this->_isExternal
-            && !preg_match('/^https?/', $path)
-            && !Stagehand_HTTP_ServerEnv::usingProxy()
-            ) {
-            $path = $context->getAppRootPath() . $path;
-        }
-
-        $this->_url = new Net_URL2($path);
-    }
-
-    // }}}
     // {{{ setIsRedirection()
 
     /**
@@ -308,6 +286,28 @@ class Piece_Unity_URI
     /**#@+
      * @access private
      */
+
+    // }}}
+    // {{{ _initialize()
+
+    /**
+     * Creates a Net_URL object with the given path, and replaces some pieces of
+     * a URI when the URI is not external.
+     *
+     * @param string $path
+     */
+    private function _initialize($path)
+    {
+        $context = Piece_Unity_Context::singleton();
+        if (!$this->_isExternal
+            && !preg_match('/^https?/', $path)
+            && !Stagehand_HTTP_ServerEnv::usingProxy()
+            ) {
+            $path = $context->getAppRootPath() . $path;
+        }
+
+        $this->_url = new Net_URL2($path);
+    }
 
     /**#@-*/
 
