@@ -108,7 +108,7 @@ class Piece_Unity_URI
             throw new Piece_Unity_Exception(__METHOD__ . ' method must be called after initializing');
         }
 
-        return $this->_url->querystring;
+        return $this->_url->getQuery();
     }
 
     // }}}
@@ -127,7 +127,24 @@ class Piece_Unity_URI
             throw new Piece_Unity_Exception(__METHOD__ . ' method must be called after initializing');
         }
 
-        $this->_url->addQueryString($name, $value);
+        $this->_url->setQueryVariable($name, $value);
+    }
+
+    // }}}
+    // {{{ getQueryVariables()
+
+    /**
+     * @return array
+     * @since Method available since Release 2.0.0dev1
+     * @throws Piece_Unity_Exception
+     */
+    public function getQueryVariables()
+    {
+        if (is_null($this->_url)) {
+            throw new Piece_Unity_Exception(__METHOD__ . ' method must be called after initializing');
+        }
+
+        return $this->_url->getQueryVariables();
     }
 
     // }}}
@@ -157,13 +174,13 @@ class Piece_Unity_URI
             && Stagehand_HTTP_ServerEnv::usingProxy()
             && array_key_exists('HTTP_X_FORWARDED_SERVER', $_SERVER)
             ) {
-            if ($this->_url->host != $_SERVER['HTTP_X_FORWARDED_SERVER']) {
-                $this->_url->host = $_SERVER['HTTP_X_FORWARDED_SERVER'];
+            if ($this->_url->getHost() != $_SERVER['HTTP_X_FORWARDED_SERVER']) {
+                $this->_url->setHost($_SERVER['HTTP_X_FORWARDED_SERVER']);
             }
         } else {
-            $this->_url->host = $_SERVER['SERVER_NAME'];
-            $this->_url->port = $_SERVER['SERVER_PORT'];
-            $this->_url->path = $context->removeProxyPath($this->_url->path);
+            $this->_url->setHost($_SERVER['SERVER_NAME']);
+            $this->_url->setPort($_SERVER['SERVER_PORT']);
+            $this->_url->setPath($context->removeProxyPath($this->_url->getPath()));
         }
 
         $url = clone($this->_url);
@@ -173,24 +190,27 @@ class Piece_Unity_URI
         }
 
         if ($protocol == 'pass') {
-            $protocol = $url->protocol;
+            $protocol = $this->_url->getScheme();
+            $port = $this->_url->getPort();
         }
 
         if ($protocol == 'https') {
-            $url->protocol = 'https';
+            $url->setScheme('https');
             $port = 443;
         } elseif ($protocol == 'http') {
-            $url->protocol = 'http';
+            $url->setScheme('http');
             $port = 80;
+        } else {
+            $url->setScheme(Stagehand_HTTP_ServerEnv::isSecure() ? 'https' : 'http');
         }
 
         if ((Stagehand_HTTP_ServerEnv::usingProxy() && !$this->_isRedirection)
             || Stagehand_HTTP_ServerEnv::isRunningOnStandardPort()
             ) {
-            $url->port= $port;
+            $url->setPort($port);
         }
 
-        return $url->getURL();
+        return $url->getNormalizedURL();
     }
 
     // }}}
@@ -231,8 +251,9 @@ class Piece_Unity_URI
             $path = $context->getAppRootPath() . $path;
         }
 
-        $this->_url = new Net_URL($path);
+        $this->_url = new Net_URL2($path);
     }
+
 
     // }}}
     // {{{ removeQueryString()
@@ -250,7 +271,7 @@ class Piece_Unity_URI
             throw new Piece_Unity_Exception(__METHOD__ . ' method must be called after initializing');
         }
 
-        $this->_url->removeQueryString($name);
+        $this->_url->unsetQueryVariable($name);
     }
 
     // }}}

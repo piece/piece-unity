@@ -153,8 +153,8 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
         $uri->setIsExternal($isExternal);
 
         $viewElements = $this->context->getViewElement()->getElements();
-        $queryString = $uri->getQueryString();
-        foreach (array_keys($queryString) as $elementName) {
+        $queryVariables = $uri->getQueryVariables();
+        foreach (array_keys($queryVariables) as $elementName) {
             if (array_key_exists($elementName, $viewElements)
                 && is_scalar($viewElements[$elementName])
                 ) {
@@ -182,9 +182,9 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
             /*
              * Replaces __eventNameKey with the event name key.
              */
-            if (array_key_exists('__eventNameKey', $queryString)) {
+            if (array_key_exists('__eventNameKey', $queryVariables)) {
                 $uri->removeQueryString('__eventNameKey');
-                $uri->addQueryString($this->context->getEventNameKey(), $queryString['__eventNameKey']);
+                $uri->addQueryString($this->context->getEventNameKey(), $queryVariables['__eventNameKey']);
             }
         }
 

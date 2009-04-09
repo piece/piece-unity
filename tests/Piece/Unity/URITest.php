@@ -76,7 +76,6 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
     public function tearDown()
     {
         Piece_Unity_Context::clear();
-        Piece_Unity_Error::clearErrors();
     }
 
     /**
@@ -98,9 +97,6 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI('https'));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI('http'));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI());
-
-        unset($_SERVER['SERVER_PORT']);
-        unset($_SERVER['SERVER_NAME']);
     }
 
     /**
@@ -117,14 +113,12 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI());
 
         $_SERVER['SERVER_PORT'] = '443';
+        $_SERVER['HTTPS'] = 'on';
         $uri = new Piece_Unity_URI('/foo/bar/baz.php');
 
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI('https'));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI('http'));
-        $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI());
-
-        unset($_SERVER['SERVER_PORT']);
-        unset($_SERVER['SERVER_NAME']);
+        $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI());
     }
 
     /**
@@ -148,11 +142,6 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI('https'));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI('http'));
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI());
-
-        unset($_SERVER['SERVER_PORT']);
-        unset($_SERVER['SERVER_NAME']);
-        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
-        unset($_SERVER['HTTP_X_FORWARDED_SERVER']);
     }
 
     /**
@@ -175,9 +164,6 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
         $this->assertEquals('https://foo.example.org:8201/bar/baz.php', $uri->getURI('https'));
         $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $uri->getURI('http'));
         $this->assertEquals('https://foo.example.org:8201/bar/baz.php', $uri->getURI());
-
-        unset($_SERVER['SERVER_PORT']);
-        unset($_SERVER['SERVER_NAME']);
     }
 
     /**
@@ -206,9 +192,6 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
         $this->assertEquals('https://example.org/foo/bar/baz.php',
                             $uri->create('http://example.com/foo/bar/baz.php', 'https')
                             );
-
-        unset($_SERVER['SERVER_PORT']);
-        unset($_SERVER['SERVER_NAME']);
     }
 
     /**
@@ -254,10 +237,6 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
         $this->assertEquals('http://example.org/foo/bar/baz.php',
                             Piece_Unity_URI::create('http://example.com/foo/bar/baz.php')
                             );
-
-        unset($_SERVER['SERVER_PORT']);
-        unset($_SERVER['SERVER_NAME']);
-        unset($_SERVER['HTTP_VIA']);
     }
 
     /**
@@ -275,7 +254,7 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
         $uri = new Piece_Unity_URI('http://example.org:80/foo/bar/baz.php');
         $uri->setIsExternal(true);
 
-        $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI(false));
+        $this->assertEquals('http://example.org:80/foo/bar/baz.php', $uri->getURI(false));
 
         $uri = new Piece_Unity_URI('http://example.org:443/foo/bar/baz.php');
         $uri->setIsExternal(true);
@@ -361,9 +340,6 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
         $uri = new Piece_Unity_URI('https://example.com/foo/bar.php');
 
         $this->assertEquals('https://example.org:8443/foo/bar.php', $uri->getURI('pass'));
-
-        unset($_SERVER['SERVER_PORT']);
-        unset($_SERVER['SERVER_NAME']);
     }
 
     /**#@-*/
