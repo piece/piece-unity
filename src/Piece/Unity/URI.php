@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -31,19 +31,10 @@
  * @package    Piece_Unity
  * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
+ * @version    Release: @package_version@
  * @since      File available since Release 0.9.0
  */
 
-require_once 'Net/URL.php';
-require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/Error.php';
-
-// {{{ GLOBALS
-
-$GLOBALS['PIECE_UNITY_URI_NonSSLableServers'] = array();
-
-// }}}
 // {{{ Piece_Unity_URI
 
 /**
@@ -68,12 +59,19 @@ class Piece_Unity_URI
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
-    var $_url;
-    var $_isExternal;
-    var $_isRedirection;
+    private $_url;
+    private $_isExternal;
+    private $_isRedirection;
+    private static $_nonSSLableServers = array();
 
     /**#@-*/
 
@@ -82,7 +80,7 @@ class Piece_Unity_URI
      */
 
     // }}}
-    // {{{ constructor
+    // {{{ __construct()
 
     /**
      * Initializes a Net_URL object if the path is given.
@@ -91,10 +89,10 @@ class Piece_Unity_URI
      * @param boolean $isExternal
      * @param boolean $isRedirection
      */
-    function Piece_Unity_URI($path = null,
-                             $isExternal = false,
-                             $isRedirection = false
-                             )
+    public function __construct($path = null,
+                                $isExternal = false,
+                                $isRedirection = false
+                                )
     {
         $this->_isExternal = $isExternal;
         $this->_isRedirection = $isRedirection;
@@ -113,11 +111,11 @@ class Piece_Unity_URI
      * @return boolean
      * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      */
-    function getQueryString()
+    public function getQueryString()
     {
         if (is_null($this->_url)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
-                                    __FUNCTION__ . ' method must be called after initializing.'
+                                    __METHOD__ . ' method must be called after initializing.'
                                     );
             return;
         }
@@ -135,11 +133,11 @@ class Piece_Unity_URI
      * @param string $value
      * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      */
-    function addQueryString($name, $value)
+    public function addQueryString($name, $value)
     {
         if (is_null($this->_url)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
-                                    __FUNCTION__ . ' method must be called after initializing.'
+                                    __METHOD__ . ' method must be called after initializing.'
                                     );
             return;
         }
@@ -160,11 +158,11 @@ class Piece_Unity_URI
      * @return string
      * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      */
-    function getURI($protocol = 'http')
+    public function getURI($protocol = 'http')
     {
         if (is_null($this->_url)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
-                                    __FUNCTION__ . ' method must be called after initializing.'
+                                    __METHOD__ . ' method must be called after initializing.'
                                     );
             return;
         }
@@ -173,9 +171,9 @@ class Piece_Unity_URI
             return $this->_url->getURL();
         }
 
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         if (!$this->_isRedirection
-            && $context->usingProxy()
+            && Stagehand_HTTP_ServerEnv::usingProxy()
             && array_key_exists('HTTP_X_FORWARDED_SERVER', $_SERVER)
             ) {
             if ($this->_url->host != $_SERVER['HTTP_X_FORWARDED_SERVER']) {
@@ -206,9 +204,9 @@ class Piece_Unity_URI
         }
 
         if ($protocol == 'https') {
-            if (!in_array($url->host, $GLOBALS['PIECE_UNITY_URI_NonSSLableServers'])) {
+            if (!in_array($url->host, self::$_nonSSLableServers)) {
                 $url->protocol = $protocol;
-                if (($context->usingProxy() && !$this->_isRedirection) || $context->isRunningOnStandardPort()) {
+                if ((Stagehand_HTTP_ServerEnv::usingProxy() && !$this->_isRedirection) || Stagehand_HTTP_ServerEnv::isRunningOnStandardPort()) {
                     $url->port= '443';
                 }
 
@@ -220,7 +218,7 @@ class Piece_Unity_URI
 
         if ($protocol == 'http') {
             $url->protocol = $protocol;
-            if (($context->usingProxy() && !$this->_isRedirection) || $context->isRunningOnStandardPort()) {
+            if ((Stagehand_HTTP_ServerEnv::usingProxy() && !$this->_isRedirection) || Stagehand_HTTP_ServerEnv::isRunningOnStandardPort()) {
                 $url->port= '80';
             }
 
@@ -240,11 +238,10 @@ class Piece_Unity_URI
      *
      * @param string $path
      * @return string
-     * @static
      */
-    function create($path)
+    public static function create($path)
     {
-        $uri = &new Piece_Unity_URI($path);
+        $uri = new Piece_Unity_URI($path);
         return $uri->getURI('http');
     }
 
@@ -257,17 +254,17 @@ class Piece_Unity_URI
      *
      * @param string $path
      */
-    function initialize($path)
+    public function initialize($path)
     {
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         if (!$this->_isExternal
             && !preg_match('/^https?/', $path)
-            && !$context->usingProxy()
+            && !Stagehand_HTTP_ServerEnv::usingProxy()
             ) {
             $path = $context->getAppRootPath() . $path;
         }
 
-        $this->_url = &new Net_URL($path);
+        $this->_url = new Net_URL($path);
     }
 
     // }}}
@@ -280,11 +277,10 @@ class Piece_Unity_URI
      *
      * @param string $path
      * @return string
-     * @static
      */
-    function createSSL($path)
+    public static function createSSL($path)
     {
-        $uri = &new Piece_Unity_URI($path);
+        $uri = new Piece_Unity_URI($path);
         return $uri->getURI('https');
     }
 
@@ -295,11 +291,10 @@ class Piece_Unity_URI
      * Adds a server name which is forced to be non-SSL request.
      *
      * @param string $serverName
-     * @static
      */
-    function addNonSSLableServer($serverName)
+    public static function addNonSSLableServer($serverName)
     {
-        $GLOBALS['PIECE_UNITY_URI_NonSSLableServers'][] = $serverName;
+        self::$_nonSSLableServers[] = $serverName;
     }
 
     // }}}
@@ -307,12 +302,10 @@ class Piece_Unity_URI
 
     /**
      * Clears the list of non-SSLable servers.
-     *
-     * @static
      */
-    function clearNonSSLableServers()
+    public static function clearNonSSLableServers()
     {
-        $GLOBALS['PIECE_UNITY_URI_NonSSLableServers'] = array();
+        self::$_nonSSLableServers = array();
     }
 
     // }}}
@@ -325,17 +318,23 @@ class Piece_Unity_URI
      * @since Method available since Release 0.11.0
      * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      */
-    function removeQueryString($name)
+    public function removeQueryString($name)
     {
         if (is_null($this->_url)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
-                                    __FUNCTION__ . ' method must be called after initializing.'
+                                    __METHOD__ . ' method must be called after initializing.'
                                     );
             return;
         }
 
         $this->_url->removeQueryString($name);
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

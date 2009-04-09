@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -31,17 +31,11 @@
  * @package    Piece_Unity
  * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
+ * @version    Release: @package_version@
  * @since      File available since Release 0.9.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/URI.php';
-require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/Error.php';
-
-// {{{ Piece_Unity_URITestCase
+// {{{ Piece_Unity_URITest
 
 /**
  * Some tests for Piece_Unity_URI.
@@ -52,13 +46,19 @@ require_once 'Piece/Unity/Error.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.9.0
  */
-class Piece_Unity_URITestCase extends PHPUnit_TestCase
+class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -73,24 +73,27 @@ class Piece_Unity_URITestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function tearDown()
+    public function tearDown()
     {
         Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
     }
 
-    function testInternalURIWithAbsolutePath()
+    /**
+     * @test
+     */
+    public function buildAnInternalUriFromTheGivenAbsolutePath()
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $uri = &new Piece_Unity_URI('http://example.com/foo/bar/baz.php', false);
+        $uri = new Piece_Unity_URI('http://example.com/foo/bar/baz.php', false);
 
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI(true));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI(false));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI());
 
         $_SERVER['SERVER_PORT'] = '443';
-        $uri = &new Piece_Unity_URI('http://example.com/foo/bar/baz.php', false);
+        $uri = new Piece_Unity_URI('http://example.com/foo/bar/baz.php', false);
 
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI(true));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI(false));
@@ -100,18 +103,21 @@ class Piece_Unity_URITestCase extends PHPUnit_TestCase
         unset($_SERVER['SERVER_NAME']);
     }
 
-    function testInternalURIWithRelativePath()
+    /**
+     * @test
+     */
+    public function buildAnInternalUriFromTheGivenRelativePath()
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $uri = &new Piece_Unity_URI('/foo/bar/baz.php', false);
+        $uri = new Piece_Unity_URI('/foo/bar/baz.php', false);
 
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI(true));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI(false));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI());
 
         $_SERVER['SERVER_PORT'] = '443';
-        $uri = &new Piece_Unity_URI('/foo/bar/baz.php', false);
+        $uri = new Piece_Unity_URI('/foo/bar/baz.php', false);
 
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI(true));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI(false));
@@ -121,21 +127,23 @@ class Piece_Unity_URITestCase extends PHPUnit_TestCase
         unset($_SERVER['SERVER_NAME']);
     }
 
-    function testInternalURIWithProxy()
+    /**
+     * @test
+     */
+    public function buildAnInternalUriForProxy()
     {
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
         $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'example.org';
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        $context = &Piece_Unity_Context::singleton();
-        $context->setProxyPath('/foo');
-        $uri = &new Piece_Unity_URI('http://example.com/foo/bar/baz.php', false);
+        Piece_Unity_Context::singleton()->setProxyPath('/foo');
+        $uri = new Piece_Unity_URI('http://example.com/foo/bar/baz.php', false);
 
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI(true));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI(false));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI());
 
-        $uri = &new Piece_Unity_URI('https://example.com/foo/bar/baz.php', false);
+        $uri = new Piece_Unity_URI('https://example.com/foo/bar/baz.php', false);
 
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI(true));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI(false));
@@ -147,20 +155,22 @@ class Piece_Unity_URITestCase extends PHPUnit_TestCase
         unset($_SERVER['HTTP_X_FORWARDED_SERVER']);
     }
 
-    function testInternalURIWithDirectAccessToBackendServer()
+    /**
+     * @test
+     */
+    public function buildAnInternalUriForDirectAccessToBackendServer()
     {
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        $context = &Piece_Unity_Context::singleton();
-        $context->setProxyPath('/foo');
+        Piece_Unity_Context::singleton()->setProxyPath('/foo');
 
-        $uri = &new Piece_Unity_URI('http://example.com/foo/bar/baz.php', false);
+        $uri = new Piece_Unity_URI('http://example.com/foo/bar/baz.php', false);
 
         $this->assertEquals('https://foo.example.org:8201/bar/baz.php', $uri->getURI(true));
         $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $uri->getURI(false));
         $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $uri->getURI());
 
-        $uri = &new Piece_Unity_URI('https://example.com/foo/bar/baz.php', false);
+        $uri = new Piece_Unity_URI('https://example.com/foo/bar/baz.php', false);
 
         $this->assertEquals('https://foo.example.org:8201/bar/baz.php', $uri->getURI(true));
         $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $uri->getURI(false));
@@ -170,7 +180,10 @@ class Piece_Unity_URITestCase extends PHPUnit_TestCase
         unset($_SERVER['SERVER_NAME']);
     }
 
-    function testCreateDirectly()
+    /**
+     * @test
+     */
+    public function buildAnInternalUriDirectly()
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
@@ -188,7 +201,7 @@ class Piece_Unity_URITestCase extends PHPUnit_TestCase
                             Piece_Unity_URI::create('/foo/bar/baz.php')
                             );
 
-        $uri = &new Piece_Unity_URI();
+        $uri = new Piece_Unity_URI();
 
         $this->assertEquals('https://example.org/foo/bar/baz.php',
                             $uri->createSSL('http://example.com/foo/bar/baz.php')
@@ -198,9 +211,12 @@ class Piece_Unity_URITestCase extends PHPUnit_TestCase
         unset($_SERVER['SERVER_NAME']);
     }
 
-    function testInvalidOperations()
+    /**
+     * @test
+     */
+    public function raiseAnExceptionWhenAnInvalidOperationIsPerformed()
     {
-        $uri = &new Piece_Unity_URI();
+        $uri = new Piece_Unity_URI();
         Piece_Unity_Error::disableCallback();
         $uri->getQueryString();
         Piece_Unity_Error::enableCallback();
@@ -232,7 +248,10 @@ class Piece_Unity_URITestCase extends PHPUnit_TestCase
         $this->assertNull($error);
     }
 
-    function testNonSSLableServers()
+    /**
+     * @test
+     */
+    public function buildAnInternalUrlForNonSslableServers()
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
@@ -259,14 +278,16 @@ class Piece_Unity_URITestCase extends PHPUnit_TestCase
         unset($_SERVER['SERVER_NAME']);
     }
 
-    function testNonSSLableServersWithProxy()
+    /**
+     * @test
+     */
+    public function buildAnInternalUrlForNonSslableServersAndProxy()
     {
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
         $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'example.org';
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        $context = &Piece_Unity_Context::singleton();
-        $context->setProxyPath('/foo');
+        Piece_Unity_Context::singleton()->setProxyPath('/foo');
         Piece_Unity_URI::addNonSSLableServer('example.org');
 
         $this->assertEquals('http://example.org/foo/bar/baz.php',
@@ -290,9 +311,10 @@ class Piece_Unity_URITestCase extends PHPUnit_TestCase
     }
 
     /**
+     * @test
      * @since Method available since Release 0.11.0
      */
-    function testCannotRedirectWithEZwebMobilePhone()
+    public function buildAnInternalUrlForEZwebMobilePhones()
     {
         $_SERVER['HTTP_VIA'] = '1.2.3.4';
         $_SERVER['SERVER_NAME'] = 'example.org';
@@ -308,97 +330,107 @@ class Piece_Unity_URITestCase extends PHPUnit_TestCase
     }
 
     /**
+     * @test
      * @since Method available since Release 1.2.0
      */
-    function testDomainStringShouldNotBeReplacedIfExternalURIIsGiven()
+    public function buildAnExternalUri()
     {
-        $uri = &new Piece_Unity_URI('http://example.org/foo/bar/baz.php', true);
+        $uri = new Piece_Unity_URI('http://example.org/foo/bar/baz.php', true);
 
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI(false));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI(true));
 
-        $uri = &new Piece_Unity_URI('http://example.org:80/foo/bar/baz.php', true);
+        $uri = new Piece_Unity_URI('http://example.org:80/foo/bar/baz.php', true);
 
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI(false));
 
-        $uri = &new Piece_Unity_URI('http://example.org:443/foo/bar/baz.php', true);
+        $uri = new Piece_Unity_URI('http://example.org:443/foo/bar/baz.php', true);
 
         $this->assertEquals('http://example.org:443/foo/bar/baz.php', $uri->getURI(false));
 
-        $uri = &new Piece_Unity_URI('http://example.org:8201/foo/bar/baz.php', true);
+        $uri = new Piece_Unity_URI('http://example.org:8201/foo/bar/baz.php', true);
 
         $this->assertEquals('http://example.org:8201/foo/bar/baz.php', $uri->getURI(false));
 
-        $uri = &new Piece_Unity_URI('http://example.org:8202/foo/bar/baz.php', true);
+        $uri = new Piece_Unity_URI('http://example.org:8202/foo/bar/baz.php', true);
 
         $this->assertEquals('http://example.org:8202/foo/bar/baz.php', $uri->getURI(false));
 
-        $uri = &new Piece_Unity_URI('https://example.org/foo/bar/baz.php', true);
+        $uri = new Piece_Unity_URI('https://example.org/foo/bar/baz.php', true);
 
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI(false));
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI(true));
     }
 
     /**
+     * @test
      * @since Method available since Release 1.2.0
      */
-    function testPathInfoInURIShouldBeKept()
+    public function KeepPathinfoInTheUri()
     {
-        $uri = &new Piece_Unity_URI('http://example.org/foo.php/bar/baz', true);
+        $uri = new Piece_Unity_URI('http://example.org/foo.php/bar/baz', true);
 
         $this->assertEquals('http://example.org/foo.php/bar/baz', $uri->getURI());
     }
 
     /**
+     * @test
      * @since Method available since Release 1.2.0
      */
-    function testPathInfoInURIShouldNotBeEncodedAutomatically()
+    public function NotEncodeThePathinfoInTheUriAutomatically()
     {
-
-        $uri = &new Piece_Unity_URI('http://example.org/foo.php/bar/%E4%B9%85%E4%BF%9D%E6%95%A6%E5%95%93', true);
+        $uri = new Piece_Unity_URI('http://example.org/foo.php/bar/%E4%B9%85%E4%BF%9D%E6%95%A6%E5%95%93', true);
 
         $this->assertEquals('http://example.org/foo.php/bar/%E4%B9%85%E4%BF%9D%E6%95%A6%E5%95%93', $uri->getURI());
     }
 
     /**
+     * @test
      * @since Method available since Release 1.2.0
      */
-    function testQueryStringInURIShouldNotBeEncodedAutomatically()
+    public function NotEncodeTheQueryStringInTheUriAutomatically()
     {
-        $uri = &new Piece_Unity_URI('http://example.org/foo.php?bar=%E4%B9%85%E4%BF%9D%E6%95%A6%E5%95%93', true);
+        $uri = new Piece_Unity_URI('http://example.org/foo.php?bar=%E4%B9%85%E4%BF%9D%E6%95%A6%E5%95%93', true);
 
         $this->assertEquals('http://example.org/foo.php?bar=%E4%B9%85%E4%BF%9D%E6%95%A6%E5%95%93', $uri->getURI());
     }
 
     /**
+     * @test
      * @since Method available since Release 1.7.0
      */
-    function testPassTheGivenProtocol()
+    public function passTheGivenProtocolAsIs()
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $uri = &new Piece_Unity_URI('https://example.com/foo/bar.php', false);
+        $uri = new Piece_Unity_URI('https://example.com/foo/bar.php', false);
 
         $this->assertEquals('https://example.org/foo/bar.php', $uri->getURI('pass'));
 
         $_SERVER['SERVER_PORT'] = '443';
-        $uri = &new Piece_Unity_URI('https://example.com/foo/bar.php', false);
+        $uri = new Piece_Unity_URI('https://example.com/foo/bar.php', false);
 
         $this->assertEquals('https://example.org/foo/bar.php', $uri->getURI('pass'));
 
         $_SERVER['SERVER_PORT'] = '8080';
-        $uri = &new Piece_Unity_URI('https://example.com/foo/bar.php', false);
+        $uri = new Piece_Unity_URI('https://example.com/foo/bar.php', false);
 
         $this->assertEquals('https://example.org:8080/foo/bar.php', $uri->getURI('pass'));
 
         $_SERVER['SERVER_PORT'] = '8443';
-        $uri = &new Piece_Unity_URI('https://example.com/foo/bar.php', false);
+        $uri = new Piece_Unity_URI('https://example.com/foo/bar.php', false);
 
         $this->assertEquals('https://example.org:8443/foo/bar.php', $uri->getURI('pass'));
 
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
