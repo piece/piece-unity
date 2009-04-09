@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -30,18 +30,10 @@
  *
  * @package    Piece_Unity
  * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
+ * @version    Release: @package_version@
  * @since      File available since Release 0.6.0
  */
-
-require_once realpath(dirname(__FILE__) . '/../../../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
-require_once 'Piece/Unity/Plugin/Renderer/Redirection.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_RedirectionTestCase
 
@@ -50,17 +42,23 @@ require_once 'Piece/Unity/Plugin/Renderer/Redirection.php';
  *
  * @package    Piece_Unity
  * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @version    Release: @package_version@
  * @since      Class available since Release 0.6.0
  */
-class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
+class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_Framework_TestCase
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -75,203 +73,190 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function tearDown()
+    public function setUp()
     {
         Piece_Unity_Context::clear();
     }
 
-    function testRedirection()
+    /**
+     * @test
+     */
+    public function redirect()
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setView('http://example.org/foo.php');
-        $config = &new Piece_Unity_Config();
-        $context->setConfiguration($config);
-        $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
-        $redirection->invoke();
+        $context->setConfiguration(new Piece_Unity_Config());
+        $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $redirection->render();
 
-        $this->assertEquals('http://example.org/foo.php', $redirection->_uri);
-
-        unset($_SERVER['SERVER_NAME']);
-        unset($_SERVER['SERVER_PORT']);
+        $this->assertEquals('http://example.org/foo.php',
+                            $this->readAttribute($redirection, '_uri')
+                            );
     }
 
-    function testRedirectionWithDirectAccessToBackendServer()
+    /**
+     * @test
+     */
+    public function redirectForDirectAccessToABackendServer()
     {
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setView('http://example.org/foo/bar.php');
         $context->setProxyPath('/foo');
-        $config = &new Piece_Unity_Config();
-        $context->setConfiguration($config);
-        $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
-        $redirection->invoke();
+        $context->setConfiguration(new Piece_Unity_Config());
+        $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $redirection->render();
 
         $this->assertEquals('http://foo.example.org:8201/bar.php',
-                            $redirection->_uri
+                            $this->readAttribute($redirection, '_uri')
                             );
-
-        unset($_SERVER['SERVER_NAME']);
-        unset($_SERVER['SERVER_PORT']);
     }
 
-    function testRedirectionWithProxy()
+    /**
+     * @test
+     */
+    public function redirectForAProxy()
     {
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
         $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'example.org';
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setView('http://example.org/foo/bar.php');
         $context->setProxyPath('/foo');
-        $config = &new Piece_Unity_Config();
-        $context->setConfiguration($config);
-        $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
-        $redirection->invoke();
+        $context->setConfiguration(new Piece_Unity_Config());
+        $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $redirection->render();
 
         $this->assertEquals('http://foo.example.org:8201/bar.php',
-                            $redirection->_uri
+                            $this->readAttribute($redirection, '_uri')
                             );
-
-        unset($_SERVER['SERVER_NAME']);
-        unset($_SERVER['SERVER_PORT']);
-        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
     }
 
-    function testRedirectionWithDirectAccessToBackendServerWhenHTTPSProtocolIsGiven()
+    /**
+     * @test
+     */
+    public function redirectForDirectAccessToABackendServerWhenHttpsProtocolIsGiven()
     {
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setView('https://example.org/foo/bar.php');
         $context->setProxyPath('/foo');
-        $config = &new Piece_Unity_Config();
-        $context->setConfiguration($config);
-        $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
-        $redirection->invoke();
+        $context->setConfiguration(new Piece_Unity_Config());
+        $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $redirection->render();
 
         $this->assertEquals('https://foo.example.org:8201/bar.php',
-                            $redirection->_uri
+                            $this->readAttribute($redirection, '_uri')
                             );
-
-        unset($_SERVER['SERVER_NAME']);
-        unset($_SERVER['SERVER_PORT']);
     }
 
-    function testRedirectionWithOtherProxy()
+    /**
+     * @test
+     */
+    public function redirectForOtherProxy()
     {
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
         $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'test.example.org';
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setView('http://example.org/foo/bar.php');
         $context->setProxyPath('/foo');
-        $config = &new Piece_Unity_Config();
-        $context->setConfiguration($config);
-        $redirection = &new Piece_Unity_Plugin_Renderer_Redirection();
-        $redirection->invoke();
+        $context->setConfiguration(new Piece_Unity_Config());
+        $redirection = new Piece_Unity_Plugin_Renderer_Redirection();
+        $redirection->render();
 
         $this->assertEquals('http://foo.example.org:8201/bar.php',
-                            $redirection->_uri
+                            $this->readAttribute($redirection, '_uri')
                             );
-
-        unset($_SERVER['SERVER_NAME']);
-        unset($_SERVER['SERVER_PORT']);
-        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
     }
 
     /**
+     * @test
      * @since Method available since Release 0.11.0
      */
-    function testReplaceBuiltinEventNameKeyWithEventNameKey()
+    public function replaceTheEventNameKeyVariableWithTheActualEventNameKey()
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setView('http://example.org/foo.php?__eventNameKey=bar');
-        $config = &new Piece_Unity_Config();
-        $context->setConfiguration($config);
-        $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
-        $redirection->invoke();
+        $context->setConfiguration(new Piece_Unity_Config());
+        $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $redirection->render();
 
         $this->assertEquals('http://example.org/foo.php?_event=bar',
-                            $redirection->_uri
+                            $this->readAttribute($redirection, '_uri')
                             );
-
-        unset($_SERVER['SERVER_NAME']);
-        unset($_SERVER['SERVER_PORT']);
     }
 
     /**
+     * @test
      * @since Method available since Release 0.11.0
      */
-    function testRedirectionToHTTPS()
+    public function redirectToHttps()
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setView('https://example.org/foo.php');
-        $config = &new Piece_Unity_Config();
-        $context->setConfiguration($config);
-        $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
-        $redirection->invoke();
+        $context->setConfiguration(new Piece_Unity_Config());
+        $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $redirection->render();
 
-        $this->assertEquals('https://example.org/foo.php', $redirection->_uri);
-
-        unset($_SERVER['SERVER_NAME']);
-        unset($_SERVER['SERVER_PORT']);
+        $this->assertEquals('https://example.org/foo.php',
+                            $this->readAttribute($redirection, '_uri')
+                            );
     }
 
     /**
+     * @test
      * @since Method available since Release 1.5.0
      */
-    function testShouldSupportSelfNotation()
+    public function supportSelfNotation()
     {
-        $oldScriptName = $_SERVER['REQUEST_URI'];
         $_SERVER['REQUEST_URI'] = '/foo.php';
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
 
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setView('self://__eventNameKey=goDisplayForm&bar=baz#zip');
-        $config = &new Piece_Unity_Config();
-        $context->setConfiguration($config);
-        $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
-        $redirection->invoke();
+        $context->setConfiguration(new Piece_Unity_Config());
+        $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $redirection->render();
 
         $this->assertEquals('http://example.org/foo.php?__eventNameKey=goDisplayForm&bar=baz#zip', $context->getView());
-
-        unset($_SERVER['SERVER_PORT']);
-        unset($_SERVER['SERVER_NAME']);
-        $_SERVER['REQUEST_URI'] = $oldScriptName;
     }
 
     /**
+     * @test
      * @since Method available since Release 1.5.0
      */
-    function testShouldSupportSelfNotationForHTTPS()
+    public function supportSelfNotationForHttps()
     {
-        $oldScriptName = $_SERVER['REQUEST_URI'];
         $_SERVER['REQUEST_URI'] = '/foo.php';
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
 
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setView('selfs://__eventNameKey=goDisplayForm&bar=baz#zip');
-        $config = &new Piece_Unity_Config();
-        $context->setConfiguration($config);
-        $redirection = &Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
-        $redirection->invoke();
+        $context->setConfiguration(new Piece_Unity_Config());
+        $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $redirection->render();
 
         $this->assertEquals('https://example.org/foo.php?__eventNameKey=goDisplayForm&bar=baz#zip', $context->getView());
-
-        unset($_SERVER['SERVER_PORT']);
-        unset($_SERVER['SERVER_NAME']);
-        $_SERVER['REQUEST_URI'] = $oldScriptName;
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

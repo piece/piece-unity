@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -30,13 +30,10 @@
  *
  * @package    Piece_Unity
  * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
+ * @version    Release: @package_version@
  * @since      File available since Release 0.6.0
  */
-
-require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/URI.php';
 
 // {{{ Piece_Unity_Plugin_Renderer_Redirection
 
@@ -45,11 +42,11 @@ require_once 'Piece/Unity/URI.php';
  *
  * @package    Piece_Unity
  * @copyright  2006-2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @version    Release: @package_version@
  * @since      Class available since Release 0.6.0
  */
-class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Renderer_Interface
 {
 
     // {{{ properties
@@ -61,10 +58,16 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
-    var $_uri;
+    private $_uri;
 
     /**#@-*/
 
@@ -73,14 +76,13 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ invoke()
+    // {{{ render()
 
     /**
-     * Invokes the plugin specific code.
      */
-    function invoke()
+    public function render()
     {
-        $this->_replaceSelfNotation();
+        $this->_replaceSelfNotationWithURI();
         $this->_uri = $this->_buildURI();
 
         if (!headers_sent() && !is_null($this->_uri)) {
@@ -91,41 +93,49 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
     // }}}
-    // {{{ _initialize()
+    // {{{ initialize()
 
     /**
      * Defines and initializes extension points and configuration points.
      *
      * @since Method available since Release 0.6.0
      */
-    function _initialize()
+    function initialize()
     {
-        $this->_addConfigurationPoint('addSessionID', false);
-        $this->_addConfigurationPoint('isExternal', false);
-        $this->_addConfigurationPoint('addFlowExecutionTicket', false);
+        $this->addConfigurationPoint('addSessionID', false);
+        $this->addConfigurationPoint('isExternal', false);
+        $this->addConfigurationPoint('addFlowExecutionTicket', false);
     }
 
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
+
     // }}}
-    // {{{ _replaceSelfNotation()
+    // {{{ _replaceSelfNotationWithURI()
 
     /**
      * @since Method available since Release 1.5.0
      */
-    function _replaceSelfNotation()
+    function _replaceSelfNotationWithURI()
     {
         $viewString = $this->_context->getView();
-        if (preg_match('!^selfs?://(.*)!', $viewString, $matches)) {
-            $config = &$this->_context->getConfiguration();
-            $config->setConfiguration('Renderer_Redirection', 'addFlowExecutionTicket', true);
-            if (substr($viewString, 0, 7) == 'self://') {
-                $this->_context->setView('http://example.org' . $this->_context->getScriptName() . '?' . $matches[1]);
-            } elseif (substr($viewString, 0, 8) == 'selfs://') {
-                $this->_context->setView('https://example.org' . $this->_context->getScriptName() . '?' . $matches[1]);
-            }
+        if (!preg_match('!^selfs?://(.*)!', $viewString, $matches)) {
+            return;
+        }
+
+        $this->_context->getConfiguration()
+            ->setConfiguration('Renderer_Redirection', 'addFlowExecutionTicket', true);
+        if (substr($viewString, 0, 7) == 'self://') {
+            $this->_context->setView('http://example.org' . $this->_context->getScriptName() . '?' . $matches[1]);
+        } elseif (substr($viewString, 0, 8) == 'selfs://') {
+            $this->_context->setView('https://example.org' . $this->_context->getScriptName() . '?' . $matches[1]);
         }
     }
 
@@ -137,11 +147,12 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
      */
     function _buildURI()
     {
-        $isExternal = $this->_getConfiguration('isExternal');
+        $isExternal = $this->getConfiguration('isExternal');
         $viewString = $this->_context->getView();
-        $uri = &new Piece_Unity_URI($viewString, $isExternal, true);
+        $uri = new Piece_Unity_URI($viewString, $isExternal);
+        $uri->setIsRedirection(true);
 
-        $viewElement = &$this->_context->getViewElement();
+        $viewElement = $this->_context->getViewElement();
         $viewElements = $viewElement->getElements();
         $queryString = $uri->getQueryString();
         foreach (array_keys($queryString) as $elementName) {
@@ -155,13 +166,13 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common
         }
 
         if (!$isExternal) {
-            if ($this->_getConfiguration('addSessionID')) {
+            if ($this->getConfiguration('addSessionID')) {
                 $uri->addQueryString($viewElements['__sessionName'],
                                      $viewElements['__sessionID']
                                      );
             }
 
-            if ($this->_getConfiguration('addFlowExecutionTicket')) {
+            if ($this->getConfiguration('addFlowExecutionTicket')) {
                 if (array_key_exists('__flowExecutionTicketKey', $viewElements)) {
                     $uri->addQueryString($viewElements['__flowExecutionTicketKey'],
                                          $viewElements['__flowExecutionTicket']
