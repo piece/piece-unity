@@ -31,7 +31,7 @@
  * @package    Piece_Unity
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
+ * @version    Release: @package_version@
  * @since      File available since Release 0.1.0
  */
 
@@ -174,18 +174,6 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function getTheRequestUri()
-    {
-        $_SERVER['REQUEST_URI'] = '/path/to/foo.php';
-
-        $this->assertEquals('/path/to/foo.php',
-                            Piece_Unity_Context::singleton()->getScriptName()
-                            );
-    }
-
-    /**
-     * @test
-     */
     public function getTheBasePathOfTheRequestUri()
     {
         $_SERVER['REQUEST_URI'] = '/path/to/foo.php';
@@ -193,23 +181,6 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('/path/to',
                             Piece_Unity_Context::singleton()->getBasePath()
                             );
-    }
-
-    /**
-     * @test
-     * @since Method available since Release 0.5.0
-     */
-    public function setTheRequestUri()
-    {
-        $_SERVER['REQUEST_URI'] = '/path/to/foo.php';
-
-        $context = Piece_Unity_Context::singleton();
-
-        $this->assertEquals('/path/to/foo.php', $context->getScriptName());
-
-        $context->setScriptName('/path/to/foo/bar.php');
-
-        $this->assertEquals('/path/to/foo/bar.php', $context->getScriptName());
     }
 
     /**
@@ -345,23 +316,6 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
-     * @since Method available since Release 0.12.0
-     */
-    public function getTheIpAddressOfTheClient()
-    {
-        $_SERVER['REMOTE_ADDR'] = '1.2.3.4';
-
-        $context = Piece_Unity_Context::singleton();
-
-        $this->assertEquals('1.2.3.4', $context->getRemoteAddr());
-
-        $_SERVER['HTTP_X_FORWARDED_FOR'] = '5.6.7.8';
-
-        $this->assertEquals('5.6.7.8', $context->getRemoteAddr());
-    }
-
-    /**
-     * @test
      * @since Method available since Release 1.5.0
      */
     public function sendTheStatusLineOfTheResponse()
@@ -374,47 +328,6 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
                                      '_sentStatusLine',
                                      'Stagehand_HTTP_Status'
                                      );
-    }
-
-    /**
-     * @test
-     * @since Method available since Release 1.7.1
-     */
-    public function removeQueryVariablesFromRequestUri()
-    {
-        $_SERVER['REQUEST_URI'] = '/foo.php?bar=baz';
-
-        $this->assertEquals('/foo.php',
-                            Piece_Unity_Context::singleton()->getScriptName()
-                            );
-    }
-
-    /**
-     * @test
-     * @since Method available since Release 1.7.1
-     */
-    public function removePathInfoFromRequestUri()
-    {
-        $_SERVER['REQUEST_URI'] = '/foo.php/bar/baz';
-        $_SERVER['PATH_INFO'] = '/bar/baz';
-
-        $this->assertEquals('/foo.php',
-                            Piece_Unity_Context::singleton()->getScriptName()
-                            );
-    }
-
-    /**
-     * @test
-     * @since Method available since Release 1.7.1
-     */
-    public function removeQueryVariablesAndPathInfoFromRequestUri()
-    {
-        $_SERVER['REQUEST_URI'] = '/foo.php/bar/baz?bar=baz';
-        $_SERVER['PATH_INFO'] = '/bar/baz';
-
-        $this->assertEquals('/foo.php',
-                            Piece_Unity_Context::singleton()->getScriptName()
-                            );
     }
 
     /**#@-*/
