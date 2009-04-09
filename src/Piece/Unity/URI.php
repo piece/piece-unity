@@ -177,13 +177,16 @@ class Piece_Unity_URI
         }
 
         if ($protocol == 'https') {
+            $url->protocol = 'https';
             $port = 443;
         } elseif ($protocol == 'http') {
+            $url->protocol = 'http';
             $port = 80;
         }
 
-        $url->protocol = $protocol;
-        if ((Stagehand_HTTP_ServerEnv::usingProxy() && !$this->_isRedirection) || Stagehand_HTTP_ServerEnv::isRunningOnStandardPort()) {
+        if ((Stagehand_HTTP_ServerEnv::usingProxy() && !$this->_isRedirection)
+            || Stagehand_HTTP_ServerEnv::isRunningOnStandardPort()
+            ) {
             $url->port= $port;
         }
 
