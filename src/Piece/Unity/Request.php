@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -31,7 +31,7 @@
  * @package    Piece_Unity
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
+ * @version    Release: @package_version@
  * @since      File available since Release 0.1.0
  */
 
@@ -58,10 +58,16 @@ class Piece_Unity_Request
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
-    var $_parameters = array();
+    private $_parameters = array();
 
     /**#@-*/
 
@@ -70,12 +76,12 @@ class Piece_Unity_Request
      */
 
     // }}}
-    // {{{ constructor
+    // {{{ __construct()
 
     /**
      * Imports client request data correspoinding to the request method.
      */
-    function Piece_Unity_Request()
+    public function __construct()
     {
         if (@$_SERVER['REQUEST_METHOD'] == 'GET') {
             $this->_parameters = $_GET;
@@ -97,7 +103,7 @@ class Piece_Unity_Request
      * @param string $name
      * @param mixed  $value
      */
-    function setParameter($name, $value)
+    public function setParameter($name, $value)
     {
         $this->_parameters[$name] = $value;
     }
@@ -111,7 +117,7 @@ class Piece_Unity_Request
      * @param string $name
      * @return boolean
      */
-    function hasParameter($name)
+    public function hasParameter($name)
     {
         return array_key_exists($name, $this->_parameters);
     }
@@ -125,7 +131,7 @@ class Piece_Unity_Request
      * @param string $name
      * @return mixed
      */
-    function getParameter($name)
+    public function getParameter($name)
     {
         return $this->_parameters[$name];
     }
@@ -138,7 +144,7 @@ class Piece_Unity_Request
      *
      * @return array
      */
-    function getParameters()
+    public function getParameters()
     {
         return $this->_parameters;
     }
@@ -152,9 +158,9 @@ class Piece_Unity_Request
      * @param boolean $importPathInfo
      * @since Method available since Release 0.4.0
      */
-    function importPathInfo()
+    public function importPathInfo()
     {
-        $pathInfo = Piece_Unity_Request::getPathInfo();
+        $pathInfo = self::getPathInfo();
         if (is_null($pathInfo)) {
             return;
         }
@@ -173,9 +179,8 @@ class Piece_Unity_Request
      *
      * @return string
      * @since Method available since Release 1.7.1
-     * @static
      */
-    function getPathInfo()
+    public static function getPathInfo()
     {
         if (PHP_SAPI != 'cgi') {
             if (array_key_exists('PATH_INFO', $_SERVER)) {
@@ -187,6 +192,12 @@ class Piece_Unity_Request
             return $_SERVER['ORIG_PATH_INFO'];
         }
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

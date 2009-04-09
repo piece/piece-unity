@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -31,18 +31,14 @@
  * @package    Piece_Unity
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
+ * @version    Release: @package_version@
  * @since      File available since Release 0.1.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Request.php';
-
-// {{{ Piece_Unity_RequestTestCase
+// {{{ Piece_Unity_RequestTest
 
 /**
- * TestCase for Piece_Unity_Request
+ * Some tests for Piece_Unity_Request.
  *
  * @package    Piece_Unity
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
@@ -50,13 +46,19 @@ require_once 'Piece/Unity/Request.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_RequestTestCase extends PHPUnit_TestCase
+class Piece_Unity_RequestTest extends PHPUnit_Framework_TestCase
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -71,9 +73,12 @@ class Piece_Unity_RequestTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function testSettingParameter()
+    /**
+     * @test
+     */
+    public function supportParameters()
     {
-        $request = &new Piece_Unity_Request();
+        $request = new Piece_Unity_Request();
         $request->setParameter('foo', 'bar');
         $request->setParameter('bar', 'baz');
 
@@ -81,9 +86,12 @@ class Piece_Unity_RequestTestCase extends PHPUnit_TestCase
         $this->assertEquals('baz', $request->getParameter('bar'));
     }
 
-    function testCheckingParameter()
+    /**
+     * @test
+     */
+    public function checkWhetherTheObjectHasTheGivenParameterOrNot()
     {
-        $request = &new Piece_Unity_Request();
+        $request = new Piece_Unity_Request();
         $request->setParameter('foo', 'bar');
         $request->setParameter('bar', 'baz');
 
@@ -92,13 +100,16 @@ class Piece_Unity_RequestTestCase extends PHPUnit_TestCase
         $this->assertFalse($request->hasParameter('baz'));
     }
 
-    function testImportingParameters()
+    /**
+     * @test
+     */
+    public function importParametersFromEnvironmentVariables()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['foo'] = 'bar';
         $_GET['bar'] = 'baz';
 
-        $request = &new Piece_Unity_Request();
+        $request = new Piece_Unity_Request();
 
         $this->assertEquals('bar', $request->getParameter('foo'));
         $this->assertEquals('baz', $request->getParameter('bar'));
@@ -108,11 +119,14 @@ class Piece_Unity_RequestTestCase extends PHPUnit_TestCase
         unset($_GET['bar']);
     }
 
-    function testImportingPathinfo()
+    /**
+     * @test
+     */
+    public function importParametersFromPathinfo()
     {
         $_SERVER['PATH_INFO'] = '/foo/bar/bar/baz/qux';
 
-        $request = &new Piece_Unity_Request();
+        $request = new Piece_Unity_Request();
         $request->importPathInfo();
 
         $this->assertEquals('bar', $request->getParameter('foo'));
@@ -121,6 +135,12 @@ class Piece_Unity_RequestTestCase extends PHPUnit_TestCase
 
         unset($_SERVER['PATH_INFO']);
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
