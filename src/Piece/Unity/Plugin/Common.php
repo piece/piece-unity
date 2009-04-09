@@ -61,7 +61,7 @@ abstract class Piece_Unity_Plugin_Common
      * @access protected
      */
 
-    protected $_context;
+    protected $context;
 
     /**#@-*/
 
@@ -99,24 +99,12 @@ abstract class Piece_Unity_Plugin_Common
 
         $this->_context = Piece_Unity_Context::singleton();
 
-        $this->_initialize();
+        $this->initialize();
 
         $config = $this->_context->getConfiguration();
         $config->validateExtensionPoints($this->_name, array_keys($this->_extensionPoints));
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
-
         $config->validateConfigurationPoints($this->_name, array_keys($this->_configurationPoints));
     }
-
-    // }}}
-    // {{{ invoke()
-
-    /**
-     * Invokes the plugin specific code.
-     */
-    abstract public function invoke();
 
     /**#@-*/
 
@@ -125,7 +113,7 @@ abstract class Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ _addExtensionPoint()
+    // {{{ addExtensionPoint()
 
     /**
      * Adds the extension point to the plugin, and sets the default value for
@@ -134,13 +122,13 @@ abstract class Piece_Unity_Plugin_Common
      * @param string $extensionPoint
      * @param string $default
      */
-    protected function _addExtensionPoint($extensionPoint, $default = null)
+    protected function addExtensionPoint($extensionPoint, $default = null)
     {
         $this->_extensionPoints[ strtolower($extensionPoint) ] = $default;
     }
 
     // }}}
-    // {{{ _addConfigurationPoint()
+    // {{{ addConfigurationPoint()
 
     /**
      * Adds the configuration point to the plugin, and sets the default value
@@ -149,44 +137,37 @@ abstract class Piece_Unity_Plugin_Common
      * @param string $configurationPoint
      * @param string $default
      */
-    protected function _addConfigurationPoint($configurationPoint, $default = null)
+    protected function addConfigurationPoint($configurationPoint, $default = null)
     {
         $this->_configurationPoints[ strtolower($configurationPoint) ] = $default;
     }
 
     // }}}
-    // {{{ _initialize()
+    // {{{ initialize()
 
     /**
      * Defines and initializes extension points and configuration points.
      *
      * @since Method available since Release 0.6.0
      */
-    protected function _initialize() {}
+    protected function initialize() {}
 
     // }}}
-    // {{{ _getExtension()
+    // {{{ getExtension()
 
     /**
      * Gets the extension of the given extension point.
      *
      * @param string $extensionPoint
      * @return mixed
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws Piece_Unity_Exception
      * @since Method available since Release 0.12.0
      */
-    protected function _getExtension($extensionPoint)
+    protected function getExtension($extensionPoint)
     {
         $extensionPoint = strtolower($extensionPoint);
         if (!array_key_exists($extensionPoint, $this->_extensionPoints)) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The configuration point  [ $extensionPoint ] is not found in the plug-in [ {$this->_name} ].",
-                                    'exception',
-                                    false,
-                                    false,
-                                    debug_backtrace()
-                                    );
-            return;
+            throw new Piece_Unity_Exception("The configuration point  [ $extensionPoint ] is not found in the plug-in [ {$this->_name} ]");
         }
 
         $extension = $this->_context->getConfiguration()
@@ -203,28 +184,21 @@ abstract class Piece_Unity_Plugin_Common
     }
 
     // }}}
-    // {{{ _getConfiguration()
+    // {{{ getConfiguration()
 
     /**
      * Gets the configuration of the given configuration point.
      *
      * @param string $configurationPoint
      * @return string
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws Piece_Unity_Exception
      * @since Method available since Release 0.12.0
      */
-    protected function _getConfiguration($configurationPoint)
+    protected function getConfiguration($configurationPoint)
     {
         $configurationPoint = strtolower($configurationPoint);
         if (!array_key_exists($configurationPoint, $this->_configurationPoints)) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The configuration point  [ $configurationPoint ] is not found in the plug-in [ {$this->_name} ].",
-                                    'exception',
-                                    false,
-                                    false,
-                                    debug_backtrace()
-                                    );
-            return;
+            throw new Piece_Unity_Exception("The configuration point  [ $configurationPoint ] is not found in the plug-in [ {$this->_name} ]");
         }
 
         $configuration = $this->_context->getConfiguration()
