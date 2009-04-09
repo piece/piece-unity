@@ -82,14 +82,6 @@ class Piece_Unity_Context
     private $_proxyPath;
     private $_continuation;
     private $_validation;
-    private $_proxyMeasures = array('HTTP_X_FORWARDED_FOR',
-                                    'HTTP_X_FORWARDED',
-                                    'HTTP_FORWARDED_FOR',
-                                    'HTTP_FORWARDED',
-                                    'HTTP_VIA',
-                                    'HTTP_X_COMING_FROM',
-                                    'HTTP_COMING_FROM'
-                                    );
     private $_appRootPath = '';
     private static $_soleInstance;
 
@@ -110,7 +102,7 @@ class Piece_Unity_Context
         $this->_request = new Piece_Unity_Request();
         $this->_viewElement = new Piece_Unity_ViewElement();
         $this->_session = new Piece_Unity_Session();
-        $this->_scriptName = $this->_originalScriptName = $this->_getScriptName();
+        $this->_scriptName = $this->_originalScriptName = Stagehand_HTTP_ServerEnv::getScriptName();
         $this->_basePath = $this->_getBasePath();
         $this->_validation = new Piece_Unity_Validation();
     }
@@ -494,25 +486,6 @@ class Piece_Unity_Context
     }
 
     // }}}
-    // {{{ usingProxy()
-
-    /**
-     * Returns whether the application is accessed via reverse proxies.
-     *
-     * @return boolean
-     */
-    public function usingProxy()
-    {
-        foreach ($this->_proxyMeasures as $proxyMeasure) {
-            if (array_key_exists($proxyMeasure, $_SERVER)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    // }}}
     // {{{ setContinuation()
 
     /**
@@ -552,28 +525,6 @@ class Piece_Unity_Context
     public function getValidation()
     {
         return $this->_validation;
-    }
-
-    // }}}
-    // {{{ getRemoteAddr()
-
-    /**
-     * Gets an IP address (or IP addresses) of the client making the request.
-     *
-     * @return string
-     * @since Method available since Release 0.12.0
-     */
-    public function getRemoteAddr()
-    {
-        if (!$this->usingProxy()) {
-            return $_SERVER['REMOTE_ADDR'];
-        }
-
-        foreach ($this->_proxyMeasures as $proxyMeasure) {
-            if (array_key_exists($proxyMeasure, $_SERVER)) {
-                return $_SERVER[$proxyMeasure];
-            }
-        }
     }
 
     // }}}
@@ -633,35 +584,6 @@ class Piece_Unity_Context
     public function sendHTTPStatus($statusCode)
     {
         Stagehand_HTTP_Status::send($statusCode);
-    }
-
-    // }}}
-    // {{{ isRunningOnStandardPort()
-
-    /**
-     * Checks whether or not the current process is running on standard port either 80
-     * or 443.
-     *
-     * @return boolean
-     * @since Method available since Release 1.7.0
-     */
-    public function isRunningOnStandardPort()
-    {
-        return $_SERVER['SERVER_PORT'] == '80' || $_SERVER['SERVER_PORT'] == '443';
-    }
-
-    // }}}
-    // {{{ isSecure()
-
-    /**
-     * Checks whether the current connection is secure or not.
-     *
-     * @return boolean
-     * @since Method available since Release 1.7.0
-     */
-    public function isSecure()
-    {
-        return array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] == 'on';
     }
 
     /**#@-*/
@@ -732,39 +654,6 @@ class Piece_Unity_Context
     {
         $eventName = $this->_request->hasParameter($this->_eventNameKey) ? $this->_request->getParameter($this->_eventNameKey) : null;
         $this->setEventName($eventName);
-    }
-
-    // }}}
-    // {{{ _getScriptName()
-
-    /**
-     * Gets the script name from the REQUEST_URI variable.
-     *
-     * @return string
-     * @since Method available since Release 1.7.1
-     */
-    private function _getScriptName()
-    {
-        $requestURI = str_replace('//', '/', @$_SERVER['REQUEST_URI']);
-
-        $positionOfQuestion = strpos($requestURI, '?');
-        if ($positionOfQuestion) {
-            $scriptName = substr($requestURI, 0, $positionOfQuestion);
-        } else {
-            $scriptName = $requestURI;
-        }
-
-        $pathInfo = Piece_Unity_Request::getPathInfo();
-        if (is_null($pathInfo)) {
-            return $scriptName;
-        }
-
-        $positionOfPathInfo = strrpos($scriptName, $pathInfo);
-        if ($positionOfPathInfo) {
-            return substr($scriptName, 0, $positionOfPathInfo);
-        }
-
-        return $scriptName;
     }
 
     // }}}
