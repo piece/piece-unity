@@ -147,7 +147,7 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI('https'));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI('http'));
-        $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI());
+        $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI());
 
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);
@@ -174,7 +174,7 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('https://foo.example.org:8201/bar/baz.php', $uri->getURI('https'));
         $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $uri->getURI('http'));
-        $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $uri->getURI());
+        $this->assertEquals('https://foo.example.org:8201/bar/baz.php', $uri->getURI());
 
         unset($_SERVER['SERVER_PORT']);
         unset($_SERVER['SERVER_NAME']);

@@ -152,12 +152,12 @@ class Piece_Unity_URI
      * Gets the absolute URI.
      * The standard port of the URI scheme is set when using reverse-proxy.
      *
-     * @param string|boolean $protocol The protocol for the URI. The protocol MUST be
-     *                                 one of: https, http, or pass.
+     * @param string $protocol The protocol for the URI. The protocol MUST be one of:
+     *                         https, http, or pass (default).
      * @return string
      * @throws PIECE_UNITY_ERROR_INVALID_OPERATION
      */
-    public function getURI($protocol = 'http')
+    public function getURI($protocol = 'pass')
     {
         if (is_null($this->_url)) {
             Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_OPERATION,
