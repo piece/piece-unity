@@ -131,6 +131,25 @@ class Piece_Unity_URI
     }
 
     // }}}
+    // {{{ removeQueryString()
+
+    /**
+     * Removes a name/value pair from the query string.
+     *
+     * @param string $name
+     * @since Method available since Release 0.11.0
+     * @throws Piece_Unity_Exception
+     */
+    public function removeQueryString($name)
+    {
+        if (is_null($this->_url)) {
+            throw new Piece_Unity_Exception(__METHOD__ . ' method must be called after initializing');
+        }
+
+        $this->_url->unsetQueryVariable($name);
+    }
+
+    // }}}
     // {{{ getQueryVariables()
 
     /**
@@ -252,26 +271,6 @@ class Piece_Unity_URI
         }
 
         $this->_url = new Net_URL2($path);
-    }
-
-
-    // }}}
-    // {{{ removeQueryString()
-
-    /**
-     * Removes a name/value pair from the query string.
-     *
-     * @param string $name
-     * @since Method available since Release 0.11.0
-     * @throws Piece_Unity_Exception
-     */
-    public function removeQueryString($name)
-    {
-        if (is_null($this->_url)) {
-            throw new Piece_Unity_Exception(__METHOD__ . ' method must be called after initializing');
-        }
-
-        $this->_url->unsetQueryVariable($name);
     }
 
     // }}}
