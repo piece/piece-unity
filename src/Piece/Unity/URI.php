@@ -166,11 +166,7 @@ class Piece_Unity_URI
             $this->_url->path = $context->removeProxyPath($this->_url->path);
         }
 
-        if (version_compare(phpversion(), '5.0.0', '<')) {
-            $url = $this->_url;
-        } else {
-            $url = clone($this->_url);
-        }
+        $url = clone($this->_url);
 
         if (!in_array($protocol, array('https', 'http', 'pass'))) {
             $protocol = 'pass';
@@ -181,21 +177,14 @@ class Piece_Unity_URI
         }
 
         if ($protocol == 'https') {
-            $url->protocol = $protocol;
-            if ((Stagehand_HTTP_ServerEnv::usingProxy() && !$this->_isRedirection) || Stagehand_HTTP_ServerEnv::isRunningOnStandardPort()) {
-                $url->port= '443';
-            }
-
-            return $url->getURL();
+            $port = 443;
+        } elseif ($protocol == 'http') {
+            $port = 80;
         }
 
-        if ($protocol == 'http') {
-            $url->protocol = $protocol;
-            if ((Stagehand_HTTP_ServerEnv::usingProxy() && !$this->_isRedirection) || Stagehand_HTTP_ServerEnv::isRunningOnStandardPort()) {
-                $url->port= '80';
-            }
-
-            return $url->getURL();
+        $url->protocol = $protocol;
+        if ((Stagehand_HTTP_ServerEnv::usingProxy() && !$this->_isRedirection) || Stagehand_HTTP_ServerEnv::isRunningOnStandardPort()) {
+            $url->port= $port;
         }
 
         return $url->getURL();
