@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -30,33 +30,36 @@
  *
  * @package    Piece_Unity
  * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
+ * @version    Release: @package_version@
  * @since      File available since Release 1.1.0
  */
-
-require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Right/Env.php';
 
 // {{{ Piece_Unity_Plugin_Configurator_EnvHandler_PieceRight
 
 /**
- * A handler to set whether the current environment is production
- * or not to the Piece_Flow environment.
+ * A handler to set whether the current environment is production or not to
+ * the Piece_Flow environment.
  *
  * @package    Piece_Unity
  * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @version    Release: @package_version@
  * @since      Class available since Release 1.1.0
  */
-class Piece_Unity_Plugin_Configurator_EnvHandler_PieceRight extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_Configurator_EnvHandler_PieceRight extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Configurator_EnvHandler_Interface
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -72,17 +75,23 @@ class Piece_Unity_Plugin_Configurator_EnvHandler_PieceRight extends Piece_Unity_
      */
 
     // }}}
-    // {{{ invoke()
+    // {{{ setIsProduction()
 
     /**
-     * Invokes the plugin specific code.
+     * Sets whether the current environment is production or not.
      *
      * @param boolean $isProduction
      */
-    function invoke($isProduction)
+    public function setIsProduction($isProduction)
     {
         Piece_Right_Env::setIsProduction($isProduction);
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

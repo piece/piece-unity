@@ -35,10 +35,10 @@
  * @since      File available since Release 0.11.0
  */
 
-// {{{ Piece_Unity_Plugin_Configurator_Env
+// {{{ Piece_Unity_Plugin_Configurator_EnvTest
 
 /**
- * A configurator for env stuff.
+ * Some tests for Piece_Unity_Plugin_Configurator_Env.
  *
  * @package    Piece_Unity
  * @copyright  2007-2009 KUBO Atsuhiro <kubo@iteman.jp>
@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.11.0
  */
-class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Configurator_Interface
+class Piece_Unity_Plugin_Configurator_EnvTest extends PHPUnit_Framework_TestCase
 {
 
     // {{{ properties
@@ -67,41 +67,63 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common impl
      * @access private
      */
 
-    private $_requiredEnvHandlers = array('Configurator_EnvHandler_PieceFlow',
-                                          'Configurator_EnvHandler_PieceRight'
-                                          );
-
     /**#@-*/
 
     /**#@+
      * @access public
      */
 
-    // }}}
-    // {{{ configure()
+    public function tearDown()
+    {
+        Piece_Unity_Context::clear();
+        Piece_Unity_URI::clearNonSSLableServers();
+    }
 
     /**
-     * Configures the runtime.
-     *
-     * @throws Piece_Unity_Exception
+     * @test
      */
-    public function configure()
+    public function setTheProxyPath()
     {
-        $proxyPath = $this->getConfiguration('proxyPath');
-        if (!is_null($proxyPath)) {
-            $this->_context->setProxyPath($proxyPath);
-        }
+        $config = new Piece_Unity_Config();
+        $config->setConfiguration('Configurator_Env', 'proxyPath', '/foo/bar');
+        $context = Piece_Unity_Context::singleton();
+        $context->setConfiguration($config);
 
-        $this->_setNonSSLableServers();
+        $configurator = new Piece_Unity_Plugin_Configurator_Env();
+        $configurator->configure();
 
-        $envHandlers = $this->getExtension('envHandlers');
-        if (!is_array($envHandlers)) {
-            throw new Piece_Unity_Exception("The value of the extension point [ envHandlers ] on the plug-in [ {$this->_name} ] should be an array.");
-        }
+        $this->assertEquals('/foo/bar', $context->getProxyPath());
+    }
 
-        foreach (array_merge($this->_requiredEnvHandlers, $envHandlers) as $extension) {
-            Piece_Unity_Plugin_Factory::factory($extension)->setIsProduction(Piece_Unity_Env::isProduction());
-        }
+    /**
+     * @test
+     */
+    public function setNonSslableServers()
+    {
+        $_SERVER['SERVER_NAME'] = 'example.org';
+        $_SERVER['SERVER_PORT'] = '80';
+        $config = new Piece_Unity_Config();
+        $config->setConfiguration('Configurator_Env', 'nonSSLableServers', array('example.org'));
+        Piece_Unity_Context::singleton()->setConfiguration($config);
+
+        $configurator = new Piece_Unity_Plugin_Configurator_Env();
+        $configurator->configure();
+
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            Piece_Unity_URI::create('http://example.com/foo/bar/baz.php', 'https')
+                            );
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            Piece_Unity_URI::create('/foo/bar/baz.php', 'https')
+                            );
+
+        $_SERVER['SERVER_PORT'] = '443';
+
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            Piece_Unity_URI::create('https://example.com/foo/bar/baz.php', 'https')
+                            );
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            Piece_Unity_URI::create('/foo/bar/baz.php', 'https')
+                            );
     }
 
     /**#@-*/
@@ -110,44 +132,11 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common impl
      * @access protected
      */
 
-    // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     */
-    protected function initialize()
-    {
-        $this->addConfigurationPoint('proxyPath');
-        $this->addConfigurationPoint('nonSSLableServers', array());
-        $this->addExtensionPoint('envHandlers', array());
-    }
-
     /**#@-*/
 
     /**#@+
      * @access private
      */
-
-    // }}}
-    // {{{ _setNonSSLableServers()
-
-    /**
-     * Makes a list of non-SSLable servers.
-     *
-     * @throws Piece_Unity_Exception
-     */
-    function _setNonSSLableServers()
-    {
-        $nonSSLableServers = $this->getConfiguration('nonSSLableServers');
-        if (!is_array($nonSSLableServers)) {
-            throw new Piece_Unity_Exception("The value of the configuration point [ nonSSLableServers ] on the plug-in [ {$this->_name} ] should be an array.");
-        }
-
-        foreach ($nonSSLableServers as $nonSSLableServer) {
-            Piece_Unity_URI::addNonSSLableServer($nonSSLableServer);
-        }
-    }
 
     /**#@-*/
 
