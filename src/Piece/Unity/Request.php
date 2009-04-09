@@ -171,28 +171,6 @@ class Piece_Unity_Request
         }
     }
 
-    // }}}
-    // {{{ getPathInfo()
-
-    /**
-     * Gets PATH_INFO string.
-     *
-     * @return string
-     * @since Method available since Release 1.7.1
-     */
-    public static function getPathInfo()
-    {
-        if (PHP_SAPI != 'cgi') {
-            if (array_key_exists('PATH_INFO', $_SERVER)) {
-                return $_SERVER['PATH_INFO'];
-            }
-        }
-
-        if (array_key_exists('ORIG_PATH_INFO', $_SERVER)) {
-            return $_SERVER['ORIG_PATH_INFO'];
-        }
-    }
-
     /**#@-*/
 
     /**#@+
