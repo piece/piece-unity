@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -30,12 +30,10 @@
  *
  * @package    Piece_Unity
  * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
+ * @version    Release: @package_version@
  * @since      File available since Release 1.0.0
  */
-
-require_once 'Piece/Unity/Error.php';
 
 // {{{ Piece_Unity_ClassLoader
 
@@ -44,7 +42,7 @@ require_once 'Piece/Unity/Error.php';
  *
  * @package    Piece_Unity
  * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @version    Release: @package_version@
  * @since      Class available since Release 1.0.0
  */
@@ -55,6 +53,12 @@ class Piece_Unity_ClassLoader
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -77,12 +81,10 @@ class Piece_Unity_ClassLoader
      *
      * @param string $class
      * @param string $directory
-     * @throws PIECE_UNITY_ERROR_NOT_READABLE
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
-     * @throws PIECE_UNITY_ERROR_CANNOT_READ
-     * @static
+     * @throws Piece_Unity_ClassLoader_Exception
+     * @throws Piece_Unity_Exception
      */
-    function load($class, $directory = null)
+    public static function load($class, $directory = null)
     {
         $file = str_replace('_', '/', $class) . '.php';
 
@@ -90,24 +92,16 @@ class Piece_Unity_ClassLoader
             $file = "$directory/$file";
 
             if (!file_exists($file)) {
-                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The class file [ $file ] for the class [ $class ] is not found."
-                                        );
-                return;
+                throw new Piece_Unity_ClassLoader_Exception("The class file [ $file ] for the class [ $class ] is not found");
             }
 
             if (!is_readable($file)) {
-                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_READABLE,
-                                        "The class file [ $file ] is not readable."
-                                        );
-                return;
+                throw new Piece_Unity_Exception("The class file [ $file ] is not readable");
             }
         }
 
         if (!include_once $file) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_CANNOT_READ,
-                                    "The class file [ $file ] is not found or is not readable."
-                                    );
+            throw new Piece_Unity_Exception("The class file [ $file ] is not found or is not readable");
         }
     }
 
@@ -119,16 +113,17 @@ class Piece_Unity_ClassLoader
      *
      * @param string $class
      * @return boolean
-     * @static
      */
-    function loaded($class)
+    public static function loaded($class)
     {
-        if (version_compare(phpversion(), '5.0.0', '<')) {
-            return class_exists($class);
-        } else {
-            return class_exists($class, false);
-        }
+        return class_exists($class, false);
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
