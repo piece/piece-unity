@@ -82,7 +82,7 @@ $package->setPearinstallerDep('1.4.3');
 $package->addPackageDepWithChannel('required', 'Piece_Flow', 'pear.piece-framework.com', '1.16.0');
 $package->addPackageDepWithChannel('required', 'Cache_Lite', 'pear.php.net', '1.7.0');
 $package->addPackageDepWithChannel('required', 'PEAR', 'pear.php.net', '1.4.3');
-$package->addPackageDepWithChannel('required', 'Net_URL', 'pear.php.net', '1.0.14');
+$package->addPackageDepWithChannel('required', 'Net_URL2', 'pear.php.net', '0.2.0');
 $package->addPackageDepWithChannel('required', 'Piece_Right', 'pear.piece-framework.com', '1.10.0');
 $package->addPackageDepWithChannel('required', 'Stagehand_HTTP_Status', 'pear.piece-framework.com', '1.1.0');
 $package->addPackageDepWithChannel('required', 'Stagehand_HTTP_ServerEnv', 'pear.piece-framework.com', '1.0.0');
