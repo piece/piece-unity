@@ -73,10 +73,9 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends PHPUnit_Framework_TestCa
      * @access public
      */
 
-    public function tearDown()
+    public function setUp()
     {
         Piece_Unity_Context::clear();
-        Piece_Unity_Error::clearErrors();
     }
 
     /**
@@ -90,7 +89,7 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends PHPUnit_Framework_TestCa
         $context->setConfiguration($config);
 
         $configurator = new Piece_Unity_Plugin_Configurator_Proxy();
-        $configurator->invoke();
+        $configurator->configure();
 
         $this->assertEquals('/foo/bar', $context->getProxyPath());
     }
@@ -100,7 +99,7 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends PHPUnit_Framework_TestCa
      */
     public function adjustTheProxyPathForAProxy()
     {
-        $_SERVER['REQUEST_URI'] = '/baz/qux.php';
+        $_SERVER['SCRIPT_NAME'] = '/baz/qux.php';
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
         $oldSessionCookiePath = ini_get('session.cookie_path');
         ini_set('session.cookie_path', '/baz');
@@ -112,7 +111,7 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends PHPUnit_Framework_TestCa
         $context->setAppRootPath('/foo');
 
         $interceptor = new Piece_Unity_Plugin_Configurator_Proxy();
-        $interceptor->invoke();
+        $interceptor->configure();
 
         $this->assertEquals('/bar/baz', $context->getBasePath());
         $this->assertEquals('/bar/baz/qux.php', $context->getScriptName());
@@ -127,7 +126,7 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends PHPUnit_Framework_TestCa
      */
     public function adjustTheProxyPathForDirectAccessToABackendServer()
     {
-        $_SERVER['REQUEST_URI'] = '/baz/qux.php';
+        $_SERVER['SCRIPT_NAME'] = '/baz/qux.php';
 
         $config = new Piece_Unity_Config();
         $config->setConfiguration('Configurator_Proxy', 'proxyPath', '/bar');
@@ -136,7 +135,7 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends PHPUnit_Framework_TestCa
         $context->setAppRootPath('/foo');
 
         $interceptor = new Piece_Unity_Plugin_Configurator_Proxy();
-        $interceptor->invoke();
+        $interceptor->configure();
 
         $this->assertEquals('/baz', $context->getBasePath());
         $this->assertEquals('/baz/qux.php', $context->getScriptName());
@@ -158,7 +157,7 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends PHPUnit_Framework_TestCa
         $context->setConfiguration($config);
 
         $interceptor = new Piece_Unity_Plugin_Configurator_Proxy();
-        $interceptor->invoke();
+        $interceptor->configure();
 
         $this->assertEquals('/bar', ini_get('session.cookie_path'));
 

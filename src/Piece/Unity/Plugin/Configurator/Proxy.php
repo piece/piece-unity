@@ -30,7 +30,7 @@
  *
  * @package    Piece_Unity
  * @copyright  2007-2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @version    Release: @package_version@
  * @since      File available since Release 0.12.0
  */
@@ -38,15 +38,14 @@
 // {{{ Piece_Unity_Plugin_Configurator_Proxy
 
 /**
- * An configurator to adjust the base path and the script name of the current
- * request which are held in the Piece_Unity_Context object.
- * This configurator is used and only works if the web servers where your
- * application is running on are used as back-end servers for reverse proxy
- * servers.
+ * An configurator to adjust the base path and the script name of the current request
+ * which are held in the Piece_Unity_Context object.
+ * This configurator is used and only works if the web servers where your application
+ * is running on are used as back-end servers for reverse proxy servers.
  *
- * The base path and the script name are both relative paths since they are
- * based on REQUEST_URI environment variable. The following is a example of
- * a context change when 'proxyPath' configuration point is set to '/foo'.
+ * The base path and the script name are both relative paths since they are based on
+ * the SCRIPT_NAME variable. The following is a example of a context change when
+ * 'proxyPath' configuration point is set to '/foo'.
  *
  * <pre>
  * Configuration Point 'proxyPath' in Configurator_Proxy plug-in: /foo
@@ -61,11 +60,11 @@
  *
  * @package    Piece_Unity
  * @copyright  2007-2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @version    Release: @package_version@
  * @since      Class available since Release 0.12.0
  */
-class Piece_Unity_Plugin_Configurator_Proxy extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_Configurator_Proxy extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Configurator_Interface
 {
 
     // {{{ properties
@@ -93,26 +92,26 @@ class Piece_Unity_Plugin_Configurator_Proxy extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ invoke()
+    // {{{ configure()
 
     /**
-     * Invokes the plugin specific code.
+     * Configures the runtime.
      */
-    public function invoke()
+    public function configure()
     {
-        $proxyPath = $this->_getConfiguration('proxyPath');
-        $this->_context->setProxyPath($proxyPath);
+        $proxyPath = $this->getConfiguration('proxyPath');
+        $this->context->setProxyPath($proxyPath);
 
         if (!Stagehand_HTTP_ServerEnv::usingProxy()) {
             return;
         }
 
         if (!is_null($proxyPath)) {
-            $this->_context->setBasePath($proxyPath . $this->_context->getBasePath());
-            $this->_context->setScriptName($proxyPath . $this->_context->getScriptName());
-            $this->_context->setAppRootPath($proxyPath . $this->_context->getAppRootPath());
+            $this->context->setBasePath($proxyPath . $this->context->getBasePath());
+            $this->context->setScriptName($proxyPath . $this->context->getScriptName());
+            $this->context->setAppRootPath($proxyPath . $this->context->getAppRootPath());
 
-            $adjustSessionCookiePath = $this->_getConfiguration('adjustSessionCookiePath');
+            $adjustSessionCookiePath = $this->getConfiguration('adjustSessionCookiePath');
             if ($adjustSessionCookiePath) {
                 ini_set('session.cookie_path',
                         $proxyPath . str_replace('//', '/', ini_get('session.cookie_path'))
@@ -128,15 +127,15 @@ class Piece_Unity_Plugin_Configurator_Proxy extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ _initialize()
+    // {{{ initialize()
 
     /**
      * Defines and initializes extension points and configuration points.
      */
-    protected function _initialize()
+    protected function initialize()
     {
-        $this->_addConfigurationPoint('proxyPath');
-        $this->_addConfigurationPoint('adjustSessionCookiePath', true);
+        $this->addConfigurationPoint('proxyPath');
+        $this->addConfigurationPoint('adjustSessionCookiePath', true);
     }
 
     /**#@-*/
