@@ -226,7 +226,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_Framework_
      */
     public function supportSelfNotation()
     {
-        $_SERVER['REQUEST_URI'] = '/foo.php';
+        $_SERVER['SCRIPT_NAME'] = '/foo.php';
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
 
@@ -245,7 +245,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_Framework_
      */
     public function supportSelfNotationForHttps()
     {
-        $_SERVER['REQUEST_URI'] = '/foo.php';
+        $_SERVER['SCRIPT_NAME'] = '/foo.php';
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
 
