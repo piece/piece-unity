@@ -228,7 +228,7 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
      * @test
      * @since Method available since Release 0.11.0
      */
-    public function buildAnInternalUrlForEZwebMobilePhones()
+    public function buildAnInternalUrlForEzwebMobilePhones()
     {
         $_SERVER['HTTP_VIA'] = '1.2.3.4';
         $_SERVER['SERVER_NAME'] = 'example.org';
