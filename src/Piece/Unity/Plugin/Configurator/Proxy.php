@@ -43,9 +43,9 @@
  * This configurator is used and only works if the web servers where your application
  * is running on are used as back-end servers for reverse proxy servers.
  *
- * The base path and the script name are both relative paths since they are based on
- * the SCRIPT_NAME variable. The following is a example of a context change when
- * 'proxyPath' configuration point is set to '/foo'.
+ * The base path and the script name are both relative paths. The following is
+ * an example of a context change when 'proxyPath' configuration point is set to
+ * '/foo'.
  *
  * <pre>
  * Configuration Point 'proxyPath' in Configurator_Proxy plug-in: /foo

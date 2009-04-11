@@ -176,7 +176,7 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
      */
     public function getTheBasePathOfTheRequestUri()
     {
-        $_SERVER['SCRIPT_NAME'] = '/path/to/foo.php';
+        $_SERVER['REQUEST_URI'] = '/path/to/foo.php';
 
         $this->assertEquals('/path/to',
                             Piece_Unity_Context::singleton()->getBasePath()
@@ -189,7 +189,7 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
      */
     public function setTheBasePathOfTheRequestUri()
     {
-        $_SERVER['SCRIPT_NAME'] = '/path/to/foo.php';
+        $_SERVER['REQUEST_URI'] = '/path/to/foo.php';
 
         $context = Piece_Unity_Context::singleton();
 
@@ -206,7 +206,7 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
      */
     public function setTheBasePathOfTheRequestUriOnWindows()
     {
-        $_SERVER['SCRIPT_NAME'] = '//path/to/foo.php';
+        $_SERVER['REQUEST_URI'] = '//path/to/foo.php';
 
         $this->assertEquals('/path/to',
                             Piece_Unity_Context::singleton()->getBasePath()

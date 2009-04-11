@@ -99,7 +99,7 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends PHPUnit_Framework_TestCa
      */
     public function adjustTheProxyPathForAProxy()
     {
-        $_SERVER['SCRIPT_NAME'] = '/baz/qux.php';
+        $_SERVER['REQUEST_URI'] = '/baz/qux.php';
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '1.2.3.4';
         $oldSessionCookiePath = ini_get('session.cookie_path');
         ini_set('session.cookie_path', '/baz');
@@ -126,7 +126,7 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends PHPUnit_Framework_TestCa
      */
     public function adjustTheProxyPathForDirectAccessToABackendServer()
     {
-        $_SERVER['SCRIPT_NAME'] = '/baz/qux.php';
+        $_SERVER['REQUEST_URI'] = '/baz/qux.php';
 
         $config = new Piece_Unity_Config();
         $config->setConfiguration('Configurator_Proxy', 'proxyPath', '/bar');
