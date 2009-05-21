@@ -84,6 +84,7 @@ class Piece_Unity_Config_Factory
      * @param string $configDirectory
      * @param string $cacheDirectory
      * @return Piece_Unity_Config
+     * @throws Piece_Unity_Exception
      */
     public static function factory($configDirectory = null, $cacheDirectory = null)
     {
@@ -92,25 +93,25 @@ class Piece_Unity_Config_Factory
         }
 
         if (!file_exists($configDirectory)) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The configuration directory [ $configDirectory ] is not found."
-                                    );
-            return;
+            throw new Piece_Unity_Exception('The configuration directory [ ' .
+                                            $configDirectory .
+                                            ' ] is not found'
+                                            );
         }
 
         $configFile = "$configDirectory/piece-unity-config.yaml";
         if (!file_exists($configFile)) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The configuration file [ $configFile ] is not found."
-                                    );
-            return;
+            throw new Piece_Unity_Exception('The configuration file [ ' .
+                                            $configFile .
+                                            '] is not found'
+                                            );
         }
 
         if (!is_readable($configFile)) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_READABLE,
-                                    "The configuration file [ $configFile ] is not readable."
-                                    );
-            return;
+            throw new Piece_Unity_Exception('The configuration file [ ' .
+                                            $configFile .
+                                            ' ] is not readable'
+                                            );
         }
 
         if (is_null($cacheDirectory)) {

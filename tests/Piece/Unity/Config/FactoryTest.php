@@ -89,7 +89,6 @@ class Piece_Unity_Config_FactoryTest extends PHPUnit_Framework_TestCase
                                             'errorHandlingAPIBreak' => true)
                                       );
         $cache->clean();
-        Piece_Unity_Error::clearErrors();
     }
 
     /**
@@ -102,36 +101,20 @@ class Piece_Unity_Config_FactoryTest extends PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @expectedException Piece_Unity_Exception
      */
     public function raiseAnExceptionWhenTheGivenConfigurationDirectoryIsNotFound()
     {
-        Piece_Unity_Error::disableCallback();
-        $config = Piece_Unity_Config_Factory::factory(dirname(__FILE__) . '/foo', $this->_cacheDirectory);
-        Piece_Unity_Error::enableCallback();
-
-        $this->assertNull($config);
-        $this->assertTrue(Piece_Unity_Error::hasErrors());
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
+        Piece_Unity_Config_Factory::factory(dirname(__FILE__) . '/foo', $this->_cacheDirectory);
     }
 
     /**
      * @test
+     * @expectedException Piece_Unity_Exception
      */
     public function raiseAnExceptionWhenTheGivenConfigurationFileIsNotFound()
     {
-        Piece_Unity_Error::disableCallback();
-        $config = Piece_Unity_Config_Factory::factory(dirname(__FILE__), $this->_cacheDirectory);
-        Piece_Unity_Error::enableCallback();
-
-        $this->assertNull($config);
-        $this->assertTrue(Piece_Unity_Error::hasErrors());
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_NOT_FOUND, $error['code']);
+        Piece_Unity_Config_Factory::factory(dirname(__FILE__), $this->_cacheDirectory);
     }
 
     /**
