@@ -77,7 +77,7 @@ class CommonTestAlias_ExceptionShouldBeRaisedWhenUndefinedConfigurationPointIsUs
 
     public function invoke()
     {
-        $this->_getConfiguration('foo');
+        $this->getConfiguration('foo');
     }
 
     /**#@-*/

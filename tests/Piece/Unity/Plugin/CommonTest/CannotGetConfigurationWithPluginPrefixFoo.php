@@ -80,8 +80,8 @@ class CannotGetConfigurationWithPluginPrefixFoo extends Piece_Unity_Plugin_Commo
 
     public function invoke()
     {
-        $this->_bar = $this->_getConfiguration('bar');
-        $this->_baz = $this->_getExtension('baz');
+        $this->_bar = $this->getConfiguration('bar');
+        $this->_baz = $this->getExtension('baz');
     }
 
     /**#@-*/
@@ -90,10 +90,10 @@ class CannotGetConfigurationWithPluginPrefixFoo extends Piece_Unity_Plugin_Commo
      * @access protected
      */
 
-    protected function _initialize()
+    protected function initialize()
     {
-        $this->_addConfigurationPoint('bar', 'bar');
-        $this->_addExtensionPoint('baz', 'CannotGetConfigurationWithPluginPrefixBaz');
+        $this->addConfigurationPoint('bar', 'bar');
+        $this->addExtensionPoint('baz', 'CannotGetConfigurationWithPluginPrefixBaz');
     }
 
     /**#@-*/

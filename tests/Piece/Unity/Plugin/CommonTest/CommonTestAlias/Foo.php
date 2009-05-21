@@ -80,8 +80,8 @@ class CommonTestAlias_Foo extends Piece_Unity_Plugin_Common
 
     public function invoke()
     {
-        $this->_bar = $this->_getConfiguration('bar');
-        $this->_baz = $this->_getExtension('baz');
+        $this->_bar = $this->getConfiguration('bar');
+        $this->_baz = $this->getExtension('baz');
     }
 
     /**#@-*/
@@ -90,10 +90,10 @@ class CommonTestAlias_Foo extends Piece_Unity_Plugin_Common
      * @access protected
      */
 
-    protected function _initialize()
+    protected function initialize()
     {
-        $this->_addConfigurationPoint('bar', 'bar');
-        $this->_addExtensionPoint('baz', 'Baz');
+        $this->addConfigurationPoint('bar', 'bar');
+        $this->addExtensionPoint('baz', 'Baz');
     }
 
     /**#@-*/

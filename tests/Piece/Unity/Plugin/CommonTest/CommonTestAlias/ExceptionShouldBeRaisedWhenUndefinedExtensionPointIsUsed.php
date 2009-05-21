@@ -77,7 +77,7 @@ class CommonTestAlias_ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsed e
 
     public function invoke()
     {
-        $this->_getExtension('foo');
+        $this->getExtension('foo');
     }
 
     /**#@-*/
