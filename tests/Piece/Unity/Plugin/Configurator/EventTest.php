@@ -38,7 +38,7 @@
 // {{{ Piece_Unity_Plugin_Configurator_EventTest
 
 /**
- * TestCase for Piece_Unity_Plugin_Configurator_Event
+ * Some tests for Piece_Unity_Plugin_Configurator_Event.
  *
  * @package    Piece_Unity
  * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
