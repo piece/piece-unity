@@ -89,7 +89,7 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common impl
     {
         $proxyPath = $this->getConfiguration('proxyPath');
         if (!is_null($proxyPath)) {
-            $this->_context->setProxyPath($proxyPath);
+            $this->context->setProxyPath($proxyPath);
         }
 
         $envHandlers = $this->getExtension('envHandlers');
