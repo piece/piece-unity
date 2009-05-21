@@ -73,7 +73,7 @@ class Piece_Unity_Plugin_Configurator_EnvTest extends PHPUnit_Framework_TestCase
      * @access public
      */
 
-    public function tearDown()
+    public function setUp()
     {
         Piece_Unity_Context::clear();
     }
