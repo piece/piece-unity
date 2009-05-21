@@ -106,6 +106,17 @@ abstract class Piece_Unity_Plugin_Common
         $config->validateConfigurationPoints($this->_name, array_keys($this->_configurationPoints));
     }
 
+    // }}}
+    // {{{ getName()
+
+    /**
+     * Gets the name of the plug-in.
+     */
+    public function getName()
+    {
+        return $this->_name;
+    }
+
     /**#@-*/
 
     /**#@+
