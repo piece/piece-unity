@@ -84,7 +84,7 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common
      */
     public function invoke()
     {
-        $appRoot = $this->_getConfiguration('appRoot');
+        $appRoot = $this->getConfiguration('appRoot');
         if (!is_null($appRoot)) {
             $result = chdir($appRoot);
             if (!$result) {
@@ -95,9 +95,9 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common
             }
         }
 
-        $appRootPath = $this->_getConfiguration('appRootPath');
+        $appRootPath = $this->getConfiguration('appRootPath');
         if (!is_null($appRootPath)) {
-            $this->_context->setAppRootPath($appRootPath);
+            $this->context->setAppRootPath($appRootPath);
         }
     }
 
@@ -108,15 +108,15 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ _initialize()
+    // {{{ initialize()
 
     /**
      * Defines and initializes extension points and configuration points.
      */
-    protected function _initialize()
+    protected function initialize()
     {
-        $this->_addConfigurationPoint('appRoot');
-        $this->_addConfigurationPoint('appRootPath');
+        $this->addConfigurationPoint('appRoot');
+        $this->addConfigurationPoint('appRootPath');
     }
 
     /**#@-*/
