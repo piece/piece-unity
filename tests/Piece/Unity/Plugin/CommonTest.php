@@ -75,16 +75,11 @@ class Piece_Unity_Plugin_CommonTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
-    }
-
-    public function tearDown()
-    {
+        Piece_Unity_Context::clear();
+        Piece_Unity_Plugin_Factory::clearInstances();
         Piece_Unity_Plugin_Factory::initializePluginDirectories();
         Piece_Unity_Plugin_Factory::initializePluginPrefixes();
-        Piece_Unity_Plugin_Factory::clearInstances();
-        Piece_Unity_Context::clear();
-        Piece_Unity_Error::clearErrors();
+        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
     }
 
     /**
