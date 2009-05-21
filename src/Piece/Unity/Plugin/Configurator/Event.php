@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,8 +35,6 @@
  * @since      File available since Release 0.11.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-
 // {{{ Piece_Unity_Plugin_Configurator_Event
 
 /**
@@ -60,6 +58,12 @@ class Piece_Unity_Plugin_Configurator_Event extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -75,10 +79,28 @@ class Piece_Unity_Plugin_Configurator_Event extends Piece_Unity_Plugin_Common
     /**
      * Invokes the plugin specific code.
      */
-    function invoke()
+    public function invoke()
     {
-        $this->_context->setEventNameKey($this->_getConfiguration('eventNameKey'));
+        $this->context->setEventNameKey($this->getConfiguration('eventNameKey'));
         $this->_setEventName();
+    }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
+
+    // }}}
+    // {{{ initialize()
+
+    /**
+     * Defines and initializes extension points and configuration points.
+     */
+    protected function initialize()
+    {
+        $this->addConfigurationPoint('eventNameKey', '_event');
+        $this->addConfigurationPoint('eventName');
     }
 
     /**#@-*/
@@ -88,28 +110,16 @@ class Piece_Unity_Plugin_Configurator_Event extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ _initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     */
-    function _initialize()
-    {
-        $this->_addConfigurationPoint('eventNameKey', '_event');
-        $this->_addConfigurationPoint('eventName');
-    }
-
-    // }}}
     // {{{ _setEventName()
 
     /**
      * Sets an event name for the current request.
      */
-    function _setEventName()
+    private function _setEventName()
     {
-        $eventName = $this->_getConfiguration('eventName');
+        $eventName = $this->getConfiguration('eventName');
         if (!is_null($eventName)) {
-            $this->_context->setEventName($eventName);
+            $this->context->setEventName($eventName);
         }
     }
 
