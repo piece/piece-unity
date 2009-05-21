@@ -97,6 +97,7 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends PHPUnit_Framework_Test
 
     /**
      * @test
+     * @expectedException Piece_Unity_Exception
      */
     public function raiseAnExceptionIfTheGivenDirectoryIsNotFound()
     {
@@ -106,15 +107,7 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends PHPUnit_Framework_Test
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $configurator = new Piece_Unity_Plugin_Configurator_AppRoot();
-        Piece_Unity_Error::disableCallback();
         @$configurator->invoke();
-        Piece_Unity_Error::enableCallback();
-
-        $this->assertTrue(Piece_Unity_Error::hasErrors());
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_INVOCATION_FAILED, $error['code']);
     }
 
     /**

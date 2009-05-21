@@ -80,7 +80,7 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common
     /**
      * Invokes the plugin specific code.
      *
-     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     * @throws Piece_Unity_Exception
      */
     public function invoke()
     {
@@ -88,10 +88,10 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common
         if (!is_null($appRoot)) {
             $result = chdir($appRoot);
             if (!$result) {
-                Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                        "Failed calling chdir() for the configuration point [ appRoot ] on the plugin [ {$this->_name} ]."
-                                        );
-                return;
+                throw new Piece_Unity_Exception('Failed calling chdir() for the configuration point [ appRoot ] on the plugin [ ' .
+                                                $this->_name .
+                                                ' ]'
+                                                );
             }
         }
 
