@@ -240,7 +240,7 @@ class Piece_Unity_Config
      *
      * @param string $plugin
      * @param array  $extensionPoints
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws Piece_Unity_Exception
      * @since Method available since Release 1.1.0
      */
     public function validateExtensionPoints($plugin, $extensionPoints)
@@ -252,10 +252,12 @@ class Piece_Unity_Config
 
         foreach (array_keys($this->_extensions[$plugin]) as $extensionPoint) {
             if (!in_array($extensionPoint, $extensionPoints)) {
-                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The extension point [ $extensionPoint ] is not found in the plug-in [ $plugin ]."
-                                        );
-                return;
+                throw new Piece_Unity_Exception('The extension point [ ' .
+                                                $extensionPoint .
+                                                ' ] is not found in the plug-in [ ' .
+                                                $plugin .
+                                                ' ]'
+                                                );
             }
         }
     }
@@ -269,7 +271,7 @@ class Piece_Unity_Config
      *
      * @param string $plugin
      * @param array  $configurationPoints
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws Piece_Unity_Exception
      * @since Method available since Release 1.1.0
      */
     public function validateConfigurationPoints($plugin, $configurationPoints)
@@ -281,10 +283,12 @@ class Piece_Unity_Config
 
         foreach (array_keys($this->_configurations[$plugin]) as $configurationPoint) {
             if (!in_array($configurationPoint, $configurationPoints)) {
-                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The configuration point [ $configurationPoint ] is not found in the plug-in [ $plugin ]."
-                                        );
-                return;
+                throw new Piece_Unity_Exception('The configuration point [ ' .
+                                                $configurationPoint .
+                                                ' ] is not found in the plug-in [ ' .
+                                                $plugin .
+                                                ' ]'
+                                                );
             }
         }
     }

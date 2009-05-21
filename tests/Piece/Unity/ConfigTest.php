@@ -80,12 +80,6 @@ class Piece_Unity_ConfigTest extends PHPUnit_Framework_TestCase
         $this->_config = new Piece_Unity_Config();
     }
 
-    public function tearDown()
-    {
-        $this->_config = null;
-        Piece_Unity_Error::clearErrors();
-    }
-
     /**
      * @test
      */
