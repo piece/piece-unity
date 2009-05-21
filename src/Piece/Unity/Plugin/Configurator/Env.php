@@ -94,7 +94,10 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common impl
 
         $envHandlers = $this->getExtension('envHandlers');
         if (!is_array($envHandlers)) {
-            throw new Piece_Unity_Exception("The value of the extension point [ envHandlers ] on the plug-in [ {$this->_name} ] should be an array.");
+            throw new Piece_Unity_Exception('The value of the extension point [ envHandlers ] on the plug-in [ ' .
+                                            $this->getName() .
+                                            ' ] should be an array'
+                                            );
         }
 
         foreach (array_merge($this->_requiredEnvHandlers, $envHandlers) as $extension) {
