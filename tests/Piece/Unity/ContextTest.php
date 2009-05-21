@@ -77,13 +77,9 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        Piece_Unity_Context::clear();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_event'] = 'foo';
-    }
-
-    public function tearDown()
-    {
-        Piece_Unity_Context::clear();
     }
 
     /**
