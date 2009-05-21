@@ -73,7 +73,7 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends PHPUnit_Framework_Test
      * @access public
      */
 
-    public function tearDown()
+    public function setUp()
     {
         Piece_Unity_Context::clear();
         Piece_Unity_Error::clearErrors();
