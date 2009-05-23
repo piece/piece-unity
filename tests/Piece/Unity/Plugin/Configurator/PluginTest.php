@@ -91,7 +91,7 @@ class Piece_Unity_Plugin_Configurator_PluginTest extends PHPUnit_Framework_TestC
     {
         $config = new Piece_Unity_Config();
         $config->setConfiguration('Configurator_Plugin', 'pluginDirectories', array(dirname(__FILE__) . '/PluginTest'));
-        $config->setConfiguration('Configurator_Plugin', 'pluginPrefixes', array('PluginTestCaseAlias'));
+        $config->setConfiguration('Configurator_Plugin', 'pluginPrefixes', array('PluginTestAlias'));
         Piece_Unity_Context::singleton()->setConfiguration($config);
 
         $configurator = new Piece_Unity_Plugin_Configurator_Plugin();
@@ -99,11 +99,11 @@ class Piece_Unity_Plugin_Configurator_PluginTest extends PHPUnit_Framework_TestC
 
         $foo = Piece_Unity_Plugin_Factory::factory('Foo');
 
-        $this->assertType('PluginTestCaseAlias_Foo', $foo);
+        $this->assertType('PluginTestAlias_Foo', $foo);
 
         $bar = Piece_Unity_Plugin_Factory::factory('Bar');
 
-        $this->assertType('PluginTestCaseAlias_Bar', $bar);
+        $this->assertType('PluginTestAlias_Bar', $bar);
 
         $foo->baz = 'qux';
 

@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -32,13 +32,11 @@
  * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_Configurator_PluginTestCase
+ * @see        Piece_Unity_Plugin_Configurator_PluginTest
  * @since      File available since Release 0.11.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-
-// {{{ PluginTestCaseAlias_Foo
+// {{{ PluginTestAlias_Bar
 
 /**
  * A class for unit tests.
@@ -47,10 +45,10 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_Configurator_PluginTestCase
+ * @see        Piece_Unity_Plugin_Configurator_PluginTest
  * @since      Class available since Release 0.11.0
  */
-class PluginTestCaseAlias_Foo extends Piece_Unity_Plugin_Common
+class PluginTestAlias_Bar extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
