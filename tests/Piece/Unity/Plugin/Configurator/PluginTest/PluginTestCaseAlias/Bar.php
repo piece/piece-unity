@@ -2,9 +2,9 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
- * Copyright (c) 2007-2009 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,32 +29,26 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2007-2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
+ * @see        Piece_Unity_Plugin_Configurator_PluginTest
  * @since      File available since Release 0.11.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Plugin/Configurator/Plugin.php';
-require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
-
-// {{{ Piece_Unity_Plugin_Configurator_PluginTestCase
+// {{{ PluginTestCaseAlias_Bar
 
 /**
- * Some tests for Piece_Unity_Plugin_Configurator_Plugin.
+ * A class for unit tests.
  *
  * @package    Piece_Unity
- * @copyright  2007-2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
+ * @see        Piece_Unity_Plugin_Configurator_PluginTest
  * @since      Class available since Release 0.11.0
  */
-class Piece_Unity_Plugin_Configurator_PluginTestCase extends PHPUnit_TestCase
+class PluginTestCaseAlias_Bar extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
@@ -66,11 +60,14 @@ class Piece_Unity_Plugin_Configurator_PluginTestCase extends PHPUnit_TestCase
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
-    var $_oldPluginDirectories;
-    var $_oldPluginPrefixes;
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
 
     /**#@-*/
 
@@ -78,42 +75,23 @@ class Piece_Unity_Plugin_Configurator_PluginTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function setUp()
+    public function invoke()
     {
-        $this->_oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
-        $this->_oldPluginPrefixes = $GLOBALS['PIECE_UNITY_Plugin_Prefixes'];
+        ++$GLOBALS[strtolower(__CLASS__) . strtolower(__FUNCTION__) . 'Called'];
+        $this->getExtension('bar')->invoke();
+        $this->getExtension('baz')->invoke();
     }
 
-    function tearDown()
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
+
+    protected function initialize()
     {
-        Piece_Unity_Context::clear();
-        Piece_Unity_Error::clearErrors();
-    }
-
-    function testConfigure()
-    {
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_Plugin', 'pluginDirectories', array(dirname(__FILE__) . '/PluginTestCase'));
-        $config->setConfiguration('Configurator_Plugin', 'pluginPrefixes', array('PluginTestCaseAlias'));
-        $context = &Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-
-        $configurator = &new Piece_Unity_Plugin_Configurator_Plugin();
-        $configurator->invoke();
-
-        $foo = &Piece_Unity_Plugin_Factory::factory('Foo');
-
-        $this->assertTrue(is_a($foo, 'PluginTestCaseAlias_Foo'));
-
-        $bar = &Piece_Unity_Plugin_Factory::factory('Bar');
-
-        $this->assertTrue(is_a($bar, 'PluginTestCaseAlias_Bar'));
-
-        $foo->baz = 'qux';
-
-        $plugin = &Piece_Unity_Plugin_Factory::factory('Foo');
-
-        $this->assertTrue(array_key_exists('baz', $foo));
+        $this->addExtensionPoint('bar');
+        $this->addExtensionPoint('baz');
     }
 
     /**#@-*/

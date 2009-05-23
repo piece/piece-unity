@@ -38,7 +38,7 @@
 
 require_once 'Piece/Unity/Plugin/Common.php';
 
-// {{{ PluginTestCaseAlias_Bar
+// {{{ PluginTestCaseAlias_Foo
 
 /**
  * A class for unit tests.
@@ -50,7 +50,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @see        Piece_Unity_Plugin_Configurator_PluginTestCase
  * @since      Class available since Release 0.11.0
  */
-class PluginTestCaseAlias_Bar extends Piece_Unity_Plugin_Common
+class PluginTestCaseAlias_Foo extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
@@ -62,6 +62,12 @@ class PluginTestCaseAlias_Bar extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -71,13 +77,23 @@ class PluginTestCaseAlias_Bar extends Piece_Unity_Plugin_Common
      * @access public
      */
 
-    function invoke()
+    public function invoke()
     {
         ++$GLOBALS[strtolower(__CLASS__) . strtolower(__FUNCTION__) . 'Called'];
-        $bar = &$this->getExtension('bar');
-        $bar->invoke();
-        $baz = &$this->getExtension('baz');
-        $baz->invoke();
+        $this->getExtension('bar')->invoke();
+        $this->getExtension('baz')->invoke();
+    }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
+
+    protected function initialize()
+    {
+        $this->addExtensionPoint('bar');
+        $this->addExtensionPoint('baz');
     }
 
     /**#@-*/
@@ -85,12 +101,6 @@ class PluginTestCaseAlias_Bar extends Piece_Unity_Plugin_Common
     /**#@+
      * @access private
      */
-
-    function _initialize()
-    {
-        $this->_addExtensionPoint('bar');
-        $this->_addExtensionPoint('baz');
-    }
 
     /**#@-*/
 

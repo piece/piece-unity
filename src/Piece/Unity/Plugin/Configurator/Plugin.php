@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,10 +35,6 @@
  * @since      File available since Release 0.11.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
-require_once 'Piece/Unity/Error.php';
-
 // {{{ Piece_Unity_Plugin_Configurator_Plugin
 
 /**
@@ -62,6 +58,12 @@ class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -77,14 +79,28 @@ class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common
     /**
      * Invokes the plugin specific code.
      */
-    function invoke()
+    public function invoke()
     {
         $this->_setPluginDirectories();
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
-
         $this->_setPluginPrefixes();
+    }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
+
+    // }}}
+    // {{{ initialize()
+
+    /**
+     * Defines and initializes extension points and configuration points.
+     */
+    protected function initialize()
+    {
+        $this->addConfigurationPoint('pluginDirectories', array());
+        $this->addConfigurationPoint('pluginPrefixes', array());
     }
 
     /**#@-*/
@@ -94,33 +110,21 @@ class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ _initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     */
-    function _initialize()
-    {
-        $this->_addConfigurationPoint('pluginDirectories', array());
-        $this->_addConfigurationPoint('pluginPrefixes', array());
-    }
-
-    // }}}
     // {{{ _setPluginDirectories()
 
     /**
      * Sets plug-in directories.
      *
-     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     * @throws Piece_Unity_Exception
      */
-    function _setPluginDirectories()
+    private function _setPluginDirectories()
     {
-        $pluginDirectories = $this->_getConfiguration('pluginDirectories');
+        $pluginDirectories = $this->getConfiguration('pluginDirectories');
         if (!is_array($pluginDirectories)) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    "The value of the configuration point [ pluginDirectories ] on the plug-in [ {$this->_name} ] should be an array."
-                                    );
-            return;
+            throw new Piece_Unity_Exception('The value of the configuration point [ pluginDirectories ] on the plug-in [ ' .
+                                            $this->getName() .
+                                            ' ] should be an array'
+                                            );
         }
 
         foreach (array_reverse($pluginDirectories) as $pluginDirectory) {
@@ -134,16 +138,16 @@ class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common
     /**
      * Sets plug-in prefixes.
      *
-     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     * @throws Piece_Unity_Exception
      */
-    function _setPluginPrefixes()
+    private function _setPluginPrefixes()
     {
-        $pluginPrefixes = $this->_getConfiguration('pluginPrefixes');
+        $pluginPrefixes = $this->getConfiguration('pluginPrefixes');
         if (!is_array($pluginPrefixes)) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    "The value of the configuration point [ pluginPrefixes ] on the plug-in [ {$this->_name} ] should be an array."
-                                    );
-            return;
+            throw new Piece_Unity_Exception('The value of the configuration point [ pluginPrefixes ] on the plug-in [ ' .
+                                            $this->getName() .
+                                            ' ] should be an array'
+                                            );
         }
 
         foreach (array_reverse($pluginPrefixes) as $pluginPrefix) {

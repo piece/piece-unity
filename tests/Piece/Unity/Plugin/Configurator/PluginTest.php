@@ -2,9 +2,9 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
- * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2007-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,28 +29,24 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2007-2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_Configurator_PluginTestCase
  * @since      File available since Release 0.11.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-
-// {{{ PluginTestCaseAlias_Foo
+// {{{ Piece_Unity_Plugin_Configurator_PluginTest
 
 /**
- * A class for unit tests.
+ * Some tests for Piece_Unity_Plugin_Configurator_Plugin.
  *
  * @package    Piece_Unity
- * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2007-2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_Configurator_PluginTestCase
  * @since      Class available since Release 0.11.0
  */
-class PluginTestCaseAlias_Foo extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_Configurator_PluginTest extends PHPUnit_Framework_TestCase
 {
 
     // {{{ properties
@@ -62,6 +58,12 @@ class PluginTestCaseAlias_Foo extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -71,26 +73,56 @@ class PluginTestCaseAlias_Foo extends Piece_Unity_Plugin_Common
      * @access public
      */
 
-    function invoke()
+    public function setUp()
     {
-        ++$GLOBALS[strtolower(__CLASS__) . strtolower(__FUNCTION__) . 'Called'];
-        $bar = &$this->getExtension('bar');
-        $bar->invoke();
-        $baz = &$this->getExtension('baz');
-        $baz->invoke();
+        Piece_Unity_Context::clear();
     }
+
+    public function tearDown()
+    {
+        Piece_Unity_Plugin_Factory::initializePluginDirectories();
+        Piece_Unity_Plugin_Factory::initializePluginPrefixes();
+    }
+
+    /**
+     * @test
+     */
+    public function configure()
+    {
+        $config = new Piece_Unity_Config();
+        $config->setConfiguration('Configurator_Plugin', 'pluginDirectories', array(dirname(__FILE__) . '/PluginTest'));
+        $config->setConfiguration('Configurator_Plugin', 'pluginPrefixes', array('PluginTestCaseAlias'));
+        Piece_Unity_Context::singleton()->setConfiguration($config);
+
+        $configurator = new Piece_Unity_Plugin_Configurator_Plugin();
+        $configurator->invoke();
+
+        $foo = Piece_Unity_Plugin_Factory::factory('Foo');
+
+        $this->assertType('PluginTestCaseAlias_Foo', $foo);
+
+        $bar = Piece_Unity_Plugin_Factory::factory('Bar');
+
+        $this->assertType('PluginTestCaseAlias_Bar', $bar);
+
+        $foo->baz = 'qux';
+
+        $plugin = Piece_Unity_Plugin_Factory::factory('Foo');
+
+        $this->assertObjectHasAttribute('baz', $foo);
+    }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
     /**#@+
      * @access private
      */
-
-    function _initialize()
-    {
-        $this->_addExtensionPoint('bar');
-        $this->_addExtensionPoint('baz');
-    }
 
     /**#@-*/
 
