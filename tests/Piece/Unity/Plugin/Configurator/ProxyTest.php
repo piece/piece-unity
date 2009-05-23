@@ -145,7 +145,7 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends PHPUnit_Framework_TestCa
     /**
      * @test
      */
-    public function NotAdjustTheSessionCookiePathByConfiguration()
+    public function notAdjustTheSessionCookiePathByConfiguration()
     {
         $oldSessionCookiePath = ini_get('session.cookie_path');
         ini_set('session.cookie_path', '/bar');
