@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,16 +35,10 @@
  * @since      File available since Release 0.11.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Plugin/Configurator/Request.php';
-require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/Config.php';
-
-// {{{ Piece_Unity_Plugin_Configurator_RequestTestCase
+// {{{ Piece_Unity_Plugin_Configurator_RequestTest
 
 /**
- * TestCase for Piece_Unity_Plugin_Configurator_Request
+ * Some tests for Piece_Unity_Plugin_Configurator_Request.
  *
  * @package    Piece_Unity
  * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
@@ -52,13 +46,19 @@ require_once 'Piece/Unity/Config.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.11.0
  */
-class Piece_Unity_Plugin_Configurator_RequestTestCase extends PHPUnit_TestCase
+class Piece_Unity_Plugin_Configurator_RequestTest extends PHPUnit_Framework_TestCase
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -73,32 +73,38 @@ class Piece_Unity_Plugin_Configurator_RequestTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function tearDown()
+    public function setUp()
     {
         Piece_Unity_Context::clear();
     }
 
-    function testImportingPathInfo()
+    /**
+     * @test
+     */
+    public function importingPathInfo()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['PATH_INFO'] = '/foo/bar/bar/baz/qux';
 
-        $config = &new Piece_Unity_Config();
+        $config = new Piece_Unity_Config();
         $config->setConfiguration('Configurator_Request', 'importPathInfo', true);
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
-        $configurator = &new Piece_Unity_Plugin_Configurator_Request();
+        $configurator = new Piece_Unity_Plugin_Configurator_Request();
         $configurator->invoke();
-        $request = &$context->getRequest();
+        $request = $context->getRequest();
 
         $this->assertEquals('bar', $request->getParameter('foo'));
         $this->assertEquals('baz', $request->getParameter('bar'));
         $this->assertNull($request->getParameter('qux'));
-
-        unset($_SERVER['PATH_INFO']);
-        unset($_SERVER['REQUEST_METHOD']);
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

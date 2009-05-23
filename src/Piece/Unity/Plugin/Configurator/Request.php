@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,8 +35,6 @@
  * @since      File available since Release 0.11.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-
 // {{{ Piece_Unity_Plugin_Configurator_Request
 
 /**
@@ -60,6 +58,12 @@ class Piece_Unity_Plugin_Configurator_Request extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -75,9 +79,26 @@ class Piece_Unity_Plugin_Configurator_Request extends Piece_Unity_Plugin_Common
     /**
      * Invokes the plugin specific code.
      */
-    function invoke()
+    public function invoke()
     {
         $this->_importPathInfo();
+    }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
+
+    // }}}
+    // {{{ initialize()
+
+    /**
+     * Defines and initializes extension points and configuration points.
+     */
+    protected function initialize()
+    {
+        $this->addConfigurationPoint('importPathInfo', false);
     }
 
     /**#@-*/
@@ -87,27 +108,15 @@ class Piece_Unity_Plugin_Configurator_Request extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ _initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     */
-    function _initialize()
-    {
-        $this->_addConfigurationPoint('importPathInfo', false);
-    }
-
-    // }}}
     // {{{ _importPathInfo()
 
     /**
      * Imports PATH_INFO string as parameters.
      */
-    function _importPathInfo()
+    private function _importPathInfo()
     {
-        if ($this->_getConfiguration('importPathInfo')) {
-            $request = &$this->_context->getRequest();
-            $request->importPathInfo();
+        if ($this->getConfiguration('importPathInfo')) {
+            $this->context->getRequest()->importPathInfo();
         }
     }
 
