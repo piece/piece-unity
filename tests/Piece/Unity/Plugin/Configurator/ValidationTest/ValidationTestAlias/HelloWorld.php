@@ -36,7 +36,7 @@
  * @since      File available since Release 0.11.0
  */
 
-// {{{ ValidationTestCaseAlias_HelloWorld
+// {{{ ValidationTestAlias_HelloWorld
 
 /**
  * A class for unit tests.
@@ -48,7 +48,7 @@
  * @see        Piece_Unity_Plugin_Configurator_ValidationTest
  * @since      Class available since Release 0.11.0
  */
-class ValidationTestCaseAlias_HelloWorld extends Piece_Right_Validator_Common
+class ValidationTestAlias_HelloWorld extends Piece_Right_Validator_Common
 {
 
     // {{{ properties

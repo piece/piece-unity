@@ -109,8 +109,8 @@ class Piece_Unity_Plugin_Configurator_ValidationTest extends Piece_Unity_PHPUnit
         $config->setConfiguration('Configurator_Validation', 'cacheDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Configurator_Validation', 'validatorDirectories', array($this->_exclusiveDirectory));
         $config->setConfiguration('Configurator_Validation', 'filterDirectories', array($this->_exclusiveDirectory));
-        $config->setConfiguration('Configurator_Validation', 'validatorPrefixes', array('ValidationTestCaseAlias'));
-        $config->setConfiguration('Configurator_Validation', 'filterPrefixes', array('ValidationTestCaseAlias'));
+        $config->setConfiguration('Configurator_Validation', 'validatorPrefixes', array('ValidationTestAlias'));
+        $config->setConfiguration('Configurator_Validation', 'filterPrefixes', array('ValidationTestAlias'));
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
