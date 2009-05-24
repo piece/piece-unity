@@ -35,6 +35,8 @@
  * @since      File available since Release 0.11.0
  */
 
+require_once 'Piece/Right/Env.php';
+
 // {{{ Piece_Unity_Plugin_Configurator_EnvTest
 
 /**
