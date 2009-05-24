@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.12.0
  */
-class Piece_Unity_Plugin_CommonTest extends PHPUnit_Framework_TestCase
+class Piece_Unity_Plugin_CommonTest extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -75,10 +75,7 @@ class Piece_Unity_Plugin_CommonTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        Piece_Unity_Context::clear();
-        Piece_Unity_Plugin_Factory::clearInstances();
-        Piece_Unity_Plugin_Factory::initializePluginDirectories();
-        Piece_Unity_Plugin_Factory::initializePluginPrefixes();
+        parent::setUp();
         Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
     }
 

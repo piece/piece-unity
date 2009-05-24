@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
+class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -77,7 +77,7 @@ class Piece_Unity_ContextTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        Piece_Unity_Context::clear();
+        parent::setUp();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_event'] = 'foo';
     }

@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.11.0
  */
-class Piece_Unity_Plugin_Configurator_PluginTest extends PHPUnit_Framework_TestCase
+class Piece_Unity_Plugin_Configurator_PluginTest extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -72,17 +72,6 @@ class Piece_Unity_Plugin_Configurator_PluginTest extends PHPUnit_Framework_TestC
     /**#@+
      * @access public
      */
-
-    public function setUp()
-    {
-        Piece_Unity_Context::clear();
-    }
-
-    public function tearDown()
-    {
-        Piece_Unity_Plugin_Factory::initializePluginDirectories();
-        Piece_Unity_Plugin_Factory::initializePluginPrefixes();
-    }
 
     /**
      * @test

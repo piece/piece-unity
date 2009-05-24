@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.12.0
  */
-class Piece_Unity_Plugin_Configurator_ProxyTest extends PHPUnit_Framework_TestCase
+class Piece_Unity_Plugin_Configurator_ProxyTest extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -60,11 +60,6 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends PHPUnit_Framework_TestCa
     /**#@+
      * @access protected
      */
-
-    public function setUp()
-    {
-        Piece_Unity_Context::clear();
-    }
 
     /**#@-*/
 

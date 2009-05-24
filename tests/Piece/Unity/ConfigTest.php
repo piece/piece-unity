@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_ConfigTest extends PHPUnit_Framework_TestCase
+class Piece_Unity_ConfigTest extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -77,6 +77,7 @@ class Piece_Unity_ConfigTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
+        parent::setUp();
         $this->_config = new Piece_Unity_Config();
     }
 

@@ -49,7 +49,7 @@ require_once 'Piece/Right/Validator/Factory.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.11.0
  */
-class Piece_Unity_Plugin_Configurator_ValidationTest extends PHPUnit_Framework_TestCase
+class Piece_Unity_Plugin_Configurator_ValidationTest extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -78,7 +78,7 @@ class Piece_Unity_Plugin_Configurator_ValidationTest extends PHPUnit_Framework_T
 
     public function setUp()
     {
-        Piece_Unity_Context::clear();
+        parent::setUp();
         Piece_Right_Filter_Factory::clearInstances();
         Piece_Right_Validator_Factory::clearInstances();
     }
