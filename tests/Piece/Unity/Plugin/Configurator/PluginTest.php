@@ -84,7 +84,7 @@ class Piece_Unity_Plugin_Configurator_PluginTest extends Piece_Unity_PHPUnit_Tes
         Piece_Unity_Context::singleton()->setConfiguration($config);
 
         $configurator = new Piece_Unity_Plugin_Configurator_Plugin();
-        $configurator->invoke();
+        $configurator->configure();
 
         $foo = Piece_Unity_Plugin_Factory::factory('Foo');
 

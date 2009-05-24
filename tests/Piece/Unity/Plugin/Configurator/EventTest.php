@@ -87,7 +87,7 @@ class Piece_Unity_Plugin_Configurator_EventTest extends Piece_Unity_PHPUnit_Test
         $context->setConfiguration($config);
 
         $configurator = new Piece_Unity_Plugin_Configurator_Event();
-        $configurator->invoke();
+        $configurator->configure();
 
         $this->assertEquals('bar', $context->getEventName());
     }
@@ -106,7 +106,7 @@ class Piece_Unity_Plugin_Configurator_EventTest extends Piece_Unity_PHPUnit_Test
         $context->setConfiguration($config);
 
         $configurator = new Piece_Unity_Plugin_Configurator_Event();
-        $configurator->invoke();
+        $configurator->configure();
 
         $this->assertEquals('bar', $context->getEventName());
     }

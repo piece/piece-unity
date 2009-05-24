@@ -47,7 +47,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.12.0
  */
-class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Configurator_Interface
 {
 
     // {{{ properties
@@ -75,14 +75,14 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ invoke()
+    // {{{ configure()
 
     /**
-     * Invokes the plugin specific code.
+     * Configures the runtime.
      *
      * @throws Piece_Unity_Exception
      */
-    public function invoke()
+    public function configure()
     {
         $appRoot = $this->getConfiguration('appRoot');
         if (!is_null($appRoot)) {

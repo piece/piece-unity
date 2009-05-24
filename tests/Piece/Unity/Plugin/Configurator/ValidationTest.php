@@ -118,7 +118,7 @@ class Piece_Unity_Plugin_Configurator_ValidationTest extends Piece_Unity_PHPUnit
         $context->setConfiguration($config);
 
         $configurator = new Piece_Unity_Plugin_Configurator_Validation();
-        $configurator->invoke();
+        $configurator->configure();
 
         $validation = $context->getValidation();
         $validationConfig = $validation->getConfiguration();

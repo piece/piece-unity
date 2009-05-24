@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.11.0
  */
-class Piece_Unity_Plugin_Configurator_Event extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_Configurator_Event extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Configurator_Interface
 {
 
     // {{{ properties
@@ -74,12 +74,12 @@ class Piece_Unity_Plugin_Configurator_Event extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ invoke()
+    // {{{ configure()
 
     /**
-     * Invokes the plugin specific code.
+     * Configures the runtime.
      */
-    public function invoke()
+    public function configure()
     {
         $this->context->setEventNameKey($this->getConfiguration('eventNameKey'));
         $this->_setEventName();

@@ -87,7 +87,7 @@ class Piece_Unity_Plugin_Configurator_RequestTest extends Piece_Unity_PHPUnit_Te
         $context->setConfiguration($config);
 
         $configurator = new Piece_Unity_Plugin_Configurator_Request();
-        $configurator->invoke();
+        $configurator->configure();
         $request = $context->getRequest();
 
         $this->assertEquals('bar', $request->getParameter('foo'));

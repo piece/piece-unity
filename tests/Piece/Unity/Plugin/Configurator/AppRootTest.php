@@ -84,7 +84,7 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends Piece_Unity_PHPUnit_Te
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $configurator = new Piece_Unity_Plugin_Configurator_AppRoot();
-        $configurator->invoke();
+        $configurator->configure();
 
         $this->assertEquals($appRoot, getcwd());
     }
@@ -101,7 +101,7 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends Piece_Unity_PHPUnit_Te
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $configurator = new Piece_Unity_Plugin_Configurator_AppRoot();
-        @$configurator->invoke();
+        @$configurator->configure();
     }
 
     /**
@@ -115,7 +115,7 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends Piece_Unity_PHPUnit_Te
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $configurator = new Piece_Unity_Plugin_Configurator_AppRoot();
-        $configurator->invoke();
+        $configurator->configure();
 
         $this->assertEquals($appRootPath, $context->getAppRootPath());
     }

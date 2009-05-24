@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.11.0
  */
-class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Configurator_Interface
 {
 
     // {{{ properties
@@ -74,12 +74,12 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
      */
 
     // }}}
-    // {{{ invoke()
+    // {{{ configure()
 
     /**
-     * Invokes the plugin specific code.
+     * Configures the runtime.
      */
-    public function invoke()
+    public function configure()
     {
         $validation = $this->context->getValidation();
         $validation->setConfigDirectory($this->getConfiguration('configDirectory'));
