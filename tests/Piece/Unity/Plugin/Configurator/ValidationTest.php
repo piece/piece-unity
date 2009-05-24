@@ -96,7 +96,10 @@ class Piece_Unity_Plugin_Configurator_ValidationTest extends Piece_Unity_PHPUnit
         $cache->clean();
     }
 
-    public function testConfigure()
+    /**
+     * @test
+     */
+    public function configure()
     {
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_POST['login_name'] = 'iteman';
