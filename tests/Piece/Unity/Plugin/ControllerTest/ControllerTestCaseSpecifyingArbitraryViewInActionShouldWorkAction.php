@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -32,7 +32,7 @@
  * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_ControllerTestCase
+ * @see        Piece_Unity_Plugin_ControllerTest
  * @since      File available since Release 1.2.0
  */
 
@@ -45,7 +45,7 @@
  * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_ControllerTestCase
+ * @see        Piece_Unity_Plugin_ControllerTest
  * @since      Class available since Release 1.2.0
  */
 class ControllerTestCaseSpecifyingArbitraryViewInActionShouldWorkAction
@@ -60,6 +60,12 @@ class ControllerTestCaseSpecifyingArbitraryViewInActionShouldWorkAction
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -69,10 +75,16 @@ class ControllerTestCaseSpecifyingArbitraryViewInActionShouldWorkAction
      * @access public
      */
 
-    function invoke(&$context)
+    public function invoke($context)
     {
         $context->setView('http://example.org/');
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

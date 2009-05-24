@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,13 +35,7 @@
  * @since      File available since Release 1.2.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Plugin/Controller.php';
-require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/Config.php';
-
-// {{{ Piece_Unity_Plugin_ControllerTestCase
+// {{{ Piece_Unity_Plugin_ControllerTest
 
 /**
  * Some tests for Piece_Unity_Plugin_Controller.
@@ -52,7 +46,7 @@ require_once 'Piece/Unity/Config.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 1.2.0
  */
-class Piece_Unity_Plugin_ControllerTestCase extends PHPUnit_TestCase
+class Piece_Unity_Plugin_ControllerTest extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -64,10 +58,14 @@ class Piece_Unity_Plugin_ControllerTestCase extends PHPUnit_TestCase
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
-    var $_cacheDirectory;
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
 
     /**#@-*/
 
@@ -75,41 +73,52 @@ class Piece_Unity_Plugin_ControllerTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function setUp()
+    /* public function setUp() */
+    /* { */
+    /*     parent::setUp(); */
+    /*     $_SERVER['REQUEST_METHOD'] = 'GET'; */
+    /*     $this->_exclusiveDirectory = ; */
+    /* } */
+
+    /* function tearDown() */
+    /* { */
+    /*     unset($_SESSION); */
+    /*     Piece_Unity_Context::clear(); */
+    /*     unset($_GET['_event']); */
+    /*     unset($_SERVER['REQUEST_METHOD']); */
+    /* } */
+
+    /**
+     * @test
+     */
+    public function overwriteTheViewWithAnArbitraryViewFromAnAction()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
-    }
-
-    function tearDown()
-    {
-        unset($_SESSION);
-        Piece_Unity_Context::clear();
-        unset($_GET['_event']);
-        unset($_SERVER['REQUEST_METHOD']);
-    }
-
-    function testShouldOverwriteTheViewWithAnArbitraryViewFromAnAction()
-    {
         $_GET['_event'] = 'ControllerTestCaseSpecifyingArbitraryViewInActionShouldWork';
-        $oldScriptName = $_SERVER['REQUEST_URI'];
+        /* $oldScriptName = $_SERVER['REQUEST_URI']; */
         $_SERVER['REQUEST_URI'] = '/foo.php';
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $config = &new Piece_Unity_Config();
+        $config = new Piece_Unity_Config();
         $config->setExtension('Controller', 'dispatcher', 'Dispatcher_Simple');
-        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_cacheDirectory);
-        $context = &Piece_Unity_Context::singleton();
+        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
-        $controller = &new Piece_Unity_Plugin_Controller();
+        $controller = new Piece_Unity_Plugin_Controller();
         $controller->invoke();
 
         $this->assertEquals('http://example.org/', $context->getView());
 
-        $_SERVER['REQUEST_URI'] = $oldScriptName;
-        unset($_SERVER['SERVER_PORT']);
-        unset($_SERVER['SERVER_NAME']);
+        /* $_SERVER['REQUEST_URI'] = $oldScriptName; */
+        /* unset($_SERVER['SERVER_PORT']); */
+        /* unset($_SERVER['SERVER_NAME']); */
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

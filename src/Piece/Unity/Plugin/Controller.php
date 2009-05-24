@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,10 +35,6 @@
  * @since      File available since Release 0.4.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
-
 // {{{ Piece_Unity_Plugin_Controller
 
 /**
@@ -63,6 +59,12 @@ class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -78,40 +80,38 @@ class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
     /**
      * Invokes the plugin specific code.
      */
-    function invoke()
+    public function invoke()
     {
-        if (is_null($this->_context->getView())) {
-            $dispatcher = &$this->_getExtension('dispatcher');
-            if (Piece_Unity_Error::hasErrors()) {
-                return;
-            }
+        if (is_null($this->context->getView())) {
+            $viewString = $this->getExtension('dispatcher')->invoke();
 
-            $viewString = $dispatcher->invoke();
-            if (Piece_Unity_Error::hasErrors()) {
-                return;
-            }
-
-            if (is_null($this->_context->getView())) {
-                $this->_context->setView($viewString);
+            if (is_null($this->context->getView())) {
+                $this->context->setView($viewString);
             }
         }
 
-        $dispatcherContinuation = &Piece_Unity_Plugin_Factory::factory('Dispatcher_Continuation');
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
+        Piece_Unity_Plugin_Factory::factory('Dispatcher_Continuation')->publish();
+        $this->getExtension('view')->invoke();
+    }
 
-        $dispatcherContinuation->publish();
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
+    /**#@-*/
 
-        $view = &$this->_getExtension('view');
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
+    /**#@+
+     * @access protected
+     */
 
-        $view->invoke();
+    // }}}
+    // {{{ initialize()
+
+    /**
+     * Defines and initializes extension points and configuration points.
+     *
+     * @since Method available since Release 0.6.0
+     */
+    protected function initialize()
+    {
+        $this->addExtensionPoint('dispatcher', 'Dispatcher_Continuation');
+        $this->addExtensionPoint('view', 'View');
     }
 
     /**#@-*/
@@ -119,20 +119,6 @@ class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
     /**#@+
      * @access private
      */
-
-    // }}}
-    // {{{ _initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
-     */
-    function _initialize()
-    {
-        $this->_addExtensionPoint('dispatcher', 'Dispatcher_Continuation');
-        $this->_addExtensionPoint('view', 'View');
-    }
 
     /**#@-*/
 
