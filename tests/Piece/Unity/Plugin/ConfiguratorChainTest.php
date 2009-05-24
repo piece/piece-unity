@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,15 +35,6 @@
  * @since      File available since Release 0.11.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Plugin/ConfiguratorChain.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/Env.php';
-
 // {{{ Piece_Unity_Plugin_ConfiguratorChainTestCase
 
 /**
@@ -55,7 +46,7 @@ require_once 'Piece/Unity/Env.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.11.0
  */
-class Piece_Unity_Plugin_ConfiguratorChainTestCase extends PHPUnit_TestCase
+class Piece_Unity_Plugin_ConfiguratorChainTestCase extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -67,11 +58,14 @@ class Piece_Unity_Plugin_ConfiguratorChainTestCase extends PHPUnit_TestCase
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
-    var $_oldPluginDirectories;
-    var $_oldPluginPrefixes;
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
 
     /**#@-*/
 
@@ -79,49 +73,45 @@ class Piece_Unity_Plugin_ConfiguratorChainTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function setUp()
+    public function setUp()
     {
+        parent::setUp();
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $this->_oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
-        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/ConfiguratorChainTestCase');
-        $this->_oldPluginPrefixes = $GLOBALS['PIECE_UNITY_Plugin_Prefixes'];
+        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
         Piece_Unity_Plugin_Factory::addPluginPrefix('');
     }
 
-    function tearDown()
+    /**
+     * @test
+     */
+    public function invokeAConfigurator()
     {
-        $GLOBALS['PIECE_UNITY_Plugin_Prefixes'] = $this->_oldPluginPrefixes;
-        unset($_SERVER['REQUEST_METHOD']);
-        Piece_Unity_Context::clear();
-        $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $this->_oldPluginDirectories;
-        Piece_Unity_Error::clearErrors();
-    }
-
-    function testSingleConfigurator()
-    {
-        $config = &new Piece_Unity_Config();
+        $config = new Piece_Unity_Config();
         $config->setExtension('ConfiguratorChain', 'configurators', array('FirstConfigurator'));
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
-        $chain = &new Piece_Unity_Plugin_ConfiguratorChain();
+        $chain = new Piece_Unity_Plugin_ConfiguratorChain();
         $chain->invoke();
-        $request = &$context->getRequest();
+        $request = $context->getRequest();
 
         $this->assertTrue($request->hasParameter('FirstConfiguratorCalled'));
         $this->assertTrue($request->getParameter('FirstConfiguratorCalled'));
     }
 
-    function testMultipleConfigurators()
+    /**
+     * @test
+     */
+    public function invokeMultipleConfigurators()
     {
-        $config = &new Piece_Unity_Config();
+        $config = new Piece_Unity_Config();
         $config->setExtension('ConfiguratorChain', 'configurators', array('FirstConfigurator', 'SecondConfigurator'));
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
-        $chain = &new Piece_Unity_Plugin_ConfiguratorChain();
+        $chain = new Piece_Unity_Plugin_ConfiguratorChain();
         $chain->invoke();
-        $request = &$context->getRequest();
+        $request = $context->getRequest();
 
         $this->assertTrue($request->hasParameter('FirstConfiguratorCalled'));
         $this->assertTrue($request->getParameter('FirstConfiguratorCalled'));
@@ -130,9 +120,15 @@ class Piece_Unity_Plugin_ConfiguratorChainTestCase extends PHPUnit_TestCase
 
         $logs = $request->getParameter('logs');
 
-        $this->assertEquals(strtolower('FirstConfigurator'), strtolower(array_shift($logs)));
-        $this->assertEquals(strtolower('SecondConfigurator'), strtolower(array_shift($logs)));
+        $this->assertEquals('FirstConfigurator', array_shift($logs));
+        $this->assertEquals('SecondConfigurator', array_shift($logs));
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

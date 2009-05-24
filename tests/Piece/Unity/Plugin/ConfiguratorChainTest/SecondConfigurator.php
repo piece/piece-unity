@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -32,13 +32,11 @@
  * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_ConfiguratorChainTestCase
+ * @see        Piece_Unity_Plugin_ConfiguratorChainTest
  * @since      File available since Release 0.11.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-
-// {{{ FirstConfigurator
+// {{{ SecondConfigurator
 
 /**
  * A class for unit tests.
@@ -47,16 +45,22 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_ConfiguratorChainTestCase
+ * @see        Piece_Unity_Plugin_ConfiguratorChainTest
  * @since      Class available since Release 0.11.0
  */
-class FirstConfigurator extends Piece_Unity_Plugin_Common
+class SecondConfigurator extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Configurator_Interface
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -72,15 +76,15 @@ class FirstConfigurator extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ invoke()
+    // {{{ configure()
 
     /**
-     * Invokes the plugin specific code.
+     * Configures the runtime.
      */
-    function invoke()
+    public function configure()
     {
-        $request = &$this->_context->getRequest();
-        $request->setParameter('FirstConfiguratorCalled', true);
+        $request = $this->context->getRequest();
+        $request->setParameter('SecondConfiguratorCalled', true);
 
         if (!$request->hasParameter('logs')) {
             $logs = array();
@@ -90,9 +94,13 @@ class FirstConfigurator extends Piece_Unity_Plugin_Common
 
         $logs[] = __CLASS__;
         $request->setParameter('logs', $logs);
-
-        return true;
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,9 +35,6 @@
  * @since      File available since Release 0.11.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/Error.php';
-
 // {{{ Piece_Unity_Plugin_ConfiguratorChain
 
 /**
@@ -56,6 +53,12 @@ class Piece_Unity_Plugin_ConfiguratorChain extends Piece_Unity_Plugin_Common
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -85,29 +88,38 @@ class Piece_Unity_Plugin_ConfiguratorChain extends Piece_Unity_Plugin_Common
     /**
      * Invokes the plugin specific code.
      *
-     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     * @throws Piece_Unity_Exception
      */
-    function invoke()
+    public function invoke()
     {
-        $configurators = &$this->_getExtension('configurators');
+        $configurators = $this->getExtension('configurators');
         if (!is_array($configurators)) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    "The value of the extension point [ configurators ] on the plug-in [ {$this->_name} ] should be an array."
-                                    );
-            return;
+            throw new Piece_Unity_Exception('The value of the extension point [ configurators ] on the plug-in [ ' .
+                                            $this->getName() .
+                                            ' ] should be an array'
+                                            );
         }
 
         foreach (array_merge($this->_requiredConfigurators, $configurators) as $extension) {
-            $configurator = &Piece_Unity_Plugin_Factory::factory($extension);
-            if (Piece_Unity_Error::hasErrors()) {
-                return;
-            }
-
-            $configurator->invoke();
-            if (Piece_Unity_Error::hasErrors()) {
-                return;
-            }
+            Piece_Unity_Plugin_Factory::factory($extension)->configure();
         }
+    }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
+
+    // }}}
+    // {{{ initialize()
+
+    /**
+     * Defines and initializes extension points and configuration points.
+     */
+    protected function initialize()
+    {
+        $this->addExtensionPoint('configurators', array());
     }
 
     /**#@-*/
@@ -116,17 +128,6 @@ class Piece_Unity_Plugin_ConfiguratorChain extends Piece_Unity_Plugin_Common
      * @access private
      */
 
-    // }}}
-    // {{{ _initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     */
-    function _initialize()
-    {
-        $this->_addExtensionPoint('configurators', array());
-    }
- 
     /**#@-*/
 
     // }}}
