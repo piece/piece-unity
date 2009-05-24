@@ -70,6 +70,8 @@ class Piece_Unity_Plugin_Configurator_ValidationTest extends Piece_Unity_PHPUnit
      * @access private
      */
 
+    private $_exclusiveDirectory;
+
     /**#@-*/
 
     /**#@+
@@ -81,11 +83,12 @@ class Piece_Unity_Plugin_Configurator_ValidationTest extends Piece_Unity_PHPUnit
         parent::setUp();
         Piece_Right_Filter_Factory::clearInstances();
         Piece_Right_Validator_Factory::clearInstances();
+        $this->_exclusiveDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 
     public function tearDown()
     {
-        $cache = new Cache_Lite_File(array('cacheDir' => dirname(__FILE__) . '/ValidationTest/',
+        $cache = new Cache_Lite_File(array('cacheDir' => $this->_exclusiveDirectory . '/',
                                            'masterFile' => '',
                                            'automaticSerialization' => true,
                                            'errorHandlingAPIBreak' => true)
@@ -102,10 +105,10 @@ class Piece_Unity_Plugin_Configurator_ValidationTest extends Piece_Unity_PHPUnit
         $_POST['greeting'] = 'Hello World';
 
         $config = new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_Validation', 'configDirectory', dirname(__FILE__) . '/ValidationTest');
-        $config->setConfiguration('Configurator_Validation', 'cacheDirectory', dirname(__FILE__) . '/ValidationTest');
-        $config->setConfiguration('Configurator_Validation', 'validatorDirectories', array(dirname(__FILE__) . '/ValidationTest'));
-        $config->setConfiguration('Configurator_Validation', 'filterDirectories', array(dirname(__FILE__) . '/ValidationTest'));
+        $config->setConfiguration('Configurator_Validation', 'configDirectory', $this->_exclusiveDirectory);
+        $config->setConfiguration('Configurator_Validation', 'cacheDirectory', $this->_exclusiveDirectory);
+        $config->setConfiguration('Configurator_Validation', 'validatorDirectories', array($this->_exclusiveDirectory));
+        $config->setConfiguration('Configurator_Validation', 'filterDirectories', array($this->_exclusiveDirectory));
         $config->setConfiguration('Configurator_Validation', 'validatorPrefixes', array('ValidationTestCaseAlias'));
         $config->setConfiguration('Configurator_Validation', 'filterPrefixes', array('ValidationTestCaseAlias'));
         $context = Piece_Unity_Context::singleton();
