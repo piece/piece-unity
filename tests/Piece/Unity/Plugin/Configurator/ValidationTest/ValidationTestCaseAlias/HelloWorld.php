@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -32,11 +32,11 @@
  * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_Configurator_ValidationTestCase
+ * @see        Piece_Unity_Plugin_Configurator_ValidationTest
  * @since      File available since Release 0.11.0
  */
 
-// {{{ ValidationTestCaseAlias_LowerCase
+// {{{ ValidationTestCaseAlias_HelloWorld
 
 /**
  * A class for unit tests.
@@ -45,16 +45,22 @@
  * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_Configurator_ValidationTestCase
+ * @see        Piece_Unity_Plugin_Configurator_ValidationTest
  * @since      Class available since Release 0.11.0
  */
-class ValidationTestCaseAlias_LowerCase
+class ValidationTestCaseAlias_HelloWorld extends Piece_Right_Validator_Common
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -69,10 +75,16 @@ class ValidationTestCaseAlias_LowerCase
      * @access public
      */
 
-    function filter($value)
+    public function validate($value)
     {
-        return strtolower($value);
+        return $value == 'hello world';
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

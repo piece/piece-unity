@@ -61,6 +61,11 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends PHPUnit_Framework_TestCa
      * @access protected
      */
 
+    public function setUp()
+    {
+        Piece_Unity_Context::clear();
+    }
+
     /**#@-*/
 
     /**#@+
@@ -72,11 +77,6 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends PHPUnit_Framework_TestCa
     /**#@+
      * @access public
      */
-
-    public function setUp()
-    {
-        Piece_Unity_Context::clear();
-    }
 
     /**
      * @test
