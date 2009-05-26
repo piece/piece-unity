@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2008-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,8 +35,6 @@
  * @since      File available since Release 1.5.0
  */
 
-require_once 'Piece/Unity/Error.php';
-
 // {{{ Piece_Unity_Service_Renderring_PHP
 
 /**
@@ -60,11 +58,17 @@ class Piece_Unity_Service_Rendering_PHP
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
-    var $_fileForRender;
-    var $_viewElementForRender;
+    private $_fileForRender;
+    private $_viewElementForRender;
 
     /**#@-*/
 
@@ -79,37 +83,42 @@ class Piece_Unity_Service_Rendering_PHP
      * Renders a HTML or HTML fragment.
      *
      * @param string                  $file
-     * @param Piece_Unity_ViewElement &$viewElement
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
-     * @throws PIECE_UNITY_ERROR_CANNOT_READ
-     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     * @param Piece_Unity_ViewElement $viewElement
+     * @throws Piece_Unity_Exception
      */
-    function render($file, &$viewElement)
+    public function render($file, Piece_Unity_ViewElement $viewElement)
     {
         if (!file_exists($file)) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The HTML template file [ $file ] is not found."
-                                    );
-            return;
+            throw new Piece_Unity_Exception('The HTML template file [ ' .
+                                            $file .
+                                            ' ] is not found'
+                                            );
         }
 
         if (!is_readable($file)) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_CANNOT_READ,
-                                    "The HTML template file [ $file ] is not readable."
-                                    );
-            return;
+            throw new Piece_Unity_Exception('The HTML template file [ ' .
+                                            $file .
+                                            ' ] is not readable'
+                                            );
         }
 
         $this->_fileForRender = $file;
-        $this->_viewElementForRender = &$viewElement;
+        $this->_viewElementForRender = $viewElement;
         extract($this->_viewElementForRender->getElements(), EXTR_OVERWRITE | EXTR_REFS);
 
         if (!include $this->_fileForRender) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    "The HTML template file [ {$this->_fileForRender} ] is not found or is not readable."
-                                    );
+            throw new Piece_Unity_Exception('The HTML template file [ ' .
+                                            $this->_fileForRender .
+                                            ' ] is not found or is not readable'
+                                            );
         }
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
