@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.9.0
  */
-class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
+class Piece_Unity_URITest extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -72,11 +72,6 @@ class Piece_Unity_URITest extends PHPUnit_Framework_TestCase
     /**#@+
      * @access public
      */
-
-    public function tearDown()
-    {
-        Piece_Unity_Context::clear();
-    }
 
     /**
      * @test
