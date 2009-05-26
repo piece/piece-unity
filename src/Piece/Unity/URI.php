@@ -99,7 +99,7 @@ class Piece_Unity_URI
     /**
      * Gets the query string of a URI.
      *
-     * @return boolean
+     * @return string
      * @throws Piece_Unity_Exception
      */
     public function getQueryString()
