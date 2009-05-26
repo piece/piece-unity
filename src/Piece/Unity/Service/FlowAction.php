@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -48,7 +48,7 @@
  * @see        Piece_Flow_Action
  * @since      Class available since Release 1.0.0
  */
-class Piece_Unity_Service_FlowAction
+abstract class Piece_Unity_Service_FlowAction
 {
 
     // {{{ properties
@@ -60,12 +60,18 @@ class Piece_Unity_Service_FlowAction
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
-    var $_flow;
-    var $_context;
-    var $_event;
+    protected $flow;
+    protected $context;
+    protected $event;
+
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
 
     /**#@-*/
 
@@ -80,11 +86,11 @@ class Piece_Unity_Service_FlowAction
      * Sets the Piece_Flow object which is used by the flow execution
      * in progress.
      *
-     * @param Piece_Flow &$flow
+     * @param Piece_Flow $flow
      */
-    function setFlow(&$flow)
+    public function setFlow(Piece_Flow $flow)
     {
-        $this->_flow = &$flow;
+        $this->flow = $flow;
     }
 
     // }}}
@@ -93,11 +99,11 @@ class Piece_Unity_Service_FlowAction
     /**
      * Sets a single instance of Piece_Unity_Context class.
      *
-     * @param Piece_Unity_Context &$context
+     * @param Piece_Unity_Context $context
      */
-    function setPayload(&$context)
+    public function setPayload(Piece_Unity_Context $context)
     {
-        $this->_context = &$context;
+        $this->context = $context;
     }
 
     // }}}
@@ -108,9 +114,9 @@ class Piece_Unity_Service_FlowAction
      *
      * @param string $event
      */
-    function setEvent($event)
+    public function setEvent($event)
     {
-        $this->_event = $event;
+        $this->event = $event;
     }
 
     // }}}
@@ -120,7 +126,7 @@ class Piece_Unity_Service_FlowAction
      * Prepares something for an event handler which will be invoked just
      * after this method call.
      */
-    function prepare() {}
+    public function prepare() {}
 
     // }}}
     // {{{ clear()
@@ -130,12 +136,18 @@ class Piece_Unity_Service_FlowAction
      *
      * @since Method available since Release 1.1.0
      */
-    function clear()
+    public function clear()
     {
-        unset($this->_flow);
-        unset($this->_context);
-        $this->_event = null;
+        unset($this->flow);
+        unset($this->context);
+        $this->event = null;
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
