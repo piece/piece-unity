@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2008-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,14 +35,7 @@
  * @since      File available since Release 1.5.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
-require_once 'Piece/Unity/Plugin/ViewSchemeHandler.php';
-
-// {{{ Piece_Unity_Plugin_ViewSchemeHandlerTestCase
+// {{{ Piece_Unity_Plugin_ViewSchemeHandlerTest
 
 /**
  * Some tests for Piece_Unity_Plugin_ViewSchemeHandler.
@@ -53,13 +46,19 @@ require_once 'Piece/Unity/Plugin/ViewSchemeHandler.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 1.5.0
  */
-class Piece_Unity_Plugin_ViewSchemeHandlerTestCase extends PHPUnit_TestCase
+class Piece_Unity_Plugin_ViewSchemeHandlerTest extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -74,41 +73,37 @@ class Piece_Unity_Plugin_ViewSchemeHandlerTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function tearDown()
+    /**
+     * @test
+     */
+    public function removeHtmlSchemeStringFromTheViewString()
     {
-        Piece_Unity_Context::clear();
-    }
-
-    function testShouldRemoveHtmlSchemeStringFromAViewString()
-    {
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setView('html:Foo');
-        $config = &new Piece_Unity_Config();
-        $context->setConfiguration($config);
-        $viewSchemeHandler = &Piece_Unity_Plugin_Factory::factory('ViewSchemeHandler');;
-        $rendererExtension = $viewSchemeHandler->invoke();
+        $context->setConfiguration(new Piece_Unity_Config());
+        $rendererExtension = Piece_Unity_Plugin_Factory::factory('ViewSchemeHandler')->invoke();
 
         $this->assertEquals('Renderer_PHP', $rendererExtension);
         $this->assertEquals('Foo', $context->getView());
     }
 
-    function testShouldRaiseAnExceptionIfTheViewStringIsStartedWithColon()
+    /**
+     * @test
+     * @expectedException Piece_Unity_Exception
+     */
+    public function raiseAnExceptionIfTheViewStringIsStartedWithColon()
     {
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setView(':Foo');
-        $config = &new Piece_Unity_Config();
-        $context->setConfiguration($config);
-        $viewSchemeHandler = &Piece_Unity_Plugin_Factory::factory('ViewSchemeHandler');;
-        Piece_Unity_Error::disableCallback();
-        $viewSchemeHandler->invoke();
-        Piece_Unity_Error::enableCallback();
-
-        $this->assertTrue(Piece_Unity_Error::hasErrors());
-
-        $error = Piece_Unity_Error::pop();
-
-        $this->assertEquals(PIECE_UNITY_ERROR_UNEXPECTED_VALUE, $error['code']);
+        $context->setConfiguration(new Piece_Unity_Config());
+        Piece_Unity_Plugin_Factory::factory('ViewSchemeHandler')->invoke();
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

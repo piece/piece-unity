@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2008-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,9 +35,6 @@
  * @since      File available since Release 1.5.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/Error.php';
-
 // {{{ Piece_Unity_Plugin_ViewSchemeHandler
 
 /**
@@ -63,6 +60,12 @@ class Piece_Unity_Plugin_ViewSchemeHandler extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -80,29 +83,48 @@ class Piece_Unity_Plugin_ViewSchemeHandler extends Piece_Unity_Plugin_Common
      * view string such like "http:", "json:", "html:", etc.
      *
      * @return string
-     * @throws PIECE_UNITY_ERROR_UNEXPECTED_VALUE
+     * @throws Piece_Unity_Exception
      */
-    function invoke()
+    public function invoke()
     {
-        $viewString = $this->_context->getView();
+        $viewString = $this->context->getView();
         $positionOfColon = strpos($viewString, ':');
         if ($positionOfColon === 0) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_UNEXPECTED_VALUE,
-                                    "The view string [ $viewString ] should not start with colon."
-                                    );
-            return;
+            throw new Piece_Unity_Exception('The view string [ ' .
+                                            $viewString .
+                                            ' ] should not start with colon'
+                                            );
         }
 
-        $viewScheme = !$positionOfColon ? 'html'
-                                        : substr($viewString, 0, $positionOfColon);
-        $rendererExtension = $this->_getConfiguration($viewScheme);
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
+        $this->context->setView(preg_replace('/^html:/', '', $viewString));
 
-        $this->_context->setView(preg_replace('/^html:/', '', $viewString));
+        return $this->getConfiguration(
+            !$positionOfColon ? 'html'
+                              : substr($viewString, 0, $positionOfColon)
+                                       );
+    }
 
-        return $rendererExtension;
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
+
+    // }}}
+    // {{{ initialize()
+
+    /**
+     * Defines and initializes extension points and configuration points.
+     */
+    protected function initialize()
+    {
+        $this->addConfigurationPoint('html', 'Renderer_PHP');
+        $this->addConfigurationPoint('http', 'Renderer_Redirection');
+        $this->addConfigurationPoint('https', 'Renderer_Redirection');
+        $this->addConfigurationPoint('self', 'Renderer_Redirection');
+        $this->addConfigurationPoint('selfs', 'Renderer_Redirection');
+        $this->addConfigurationPoint('json', 'Renderer_JSON');
+        $this->addConfigurationPoint('raw', 'Renderer_Raw');
     }
 
     /**#@-*/
@@ -111,23 +133,6 @@ class Piece_Unity_Plugin_ViewSchemeHandler extends Piece_Unity_Plugin_Common
      * @access private
      */
  
-    // }}}
-    // {{{ _initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     */
-    function _initialize()
-    {
-        $this->_addConfigurationPoint('html', 'Renderer_PHP');
-        $this->_addConfigurationPoint('http', 'Renderer_Redirection');
-        $this->_addConfigurationPoint('https', 'Renderer_Redirection');
-        $this->_addConfigurationPoint('self', 'Renderer_Redirection');
-        $this->_addConfigurationPoint('selfs', 'Renderer_Redirection');
-        $this->_addConfigurationPoint('json', 'Renderer_JSON');
-        $this->_addConfigurationPoint('raw', 'Renderer_Raw');
-    }
-
     /**#@-*/
 
     // }}}
