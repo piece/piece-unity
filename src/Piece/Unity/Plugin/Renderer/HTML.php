@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,9 +35,6 @@
  * @since      File available since Release 0.9.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/Error.php';
-
 // {{{ Piece_Unity_Plugin_Renderer_HTML
 
 /**
@@ -48,9 +45,8 @@ require_once 'Piece/Unity/Error.php';
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
  * @since      Class available since Release 0.9.0
- * @abstract
  */
-class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
+abstract class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Renderer_Interface
 {
 
     // {{{ properties
@@ -62,6 +58,12 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -72,17 +74,15 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ invoke()
+    // {{{ render()
 
     /**
-     * Invokes the plugin specific code.
-     *
-     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     * @throws Piece_Unity_Exception
      */
-    function invoke()
+    public function render()
     {
-        $useLayout = $this->_getConfiguration('useLayout');
-        if ($this->_getConfiguration('turnOffLayoutByHTTPAccept')) {
+        $useLayout = $this->getConfiguration('useLayout');
+        if ($this->getConfiguration('turnOffLayoutByHTTPAccept')) {
             if (array_key_exists('HTTP_ACCEPT', $_SERVER)) {
                 if ($_SERVER['HTTP_ACCEPT'] == 'application/x-piece-html-fragment') {
                     $useLayout = false;
@@ -90,40 +90,27 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
             }
         }
 
-        $components = &$this->_getExtension('components');
+        $components = $this->getExtension('components');
         if (!is_array($components)) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    "The value of the extension point [ components ] on the plug-in [ {$this->_name} ] should be an array."
-                                    );
-            return;
+            throw new Piece_Unity_Exception('The value of the extension point [ components ] on the plug-in [ ' .
+                                            $this->getName() .
+                                            ' ] should be an array'
+                                            );
         }
 
         foreach ($components as $extension) {
-            $component = &Piece_Unity_Plugin_Factory::factory($extension);
-            if (Piece_Unity_Error::hasErrors()) {
-                return;
-            }
-
-            $component->invoke();
-            if (Piece_Unity_Error::hasErrors()) {
-                return;
-            }
+            Piece_Unity_Plugin_Factory::factory($extension)->invoke();
         }
 
         if (!$useLayout) {
             $this->_render(false);
         } else {
-            $viewElement = &$this->_context->getViewElement();
+            $viewElement = $this->context->getViewElement();
 
             ob_start();
             $this->_render(false);
-            if (Piece_Unity_Error::hasErrors()) {
-                ob_end_clean();
-                return;
-            }
             $content = ob_get_contents();
             ob_end_clean();
-
             $viewElement->setElement('__content', $content);
 
             $this->_render(true);
@@ -133,28 +120,52 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
     // }}}
-    // {{{ _initialize()
+    // {{{ initialize()
 
     /**
      * Defines and initializes extension points and configuration points.
      */
-    function _initialize()
+    protected function initialize()
     {
-        $this->_addConfigurationPoint('useLayout', false);
-        $this->_addConfigurationPoint('layoutView');
-        $this->_addConfigurationPoint('layoutDirectory');
-        $this->_addConfigurationPoint('layoutCompileDirectory');
-        $this->_addConfigurationPoint('turnOffLayoutByHTTPAccept', false);
-        $this->_addConfigurationPoint('useFallback', false);
-        $this->_addConfigurationPoint('fallbackView');
-        $this->_addConfigurationPoint('fallbackDirectory');
-        $this->_addConfigurationPoint('fallbackCompileDirectory');
-        $this->_addExtensionPoint('components', array());
+        $this->addConfigurationPoint('useLayout', false);
+        $this->addConfigurationPoint('layoutView');
+        $this->addConfigurationPoint('layoutDirectory');
+        $this->addConfigurationPoint('layoutCompileDirectory');
+        $this->addConfigurationPoint('turnOffLayoutByHTTPAccept', false);
+        $this->addConfigurationPoint('useFallback', false);
+        $this->addConfigurationPoint('fallbackView');
+        $this->addConfigurationPoint('fallbackDirectory');
+        $this->addConfigurationPoint('fallbackCompileDirectory');
+        $this->addExtensionPoint('components', array());
     }
+
+    // }}}
+    // {{{ doRender()
+
+    /**
+     * Renders a HTML.
+     *
+     * @param boolean $isLayout
+     */
+    abstract protected function doRender($isLayout);
+
+    // }}}
+    // {{{ _prepareFallback()
+
+    /**
+     * Prepares another view as a fallback.
+     */
+    abstract protected function prepareFallback();
+
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
 
     // }}}
     // {{{ _render()
@@ -165,59 +176,28 @@ class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common
      * useFallback is true, a fallback view will be rendered.
      *
      * @param boolean $isLayout
-     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     * @throws Piece_Unity_Service_Rendering_NotFoundException
      */
-    function _render($isLayout)
+    private function _render($isLayout)
     {
-        Piece_Unity_Error::disableCallback();
-        $this->_doRender($isLayout);
-        Piece_Unity_Error::enableCallback();
-        if (!Piece_Unity_Error::hasErrors()) {
-            return;
-        }
-
-        $error = Piece_Unity_Error::pop();
-        if ($error['code'] == 'PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND') {
-            trigger_error("Failed to render a HTML template with the plugin [ {$this->_name} ].",
+        try {
+            $this->doRender($isLayout);
+        } catch (Piece_Unity_Service_Rendering_NotFoundException $e) {
+            trigger_error('Failed to render a HTML template with the plugin [ ' .
+                          $this->getName() .
+                          ' ]',
                           E_USER_WARNING
                           );
-       
-            if ($this->_getConfiguration('useFallback')) {
-                $this->_context->setView($this->_getConfiguration('fallbackView'));
-                $this->_prepareFallback();
-                $this->_doRender($isLayout);
+            if ($this->getConfiguration('useFallback')) {
+                $this->context->setView($this->getConfiguration('fallbackView'));
+                $this->prepareFallback();
+                $this->doRender($isLayout);
                 return;
             }
-        } else {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    "Failed to render a HTML template with the plugin [ {$this->_name} ].",
-                                    'exception',
-                                    array(),
-                                    $error
-                                    );
+
+            throw $e;
         }
     }
-
-    // }}}
-    // {{{ _doRender()
-
-    /**
-     * Renders a HTML.
-     *
-     * @param boolean $isLayout
-     * @abstract
-     */
-    function _doRender($isLayout) {}
-
-    // }}}
-    // {{{ _prepareFallback()
-
-    /**
-     * Prepares another view as a fallback.
-     *
-     * @abstract
-     */
-    function _prepareFallback() {}
 
     /**#@-*/
 
