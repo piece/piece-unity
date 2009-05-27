@@ -89,19 +89,31 @@ class Piece_Unity_ClassLoader
         $file = str_replace('_', '/', $class) . '.php';
 
         if (!is_null($directory)) {
-            $file = "$directory/$file";
+            $file = $directory . '/' . $file;
 
             if (!file_exists($file)) {
-                throw new Piece_Unity_ClassLoader_NotFoundException("The class file [ $file ] for the class [ $class ] is not found");
+                throw new Piece_Unity_ClassLoader_NotFoundException(
+                    'The class file [ ' .
+                    $file .
+                    ' ] for the class [ ' .
+                    $class .
+                    ' ] is not found'
+                                                                    );
             }
 
             if (!is_readable($file)) {
-                throw new Piece_Unity_Exception("The class file [ $file ] is not readable");
+                throw new Piece_Unity_Exception('The class file [ ' .
+                                                $file .
+                                                ' ] is not readable'
+                                                );
             }
         }
 
         if (!include_once $file) {
-            throw new Piece_Unity_Exception("The class file [ $file ] is not found or is not readable");
+            throw new Piece_Unity_Exception('The class file [ ' .
+                                            $file .
+                                            ' ] is not found or is not readable'
+                                            );
         }
     }
 
