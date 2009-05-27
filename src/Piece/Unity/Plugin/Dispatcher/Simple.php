@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,10 +35,6 @@
  * @since      File available since Release 0.1.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/ClassLoader.php';
-
 // {{{ Piece_Unity_Plugin_Dispatcher_Simple
 
 /**
@@ -65,6 +61,12 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -81,63 +83,50 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
      * Invokes the plugin specific code.
      *
      * @return string
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
-     * @throws PIECE_UNITY_ERROR_CANNOT_READ
+     * @throws Piece_Unity_Exception
      */
-    function invoke()
+    public function invoke()
     {
-        $eventName = $this->_context->getEventName();
+        $eventName = $this->context->getEventName();
 
-        if ($this->_getConfiguration('useDefaultEvent')) {
+        if ($this->getConfiguration('useDefaultEvent')) {
             if (is_null($eventName) || !strlen($eventName)) {
-                $eventName = $this->_getConfiguration('defaultEventName');
-                $this->_context->setEventName($eventName);
+                $eventName = $this->getConfiguration('defaultEventName');
+                $this->context->setEventName($eventName);
             }
         }
 
-        $class = str_replace('.', '', "{$eventName}Action");
+        $class = str_replace('.', '', $eventName . 'Action');
 
-        $actionDirectory = $this->_getConfiguration('actionDirectory');
+        $actionDirectory = $this->getConfiguration('actionDirectory');
         if (is_null($actionDirectory)) {
             return $eventName;
         }
 
         if (!Piece_Unity_ClassLoader::loaded($class)) {
-            Piece_Unity_Error::disableCallback();
-            Piece_Unity_ClassLoader::load($class, $actionDirectory);
-            Piece_Unity_Error::enableCallback();
-            if (Piece_Unity_Error::hasErrors()) {
-                $error = Piece_Unity_Error::pop();
-                if ($error['code'] == PIECE_UNITY_ERROR_NOT_FOUND) {
-                    return $eventName;
-                }
-
-                Piece_Unity_Error::push(PIECE_UNITY_ERROR_CANNOT_READ,
-                                        "Failed to read the action class [ $class ] for any reasons.",
-                                        'exception',
-                                        array(),
-                                        $error
-                                        );
-                return;
+            try {
+                Piece_Unity_ClassLoader::load($class, $actionDirectory);
+            } catch (Piece_Unity_ClassLoader_NotFoundException $e) {
+                return $eventName;
             }
 
             if (!Piece_Unity_ClassLoader::loaded($class)) {
-                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The class [ $class ] is not found in the loaded file."
-                                        );
-                return;
+                throw new Piece_Unity_Exception('The class [ ' .
+                                                $class .
+                                                ' ] is not found in the loaded file'
+                                                );
             }
         }
 
-        $action = &new $class();
+        $action = new $class();
         if (!method_exists($action, 'invoke')) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                    "The method invoke() is not found in the class [ $class ]."
-                                    );
-            return;
+            throw new Piece_Unity_Exception('The method invoke() is not found in the class [ ' .
+                                            $class .
+                                            ' ]'
+                                            );
         }
 
-        $viewString = $action->invoke($this->_context);
+        $viewString = $action->invoke($this->context);
         if (is_null($viewString)) {
             return $eventName;
         } else {
@@ -148,24 +137,30 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
     // }}}
-    // {{{ _initialize()
+    // {{{ initialize()
 
     /**
      * Defines and initializes extension points and configuration points.
      *
      * @since Method available since Release 0.6.0
      */
-    function _initialize()
+    protected function initialize()
     {
-        $this->_addConfigurationPoint('actionDirectory');
-        $this->_addConfigurationPoint('useDefaultEvent', false);
-        $this->_addConfigurationPoint('defaultEventName');
+        $this->addConfigurationPoint('actionDirectory');
+        $this->addConfigurationPoint('useDefaultEvent', false);
+        $this->addConfigurationPoint('defaultEventName');
     }
  
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
+
     /**#@-*/
 
     // }}}

@@ -2,9 +2,9 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
- * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,32 +29,38 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_Dispatcher_SimpleTestCase
- * @since      File available since Release 1.2.0
+ * @see        Piece_Unity_Plugin_Dispatcher_SimpleTest
+ * @since      File available since Release 0.1.0
  */
 
-// {{{ ActionShouldBeAbleToReturnViewStringAction
+// {{{ SimpleExampleAction
 
 /**
  * A class for unit tests.
  *
  * @package    Piece_Unity
- * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_Dispatcher_SimpleTestCase
- * @since      Class available since Release 1.2.0
+ * @see        Piece_Unity_Plugin_Dispatcher_SimpleTest
+ * @since      Class available since Release 0.1.0
  */
-class ActionShouldBeAbleToReturnViewStringAction
+class SimpleExampleAction
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -69,10 +75,16 @@ class ActionShouldBeAbleToReturnViewStringAction
      * @access public
      */
 
-    function invoke(&$context)
+    public function invoke(Piece_Unity_Context $context)
     {
-        return 'Foo';
+        $GLOBALS['actionCalled'] = true;
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,17 +35,14 @@
  * @since      File available since Release 0.1.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Plugin/Dispatcher/Simple.php';
-require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/Context.php';
-require_once 'Cache/Lite/File.php';
+require_once 'Piece/Right/Validator/Factory.php';
+require_once 'Piece/Right/Env.php';
+require_once 'Piece/Right/Config/Factory.php';
 
-// {{{ Piece_Unity_Plugin_Dispatcher_SimpleTestCase
+// {{{ Piece_Unity_Plugin_Dispatcher_SimpleTest
 
 /**
- * TestCase for Piece_Unity_Plugin_Dispatcher_Simple
+ * Some tests for Piece_Unity_Plugin_Dispatcher_Simple.
  *
  * @package    Piece_Unity
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
@@ -53,7 +50,7 @@ require_once 'Cache/Lite/File.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
+class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -65,10 +62,16 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
-    var $_cacheDirectory;
+    private $_exclusiveDirectory;
 
     /**#@-*/
 
@@ -76,75 +79,77 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function setUp()
+    public function setUp()
     {
+        parent::setUp();
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
+        $this->_exclusiveDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 
-    function tearDown()
+    public function tearDown()
     {
-        $cache = &new Cache_Lite_File(array('cacheDir' => "{$this->_cacheDirectory}/",
-                                            'masterFile' => '',
-                                            'automaticSerialization' => true,
-                                            'errorHandlingAPIBreak' => true)
-                                      );
+        $cache = new Cache_Lite_File(array('cacheDir' => $this->_exclusiveDirectory . '/',
+                                           'masterFile' => '',
+                                           'automaticSerialization' => true,
+                                           'errorHandlingAPIBreak' => true)
+                                     );
         $cache->clean();
-        Piece_Unity_Context::clear();
-        unset($_GET['_event']);
-        unset($_SERVER['REQUEST_METHOD']);
     }
 
-    function testDispatchingWithoutAction()
+    /**
+     * @test
+     */
+    public function dispatchTheRequestToTheViewDirectly()
     {
         $_GET['_event'] = 'foo';
-        $config = &new Piece_Unity_Config();
-        $context = &Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
+        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Unity_Config());
+        $dispatcher = new Piece_Unity_Plugin_Dispatcher_Simple();
+        $viewString = $dispatcher->invoke();
 
-        $this->assertEquals('foo', $dispatcher->invoke());
+        $this->assertEquals('foo', $viewString);
     }
 
-    function testDispatchingWithAction()
+    /**
+     * @test
+     */
+    public function dispatchTheRequestToTheAction()
     {
         $_GET['_event'] = 'SimpleExample';
         $GLOBALS['actionCalled'] = false;
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_cacheDirectory);
-        $context = &Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
+        $config = new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_exclusiveDirectory);
+        Piece_Unity_Context::singleton()->setConfiguration($config);
+        $dispatcher = new Piece_Unity_Plugin_Dispatcher_Simple();
+        $viewString = $dispatcher->invoke();
 
-        $this->assertEquals('SimpleExample', $dispatcher->invoke());
+        $this->assertEquals('SimpleExample', $viewString);
         $this->assertTrue($GLOBALS['actionCalled']);
-
-        unset($GLOBALS['actionCalled']);
     }
 
-    function testRelativePathVulnerability()
+    /**
+     * @test
+     */
+    public function removeRelativePathsFromTheEventName()
     {
         $_GET['_event'] = '../RelativePathVulnerability';
         $GLOBALS['actionCalled'] = false;
         $GLOBALS['RelativePathVulnerabilityActionLoaded'] = false;
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_cacheDirectory);
-        $context = &Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
+        $config = new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_exclusiveDirectory);
+        Piece_Unity_Context::singleton()->setConfiguration($config);
+        $dispatcher = new Piece_Unity_Plugin_Dispatcher_Simple();
+        $viewString = $dispatcher->invoke();
 
-        $this->assertEquals('../RelativePathVulnerability', $dispatcher->invoke());
+        $this->assertEquals('../RelativePathVulnerability', $viewString);
         $this->assertFalse($GLOBALS['actionCalled']);
         $this->assertFalse($GLOBALS['RelativePathVulnerabilityActionLoaded']);
-
-        unset($GLOBALS['actionCalled']);
-        unset($GLOBALS['RelativePathVulnerabilityActionLoaded']);
     }
 
     /**
+     * @test
      * @since Method available since Release 0.8.0
      */
-    function testSettingResultsAsViewElement()
+    public function setAValidationResultAsAViewElement()
     {
         $_GET['_event'] = 'SimpleValidation';
         $fields = array('first_name' => ' Foo ',
@@ -155,44 +160,41 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
             $_GET[$name] = $value;
         }
 
-        $context = &Piece_Unity_Context::singleton();
-        $validation = &$context->getValidation();
-        $validation->setConfigDirectory($this->_cacheDirectory);
-        $validation->setCacheDirectory($this->_cacheDirectory);
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_cacheDirectory);
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
+        $validation = $context->getValidation();
+        $validation->setConfigDirectory($this->_exclusiveDirectory);
+        $validation->setCacheDirectory($this->_exclusiveDirectory);
+        $config = new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_exclusiveDirectory);
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
+        $dispatcher = new Piece_Unity_Plugin_Dispatcher_Simple();
         $dispatcher->invoke();
 
-        $viewElement = &$context->getViewElement();
+        $viewElement = $context->getViewElement();
 
         $this->assertTrue($viewElement->hasElement('__ValidationResults'));
         $this->assertEquals($validation->getResults(), $viewElement->getElement('__ValidationResults'));
 
-        $user = &$context->getAttribute('user');
+        $user = $context->getAttribute('user');
         foreach ($fields as $field => $value) {
             $this->assertEquals(trim($value), $user->$field, $field);
         }
-
-        foreach (array_keys($fields) as $field) {
-            unset($_GET[$field]);
-        }
     }
 
     /**
+     * @test
      * @since Method available since Release 1.2.0
      */
-    function testDefaultEventShouldBeUsedIfEventNameIsEmptyString()
+    public function useTheDefaultEventIfTheGivenEventNameIsEmpty()
     {
         $_GET['_event'] = '';
-        $config = &new Piece_Unity_Config();
+        $config = new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Simple', 'useDefaultEvent', true);
         $config->setConfiguration('Dispatcher_Simple', 'defaultEventName', 'Index');
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
+        $dispatcher = new Piece_Unity_Plugin_Dispatcher_Simple();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Index', $viewString);
@@ -200,18 +202,18 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
     }
 
     /**
+     * @test
      * @since Method available since Release 1.2.0
      */
-    function testDefaultEventShouldBeUsedIfEventNameIsNull()
+    public function useTheDefaultEventIfTheGivenEventNameIsNull()
     {
         $_GET['_event'] = null;
-        $config = &new Piece_Unity_Config();
+        $config = new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Simple', 'useDefaultEvent', true);
         $config->setConfiguration('Dispatcher_Simple', 'defaultEventName', 'Index');
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
-        $dispatcher->invoke();
+        $dispatcher = new Piece_Unity_Plugin_Dispatcher_Simple();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Index', $viewString);
@@ -219,83 +221,68 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTestCase extends PHPUnit_TestCase
     }
 
     /**
+     * @test
      * @since Method available since Release 1.2.0
      */
-    function testDefaultEventShouldNotBeUsedIfEventNameIsNotEmptyStringOrNull()
+    public function notUseTheDefaultEventIfTheGivenEventNameIsNotEmptyOrNull()
     {
         $_GET['_event'] = 'Foo';
-        $config = &new Piece_Unity_Config();
+        $config = new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Simple', 'useDefaultEvent', true);
         $config->setConfiguration('Dispatcher_Simple', 'defaultEventName', 'Index');
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
+        $dispatcher = new Piece_Unity_Plugin_Dispatcher_Simple();
         $viewString = $dispatcher->invoke();
 
-        $this->assertFalse($viewString == 'Index');
         $this->assertEquals('Foo', $viewString);
         $this->assertEquals('Foo', $context->getEventName());
     }
 
     /**
+     * @test
      * @since Method available since Release 1.2.0
      */
-    function testDefaultEventShouldNotBeUsedIfUseDefaultEventIsFalse()
+    public function notUseTheDefaultEventIfTheOptionIsDisabled()
     {
         $_GET['_event'] = 'Foo';
-        $config = &new Piece_Unity_Config();
+        $config = new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Simple', 'useDefaultEvent', false);
         $config->setConfiguration('Dispatcher_Simple', 'defaultEventName', 'Index');
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
-        $dispatcher->invoke();
-        $eventName = $context->getEventName();
+        $dispatcher = new Piece_Unity_Plugin_Dispatcher_Simple();
+        $viewString = $dispatcher->invoke();
 
-        $this->assertFalse($eventName == 'Index');
-        $this->assertEquals('Foo', $eventName);
+        $this->assertEquals('Foo', $viewString);
         $this->assertEquals('Foo', $context->getEventName());
     }
 
     /**
+     * @test
      * @since Method available since Release 1.2.0
      */
-    function testDefaultEventShouldBeFalseIfUseDefaultEventIsNotGiven()
-    {
-        $_GET['_event'] = 'Foo';
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'useDefaultEvent', false);
-        $config->setConfiguration('Dispatcher_Simple', 'defaultEventName', 'Index');
-        $context = &Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
-        $dispatcher->invoke();
-        $eventName = $context->getEventName();
-
-        $this->assertFalse($eventName == 'Index');
-        $this->assertEquals('Foo', $eventName);
-        $this->assertEquals('Foo', $context->getEventName());
-    }
-
-    /**
-     * @since Method available since Release 1.2.0
-     */
-    function testActionShouldBeAbleToReturnViewString()
+    public function returnAnyViewStringWhichShouldBeRendered()
     {
         $_GET['_event'] = 'ActionShouldBeAbleToReturnViewString';
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_cacheDirectory);
-        $context = &Piece_Unity_Context::singleton();
+        $config = new Piece_Unity_Config();
+        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_exclusiveDirectory);
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
-        $dispatcher = &new Piece_Unity_Plugin_Dispatcher_Simple();
-        $dispatcher->invoke();
+        $dispatcher = new Piece_Unity_Plugin_Dispatcher_Simple();
         $viewString = $dispatcher->invoke();
         $eventName = $context->getEventName();
 
-        $this->assertFalse($viewString == $eventName);
+        $this->assertNotEquals($viewString, $eventName);
         $this->assertEquals('Foo', $viewString);
         $this->assertEquals('ActionShouldBeAbleToReturnViewString', $eventName);
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -32,11 +32,11 @@
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_Dispatcher_SimpleTestCase
- * @since      File available since Release 0.1.0
+ * @see        Piece_Unity_Plugin_Dispatcher_SimpleTest
+ * @since      File available since Release 0.8.0
  */
 
-// {{{ SimpleExampleAction
+// {{{ SimpleValidationAction
 
 /**
  * A class for unit tests.
@@ -45,16 +45,22 @@
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_Dispatcher_SimpleTestCase
- * @since      Class available since Release 0.1.0
+ * @see        Piece_Unity_Plugin_Dispatcher_SimpleTest
+ * @since      Class available since Release 0.8.0
  */
-class SimpleExampleAction
+class SimpleValidationAction
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -69,10 +75,20 @@ class SimpleExampleAction
      * @access public
      */
 
-    function invoke(&$context)
+    public function invoke(Piece_Unity_Context $context)
     {
-        $GLOBALS['actionCalled'] = true;
+        $user = new stdClass();
+        $context->setAttribute('user', $user);
+        $validation = $context->getValidation();
+        $validation->getConfiguration()->addValidation('email', 'Email');
+        $validation->validate('Validation', $user);
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

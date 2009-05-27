@@ -2,9 +2,9 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
- * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,32 +29,38 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_Dispatcher_SimpleTestCase
- * @since      File available since Release 0.8.0
+ * @see        Piece_Unity_Plugin_Dispatcher_SimpleTest
+ * @since      File available since Release 1.2.0
  */
 
-// {{{ SimpleValidationAction
+// {{{ ActionShouldBeAbleToReturnViewStringAction
 
 /**
  * A class for unit tests.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_Dispatcher_SimpleTestCase
- * @since      Class available since Release 0.8.0
+ * @see        Piece_Unity_Plugin_Dispatcher_SimpleTest
+ * @since      Class available since Release 1.2.0
  */
-class SimpleValidationAction
+class ActionShouldBeAbleToReturnViewStringAction
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -69,15 +75,16 @@ class SimpleValidationAction
      * @access public
      */
 
-    function invoke(&$context)
+    public function invoke(Piece_Unity_Context $context)
     {
-        $user = &new stdClass();
-        $context->setAttributeByRef('user', $user);
-        $validation = &$context->getValidation();
-        $config = &$validation->getConfiguration();
-        $config->addValidation('email', 'Email');
-        $validation->validate('Validation', $user);
+        return 'Foo';
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
