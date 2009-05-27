@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2007-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,15 +35,7 @@
  * @since      File available since Release 0.11.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
-require_once 'Piece/Unity/Plugin/View.php';
-
-// {{{ Piece_Unity_Plugin_ViewTestCase
+// {{{ Piece_Unity_Plugin_ViewTest
 
 /**
  * Some tests for Piece_Unity_Plugin_View.
@@ -54,13 +46,19 @@ require_once 'Piece/Unity/Plugin/View.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.11.0
  */
-class Piece_Unity_Plugin_ViewTestCase extends PHPUnit_TestCase
+class Piece_Unity_Plugin_ViewTest extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -75,36 +73,35 @@ class Piece_Unity_Plugin_ViewTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function tearDown()
-    {
-        Piece_Unity_Context::clear();
-    }
-
     /**
+     * @test
      * @since Method available since Release 0.12.0
      */
-    function testBuiltinElements()
+    public function provideBuiltinViewElements()
     {
-        $config = &new Piece_Unity_Config();
-        $context = &Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $view = &Piece_Unity_Plugin_Factory::factory('View');
-        $view->invoke();
-        $viewElement = &$context->getViewElement();
-        $elements = $viewElement->getElements();
+        $context = Piece_Unity_Context::singleton();
+        $context->setConfiguration(new Piece_Unity_Config());
+        Piece_Unity_Plugin_Factory::factory('View')->invoke();
+        $elements = $context->getViewElement()->getElements();
 
         $this->assertEquals(10, count($elements));
-        $this->assertTrue(array_key_exists('__request', $elements));
-        $this->assertTrue(array_key_exists('__session', $elements));
-        $this->assertTrue(array_key_exists('__eventNameKey', $elements));
-        $this->assertTrue(array_key_exists('__scriptName', $elements));
-        $this->assertTrue(array_key_exists('__basePath', $elements));
-        $this->assertTrue(array_key_exists('__sessionName', $elements));
-        $this->assertTrue(array_key_exists('__sessionID', $elements));
-        $this->assertTrue(array_key_exists('__appRootPath', $elements));
-        $this->assertTrue(array_key_exists('__url', $elements));
-        $this->assertTrue(array_key_exists('__uri', $elements));
+        $this->assertArrayHasKey('__request', $elements);
+        $this->assertArrayHasKey('__session', $elements);
+        $this->assertArrayHasKey('__eventNameKey', $elements);
+        $this->assertArrayHasKey('__scriptName', $elements);
+        $this->assertArrayHasKey('__basePath', $elements);
+        $this->assertArrayHasKey('__sessionName', $elements);
+        $this->assertArrayHasKey('__sessionID', $elements);
+        $this->assertArrayHasKey('__appRootPath', $elements);
+        $this->assertArrayHasKey('__url', $elements);
+        $this->assertArrayHasKey('__uri', $elements);
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

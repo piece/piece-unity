@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,10 +35,6 @@
  * @since      File available since Release 0.1.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/URI.php';
-
 // {{{ Piece_Unity_Plugin_View
 
 /**
@@ -63,6 +59,12 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -78,25 +80,23 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
     /**
      * Invokes the plugin specific code.
      */
-    function invoke()
+    public function invoke()
     {
 
         /*
          * Sets the Piece_Unity_Request object and the
          * Piece_Unity_Session object as built-in view elements.
          */
-        $viewElement = &$this->_context->getViewElement();
-        $request = &$this->_context->getRequest();
-        $viewElement->setElementByRef('__request', $request);
-        $session = &$this->_context->getSession();
-        $viewElement->setElementByRef('__session', $session);
-        $viewElement->setElement('__eventNameKey', $this->_context->getEventNameKey());
-        $viewElement->setElement('__scriptName', $this->_context->getScriptName());
-        $viewElement->setElement('__basePath', $this->_context->getBasePath());
+        $viewElement = $this->context->getViewElement();
+        $viewElement->setElement('__request', $this->context->getRequest());
+        $viewElement->setElement('__session', $this->context->getSession());
+        $viewElement->setElement('__eventNameKey', $this->context->getEventNameKey());
+        $viewElement->setElement('__scriptName', $this->context->getScriptName());
+        $viewElement->setElement('__basePath', $this->context->getBasePath());
         $viewElement->setElement('__sessionName', session_name());
         $viewElement->setElement('__sessionID', session_id());
-        $viewElement->setElement('__appRootPath', $this->_context->getAppRootPath());
-        $uri = &new Piece_Unity_URI();
+        $viewElement->setElement('__appRootPath', $this->context->getAppRootPath());
+        $uri = new Piece_Unity_URI();
         $viewElement->setElementByRef('__url', $uri); // deprecated
         $viewElement->setElementByRef('__uri', $uri);
 
@@ -104,12 +104,12 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
          * Overwrites the current view with another one which is specified by
          * forcedView configuration.
          */
-        $forcedView = $this->_getConfiguration('forcedView');
+        $forcedView = $this->getConfiguration('forcedView');
         if (!is_null($forcedView)) {
-            $this->_context->setView($forcedView);
+            $this->context->setView($forcedView);
         }
 
-        $config = &$this->_context->getConfiguration();
+        $config = $this->context->getConfiguration();
         $rendererExtension = $config->getExtension('View', 'renderer');
         if (strlen($rendererExtension)) {
             $config->setConfiguration('ViewSchemeHandler',
@@ -118,23 +118,29 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
                                       );
         }
 
-        $viewSchemeHandler = &$this->_getExtension('viewSchemeHandler');
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
+        $config->setExtension('View', 'renderer', $this->getExtension('viewSchemeHandler')->invoke());
+        $this->getExtension('renderer')->render();
+    }
 
-        $rendererExtension = $viewSchemeHandler->invoke();
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
+    /**#@-*/
 
-        $config->setExtension('View', 'renderer', $rendererExtension);
-        $renderer = &$this->_getExtension('renderer');
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
+    /**#@+
+     * @access protected
+     */
 
-        $renderer->invoke();
+    // }}}
+    // {{{ initialize()
+
+    /**
+     * Defines and initializes extension points and configuration points.
+     *
+     * @since Method available since Release 0.6.0
+     */
+    protected function initialize()
+    {
+        $this->addExtensionPoint('renderer');
+        $this->addConfigurationPoint('forcedView');
+        $this->addExtensionPoint('viewSchemeHandler', 'ViewSchemeHandler');
     }
 
     /**#@-*/
@@ -143,21 +149,6 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
      * @access private
      */
  
-    // }}}
-    // {{{ _initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
-     */
-    function _initialize()
-    {
-        $this->_addExtensionPoint('renderer');
-        $this->_addConfigurationPoint('forcedView');
-        $this->_addExtensionPoint('viewSchemeHandler', 'ViewSchemeHandler');
-    }
-
     /**#@-*/
 
     // }}}
