@@ -79,7 +79,7 @@ class Piece_Unity_Plugin_ControllerTest extends Piece_Unity_PHPUnit_TestCase
     public function overwriteTheViewWithAnArbitraryViewFromAnAction()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET['_event'] = 'ControllerTestCaseSpecifyingArbitraryViewInActionShouldWork';
+        $_GET['_event'] = 'ControllerTestSpecifyingArbitraryViewInActionShouldWork';
         $_SERVER['REQUEST_URI'] = '/foo.php';
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';

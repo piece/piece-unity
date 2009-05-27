@@ -36,7 +36,7 @@
  * @since      File available since Release 1.2.0
  */
 
-// {{{ ControllerTestCaseSpecifyingArbitraryViewInActionShouldWorkAction
+// {{{ ControllerTestSpecifyingArbitraryViewInActionShouldWorkAction
 
 /**
  * A class for unit tests.
@@ -48,7 +48,7 @@
  * @see        Piece_Unity_Plugin_ControllerTest
  * @since      Class available since Release 1.2.0
  */
-class ControllerTestCaseSpecifyingArbitraryViewInActionShouldWorkAction
+class ControllerTestSpecifyingArbitraryViewInActionShouldWorkAction
 {
 
     // {{{ properties
