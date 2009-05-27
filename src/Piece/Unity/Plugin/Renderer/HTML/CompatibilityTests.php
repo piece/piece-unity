@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,20 +35,6 @@
  * @since      File available since Release 0.2.0
  */
 
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'PHP/Compat.php';
-require_once 'PEAR/ErrorStack.php';
-
-PHP_Compat::loadFunction('scandir');
-
-// {{{ GLOBALS
-
-$GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings'] = false;
-
-// }}}
 // {{{ Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests
 
 /**
@@ -60,7 +46,7 @@ $GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings'] = fa
  * @version    Release: @package_version@
  * @since      Class available since Release 0.2.0
  */
-class Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests extends PHPUnit_TestCase
+abstract class Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -69,14 +55,22 @@ class Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests extends PHPUnit_TestCa
      * @access public
      */
 
+    public static $hasWarnings = false;
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
+
+    protected $target;
+    protected $exclusiveDirectory;
+
     /**#@-*/
 
     /**#@+
      * @access private
      */
-
-    var $_target;
-    var $_cacheDirectory;
 
     /**#@-*/
 
@@ -84,98 +78,117 @@ class Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests extends PHPUnit_TestCa
      * @access public
      */
 
-    function setUp()
+    public function setUp()
     {
-        $this->_doSetUp();
+        parent::setUp();
+        $this->doSetUp();
+        self::$hasWarnings = false;
     }
 
-    function tearDown()
+    public function tearDown()
     {
-        Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests::removeDirectoryRecursively("{$this->_cacheDirectory}/compiled-templates");
-        Piece_Unity_Plugin_Factory::clearInstances();
-        Piece_Unity_Context::clear();
+        Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests::_removeDirectoryRecursively("{$this->exclusiveDirectory}/compiled-templates");
     }
 
-    function testRendering()
+    /**
+     * @test
+     */
+    public function renderTheContents()
     {
-        $context = &Piece_Unity_Context::singleton();
-        $context->setView("{$this->_target}Example");
-        $viewElement = &$context->getViewElement();
-        $viewElement->setElement('content', 'This is a dynamic content.');
-        $config = &$this->_getConfig();
-        $context->setConfiguration($config);
+        $context = Piece_Unity_Context::singleton();
+        $context->setView($this->target . 'Example');
+        $context->getViewElement()->setElement('content', 'This is a dynamic content.');
+        $context->setConfiguration($this->getConfig());
 
-        $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $this->_render());
+        $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $this->render());
     }
 
-    function testRelativePathVulnerability()
+    /**
+     * @test
+     */
+    public function removeRelativePaths()
     {
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setView('../RelativePathVulnerability');
-        $viewElement = &$context->getViewElement();
-        $viewElement->setElement('content', 'This is a dynamic content.');
-        $config = &$this->_getConfig();
-        $context->setConfiguration($config);
+        $context->getViewElement()->setElement('content', 'This is a dynamic content.');
+        $context->setConfiguration($this->getConfig());
+
         set_error_handler(create_function('$code, $message, $file, $line', "
 if (\$code == E_USER_WARNING) {
-    \$GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings'] = true;
+    Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests::\$hasWarnings = true;
 }
 "));
-        $output = $this->_render();
-        restore_error_handler();
 
-        $this->assertEquals('', $output);
-        $this->assertTrue($GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings']);
+        try {
+            $this->render();
+            restore_error_handler();
 
-        $GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings'] = false;
+            $this->fail('An expected exception has not been raised');
+        } catch (Piece_Unity_Service_Rendering_NotFoundException $e) {
+            $this->assertTrue(self::$hasWarnings);
+
+            restore_error_handler();
+        }
     }
 
-    function testKeepingReference()
+    /**
+     * @test
+     */
+    public function keepReferences()
     {
-        $context = &Piece_Unity_Context::singleton();
-        $context->setView("{$this->_target}KeepingReference");
-        $foo = &new stdClass();
-        $viewElement = &$context->getViewElement();
-        $viewElement->setElementByRef('foo', $foo);
-        $config = &$this->_getConfig();
+        $context = Piece_Unity_Context::singleton();
+        $context->setView($this->target . 'KeepingReference');
+        $foo = array();
+        $context->getViewElement()->setElementByRef('foo', $foo);
+        $config = $this->getConfig();
         $context->setConfiguration($config);
-        $this->_render();
+        $this->render();
 
-        $this->assertTrue(array_key_exists('bar', $foo));
-        $this->assertEquals('baz', $foo->bar);
+        $this->assertArrayHasKey('bar', $foo);
+        $this->assertEquals('baz', $foo['bar']);
     }
 
-    function testNonExistingTemplate()
+    /**
+     * @test
+     */
+    public function raiseAnExceptionIfTheTemplateIsNotFound()
     {
-        $context = &Piece_Unity_Context::singleton();
-        $context->setView("{$this->_target}NonExistingView");
-        $config = &$this->_getConfig();
-        $context->setConfiguration($config);
+        $context = Piece_Unity_Context::singleton();
+        $context->setView('NonExistingView');
+        $context->setConfiguration($this->getConfig());
         set_error_handler(create_function('$code, $message, $file, $line', "
 if (\$code == E_USER_WARNING) {
-    \$GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings'] = true;
+    Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests::\$hasWarnings = true;
 }
 "));
-        $this->_render();
-        restore_error_handler();
 
-        $this->assertTrue($GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings']);
+        try {
+            $this->render();
+            restore_error_handler();
 
-        $GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings'] = false;
+            $this->fail('An expected exception has not been raised');
+        } catch (Piece_Unity_Service_Rendering_NotFoundException $e) {
+            $this->assertTrue(self::$hasWarnings);
+
+            restore_error_handler();
+        }
     }
 
-    function testLayout()
+    /**
+     * @test
+     */
+    public function renderTheContentsWithTheLayout()
     {
-        $context = &Piece_Unity_Context::singleton();
-        $context->setView("{$this->_target}LayoutContent");
-        $viewElement = &$context->getViewElement();
+        $context = Piece_Unity_Context::singleton();
+        $context->setView($this->target . 'LayoutContent');
+        $viewElement = $context->getViewElement();
         $viewElement->setElement('foo', 'This is an element for the content.');
         $viewElement->setElement('bar', 'This is an element for the layout.');
-        $config = &$this->_getConfig();
-        $config->setConfiguration("Renderer_{$this->_target}", 'useLayout', true);
-        $config->setConfiguration("Renderer_{$this->_target}", 'layoutView', "{$this->_target}Layout");
-        $config->setConfiguration("Renderer_{$this->_target}", 'layoutDirectory', "{$this->_cacheDirectory}/templates/Layout");
-        $config->setConfiguration("Renderer_{$this->_target}", 'layoutCompileDirectory', "{$this->_cacheDirectory}/compiled-templates/Layout");
+        $config = $this->getConfig();
+        $config->setConfiguration('Renderer_' . $this->target, 'useLayout', true);
+        $config->setConfiguration('Renderer_' . $this->target, 'layoutView', $this->target . 'Layout');
+        $config->setConfiguration('Renderer_' . $this->target, 'layoutDirectory', $this->exclusiveDirectory . '/templates/Layout');
+        $config->setConfiguration('Renderer_' . $this->target, 'layoutCompileDirectory', $this->exclusiveDirectory . '/compiled-templates/Layout');
         $context->setConfiguration($config);
 
         $this->assertEquals('<html>
@@ -183,15 +196,21 @@ if (\$code == E_USER_WARNING) {
     <h1>This is an element for the layout.</h1>
     This is an element for the content.
   </body>
-</html>', trim($this->_render()));
+</html>', trim($this->render()));
     }
 
-    function testTurnOffLayoutByHTTPAcceptSuccess()
+    /**
+     * @test
+     */
+    public function turnOffTheLayoutIfEnabled()
     {
         $this->_assertTurnOffLayoutByHTTPAccept(true, 'This is an element for the content.');
     }
 
-    function testTurnOffLayoutByHTTPAcceptFailure()
+    /**
+     * @test
+     */
+    public function notTurnOffTheLayoutIfDisabled()
     {
         $this->_assertTurnOffLayoutByHTTPAccept(false, '<html>
   <body>
@@ -201,25 +220,28 @@ if (\$code == E_USER_WARNING) {
 </html>');
     }
 
-    function testFallback()
+    /**
+     * @test
+     */
+    public function renderTheFallbackViewIfEnabled()
     {
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setView('NonExistingView');
-        $viewElement = &$context->getViewElement();
+        $viewElement = $context->getViewElement();
         $viewElement->setElement('content', 'This is a dynamic content.');
-        $config = &$this->_getConfig();
-        $config->setConfiguration("Renderer_{$this->_target}", 'useFallback', true);
-        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackView', 'Fallback');
-        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackDirectory', "{$this->_cacheDirectory}/templates/Fallback");
-        $config->setConfiguration("Renderer_{$this->_target}", 'fallbackCompileDirectory', "{$this->_cacheDirectory}/compiled-templates/Fallback");
+        $config = $this->getConfig();
+        $config->setConfiguration('Renderer_' . $this->target, 'useFallback', true);
+        $config->setConfiguration('Renderer_' . $this->target, 'fallbackView', 'Fallback');
+        $config->setConfiguration('Renderer_' . $this->target, 'fallbackDirectory', $this->exclusiveDirectory . '/templates/Fallback');
+        $config->setConfiguration('Renderer_' . $this->target, 'fallbackCompileDirectory', $this->exclusiveDirectory . '/compiled-templates/Fallback');
         $context->setConfiguration($config);
 
         set_error_handler(create_function('$code, $message, $file, $line', "
 if (\$code == E_USER_WARNING) {
-    \$GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings'] = true;
+    Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests::\$hasWarnings = true;
 }
 "));
-        $output = $this->_render();
+        $output = $this->render();
         restore_error_handler();
 
         $this->assertEquals('<html>
@@ -227,31 +249,85 @@ if (\$code == E_USER_WARNING) {
     <p>This is a test for fallback.</p>
   </body>
 </html>', rtrim($output));
-        $this->assertFalse(Piece_Unity_Error::hasErrors());
-        $this->assertTrue($GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings']);
+        $this->assertTrue(self::$hasWarnings);
 
-        $GLOBALS['PIECE_UNITY_Plugin_Renderer_HTML_CompatibilityTests_hasWarnings'] = false;
     }
 
     /**
+     * @test
      * @since Method available since Release 1.3.0
      */
-    function testUnderScoresInViewStringShouldBeUsedAsDirectorySeparators()
+    public function useAnUnderScoreAsADirectorySeparatorInTheViewString()
     {
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setView('Foo_Bar_Baz');
-        $viewElement = &$context->getViewElement();
-        $viewElement->setElement('content', 'This is a dynamic content.');
-        $config = &$this->_getConfigForLayeredStructure();
+        $context->getViewElement()->setElement('content', 'This is a dynamic content.');
+        $config = $this->getConfigForLayeredStructure();
         $context->setConfiguration($config);
 
-        $this->assertEquals('Hello, World!', rtrim($this->_render()));
+        $this->assertEquals('Hello, World!', rtrim($this->render()));
+    }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
+
+    abstract protected function getConfig();
+
+    /**
+     * @since Method available since Release 1.0.0
+     */
+    protected function render()
+    {
+        ob_start();
+        Piece_Unity_Plugin_Factory::factory('Renderer_' . $this->target)->render();
+        $buffer = ob_get_contents();
+        ob_end_clean();
+
+        return $buffer;
+    }
+
+    /**
+     * @since Method available since Release 1.0.0
+     */
+    abstract protected function doSetUp();
+
+    /**
+     * @since Method available since Release 1.3.0
+     */
+    abstract protected function getConfigForLayeredStructure();
+
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
+
+    private function _assertTurnOffLayoutByHTTPAccept($turnOffLayoutByHTTPAccept, $result)
+    {
+        $context = Piece_Unity_Context::singleton();
+        $context->setView($this->target . 'LayoutContent');
+        $viewElement = $context->getViewElement();
+        $viewElement->setElement('foo', 'This is an element for the content.');
+        $viewElement->setElement('bar', 'This is an element for the layout.');
+        $config = $this->getConfig();
+        $config->setConfiguration('Renderer_' . $this->target, 'turnOffLayoutByHTTPAccept', $turnOffLayoutByHTTPAccept);
+        $config->setConfiguration('Renderer_' . $this->target, 'useLayout', true);
+        $config->setConfiguration('Renderer_' . $this->target, 'layoutView', $this->target . 'Layout');
+        $config->setConfiguration('Renderer_' . $this->target, 'layoutDirectory', $this->exclusiveDirectory . '/templates/Layout');
+        $config->setConfiguration('Renderer_' . $this->target, 'layoutCompileDirectory', $this->exclusiveDirectory . '/compiled-templates/Layout');
+        $context->setConfiguration($config);
+        $_SERVER['HTTP_ACCEPT'] = 'application/x-piece-html-fragment';
+
+        $this->assertEquals($result, rtrim($this->render()));
     }
 
     /**
      * @since Method available since Release 1.3.0
      */
-    function removeDirectoryRecursively($directory, $rootDirectory = null)
+    private static function _removeDirectoryRecursively($directory, $rootDirectory = null)
     {
         if (is_null($rootDirectory)) {
             $rootDirectory = $directory;
@@ -270,10 +346,10 @@ if (\$code == E_USER_WARNING) {
                 continue;
             }
 
-            $file = "$directory/$file";
+            $file = $directory . '/' . $file;
 
             if (is_dir($file)) {
-                Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests::removeDirectoryRecursively($file, $rootDirectory);
+                Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests::_removeDirectoryRecursively($file, $rootDirectory);
             } elseif (is_file($file) && substr(basename($file), 0, 1) != '.') {
                 @unlink($file);
             }
@@ -283,60 +359,6 @@ if (\$code == E_USER_WARNING) {
             @rmdir($directory);
         }
     }
-
-    /**#@-*/
-
-    /**#@+
-     * @access private
-     */
-
-    function &_getConfig() {}
-
-    function _assertTurnOffLayoutByHTTPAccept($turnOffLayoutByHTTPAccept, $result)
-    {
-        $context = &Piece_Unity_Context::singleton();
-        $context->setView("{$this->_target}LayoutContent");
-        $viewElement = &$context->getViewElement();
-        $viewElement->setElement('foo', 'This is an element for the content.');
-        $viewElement->setElement('bar', 'This is an element for the layout.');
-        $config = &$this->_getConfig();
-        $config->setConfiguration("Renderer_{$this->_target}", 'turnOffLayoutByHTTPAccept', $turnOffLayoutByHTTPAccept);
-        $config->setConfiguration("Renderer_{$this->_target}", 'useLayout', true);
-        $config->setConfiguration("Renderer_{$this->_target}", 'layoutView', "{$this->_target}Layout");
-        $config->setConfiguration("Renderer_{$this->_target}", 'layoutDirectory', "{$this->_cacheDirectory}/templates/Layout");
-        $config->setConfiguration("Renderer_{$this->_target}", 'layoutCompileDirectory', "{$this->_cacheDirectory}/compiled-templates/Layout");
-        $context->setConfiguration($config);
-        $_SERVER['HTTP_ACCEPT'] = 'application/x-piece-html-fragment';
-
-        $this->assertEquals($result, rtrim($this->_render()));
-
-        unset($_SERVER['HTTP_ACCEPT']);
-    }
-
-    /**
-     * @since Method available since Release 1.0.0
-     */
-    function _render()
-    {
-        $renderer = &Piece_Unity_Plugin_Factory::factory("Renderer_{$this->_target}");
-        ob_start();
-        $renderer->invoke();
-        $buffer = ob_get_contents();
-        ob_end_clean();
-
-        return $buffer;
-    }
-
-    /**
-     * @since Method available since Release 1.0.0
-     */
-    function _doSetUp() {}
-
-    /**
-     * @abstract
-     * @since Method available since Release 1.3.0
-     */
-    function &_getConfigForLayeredStructure() {}
 
     /**#@-*/
 
