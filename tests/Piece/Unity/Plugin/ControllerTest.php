@@ -73,21 +73,6 @@ class Piece_Unity_Plugin_ControllerTest extends Piece_Unity_PHPUnit_TestCase
      * @access public
      */
 
-    /* public function setUp() */
-    /* { */
-    /*     parent::setUp(); */
-    /*     $_SERVER['REQUEST_METHOD'] = 'GET'; */
-    /*     $this->_exclusiveDirectory = ; */
-    /* } */
-
-    /* function tearDown() */
-    /* { */
-    /*     unset($_SESSION); */
-    /*     Piece_Unity_Context::clear(); */
-    /*     unset($_GET['_event']); */
-    /*     unset($_SERVER['REQUEST_METHOD']); */
-    /* } */
-
     /**
      * @test
      */
@@ -95,7 +80,6 @@ class Piece_Unity_Plugin_ControllerTest extends Piece_Unity_PHPUnit_TestCase
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_event'] = 'ControllerTestCaseSpecifyingArbitraryViewInActionShouldWork';
-        /* $oldScriptName = $_SERVER['REQUEST_URI']; */
         $_SERVER['REQUEST_URI'] = '/foo.php';
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
@@ -108,10 +92,6 @@ class Piece_Unity_Plugin_ControllerTest extends Piece_Unity_PHPUnit_TestCase
         $controller->invoke();
 
         $this->assertEquals('http://example.org/', $context->getView());
-
-        /* $_SERVER['REQUEST_URI'] = $oldScriptName; */
-        /* unset($_SERVER['SERVER_PORT']); */
-        /* unset($_SERVER['SERVER_NAME']); */
     }
 
     /**#@-*/
