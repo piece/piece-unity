@@ -35,7 +35,7 @@
  * @since      File available since Release 2.0.0dev1
  */
 
-// {{{ Piece_Unity_ClassLoader_Exception
+// {{{ Piece_Unity_ClassLoader_NotFoundException
 
 /**
  * An exception class for the Piece_Unity package.
@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 2.0.0dev1
  */
-class Piece_Unity_ClassLoader_Exception extends Piece_Unity_Exception {}
+class Piece_Unity_ClassLoader_NotFoundException extends Piece_Unity_Exception {}
 
 // }}}
 

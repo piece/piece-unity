@@ -81,7 +81,7 @@ class Piece_Unity_ClassLoader
      *
      * @param string $class
      * @param string $directory
-     * @throws Piece_Unity_ClassLoader_Exception
+     * @throws Piece_Unity_ClassLoader_NotFoundException
      * @throws Piece_Unity_Exception
      */
     public static function load($class, $directory = null)
@@ -92,7 +92,7 @@ class Piece_Unity_ClassLoader
             $file = "$directory/$file";
 
             if (!file_exists($file)) {
-                throw new Piece_Unity_ClassLoader_Exception("The class file [ $file ] for the class [ $class ] is not found");
+                throw new Piece_Unity_ClassLoader_NotFoundException("The class file [ $file ] for the class [ $class ] is not found");
             }
 
             if (!is_readable($file)) {
