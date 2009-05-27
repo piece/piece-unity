@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -32,31 +32,35 @@
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
- * @since      File available since Release 0.8.0
+ * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTest
+ * @since      File available since Release 0.1.0
  */
 
-require_once 'Piece/Unity/Service/FlowAction.php';
-
-// {{{ ContinuationValidationAction
+// {{{ CounterAction
 
 /**
- * An action class for ContinuationValidation.
+ * A class for unit tests.
  *
  * @package    Piece_Unity
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
- * @since      Class available since Release 0.8.0
+ * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTest
+ * @since      Class available since Release 0.1.0
  */
-class ContinuationValidationAction extends Piece_Unity_Service_FlowAction
+class CounterAction extends Piece_Unity_Service_FlowAction
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -71,20 +75,30 @@ class ContinuationValidationAction extends Piece_Unity_Service_FlowAction
      * @access public
      */
 
-    function validate()
+    public function setup()
     {
-        $user = &new stdClass();
-        $this->_context->setAttributeByRef('user', $user);
-        $validation = &$this->_context->getValidation();
-        $config = &$validation->getConfiguration();
-        $config->addValidation('email', 'Email');
-
-        if ($validation->validate('Validation', $user)) {
-            return 'goDisplaySuccess';
-        } else {
-            return 'goDisplayFailure';
+        if (!$this->flow->hasAttribute('counter')) {
+            $this->flow->setAttribute('counter', 0);
         }
     }
+
+    public function increase()
+    {
+        $counter = $this->flow->getAttribute('counter') + 1;
+        $this->flow->setAttribute('counter', $counter);
+
+        if ($counter < 3) {
+            return 'succeed';
+        }
+
+        return 'finish';
+    }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

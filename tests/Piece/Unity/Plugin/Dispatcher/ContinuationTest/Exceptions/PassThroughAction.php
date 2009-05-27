@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2008-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -32,12 +32,9 @@
  * @copyright  2008-2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
+ * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTest
  * @since      File available since Release 0.1.0
  */
-
-require_once 'Piece/Unity/Service/FlowAction.php';
-require_once 'PEAR/ErrorStack.php';
 
 // {{{ Exceptions_PassThroughAction
 
@@ -48,7 +45,7 @@ require_once 'PEAR/ErrorStack.php';
  * @copyright  2008-2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
+ * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTest
  * @since      Class available since Release 0.1.0
  */
 class Exceptions_PassThroughAction extends Piece_Unity_Service_FlowAction
@@ -63,6 +60,12 @@ class Exceptions_PassThroughAction extends Piece_Unity_Service_FlowAction
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -72,10 +75,16 @@ class Exceptions_PassThroughAction extends Piece_Unity_Service_FlowAction
      * @access public
      */
 
-    function doActivityOnDisplayNew()
+    public function doActivityOnDisplayNew()
     {
-        PEAR_ErrorStack::staticPush('Exceptions_PassThrough', -1, 'exception');
+        throw new Piece_Unity_Plugin_Dispatcher_ContinuationTest_Exceptions_PassThrough_Exception();
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

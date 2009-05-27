@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -32,7 +32,7 @@
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
+ * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTest
  * @since      File available since Release 0.1.0
  */
 

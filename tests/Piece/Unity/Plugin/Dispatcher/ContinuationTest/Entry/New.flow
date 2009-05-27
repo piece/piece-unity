@@ -1,5 +1,3 @@
-# $Id: Counter.yaml 976 2007-08-21 16:17:47Z iteman $
-
 firstState: DisplayNew
 
 viewState:
@@ -8,3 +6,10 @@ viewState:
     view: New
     activity:
       method: doActivityOnDisplayNew
+
+# Local Variables:
+# mode: conf-colon
+# coding: iso-8859-1
+# tab-width: 2
+# indent-tabs-mode: nil
+# End:

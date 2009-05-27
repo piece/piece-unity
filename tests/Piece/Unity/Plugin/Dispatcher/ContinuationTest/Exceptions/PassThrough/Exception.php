@@ -2,9 +2,9 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
- * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,77 +29,26 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
- * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
- * @since      File available since Release 0.1.0
+ * @copyright  2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
+ * @version    Release: @package_version@
+ * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTest
+ * @since      File available since Release 2.0.0dev1
  */
 
-require_once 'Piece/Unity/Service/FlowAction.php';
-
-// {{{ CounterAction
+// {{{ Piece_Unity_Plugin_Dispatcher_ContinuationTest_Exceptions_PassThrough_Exception
 
 /**
- * An action class for Counter.
+ * A class for unit tests.
  *
  * @package    Piece_Unity
- * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
+ * @copyright  2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
- * @since      Class available since Release 0.1.0
+ * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTest
+ * @since      Class available since Release 2.0.0dev1
  */
-class CounterAction extends Piece_Unity_Service_FlowAction
-{
-
-    // {{{ properties
-
-    /**#@+
-     * @access public
-     */
-
-    /**#@-*/
-
-    /**#@+
-     * @access private
-     */
-
-    /**#@-*/
-
-    /**#@+
-     * @access public
-     */
-
-    function setup()
-    {
-        if (!$this->_flow->hasAttribute('counter')) {
-            $this->_flow->setAttribute('counter', 0);
-        }
-    }
-
-    function increase()
-    {
-        $counter = $this->_flow->getAttribute('counter') + 1;
-        $this->_flow->setAttribute('counter', $counter);
-
-        if ($counter < 3) {
-            return 'succeed';
-        }
-
-        return 'finish';
-    }
-
-    /**#@-*/
-
-    /**#@+
-     * @access private
-     */
-
-    /**#@-*/
-
-    // }}}
-}
+class Piece_Unity_Plugin_Dispatcher_ContinuationTest_Exceptions_PassThrough_Exception extends Exception {}
 
 // }}}
 

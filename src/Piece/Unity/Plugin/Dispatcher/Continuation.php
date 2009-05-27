@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -36,25 +36,6 @@
  * @since      File available since Release 0.1.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Flow/Continuation/Server.php';
-require_once 'Piece/Flow/Action/Factory.php';
-require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Flow/Error.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/Service/Continuation.php';
-
-// {{{ constants
-
-define('PIECE_UNITY_CONTINUATION_SESSIONKEY', '_continuation');
-
-// }}}
-// {{{ GLOBALS
-
-$GLOBALS['PIECE_UNITY_Continuation_FlowIDKey'] = null;
-$GLOBALS['PIECE_UNITY_Continuation_FlowID'] = null;
-
-// }}}
 // {{{ Piece_Unity_Plugin_Dispatcher_Continuation
 
 /**
@@ -82,10 +63,19 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
-    var $_continuationServer;
+    private $_continuationServer;
+    private static $_sessionKey = '_continuation';
+    private static $_flowIDKey;
+    private static $_flowID;
 
     /**#@-*/
 
@@ -100,55 +90,31 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      * Invokes the plugin specific code.
      *
      * @return string
-     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
+     * @throws Stagehand_LegacyError_PEARErrorStack_Exception
      */
-    function invoke()
+    public function invoke()
     {
         $this->_prepareContinuation();
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
 
-        Piece_Flow_Error::disableCallback();
-        $flowExecutionTicket = $this->_continuationServer->invoke($this->_context, $this->_getConfiguration('bindActionsWithFlowExecution'));
-        Piece_Flow_Error::enableCallback();
-        if (Piece_Flow_Error::hasErrors()) {
-            $error = Piece_Flow_Error::pop();
-            if ($error['code'] == PIECE_FLOW_ERROR_FLOW_EXECUTION_EXPIRED) {
-                if ($this->_getConfiguration('useGCFallback')) {
-                    $session = &$this->_context->getSession();
+        try {
+            $flowExecutionTicket = $this->_continuationServer->invoke($this->context, $this->getConfiguration('bindActionsWithFlowExecution'));
+            $viewString = $this->_continuationServer->getView();
+        } catch (Stagehand_LegacyError_PEARErrorStack_Exception $e) {
+            if ($e->getCode() == PIECE_FLOW_ERROR_FLOW_EXECUTION_EXPIRED) {
+                if ($this->getConfiguration('useGCFallback')) {
+                    $session = $this->context->getSession();
                     $session->setAttribute('_flowExecutionExpired', true);
-                    $this->_context->sendHTTPStatus(302);
-                    return $this->_getConfiguration('gcFallbackURI');
+                    $this->context->sendHTTPStatus(302);
+                    return $this->getConfiguration('gcFallbackURI');
                 }
             }
 
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    "Failed to invoke the plugin [ {$this->_name} ] for any reasons.",
-                                    'exception',
-                                    array(),
-                                    $error
-                                    );
-            return;
+            throw $e;
         }
 
-        Piece_Flow_Error::disableCallback();
-        $viewString = $this->_continuationServer->getView();
-        Piece_Flow_Error::enableCallback();
-        if (Piece_Flow_Error::hasErrors()) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    "Failed to invoke the plugin [ {$this->_name} ] for any reasons.",
-                                    'exception',
-                                    array(),
-                                    Piece_Flow_Error::pop()
-                                    );
-            return;
-        }
+        $this->context->getViewElement()->setElement('__flowExecutionTicket', $flowExecutionTicket);
 
-        $viewElement = &$this->_context->getViewElement();
-        $viewElement->setElement('__flowExecutionTicket', $flowExecutionTicket);
-
-        $session = &$this->_context->getSession();
+        $session = $this->context->getSession();
         $session->setPreloadCallback('_Dispatcher_Continuation_ActionLoader', array(__CLASS__, 'loadAction'));
         foreach (array_keys(Piece_Flow_Action_Factory::getInstances())
                  as $actionClass
@@ -159,7 +125,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
                                       );
         }
 
-        if (!$this->_getConfiguration('useFlowMappings')) {
+        if (!$this->getConfiguration('useFlowMappings')) {
             return $viewString;
         }
 
@@ -173,12 +139,10 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      * Gets an event name.
      *
      * @return string
-     * @static
      */
-    function getEventName()
+    public static function getEventName()
     {
-        $context = &Piece_Unity_Context::singleton();
-        return $context->getEventName();
+        return Piece_Unity_Context::singleton()->getEventName();
     }
 
     // }}}
@@ -188,12 +152,10 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      * Gets a flow execution ticket.
      *
      * @return string
-     * @static
      */
-    function getFlowExecutionTicket()
+    public static function getFlowExecutionTicket()
     {
-        $context = &Piece_Unity_Context::singleton();
-        $request = &$context->getRequest();
+        $request = Piece_Unity_Context::singleton()->getRequest();
         return $request->hasParameter(Piece_Unity_Service_Continuation::getFlowExecutionTicketKey()) ? $request->getParameter(Piece_Unity_Service_Continuation::getFlowExecutionTicketKey()) : null;
     }
 
@@ -204,17 +166,15 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      * Gets a flow ID.
      *
      * @return string
-     * @static
      */
-    function getFlowID()
+    public static function getFlowID()
     {
-        if (!is_null($GLOBALS['PIECE_UNITY_Continuation_FlowID'])) {
-            return $GLOBALS['PIECE_UNITY_Continuation_FlowID'];
+        if (!is_null(self::$_flowID)) {
+            return self::$_flowID;
         }
 
-        $context = &Piece_Unity_Context::singleton();
-        $request = &$context->getRequest();
-        return $request->hasParameter($GLOBALS['PIECE_UNITY_Continuation_FlowIDKey']) ? $request->getParameter($GLOBALS['PIECE_UNITY_Continuation_FlowIDKey']) : null;
+        $request = Piece_Unity_Context::singleton()->getRequest();
+        return $request->hasParameter(self::$_flowIDKey) ? $request->getParameter(self::$_flowIDKey) : null;
     }
 
     // }}}
@@ -225,9 +185,8 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      *
      * @param string $class
      * @param string $flowID
-     * @static
      */
-    function loadAction($class, $flowID)
+    public static function loadAction($class, $flowID)
     {
         if ($flowID == Piece_Unity_Plugin_Dispatcher_Continuation::getFlowID()) {
             Piece_Flow_Action_Factory::load($class);
@@ -243,18 +202,68 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      *
      * @since Method available since Release 0.9.0
      */
-    function publish()
+    public function publish()
     {
         if (is_null($this->_continuationServer)) {
             $this->_prepareContinuation();
-            if (Piece_Unity_Error::hasErrors()) {
-                return;
-            }
         }
 
-        $continuationService = &$this->_context->getContinuation();
-        $viewElement = &$this->_context->getViewElement();
-        $viewElement->setElementByRef('__continuation', $continuationService);
+        $this->context->getViewElement()->setElement('__continuation', $this->context->getContinuation());
+    }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
+
+    // }}}
+    // {{{ initialize()
+
+    /**
+     * Defines and initializes extension points and configuration points.
+     *
+     * @since Method available since Release 0.6.0
+     */
+    protected function initialize()
+    {
+        $this->addConfigurationPoint('actionDirectory');
+        $this->addConfigurationPoint('enableSingleFlowMode', false); // deprecated
+        $this->addConfigurationPoint('cacheDirectory');
+        $this->addConfigurationPoint('flowDefinitions', array()); // deprecated
+        $this->addConfigurationPoint('flowExecutionTicketKey',
+                                      '_flowExecutionTicket'
+                                      );
+        $this->addConfigurationPoint('flowNameKey', '_flow'); // deprecated
+        $this->addConfigurationPoint('flowName');             // deprecated
+        $this->addConfigurationPoint('bindActionsWithFlowExecution', true);
+        $this->addConfigurationPoint('enableGC', false);
+        $this->addConfigurationPoint('gcExpirationTime', 1440);
+        $this->addConfigurationPoint('useGCFallback', false);
+        $this->addConfigurationPoint('gcFallbackURL'); // deprecated
+        $this->addConfigurationPoint('useFlowMappings', false);
+        $this->addConfigurationPoint('flowMappings', array());
+        $this->addConfigurationPoint('configDirectory');
+        $this->addConfigurationPoint('configExtension', '.flow');
+        $this->addConfigurationPoint('useFullFlowNameAsViewPrefix', true);
+        $this->addConfigurationPoint('gcFallbackURI', $this->getConfiguration('gcFallbackURL'));
+
+        Piece_Unity_Service_Continuation::setFlowExecutionTicketKey($this->getConfiguration('flowExecutionTicketKey'));
+        self::$_flowIDKey = $this->getConfiguration('flowNameKey');
+
+        if ($this->getConfiguration('useFlowMappings')) {
+            self::$_flowID = $this->context->getOriginalScriptName();
+        } else {
+            self::$_flowID = $this->getConfiguration('flowName');
+        }
+
+        Piece_Flow_Action_Factory::setActionDirectory($this->getConfiguration('actionDirectory'));
+
+        $viewElement = $this->context->getViewElement();
+        $viewElement->setElement('__flowExecutionTicketKey',
+                                 Piece_Unity_Service_Continuation::getFlowExecutionTicketKey()
+                                 );
+        $viewElement->setElement('__flowNameKey', self::$_flowIDKey); // deprecated
     }
 
     /**#@-*/
@@ -272,119 +281,41 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      * @return Piece_Flow_Continuation_Server
      * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
      */
-    function &_createContinuationServer()
+    private function _createContinuationServer()
     {
         $continuationServer =
-            &new Piece_Flow_Continuation_Server($this->_getConfiguration('enableSingleFlowMode'),
-                                                $this->_getConfiguration('enableGC'),
-                                                $this->_getConfiguration('gcExpirationTime')
-                                                );
-        $continuationServer->setCacheDirectory($this->_getConfiguration('cacheDirectory'));
+            new Piece_Flow_Continuation_Server($this->getConfiguration('enableSingleFlowMode'),
+                                               $this->getConfiguration('enableGC'),
+                                               $this->getConfiguration('gcExpirationTime')
+                                               );
+        $continuationServer->setCacheDirectory($this->getConfiguration('cacheDirectory'));
         $continuationServer->setEventNameCallback(array(__CLASS__, 'getEventName'));
         $continuationServer->setFlowExecutionTicketCallback(array(__CLASS__, 'getFlowExecutionTicket'));
         $continuationServer->setFlowIDCallback(array(__CLASS__, 'getFlowID'));
 
-        if ($this->_getConfiguration('useFlowMappings')) {
-            $continuationServer->setConfigDirectory($this->_getConfiguration('configDirectory'));
-            $continuationServer->setConfigExtension($this->_getConfiguration('configExtension'));
-            foreach ($this->_getConfiguration('flowMappings') as $flowMapping) {
+        if ($this->getConfiguration('useFlowMappings')) {
+            $continuationServer->setConfigDirectory($this->getConfiguration('configDirectory'));
+            $continuationServer->setConfigExtension($this->getConfiguration('configExtension'));
+            foreach ($this->getConfiguration('flowMappings') as $flowMapping) {
                 if (array_key_exists('url', $flowMapping)) {
                     $flowMapping['uri'] = $flowMapping['url'];
                 }
 
-                Piece_Flow_Error::disableCallback();
                 $continuationServer->addFlow($flowMapping['uri'],
                                              $flowMapping['flowName'],
                                              $flowMapping['isExclusive']
                                              );
-                Piece_Flow_Error::enableCallback();
-                if (Piece_Flow_Error::hasErrors()) {
-                    Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                            "Failed to configure the plugin [ {$this->_name}.",
-                                            'exception',
-                                            array(),
-                                            Piece_Flow_Error::pop()
-                                            );
-                    $return = null;
-                    return $return;
-                }
             }
         } else {
-            foreach ($this->_getConfiguration('flowDefinitions') as $flowDefinition) {
-                Piece_Flow_Error::disableCallback();
+            foreach ($this->getConfiguration('flowDefinitions') as $flowDefinition) {
                 $continuationServer->addFlow($flowDefinition['name'],
                                              $flowDefinition['file'],
                                              $flowDefinition['isExclusive']
                                              );
-                Piece_Flow_Error::enableCallback();
-                if (Piece_Flow_Error::hasErrors()) {
-                    Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                            "Failed to configure the plugin [ {$this->_name}.",
-                                            'exception',
-                                            array(),
-                                            Piece_Flow_Error::pop()
-                                            );
-                    $return = null;
-                    return $return;
-                }
             }
         }
 
         return $continuationServer;
-    }
-
-    // }}}
-    // {{{ _initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
-     */
-    function _initialize()
-    {
-        $this->_addConfigurationPoint('actionDirectory');
-        $this->_addConfigurationPoint('enableSingleFlowMode', false); // deprecated
-        $this->_addConfigurationPoint('cacheDirectory');
-        $this->_addConfigurationPoint('flowDefinitions', array()); // deprecated
-        $this->_addConfigurationPoint('flowExecutionTicketKey',
-                                      '_flowExecutionTicket'
-                                      );
-        $this->_addConfigurationPoint('flowNameKey', '_flow'); // deprecated
-        $this->_addConfigurationPoint('flowName');             // deprecated
-        $this->_addConfigurationPoint('bindActionsWithFlowExecution', true);
-        $this->_addConfigurationPoint('enableGC', false);
-        $this->_addConfigurationPoint('gcExpirationTime', 1440);
-        $this->_addConfigurationPoint('useGCFallback', false);
-        $this->_addConfigurationPoint('gcFallbackURL'); // deprecated
-        $this->_addConfigurationPoint('useFlowMappings', false);
-        $this->_addConfigurationPoint('flowMappings', array());
-        $this->_addConfigurationPoint('configDirectory');
-        $this->_addConfigurationPoint('configExtension', '.flow');
-        $this->_addConfigurationPoint('useFullFlowNameAsViewPrefix', true);
-        $this->_addConfigurationPoint('gcFallbackURI', $this->_getConfiguration('gcFallbackURL'));
-
-        Piece_Unity_Service_Continuation::setFlowExecutionTicketKey($this->_getConfiguration('flowExecutionTicketKey'));
-        $GLOBALS['PIECE_UNITY_Continuation_FlowIDKey'] =
-            $this->_getConfiguration('flowNameKey');
-
-        if ($this->_getConfiguration('useFlowMappings')) {
-            $GLOBALS['PIECE_UNITY_Continuation_FlowID'] =
-                $this->_context->getOriginalScriptName();
-        } else {
-            $GLOBALS['PIECE_UNITY_Continuation_FlowID'] =
-                $this->_getConfiguration('flowName');
-        }
-
-        Piece_Flow_Action_Factory::setActionDirectory($this->_getConfiguration('actionDirectory'));
-
-        $viewElement = &$this->_context->getViewElement();
-        $viewElement->setElement('__flowExecutionTicketKey',
-                                 Piece_Unity_Service_Continuation::getFlowExecutionTicketKey()
-                                 );
-        $viewElement->setElement('__flowNameKey', // deprecated
-                                 $GLOBALS['PIECE_UNITY_Continuation_FlowIDKey']
-                                 );
     }
 
     // }}}
@@ -396,19 +327,13 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      *
      * @since Method available since Release 0.9.0
      */
-    function _prepareContinuation()
+    private function _prepareContinuation()
     {
-        $session = &$this->_context->getSession();
-        $continuationServer = &$session->getAttribute(PIECE_UNITY_CONTINUATION_SESSIONKEY);
+        $session = $this->context->getSession();
+        $continuationServer = $session->getAttribute(self::$_sessionKey);
         if (is_null($continuationServer)) {
-            $continuationServer = &$this->_createContinuationServer();
-            if (Piece_Unity_Error::hasErrors()) {
-                return;
-            }
-
-            $session->setAttributeByRef(PIECE_UNITY_CONTINUATION_SESSIONKEY,
-                                        $continuationServer
-                                        );
+            $continuationServer = $this->_createContinuationServer();
+            $session->setAttribute(self::$_sessionKey, $continuationServer);
             $session->setPreloadCallback('_Dispatcher_Continuation',
                                          array('Piece_Unity_Plugin_Factory',
                                                'factory')
@@ -418,9 +343,8 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
                                       );
         }
 
-        $continuationService = &$continuationServer->createService();
-        $this->_context->setContinuation($continuationService);
-        $this->_continuationServer = &$continuationServer;
+        $this->context->setContinuation($continuationServer->createService());
+        $this->_continuationServer = $continuationServer;
     }
 
     // }}}
@@ -433,7 +357,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      * @return string
      * @since Method available since Release 1.5.0
      */
-    function _prefixFlowNameToViewString($viewString)
+    private function _prefixFlowNameToViewString($viewString)
     {
         do {
             if (preg_match('!^html:\(.*\)!', $viewString, $matches)) {
@@ -445,7 +369,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
             }
 
             $flowName = $this->_continuationServer->getActiveFlowSource();
-            if ($this->_getConfiguration('useFullFlowNameAsViewPrefix')) {
+            if ($this->getConfiguration('useFullFlowNameAsViewPrefix')) {
                 $viewString = "{$flowName}_{$viewString}";
                 break;
             }

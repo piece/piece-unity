@@ -2,9 +2,9 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
- * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,35 +29,38 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
- * @since      File available since Release 1.3.0
+ * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTest
+ * @since      File available since Release 0.8.0
  */
 
-require_once 'Piece/Unity/Service/FlowAction.php';
-require_once 'Piece/Unity/Service/Continuation.php';
-
-// {{{ Entry_NewAction
+// {{{ ContinuationValidationAction
 
 /**
  * A class for unit tests.
  *
  * @package    Piece_Unity
- * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTestCase
- * @since      Class available since Release 1.3.0
+ * @see        Piece_Unity_Plugin_Dispatcher_ContinuationTest
+ * @since      Class available since Release 0.8.0
  */
-class Entry_NewAction extends Piece_Unity_Service_FlowAction
+class ContinuationValidationAction extends Piece_Unity_Service_FlowAction
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -72,13 +75,25 @@ class Entry_NewAction extends Piece_Unity_Service_FlowAction
      * @access public
      */
 
-    function doActivityOnDisplayNew()
+    public function validate()
     {
-        $this->_context->setAttribute('foo', 'bar');
+        $user = new stdClass();
+        $this->context->setAttribute('user', $user);
+        $validation = $this->context->getValidation();
+        $validation->getConfiguration()->addValidation('email', 'Email');
 
-        $uri = &Piece_Unity_Service_Continuation::createURI('baz');
-        $this->_context->setAttributeByRef('uri', $uri);
+        if ($validation->validate('Validation', $user)) {
+            return 'goDisplaySuccess';
+        } else {
+            return 'goDisplayFailure';
+        }
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
