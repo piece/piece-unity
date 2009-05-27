@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -32,20 +32,20 @@
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_Renderer_PHPTestCase
+ * @see        Piece_Unity_Plugin_Renderer_PHPTest
  * @since      File available since Release 0.1.0
  */
 
 // {{{ PHPExampleAction
 
 /**
- * Action class for the event 'PHPExample'.
+ * A class for unit tests.
  *
  * @package    Piece_Unity
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_Renderer_PHPTestCase
+ * @see        Piece_Unity_Plugin_Renderer_PHPTest
  * @since      Class available since Release 0.1.0
  */
 class PHPExampleAction
@@ -60,6 +60,12 @@ class PHPExampleAction
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -69,11 +75,16 @@ class PHPExampleAction
      * @access public
      */
 
-    function invoke(&$context)
+    public function invoke($context)
     {
-        $viewElement = &$context->getViewElement();
-        $viewElement->setElement('content', 'This is a dynamic content.');
+        $context->getViewElement()->setElement('content', 'This is a dynamic content.');
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

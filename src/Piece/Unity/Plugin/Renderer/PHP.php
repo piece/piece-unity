@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,10 +35,6 @@
  * @since      File available since Release 0.1.0
  */
 
-require_once 'Piece/Unity/Plugin/Renderer/HTML.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/Service/Rendering/PHP.php';
-
 // {{{ Piece_Unity_Plugin_Renderer_PHP
 
 /**
@@ -62,6 +58,12 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -74,81 +76,80 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
     // }}}
-    // {{{ _initialize()
+    // {{{ initialize()
 
     /**
      * Defines and initializes extension points and configuration points.
      *
      * @since Method available since Release 0.6.0
      */
-    function _initialize()
+    protected function initialize()
     {
-        parent::_initialize();
-        $this->_addConfigurationPoint('templateDirectory');
-        $this->_addConfigurationPoint('templateExtension', '.php');
+        parent::initialize();
+        $this->addConfigurationPoint('templateDirectory');
+        $this->addConfigurationPoint('templateExtension', '.php');
     }
 
     // }}}
-    // {{{ _doRender()
+    // {{{ doRender()
 
     /**
      * Renders a HTML.
      *
      * @param boolean $isLayout
      */
-    function _doRender($isLayout)
+    protected function doRender($isLayout)
     {
-        $templateDirectory = $this->_getConfiguration('templateDirectory');
+        $templateDirectory = $this->getConfiguration('templateDirectory');
         if (!$isLayout) {
-            $view = $this->_context->getView();
+            $view = $this->context->getView();
         } else {
-            $layoutDirectory = $this->_getConfiguration('layoutDirectory');
+            $layoutDirectory = $this->getConfiguration('layoutDirectory');
             if (!is_null($layoutDirectory)) {
                 $templateDirectory = $layoutDirectory;
             }
 
-            $view = $this->_getConfiguration('layoutView');
+            $view = $this->getConfiguration('layoutView');
         }
 
         if (is_null($templateDirectory)) {
             return;
         }
 
-        $file = "$templateDirectory/" . str_replace('_', '/', str_replace('.', '', $view)) . $this->_getConfiguration('templateExtension');
-        $viewElement = &$this->_context->getViewElement();
-
-        $rendering = &new Piece_Unity_Service_Rendering_PHP();
-        $rendering->render($file, $viewElement);
-        if (Piece_Unity_Error::hasErrors()) {
-            $error = Piece_Unity_Error::pop();
-            Piece_Unity_Error::push('PIECE_UNITY_PLUGIN_RENDERER_HTML_ERROR_NOT_FOUND',
-                                    $error['message'],
-                                    'exception',
-                                    array(),
-                                    $error
-                                    );
-        }
+        $rendering = new Piece_Unity_Service_Rendering_PHP();
+        $rendering->render(
+            $templateDirectory .
+            '/' .
+            str_replace('_', '/', str_replace('.', '', $view)) .
+            $this->getConfiguration('templateExtension'),
+            $this->context->getViewElement()
+                           );
     }
 
     // }}}
-    // {{{ _prepareFallback()
+    // {{{ prepareFallback()
 
     /**
      * Prepares another view as a fallback.
      */
-    function _prepareFallback()
+    protected function prepareFallback()
     {
-        $fallbackDirectory = $this->_getConfiguration('fallbackDirectory');
+        $fallbackDirectory = $this->getConfiguration('fallbackDirectory');
         if (!is_null($fallbackDirectory)) {
-            $config = &$this->_context->getConfiguration();
-            $config->setConfiguration('Renderer_PHP', 'templateDirectory', $fallbackDirectory);
+            $this->context->getConfiguration()->setConfiguration('Renderer_PHP', 'templateDirectory', $fallbackDirectory);
         }
     }
  
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
+
     /**#@-*/
 
     // }}}

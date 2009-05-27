@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,14 +35,7 @@
  * @since      File available since Release 0.1.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../../../prepare.php');
-require_once 'Piece/Unity/Plugin/Renderer/HTML/CompatibilityTests.php';
-require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/Plugin/Renderer/PHP.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
-require_once 'Piece/Unity/Context.php';
-
-// {{{ Piece_Unity_Plugin_Renderer_PHPTestCase
+// {{{ Piece_Unity_Plugin_Renderer_PHPTest
 
 /**
  * Some tests for Piece_Unity_Plugin_Renderer_PHP.
@@ -53,7 +46,7 @@ require_once 'Piece/Unity/Context.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests
+class Piece_Unity_Plugin_Renderer_PHPTest extends Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests
 {
 
     // {{{ properties
@@ -65,10 +58,16 @@ class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Rendere
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
-    var $_target = 'PHP';
+    protected $target = 'PHP';
+
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
 
     /**#@-*/
 
@@ -77,38 +76,36 @@ class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Rendere
      */
 
     /**
+     * @test
      * @since Method available since Release 1.5.0
      */
-    function testShouldSupportHtmlComponents()
+    public function supportHtmlComponents()
     {
-        $oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
-        Piece_Unity_Plugin_Factory::addPluginDirectory($this->_cacheDirectory);
-        $context = &Piece_Unity_Context::singleton();
-        $context->setView("{$this->_target}HTMLComponent");
-        $config = &$this->_getConfig();
-        $config->setExtension("Renderer_{$this->_target}",
+        Piece_Unity_Plugin_Factory::addPluginDirectory($this->exclusiveDirectory);
+        $context = Piece_Unity_Context::singleton();
+        $context->setView($this->target . 'HTMLComponent');
+        $config = $this->getConfig();
+        $config->setExtension('Renderer_' . $this->target,
                               'components',
                               array('HTMLComponent_Example')
                               );
         $context->setConfiguration($config);
 
         $this->assertEquals('This is a html fragment from a HTML Component.',
-                            $this->_render()
+                            $this->render()
                             );
-
-        $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $oldPluginDirectories;
     }
 
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
-    function &_getConfig()
+    protected function getConfig()
     {
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Renderer_PHP', 'templateDirectory', "{$this->_cacheDirectory}/templates/Content");
+        $config = new Piece_Unity_Config();
+        $config->setConfiguration('Renderer_PHP', 'templateDirectory', $this->exclusiveDirectory . '/templates/Content');
 
         return $config;
     }
@@ -116,21 +113,27 @@ class Piece_Unity_Plugin_Renderer_PHPTestCase extends Piece_Unity_Plugin_Rendere
     /**
      * @since Method available since Release 1.0.0
      */
-    function _doSetUp()
+    protected function doSetUp()
     {
-        $this->_cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
+        $this->exclusiveDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 
     /**
      * @since Method available since Release 1.3.0
      */
-    function &_getConfigForLayeredStructure()
+    protected function getConfigForLayeredStructure()
     {
-        $config = &new Piece_Unity_Config();
-        $config->setConfiguration('Renderer_PHP', 'templateDirectory', "{$this->_cacheDirectory}/templates");
+        $config = new Piece_Unity_Config();
+        $config->setConfiguration('Renderer_PHP', 'templateDirectory', $this->exclusiveDirectory . '/templates');
 
         return $config;
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
 
     /**#@-*/
 
