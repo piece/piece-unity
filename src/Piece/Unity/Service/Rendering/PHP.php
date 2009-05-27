@@ -84,22 +84,20 @@ class Piece_Unity_Service_Rendering_PHP
      *
      * @param string                  $file
      * @param Piece_Unity_ViewElement $viewElement
-     * @throws Piece_Unity_Exception
+     * @throws Piece_Unity_Service_Rendering_NotFoundException
      */
     public function render($file, Piece_Unity_ViewElement $viewElement)
     {
         if (!file_exists($file)) {
-            throw new Piece_Unity_Exception('The HTML template file [ ' .
-                                            $file .
-                                            ' ] is not found'
-                                            );
+            throw new Piece_Unity_Service_Rendering_NotFoundException(
+                'The HTML template file [ ' . $file . ' ] is not found'
+                                                                      );
         }
 
         if (!is_readable($file)) {
-            throw new Piece_Unity_Exception('The HTML template file [ ' .
-                                            $file .
-                                            ' ] is not readable'
-                                            );
+            throw new Piece_Unity_Service_Rendering_NotFoundException(
+                'The HTML template file [ ' . $file . ' ] is not readable'
+                                                                      );
         }
 
         $this->_fileForRender = $file;
@@ -107,10 +105,11 @@ class Piece_Unity_Service_Rendering_PHP
         extract($this->_viewElementForRender->getElements(), EXTR_OVERWRITE | EXTR_REFS);
 
         if (!include $this->_fileForRender) {
-            throw new Piece_Unity_Exception('The HTML template file [ ' .
-                                            $this->_fileForRender .
-                                            ' ] is not found or is not readable'
-                                            );
+            throw new Piece_Unity_Service_Rendering_NotFoundException(
+                'The HTML template file [ ' .
+                $this->_fileForRender .
+                ' ] is not found or is not readable'
+                                                                      );
         }
     }
 
