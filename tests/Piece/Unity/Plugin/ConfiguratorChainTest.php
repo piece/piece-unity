@@ -35,7 +35,7 @@
  * @since      File available since Release 0.11.0
  */
 
-// {{{ Piece_Unity_Plugin_ConfiguratorChainTestCase
+// {{{ Piece_Unity_Plugin_ConfiguratorChainTest
 
 /**
  * Some tests for Piece_Unity_Plugin_ConfiguratorChain.
@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.11.0
  */
-class Piece_Unity_Plugin_ConfiguratorChainTestCase extends Piece_Unity_PHPUnit_TestCase
+class Piece_Unity_Plugin_ConfiguratorChainTest extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
