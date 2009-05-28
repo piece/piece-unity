@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,14 +35,6 @@
  * @since      File available since Release 0.2.0
  */
 
-require_once 'Piece/Unity/Session/Preload.php';
-require_once 'Piece/Unity/ClassLoader.php';
-
-// {{{ GLOBALS
-
-$GLOBALS['PIECE_UNITY_Session_Autoload_Classes'] = array();
-
-// }}}
 // {{{ Piece_Unity_Session
 
 /**
@@ -66,11 +58,18 @@ class Piece_Unity_Session
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
-    var $_preload;
-    var $_attributes;
+    private $_preload;
+    private $_attributes;
+    private static $_autoloadClasses = array();
 
     /**#@-*/
 
@@ -87,7 +86,7 @@ class Piece_Unity_Session
      * @param string $name
      * @param mixed  $value
      */
-    function setAttribute($name, $value)
+    public function setAttribute($name, $value)
     {
         $this->_attributes[$name] = $value;
     }
@@ -101,7 +100,7 @@ class Piece_Unity_Session
      * @param string $name
      * @param mixed  &$value
      */
-    function setAttributeByRef($name, &$value)
+    public function setAttributeByRef($name, &$value)
     {
         $this->_attributes[$name] = &$value;
     }
@@ -116,7 +115,7 @@ class Piece_Unity_Session
      * @param string $name
      * @return boolean
      */
-    function hasAttribute($name)
+    public function hasAttribute($name)
     {
         return array_key_exists($name, $this->_attributes);
     }
@@ -130,7 +129,7 @@ class Piece_Unity_Session
      * @param string $name
      * @return mixed
      */
-    function &getAttribute($name)
+    public function &getAttribute($name)
     {
         return $this->_attributes[$name];
     }
@@ -142,12 +141,11 @@ class Piece_Unity_Session
      * Adds a autoload class for restoring sessions safely.
      *
      * @param string $class
-     * @static
      */
-    function addAutoloadClass($class)
+    public static function addAutoloadClass($class)
     {
-        if (!in_array($class, $GLOBALS['PIECE_UNITY_Session_Autoload_Classes'])) {
-            $GLOBALS['PIECE_UNITY_Session_Autoload_Classes'][] = $class;
+        if (!in_array($class, self::$_autoloadClasses)) {
+            self::$_autoloadClasses[] = $class;
         }
     }
 
@@ -158,25 +156,22 @@ class Piece_Unity_Session
      * Starts a new session or restores a session if it already exists, and
      * binds the attribute holder to the $_SESSION superglobal array.
      *
-     * @throws PIECE_UNITY_ERROR_NOT_FOUND
+     * @throws Piece_Unity_Exception
      */
-    function start()
+    public function start()
     {
-        foreach ($GLOBALS['PIECE_UNITY_Session_Autoload_Classes'] as $class) {
+        foreach (self::$_autoloadClasses as $class) {
             if (Piece_Unity_ClassLoader::loaded($class)) {
                 continue;
             }
 
             Piece_Unity_ClassLoader::load($class);
-            if (Piece_Unity_Error::hasErrors()) {
-                return;
-            }
-
             if (!Piece_Unity_ClassLoader::loaded($class)) {
-                Piece_Unity_Error::push(PIECE_UNITY_ERROR_NOT_FOUND,
-                                        "The class [ $class ] is not found in the loaded file."
-                                        );
-                return;
+                throw new Piece_Unity_Exception(
+                    'The class [ ' .
+                    $class .
+                    ' ] is not found in the loaded file'
+                                                );
             }
         }
 
@@ -185,10 +180,10 @@ class Piece_Unity_Session
         $this->_attributes = &$_SESSION;
 
         if ($this->hasAttribute('_Piece_Unity_Session_Preload')) {
-            $this->_preload = &$this->getAttribute('_Piece_Unity_Session_Preload');
+            $this->_preload = $this->getAttribute('_Piece_Unity_Session_Preload');
         } else {
-            $this->_preload = &new Piece_Unity_Session_Preload();
-            $this->setAttributeByRef('_Piece_Unity_Session_Preload', $this->_preload);
+            $this->_preload = new Piece_Unity_Session_Preload();
+            $this->setAttribute('_Piece_Unity_Session_Preload', $this->_preload);
         }
     }
 
@@ -200,7 +195,7 @@ class Piece_Unity_Session
      *
      * @param string $name
      */
-    function removeAttribute($name)
+    public function removeAttribute($name)
     {
         unset($this->_attributes[$name]);
     }
@@ -211,7 +206,7 @@ class Piece_Unity_Session
     /**
      * Removes all attributes from the current session state.
      */
-    function clearAttributes()
+    public function clearAttributes()
     {
         $this->_attributes = array();
     }
@@ -226,7 +221,7 @@ class Piece_Unity_Session
      * @param string $class
      * @param string $id
      */
-    function addPreloadClass($service, $class, $id = null)
+    public function addPreloadClass($service, $class, $id = null)
     {
         if (is_null($this->_preload)) {
             return;
@@ -244,7 +239,7 @@ class Piece_Unity_Session
      * @param string   $service
      * @param callback $callback
      */
-    function setPreloadCallback($service, $callback)
+    public function setPreloadCallback($service, $callback)
     {
         if (is_null($this->_preload)) {
             return;
@@ -262,12 +257,18 @@ class Piece_Unity_Session
      * @link http://www.php.net/session_destroy
      * @since Method available since Release 1.6.0
      */
-    function restart()
+    public function restart()
     {
         session_destroy();
         $this->start();
         session_regenerate_id();
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

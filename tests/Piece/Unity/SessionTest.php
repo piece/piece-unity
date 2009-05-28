@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,13 +35,7 @@
  * @since      File available since Release 0.2.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Session.php';
-require_once 'Piece/Unity/Session/Preload.php';
-require_once dirname(__FILE__) . '/SessionTestCase/Loader.php';
-
-// {{{ Piece_Unity_SessionTestCase
+// {{{ Piece_Unity_SessionTest
 
 /**
  * TestCase for Piece_Unity_Session
@@ -52,7 +46,7 @@ require_once dirname(__FILE__) . '/SessionTestCase/Loader.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.2.0
  */
-class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
+class Piece_Unity_SessionTest extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -64,10 +58,16 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
-    var $_session;
+    private $_session;
 
     /**#@-*/
 
@@ -75,26 +75,26 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function setUp()
+    public function setUp()
     {
-        $this->_session = &new Piece_Unity_Session();
-        $_SESSION = array();
+        parent::setUp();
+        $this->_session = new Piece_Unity_Session();
     }
 
-    function tearDown()
-    {
-        unset($_SESSION);
-        $this->_session = null;
-    }
-
-    function testValidInstance()
+    /**
+     * @test
+     */
+    public function testValidInstance()
     {
         $class = strtolower(get_class($this));
 
-        $this->assertTrue(is_a($this->_session, substr($class, 0, strpos($class, 'testcase'))));
+        $this->assertType(substr($class, 0, strpos($class, 'test')), $this->_session);
     }
 
-    function testSettingAttribute()
+    /**
+     * @test
+     */
+    public function setAnAttribute()
     {
         @$this->_session->start();
         $this->_session->setAttribute('foo', 'bar');
@@ -103,39 +103,43 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
         $this->assertEquals('bar', $this->_session->getAttribute('foo'));
     }
 
-    function testSettingAttributeByReference()
+    /**
+     * @test
+     */
+    public function setAnAttributeByReference()
     {
-        $foo1 = &new stdClass();
+        $foo1 = array();
         $this->_session->setAttributeByRef('foo', $foo1);
-        $foo1->bar = 'baz';
+        $foo1['bar'] = 'baz';
 
         $this->assertTrue($this->_session->hasAttribute('foo'));
 
-        $foo2 = &$this->_session->getAttribute('foo');
+        $foo2 = $this->_session->getAttribute('foo');
 
-        $this->assertTrue(array_key_exists('bar', $foo2));
-        $this->assertEquals('baz', $foo2->bar);
+        $this->assertArrayHasKey('bar', $foo2);
+        $this->assertEquals('baz', $foo2['bar']);
     }
 
-    function testAutoloaingClass()
+    /**
+     * @test
+     */
+    public function autoloadSpecifiedClassesBeforeStartingTheSession()
     {
-        $class = 'Piece_Unity_SessionTestCase_AutoloadClass';
+        $class = 'Piece_Unity_SessionTest_AutoloadClass';
         $oldIncludePath = set_include_path(dirname(__FILE__) . '/../..' . PATH_SEPARATOR . get_include_path());
         Piece_Unity_Session::addAutoloadClass($class);
         @$this->_session->start();
-
-        if (version_compare(phpversion(), '5.0.0', '<')) {
-            $found = class_exists($class);
-        } else {
-            $found = class_exists($class, false);
-        }
+        $found = class_exists($class, false);
 
         $this->assertTrue($found);
 
         set_include_path($oldIncludePath);
     }
 
-    function testRemovingAttribute()
+    /**
+     * @test
+     */
+    public function removeAnAttribute()
     {
         @$this->_session->start();
         $this->_session->setAttribute('foo', 'bar');
@@ -147,7 +151,10 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
         $this->assertFalse($this->_session->hasAttribute('foo'));
     }
 
-    function testClearingAttributes()
+    /**
+     * @test
+     */
+    public function removeAllAttributes()
     {
         @$this->_session->start();
         $this->_session->setAttribute('foo', 'bar');
@@ -155,64 +162,63 @@ class Piece_Unity_SessionTestCase extends PHPUnit_TestCase
 
         $this->assertTrue($this->_session->hasAttribute('foo'));
         $this->assertTrue($this->_session->hasAttribute('bar'));
-        $this->assertTrue(array_key_exists('foo', $_SESSION));
-        $this->assertTrue(array_key_exists('bar', $_SESSION));
+        $this->assertArrayHasKey('foo', $_SESSION);
+        $this->assertArrayHasKey('bar', $_SESSION);
 
         $this->_session->clearAttributes();
 
         $this->assertFalse($this->_session->hasAttribute('foo'));
         $this->assertFalse($this->_session->hasAttribute('bar'));
-        $this->assertFalse(array_key_exists('foo', $_SESSION));
-        $this->assertFalse(array_key_exists('bar', $_SESSION));
+        $this->assertArrayNotHasKey('foo', $_SESSION);
+        $this->assertArrayNotHasKey('bar', $_SESSION);
     }
 
     /**
+     * @test
      * @since Method available since Release 0.9.0
      */
-    function testPreload()
+    public function preloadClassesForStoredObjectsBeforeStartingTheSession()
     {
         $GLOBALS['loadCount'] = 0;
         @$this->_session->start();
 
-        if (version_compare(phpversion(), '5.0.0', '<')) {
-            $this->assertFalse(class_exists('Piece_Unity_SessionTestCase_Foo'));
-        } else {
-            $this->assertFalse(class_exists('Piece_Unity_SessionTestCase_Foo', false));
-        }
+        $this->assertFalse(class_exists('Piece_Unity_SessionTest_Foo', false));
 
-        $service = 'Piece_Unity_SessionTestCase_Loader';
+        $service = 'Piece_Unity_SessionTest_Loader';
         $callback = array($service, 'load');
-        $preload = &new Piece_Unity_Session_Preload();
+        $preload = new Piece_Unity_Session_Preload();
         $preload->setCallback($service, $callback);
-        $preload->addClass($service, 'Piece_Unity_SessionTestCase_Foo');
-        $preload->addClass($service, 'Piece_Unity_SessionTestCase_Foo');
+        $preload->addClass($service, 'Piece_Unity_SessionTest_Foo');
+        $preload->addClass($service, 'Piece_Unity_SessionTest_Foo');
         unserialize(serialize($preload));
-        $foo = unserialize('O:31:"Piece_Unity_SessionTestCase_Foo":0:{}');
+        $foo = unserialize('O:27:"Piece_Unity_SessionTest_Foo":0:{}');
 
-        if (version_compare(phpversion(), '5.0.0', '<')) {
-            $this->assertTrue(class_exists('Piece_Unity_SessionTestCase_Foo'));
-        } else {
-            $this->assertTrue(class_exists('Piece_Unity_SessionTestCase_Foo', false));
-        }
-
+        $this->assertTrue(class_exists('Piece_Unity_SessionTest_Foo', false));
         $this->assertTrue(is_object($foo));
-        $this->assertEquals(strtolower('Piece_Unity_SessionTestCase_Foo'), strtolower(get_class($foo)));
+        $this->assertType('Piece_Unity_SessionTest_Foo', $foo);
         $this->assertEquals(1, $GLOBALS['loadCount']);
-
-        unset($GLOBALS['loadCount']);
     }
 
     /**
+     * @test
      * @since Method available since Release 1.6.2
      */
-    function testShouldPublishTheAttributesByAProperty()
+    public function publishTheAttributesByAProperty()
     {
+        $this->markTestSkipped();
+
         @$this->_session->start();
         $this->_session->setAttribute('foo', 'bar');
 
-        $this->assertTrue(array_key_exists('foo', $this->_session->_attributes));
+        $this->assertArrayHasKey('foo', $this->_session->_attributes);
         $this->assertEquals($this->_session->_attributes['foo'], 'bar');
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

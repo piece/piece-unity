@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,8 +35,6 @@
  * @since      File available since Release 0.9.0
  */
 
-require_once 'Piece/Unity/Plugin/Factory.php';
-
 // {{{ Piece_Unity_Session_Preload
 
 /**
@@ -60,10 +58,16 @@ class Piece_Unity_Session_Preload
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
-    var $_services = array();
+    private $_services = array();
 
     /**#@-*/
 
@@ -77,7 +81,7 @@ class Piece_Unity_Session_Preload
     /**
      * Preloads classes by service specific callback.
      */
-    function __wakeup()
+    public function __wakeup()
     {
         foreach (array_keys($this->_services) as $service) {
             foreach ($this->_services[$service]['classes'] as $class => $id) {
@@ -96,7 +100,7 @@ class Piece_Unity_Session_Preload
      * @param string $class
      * @param string $id
      */
-    function addClass($service, $class, $id = null)
+    public function addClass($service, $class, $id = null)
     {
         $this->_initializeService($service);
         $this->_services[$service]['classes'][$class] = $id;
@@ -111,7 +115,7 @@ class Piece_Unity_Session_Preload
      * @param string   $service
      * @param callback $callback
      */
-    function setCallback($service, $callback)
+    public function setCallback($service, $callback)
     {
         $this->_initializeService($service);
         $this->_services[$service]['callback'] = $callback;
@@ -131,7 +135,7 @@ class Piece_Unity_Session_Preload
      *
      * @param string   $service
      */
-    function _initializeService($service)
+    private function _initializeService($service)
     {
         if (!array_key_exists($service, $this->_services)) {
             $this->_services[$service] = array('callback' => null,

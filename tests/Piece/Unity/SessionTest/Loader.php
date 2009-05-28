@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -32,11 +32,11 @@
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
- * @see        Piece_Unity_SessionTestCase
+ * @see        Piece_Unity_SessionTest
  * @since      File available since Release 0.9.0
  */
 
-// {{{ Piece_Unity_SessionTestCase_Foo
+// {{{ Piece_Unity_SessionTest_Loader
 
 /**
  * A class for unit tests.
@@ -45,10 +45,17 @@
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @see        Piece_Unity_SessionTestCase
+ * @see        Piece_Unity_SessionTest
  * @since      Class available since Release 0.9.0
  */
-class Piece_Unity_SessionTestCase_Foo {}
+class Piece_Unity_SessionTest_Loader
+{
+    public function load($class, $id)
+    {
+        ++$GLOBALS['loadCount'];
+        include_once dirname(__FILE__) . '/' . substr(strrchr($class, '_'), 1) . '.php';
+    }
+}
 
 // }}}
 
