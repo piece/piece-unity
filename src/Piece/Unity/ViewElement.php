@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -58,10 +58,16 @@ class Piece_Unity_ViewElement
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
-    var $_elements = array();
+    private $_elements = array();
 
     /**#@-*/
 
@@ -78,7 +84,7 @@ class Piece_Unity_ViewElement
      * @param string $name
      * @param mixed  $value
      */
-    function setElement($name, $value)
+    public function setElement($name, $value)
     {
         $this->_elements[$name] = $value;
     }
@@ -92,7 +98,7 @@ class Piece_Unity_ViewElement
      * @param string $name
      * @param mixed  &$value
      */
-    function setElementByRef($name, &$value)
+    public function setElementByRef($name, &$value)
     {
         $this->_elements[$name] = &$value;
     }
@@ -105,7 +111,7 @@ class Piece_Unity_ViewElement
      *
      * @return array
      */
-    function getElements()
+    public function getElements()
     {
         return $this->_elements;
     }
@@ -120,7 +126,7 @@ class Piece_Unity_ViewElement
      * @return boolean
      * @since Method available since Release 0.4.0
      */
-    function hasElement($name)
+    public function hasElement($name)
     {
         return array_key_exists($name, $this->_elements);
     }
@@ -135,10 +141,16 @@ class Piece_Unity_ViewElement
      * @return mixed
      * @since Method available since Release 0.4.0
      */
-    function &getElement($name)
+    public function &getElement($name)
     {
         return $this->_elements[$name];
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

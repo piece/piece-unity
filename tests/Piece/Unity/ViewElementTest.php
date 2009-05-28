@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,11 +35,7 @@
  * @since      File available since Release 0.1.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/ViewElement.php';
-
-// {{{ Piece_Unity_ViewElementTestCase
+// {{{ Piece_Unity_ViewElementTest
 
 /**
  * TestCase for Piece_Unity_ViewElement
@@ -50,13 +46,19 @@ require_once 'Piece/Unity/ViewElement.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_ViewElementTestCase extends PHPUnit_TestCase
+class Piece_Unity_ViewElementTest extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -71,9 +73,12 @@ class Piece_Unity_ViewElementTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function testSettingElement()
+    /**
+     * @test
+     */
+    public function setAnElement()
     {
-        $viewElement = &new Piece_Unity_ViewElement();
+        $viewElement = new Piece_Unity_ViewElement();
         $viewElement->setElement('foo', 'bar');
         $viewElement->setElement('bar', 'baz');
 
@@ -86,26 +91,32 @@ class Piece_Unity_ViewElementTestCase extends PHPUnit_TestCase
         $this->assertEquals('baz', $elements['bar']);
     }
 
-    function testSettingElementByReference()
+    /**
+     * @test
+     */
+    public function setAnElementByReference()
     {
-        $foo = &new stdClass();
-        $viewElement = &new Piece_Unity_ViewElement();
+        $foo = array();
+        $viewElement = new Piece_Unity_ViewElement();
         $viewElement->setElementByRef('foo', $foo);
-        $foo->bar = 'baz';
+        $foo['bar'] = 'baz';
 
         $this->assertTrue($viewElement->hasElement('foo'));
 
         $elements = $viewElement->getElements();
 
-        $this->assertTrue(array_key_exists('foo', $elements));
-        $this->assertTrue(array_key_exists('bar', $elements['foo']));
-        $this->assertEquals('baz', $elements['foo']->bar);
+        $this->assertArrayHasKey('foo', $elements);
+        $this->assertArrayHasKey('bar', $elements['foo']);
+        $this->assertEquals('baz', $elements['foo']['bar']);
     }
 
-    function testGettingElement()
+    /**
+     * @test
+     */
+    public function getAnElement()
     {
         $element1 = array('foo' => 1, 'bar' => 2, 'baz' => 3);
-        $viewElement = &new Piece_Unity_ViewElement();
+        $viewElement = new Piece_Unity_ViewElement();
         $viewElement->setElement('foo', $element1);
 
         $this->assertTrue($viewElement->hasElement('foo'));
@@ -119,8 +130,14 @@ class Piece_Unity_ViewElementTestCase extends PHPUnit_TestCase
 
         $element3 = $viewElement->getElement('foo');
 
-        $this->assertTrue(array_key_exists('qux', $element3));
+        $this->assertArrayHasKey('qux', $element3);
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
