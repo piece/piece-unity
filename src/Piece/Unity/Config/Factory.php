@@ -35,7 +35,9 @@
  * @since      File available since Release 0.1.0
  */
 
-require_once dirname(__FILE__) . '/../../../../data/pear.piece-framework.com/Piece_Unity/spyc/spyc.php5';
+if (!class_exists('Spyc')) {
+    require_once dirname(__FILE__) . '/../../../../data/pear.piece-framework.com/Piece_Unity/spyc/spyc.php5';
+}
 
 // {{{ Piece_Unity_Config_Factory
 
