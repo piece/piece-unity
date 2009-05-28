@@ -83,7 +83,7 @@ class Piece_Unity_Plugin_CommonTest extends Piece_Unity_PHPUnit_TestCase
     /**
      * @test
      */
-    public function getTheConfigurationByTheGivenPluginPrefix()
+    public function getTheConfiguration()
     {
         Piece_Unity_Context::singleton()->setConfiguration(new Piece_Unity_Config());
         $foo = Piece_Unity_Plugin_Factory::factory('Foo');
@@ -95,7 +95,7 @@ class Piece_Unity_Plugin_CommonTest extends Piece_Unity_PHPUnit_TestCase
     /**
      * @test
      */
-    public function getTheExtensionByTheGivenPluginPrefix()
+    public function getTheExtension()
     {
         Piece_Unity_Context::singleton()->setConfiguration(new Piece_Unity_Config());
         $bar = Piece_Unity_Plugin_Factory::factory('Bar');
