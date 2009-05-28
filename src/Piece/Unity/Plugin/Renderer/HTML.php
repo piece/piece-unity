@@ -108,10 +108,14 @@ abstract class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Commo
             $viewElement = $this->context->getViewElement();
 
             ob_start();
-            $this->_render(false);
-            $content = ob_get_contents();
+            try {
+                $this->_render(false);
+                $viewElement->setElement('__content', ob_get_contents());
+            } catch (Exception $e) {
+                ob_end_clean();
+                throw $e;
+            }
             ob_end_clean();
-            $viewElement->setElement('__content', $content);
 
             $this->_render(true);
         }
