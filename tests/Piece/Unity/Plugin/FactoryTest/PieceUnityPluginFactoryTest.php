@@ -4,7 +4,7 @@
 /**
  * PHP version 5
  *
- * Copyright (c) 2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
+ * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,26 +29,26 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Piece_Unity
- * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @version    Release: @package_version@
  * @see        Piece_Unity_Plugin_FactoryTest
- * @since      File available since Release 0.11.0
+ * @since      File available since Release 0.9.0
  */
 
-// {{{ FactoryTestAlias_FactoryTest_Foo
+// {{{ PieceUnityPluginFactoryTest
 
 /**
  * A class for unit tests.
  *
  * @package    Piece_Unity
- * @copyright  2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
+ * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  New BSD License
  * @version    Release: @package_version@
  * @see        Piece_Unity_Plugin_FactoryTest
- * @since      Class available since Release 0.11.0
+ * @since      Class available since Release 0.9.0
  */
-class FactoryTestAlias_FactoryTest_Foo extends Piece_Unity_Plugin_Common
+class PieceUnityPluginFactoryTest extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
@@ -75,22 +75,11 @@ class FactoryTestAlias_FactoryTest_Foo extends Piece_Unity_Plugin_Common
      * @access public
      */
 
-    public function invoke()
-    {
-        ++$GLOBALS[strtolower(__CLASS__) . strtolower(__FUNCTION__) . 'Called'];
-        $this->getExtension('bar')->invoke();
-    }
-
     /**#@-*/
 
     /**#@+
      * @access protected
      */
-
-    protected function _initialize()
-    {
-        $this->_addExtensionPoint('bar');
-    }
 
     /**#@-*/
 
