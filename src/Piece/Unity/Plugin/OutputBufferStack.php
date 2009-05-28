@@ -98,15 +98,8 @@ class Piece_Unity_Plugin_OutputBufferStack extends Piece_Unity_Plugin_Common
         }
 
         foreach ($filters as $extension) {
-
-            /*
-             * All output filters must have the signature as follows.
-             *
-             * @param string $buffer
-             * @return string
-             */
             if (!function_exists($extension)) {
-                ob_start(array(Piece_Unity_Plugin_Factory::factory($extension), 'invoke'));
+                ob_start(array(Piece_Unity_Plugin_Factory::factory($extension), 'filter'));
             } else {
                 ob_start($extension);
             }

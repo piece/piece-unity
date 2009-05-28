@@ -48,7 +48,7 @@
  * @see        Piece_Unity_Plugin_OutputBufferStackTest
  * @since      Class available since Release 0.4.0
  */
-class Piece_Unity_Plugin_OutputBufferStackTest_First extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_OutputBufferStackTest_First extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_OutputFilter_Interface
 {
 
     // {{{ properties
@@ -75,16 +75,7 @@ class Piece_Unity_Plugin_OutputBufferStackTest_First extends Piece_Unity_Plugin_
      * @access public
      */
 
-    // }}}
-    // {{{ invoke()
-
-    /**
-     * Invokes the plugin specific code.
-     *
-     * @param string $buffer
-     * @return string
-     */
-    public function invoke($buffer)
+    public function filter($content)
     {
         $request = $this->context->getRequest();
         $request->setParameter('FirstOutputFilterCalled', true);
@@ -98,7 +89,7 @@ class Piece_Unity_Plugin_OutputBufferStackTest_First extends Piece_Unity_Plugin_
         $logs[] = __CLASS__;
         $request->setParameter('logs', $logs);
 
-        return $buffer;
+        return $content;
     }
 
     /**#@-*/
