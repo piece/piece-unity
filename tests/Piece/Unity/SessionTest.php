@@ -38,7 +38,7 @@
 // {{{ Piece_Unity_SessionTest
 
 /**
- * TestCase for Piece_Unity_Session
+ * Some tests for Piece_Unity_Session.
  *
  * @package    Piece_Unity
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
