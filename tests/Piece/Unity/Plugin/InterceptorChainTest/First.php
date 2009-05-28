@@ -36,7 +36,7 @@
  * @since      File available since Release 0.4.0
  */
 
-// {{{ Piece_Unity_Plugin_OutputBufferStackTest_First
+// {{{ Piece_Unity_Plugin_InterceptorChainTest
 
 /**
  * This class is a part of the Piece_Unity_Plugin_OutputBufferStackTestCase.
@@ -48,7 +48,7 @@
  * @see        Piece_Unity_Plugin_OutputBufferStackTest
  * @since      Class available since Release 0.4.0
  */
-class Piece_Unity_Plugin_OutputBufferStackTest_First extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_InterceptorChainTest_First extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Interceptor_Interface
 {
 
     // {{{ properties
@@ -75,19 +75,10 @@ class Piece_Unity_Plugin_OutputBufferStackTest_First extends Piece_Unity_Plugin_
      * @access public
      */
 
-    // }}}
-    // {{{ invoke()
-
-    /**
-     * Invokes the plugin specific code.
-     *
-     * @param string $buffer
-     * @return string
-     */
-    public function invoke($buffer)
+    public function intercept()
     {
         $request = $this->context->getRequest();
-        $request->setParameter('FirstOutputFilterCalled', true);
+        $request->setParameter('FirstInterceptorCalled', true);
 
         if (!$request->hasParameter('logs')) {
             $logs = array();
@@ -98,7 +89,7 @@ class Piece_Unity_Plugin_OutputBufferStackTest_First extends Piece_Unity_Plugin_
         $logs[] = __CLASS__;
         $request->setParameter('logs', $logs);
 
-        return $buffer;
+        return true;
     }
 
     /**#@-*/
