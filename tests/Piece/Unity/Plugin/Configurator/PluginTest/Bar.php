@@ -36,7 +36,7 @@
  * @since      File available since Release 0.11.0
  */
 
-// {{{ PluginTestAlias_Bar
+// {{{ Piece_Unity_Plugin_Configurator_PluginTest_Bar
 
 /**
  * A class for unit tests.
@@ -48,7 +48,7 @@
  * @see        Piece_Unity_Plugin_Configurator_PluginTest
  * @since      Class available since Release 0.11.0
  */
-class PluginTestAlias_Bar extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_Configurator_PluginTest_Bar extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties

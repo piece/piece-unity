@@ -79,8 +79,8 @@ class Piece_Unity_Plugin_Configurator_PluginTest extends Piece_Unity_PHPUnit_Tes
     public function configure()
     {
         $config = new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_Plugin', 'pluginDirectories', array(dirname(__FILE__) . '/PluginTest'));
-        $config->setConfiguration('Configurator_Plugin', 'pluginPrefixes', array('PluginTestAlias'));
+        $config->setConfiguration('Configurator_Plugin', 'pluginDirectories', array(dirname(__FILE__) . '/../../../..'));
+        $config->setConfiguration('Configurator_Plugin', 'pluginPrefixes', array(__CLASS__));
         Piece_Unity_Context::singleton()->setConfiguration($config);
 
         $configurator = new Piece_Unity_Plugin_Configurator_Plugin();
@@ -88,11 +88,11 @@ class Piece_Unity_Plugin_Configurator_PluginTest extends Piece_Unity_PHPUnit_Tes
 
         $foo = Piece_Unity_Plugin_Factory::factory('Foo');
 
-        $this->assertType('PluginTestAlias_Foo', $foo);
+        $this->assertType(__CLASS__ . '_Foo', $foo);
 
         $bar = Piece_Unity_Plugin_Factory::factory('Bar');
 
-        $this->assertType('PluginTestAlias_Bar', $bar);
+        $this->assertType(__CLASS__ . '_Bar', $bar);
 
         $foo->baz = 'qux';
 
