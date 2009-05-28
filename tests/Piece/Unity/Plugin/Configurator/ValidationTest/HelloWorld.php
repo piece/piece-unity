@@ -36,7 +36,7 @@
  * @since      File available since Release 0.11.0
  */
 
-// {{{ ValidationTestAlias_LowerCase
+// {{{ Piece_Unity_Plugin_Configurator_ValidationTest_HelloWorld
 
 /**
  * A class for unit tests.
@@ -48,7 +48,7 @@
  * @see        Piece_Unity_Plugin_Configurator_ValidationTest
  * @since      Class available since Release 0.11.0
  */
-class ValidationTestAlias_LowerCase
+class Piece_Unity_Plugin_Configurator_ValidationTest_HelloWorld extends Piece_Right_Validator_Common
 {
 
     // {{{ properties
@@ -75,9 +75,9 @@ class ValidationTestAlias_LowerCase
      * @access public
      */
 
-    public function filter($value)
+    public function validate($value)
     {
-        return strtolower($value);
+        return $value == 'hello world';
     }
 
     /**#@-*/
