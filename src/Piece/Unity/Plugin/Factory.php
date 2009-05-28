@@ -106,7 +106,7 @@ class Piece_Unity_Plugin_Factory
 
                         try {
                             Piece_Unity_ClassLoader::load($pluginClass, $pluginDirectory);
-                        } catch (Piece_Unity_ClassLoader_Exception $e) {
+                        } catch (Piece_Unity_ClassLoader_NotFoundException $e) {
                             continue;
                         }
 
