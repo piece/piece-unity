@@ -36,7 +36,7 @@
  * @since      File available since Release 1.0.0
  */
 
-// {{{ CommonTestAlias_ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsed
+// {{{ Piece_Unity_Plugin_CommonTest_UndefinedConfigurationPoint
 
 /**
  * A class for unit tests.
@@ -48,7 +48,7 @@
  * @see        Piece_Unity_Plugin_CommonTest
  * @since      Class available since Release 1.0.0
  */
-class CommonTestAlias_ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsed extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_CommonTest_UndefinedConfigurationPoint extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
@@ -77,7 +77,7 @@ class CommonTestAlias_ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsed e
 
     public function invoke()
     {
-        $this->getExtension('foo');
+        $this->getConfiguration('foo');
     }
 
     /**#@-*/

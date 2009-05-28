@@ -115,9 +115,8 @@ class Piece_Unity_Plugin_CommonTest extends Piece_Unity_PHPUnit_TestCase
     public function raiseAnExceptionWhenAnUndefinedExtensionPointIsUsed()
     {
         Piece_Unity_Context::singleton()->setConfiguration(new Piece_Unity_Config());
-        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestAlias');
-        $plugin = Piece_Unity_Plugin_Factory::factory('ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsed');
-        $plugin->invoke();
+        Piece_Unity_Plugin_Factory::addPluginPrefix(__CLASS__);
+        Piece_Unity_Plugin_Factory::factory('UndefinedExtensionPoint')->invoke();
     }
 
     /**
@@ -128,9 +127,8 @@ class Piece_Unity_Plugin_CommonTest extends Piece_Unity_PHPUnit_TestCase
     public function raiseAnExceptionWhenAnUndefinedConfigurationPointIsUsed()
     {
         Piece_Unity_Context::singleton()->setConfiguration(new Piece_Unity_Config());
-        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestAlias');
-        $plugin = Piece_Unity_Plugin_Factory::factory('ExceptionShouldBeRaisedWhenUndefinedConfigurationPointIsUsed');
-        $plugin->invoke();
+        Piece_Unity_Plugin_Factory::addPluginPrefix(__CLASS__);
+        Piece_Unity_Plugin_Factory::factory('UndefinedConfigurationPoint')->invoke();
     }
 
     /**
@@ -141,10 +139,10 @@ class Piece_Unity_Plugin_CommonTest extends Piece_Unity_PHPUnit_TestCase
     public function raiseAnExceptionWhenAnUndefinedExtensionPointIsUsedInConfiguration()
     {
         $config = new Piece_Unity_Config();
-        $config->setExtension('ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsedInConfiguration', 'bar', 'baz');
+        $config->setExtension('Bar', 'foo', 'baz');
         Piece_Unity_Context::singleton()->setConfiguration($config);
-        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestAlias');
-        $plugin = Piece_Unity_Plugin_Factory::factory('ExceptionShouldBeRaisedWhenUndefinedExtensionPointIsUsedInConfiguration');
+        Piece_Unity_Plugin_Factory::addPluginPrefix(__CLASS__);
+        Piece_Unity_Plugin_Factory::factory('Bar')->invoke();
     }
 
     /**
@@ -155,10 +153,10 @@ class Piece_Unity_Plugin_CommonTest extends Piece_Unity_PHPUnit_TestCase
     public function raiseAnExceptionWhenAnUndefinedConfigurationPointIsUsedInConfiguration()
     {
         $config = new Piece_Unity_Config();
-        $config->setConfiguration('ExceptionShouldBeRaisedWhenUndefinedConfigurationPointIsUsedInConfiguration', 'bar', 'baz');
+        $config->setConfiguration('Foo', 'baz', 'bar');
         Piece_Unity_Context::singleton()->setConfiguration($config);
-        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestAlias');
-        $plugin = Piece_Unity_Plugin_Factory::factory('ExceptionShouldBeRaisedWhenUndefinedConfigurationPointIsUsedInConfiguration');
+        Piece_Unity_Plugin_Factory::addPluginPrefix(__CLASS__);
+        Piece_Unity_Plugin_Factory::factory('Foo')->invoke();
     }
 
     /**#@-*/
