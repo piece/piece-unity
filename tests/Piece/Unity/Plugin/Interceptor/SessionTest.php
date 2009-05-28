@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2008-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,13 +35,7 @@
  * @since      File available since Release 1.6.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Plugin/Interceptor/Session.php';
-require_once 'Piece/Unity/Config.php';
-require_once 'Piece/Unity/Context.php';
-
-// {{{ Piece_Unity_Plugin_Interceptor_SessionTestCase
+// {{{ Piece_Unity_Plugin_Interceptor_SessionTest
 
 /**
  * Some tests for Piece_Unity_Plugin_Interceptor_Session.
@@ -52,13 +46,19 @@ require_once 'Piece/Unity/Context.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 1.6.0
  */
-class Piece_Unity_Plugin_Interceptor_SessionTestCase extends PHPUnit_TestCase
+class Piece_Unity_Plugin_Interceptor_SessionTest extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -73,86 +73,91 @@ class Piece_Unity_Plugin_Interceptor_SessionTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function setUp()
+    public function setUp()
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
+        parent::setUp();
         $_SESSION = array('foo' => 'bar');
     }
 
-    function tearDown()
+    /**
+     * @test
+     */
+    public function redirectToAGivenFallbackUriIfTheCurrentSessionHasBeenExpired()
     {
-        unset($_SESSION);
-        Piece_Unity_Context::clear();
-        unset($_SERVER['REQUEST_METHOD']);
-    }
-
-    function testShouldRedirectToAGivenFallbackURIfTheCurrentSessionHasBeenExpired()
-    {
-        $config = &new Piece_Unity_Config();
+        $config = new Piece_Unity_Config();
         $config->setConfiguration('Interceptor_Session', 'enableExpiration', true);
         $config->setConfiguration('Interceptor_Session', 'expirationTime', 1);
         $config->setConfiguration('Interceptor_Session',
                                   'expirationFallbackURI',
                                   'http://example.org/'
                                   );
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
-        $session = &new Piece_Unity_Plugin_Interceptor_Session();
-        $doContinue = @$session->invoke();
+        $session = new Piece_Unity_Plugin_Interceptor_Session();
+        $doContinue = @$session->intercept();
 
         $this->assertTrue($doContinue);
 
         sleep(2);
 
         Piece_Unity_Context::clear();
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
-        $session = &new Piece_Unity_Plugin_Interceptor_Session();
-        $doContinue = @$session->invoke();
+        $session = new Piece_Unity_Plugin_Interceptor_Session();
+        $doContinue = @$session->intercept();
 
         $this->assertFalse($doContinue);
         $this->assertEquals('http://example.org/', $context->getView());
     }
 
-    function testShouldStartANewSessionIfTheCurrentSessionIsMarkedAsExpired()
+    /**
+     * @test
+     */
+    public function startANewSessionIfTheCurrentSessionIsMarkedAsExpired()
     {
-        $config = &new Piece_Unity_Config();
+        $config = new Piece_Unity_Config();
         $config->setConfiguration('Interceptor_Session', 'enableExpiration', true);
         $config->setConfiguration('Interceptor_Session', 'expirationTime', 1);
         $config->setConfiguration('Interceptor_Session',
                                   'expirationFallbackURI',
                                   'http://example.org/'
                                   );
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
-        $session = &new Piece_Unity_Plugin_Interceptor_Session();
-        $doContinue = @$session->invoke();
+        $session = new Piece_Unity_Plugin_Interceptor_Session();
+        $doContinue = @$session->intercept();
 
         $this->assertTrue($doContinue);
         $this->assertEquals('bar', $_SESSION['foo']);
-        $this->assertTrue(array_key_exists('foo', $_SESSION));
+        $this->assertArrayHasKey('foo', $_SESSION);
 
         sleep(2);
 
         Piece_Unity_Context::clear();
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
-        $session = &new Piece_Unity_Plugin_Interceptor_Session();
-        $doContinue = @$session->invoke();
+        $session = new Piece_Unity_Plugin_Interceptor_Session();
+        $doContinue = @$session->intercept();
 
         $this->assertFalse($doContinue);
         $this->assertEquals('http://example.org/', $context->getView());
-        $this->assertTrue(array_key_exists('foo', $_SESSION));
+        $this->assertArrayHasKey('foo', $_SESSION);
 
         Piece_Unity_Context::clear();
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
-        $session = &new Piece_Unity_Plugin_Interceptor_Session();
-        $doContinue = @$session->invoke();
+        $session = new Piece_Unity_Plugin_Interceptor_Session();
+        $doContinue = @$session->intercept();
 
         $this->assertTrue($doContinue);
-        $this->assertFalse(array_key_exists('foo', $_SESSION));
+        $this->assertArrayNotHasKey('foo', $_SESSION);
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

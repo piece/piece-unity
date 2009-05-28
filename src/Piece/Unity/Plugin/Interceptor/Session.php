@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,9 +35,6 @@
  * @since      File available since Release 0.5.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/Error.php';
-
 // {{{ Piece_Unity_Plugin_Interceptor_Session
 
 /**
@@ -49,13 +46,19 @@ require_once 'Piece/Unity/Error.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.5.0
  */
-class Piece_Unity_Plugin_Interceptor_Session extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_Interceptor_Session extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Interceptor_Interface
 {
 
     // {{{ properties
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -71,22 +74,17 @@ class Piece_Unity_Plugin_Interceptor_Session extends Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ invoke()
+    // {{{ intercept()
 
     /**
-     * Invokes the plugin specific code.
-     *
      * @return boolean
      */
-    function invoke()
+    public function intercept()
     {
-        $session = &$this->_context->getSession();
+        $session = $this->context->getSession();
         $session->start();
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
 
-        if (!$this->_getConfiguration('enableExpiration')) {
+        if (!$this->getConfiguration('enableExpiration')) {
             return true;
         }
 
@@ -103,23 +101,29 @@ class Piece_Unity_Plugin_Interceptor_Session extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
     // }}}
-    // {{{ _initialize()
+    // {{{ initialize()
 
     /**
      * Defines and initializes extension points and configuration points.
      *
      * @since Method available since Release 1.6.0
      */
-    function _initialize()
+    protected function initialize()
     {
-        $this->_addConfigurationPoint('enableExpiration', false);
-        $this->_addConfigurationPoint('expirationTime', 1440);
-        $this->_addConfigurationPoint('expirationFallbackURI');
+        $this->addConfigurationPoint('enableExpiration', false);
+        $this->addConfigurationPoint('expirationTime', 1440);
+        $this->addConfigurationPoint('expirationFallbackURI');
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
 
     // }}}
     // {{{ _handleExpiration()
@@ -133,19 +137,19 @@ class Piece_Unity_Plugin_Interceptor_Session extends Piece_Unity_Plugin_Common
      * @return boolean
      * @since Method available since Release 1.6.0
      */
-    function _handleExpiration()
+    private function _handleExpiration()
     {
-        $session = &$this->_context->getSession();
+        $session = $this->context->getSession();
         if ($session->getAttribute('_sessionExpired')) {
             $session->restart();
-            $this->_context->setAttribute('_sessionExpired', true);
+            $this->context->setAttribute('_sessionExpired', true);
             return true;
         }
 
-        if (time() - $session->getAttribute('_sessionUpdatedAt') > $this->_getConfiguration('expirationTime')) {
+        if (time() - $session->getAttribute('_sessionUpdatedAt') > $this->getConfiguration('expirationTime')) {
             $session->setAttribute('_sessionExpired', true);
-            $this->_context->sendHTTPStatus(302);
-            $this->_context->setView($this->_getConfiguration('expirationFallbackURI'));
+            $this->context->sendHTTPStatus(302);
+            $this->context->setView($this->getConfiguration('expirationFallbackURI'));
             return false;
         }
 
