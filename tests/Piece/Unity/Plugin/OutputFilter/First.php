@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -32,11 +32,9 @@
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_OutputBufferStackTestCase
+ * @see        Piece_Unity_Plugin_OutputBufferStackTest
  * @since      File available since Release 0.4.0
  */
-
-require_once 'Piece/Unity/Plugin/Common.php';
 
 // {{{ Piece_Unity_Plugin_OutputFilter_First
 
@@ -47,7 +45,7 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_OutputBufferStackTestCase
+ * @see        Piece_Unity_Plugin_OutputBufferStackTest
  * @since      Class available since Release 0.4.0
  */
 class Piece_Unity_Plugin_OutputFilter_First extends Piece_Unity_Plugin_Common
@@ -57,6 +55,12 @@ class Piece_Unity_Plugin_OutputFilter_First extends Piece_Unity_Plugin_Common
 
     /**#@+
      * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
      */
 
     /**#@-*/
@@ -80,9 +84,9 @@ class Piece_Unity_Plugin_OutputFilter_First extends Piece_Unity_Plugin_Common
      * @param string $buffer
      * @return string
      */
-    function invoke($buffer)
+    public function invoke($buffer)
     {
-        $request = &$this->_context->getRequest();
+        $request = $this->context->getRequest();
         $request->setParameter('FirstOutputFilterCalled', true);
 
         if (!$request->hasParameter('logs')) {
@@ -96,6 +100,12 @@ class Piece_Unity_Plugin_OutputFilter_First extends Piece_Unity_Plugin_Common
 
         return $buffer;
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 

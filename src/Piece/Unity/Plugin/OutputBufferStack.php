@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,10 +35,6 @@
  * @since      File available since Release 0.4.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
-
 // {{{ Piece_Unity_Plugin_OutputBufferStack
 
 /**
@@ -63,6 +59,12 @@ class Piece_Unity_Plugin_OutputBufferStack extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -78,16 +80,17 @@ class Piece_Unity_Plugin_OutputBufferStack extends Piece_Unity_Plugin_Common
     /**
      * Invokes the plugin specific code.
      *
-     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     * @throws Piece_Unity_Exception
      */
-    function invoke()
+    public function invoke()
     {
-        $filters = &$this->_getExtension('filters');
+        $filters = $this->getExtension('filters');
         if (!is_array($filters)) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    "The value of the extension point [ filters ] on the plug-in [ {$this->_name} ] should be an array."
-                                    );
-            return;
+            throw new Piece_Unity_Exception(
+                'The value of the extension point [ filters ] on the plug-in [ ' .
+                $this->getName() .
+                ' ] should be an array'
+                                            );
         }
 
         while (ob_get_level()) {
@@ -103,12 +106,7 @@ class Piece_Unity_Plugin_OutputBufferStack extends Piece_Unity_Plugin_Common
              * @return string
              */
             if (!function_exists($extension)) {
-                $filter = &Piece_Unity_Plugin_Factory::factory($extension);
-                if (Piece_Unity_Error::hasErrors()) {
-                    return;
-                }
-
-                ob_start(array(&$filter, 'invoke'));
+                ob_start(array(Piece_Unity_Plugin_Factory::factory($extension), 'invoke'));
             } else {
                 ob_start($extension);
             }
@@ -118,22 +116,28 @@ class Piece_Unity_Plugin_OutputBufferStack extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
     // }}}
-    // {{{ _initialize()
+    // {{{ initialize()
 
     /**
      * Defines and initializes extension points and configuration points.
      *
      * @since Method available since Release 0.6.0
      */
-    function _initialize()
+    protected function initialize()
     {
-        $this->_addExtensionPoint('filters', array());
+        $this->addExtensionPoint('filters', array());
     }
- 
+
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
+
     /**#@-*/
 
     // }}}
