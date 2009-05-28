@@ -76,8 +76,8 @@ class Piece_Unity_Plugin_InterceptorChainTest extends Piece_Unity_PHPUnit_TestCa
     public function setUp()
     {
         parent::setUp();
-        $_SERVER['REQUEST_METHOD'] = 'GET';
         Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/../../..');
+        Piece_Unity_Plugin_Factory::addPluginPrefix(__CLASS__);
     }
 
     /**
@@ -86,7 +86,7 @@ class Piece_Unity_Plugin_InterceptorChainTest extends Piece_Unity_PHPUnit_TestCa
     public function invokeAInterceptor()
     {
         $config = new Piece_Unity_Config();
-        $config->setExtension('InterceptorChain', 'interceptors', array('Interceptor_First'));
+        $config->setExtension('InterceptorChain', 'interceptors', array('First'));
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
@@ -104,7 +104,7 @@ class Piece_Unity_Plugin_InterceptorChainTest extends Piece_Unity_PHPUnit_TestCa
     public function invokeMultipleInterceptors()
     {
         $config = new Piece_Unity_Config();
-        $config->setExtension('InterceptorChain', 'interceptors', array('Interceptor_First', 'Interceptor_Second'));
+        $config->setExtension('InterceptorChain', 'interceptors', array('First', 'Second'));
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
@@ -119,8 +119,8 @@ class Piece_Unity_Plugin_InterceptorChainTest extends Piece_Unity_PHPUnit_TestCa
 
         $logs = $request->getParameter('logs');
 
-        $this->assertEquals(strtolower('Piece_Unity_Plugin_Interceptor_First'), strtolower(array_shift($logs)));
-        $this->assertEquals(strtolower('Piece_Unity_Plugin_Interceptor_Second'), strtolower(array_shift($logs)));
+        $this->assertEquals(__CLASS__ . '_First', array_shift($logs));
+        $this->assertEquals(__CLASS__ . '_Second', array_shift($logs));
     }
 
     /**#@-*/

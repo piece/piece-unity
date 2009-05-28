@@ -36,7 +36,7 @@
  * @since      File available since Release 0.4.0
  */
 
-// {{{ Piece_Unity_Plugin_Interceptor_First
+// {{{ Piece_Unity_Plugin_InterceptorChainTest_First
 
 /**
  * A class for unit tests.
@@ -48,7 +48,7 @@
  * @see        Piece_Unity_Plugin_InterceptorChainTest
  * @since      Class available since Release 0.4.0
  */
-class Piece_Unity_Plugin_Interceptor_First extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_InterceptorChainTest_First extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
