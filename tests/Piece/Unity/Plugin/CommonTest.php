@@ -76,38 +76,35 @@ class Piece_Unity_Plugin_CommonTest extends Piece_Unity_PHPUnit_TestCase
     public function setUp()
     {
         parent::setUp();
-        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
+        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/../../..');
     }
 
     /**
      * @test
      */
-    public function getConfigurationByTheGivenPluginPrefix()
+    public function getTheConfigurationByTheGivenPluginPrefix()
     {
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Foo', 'bar', 'baz');
-        $config->setExtension('Foo', 'baz', 'Qux');
-        $config->setConfiguration('CannotGetConfigurationWithPluginPrefixFoo', 'bar', 'baz');
-        $config->setExtension('CannotGetConfigurationWithPluginPrefixFoo', 'baz', 'CannotGetConfigurationWithPluginPrefixQux');
-        Piece_Unity_Context::singleton()->setConfiguration($config);
-        Piece_Unity_Plugin_Factory::addPluginPrefix('CommonTestAlias');
-        Piece_Unity_Plugin_Factory::addPluginPrefix('');
+        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Unity_Config());
+        Piece_Unity_Plugin_Factory::addPluginPrefix(__CLASS__);
 
         $foo = Piece_Unity_Plugin_Factory::factory('Foo');
         $foo->invoke();
 
         $this->assertEquals('baz', $this->readAttribute($foo, '_bar'));
-        $this->assertType('CommonTestAlias_Qux',
-                          $this->readAttribute($foo, '_baz')
-                          );
+    }
 
-        $empty = Piece_Unity_Plugin_Factory::factory('CannotGetConfigurationWithPluginPrefixFoo');
-        $empty->invoke();
+    /**
+     * @test
+     */
+    public function getTheExtensionByTheGivenPluginPrefix()
+    {
+        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Unity_Config());
+        Piece_Unity_Plugin_Factory::addPluginPrefix(__CLASS__);
 
-        $this->assertEquals('baz', $this->readAttribute($empty, '_bar'));
-        $this->assertType('CannotGetConfigurationWithPluginPrefixQux',
-                          $this->readAttribute($empty, '_baz')
-                          );
+        $bar = Piece_Unity_Plugin_Factory::factory('Bar');
+        $bar->invoke();
+
+        $this->assertEquals('qux', $this->readAttribute($bar, '_baz'));
     }
 
     /**
