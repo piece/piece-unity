@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,9 +35,6 @@
  * @since      File available since Release 0.1.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/Error.php';
-
 // {{{ Piece_Unity_Plugin_Root
 
 /**
@@ -61,6 +58,12 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -76,44 +79,34 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
     /**
      * Invokes the plugin specific code.
      */
-    function invoke()
+    public function invoke()
     {
-        $configurator = &$this->_getExtension('configurator');
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
+        $this->getExtension('configurator')->invoke();
+        $this->getExtension('outputFilter')->invoke();
+        $this->getExtension('interceptor')->invoke();
+        $this->getExtension('controller')->invoke();
+    }
 
-        $configurator->invoke();
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
+    /**#@-*/
 
-        $outputFilter = &$this->_getExtension('outputFilter');
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
+    /**#@+
+     * @access protected
+     */
 
-        $outputFilter->invoke();
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
+    // }}}
+    // {{{ initialize()
 
-        $interceptor = &$this->_getExtension('interceptor');
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
-
-        $interceptor->invoke();
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
-
-        $controller = &$this->_getExtension('controller');
-        if (Piece_Unity_Error::hasErrors()) {
-            return;
-        }
-
-        $controller->invoke();
+    /**
+     * Defines and initializes extension points and configuration points.
+     *
+     * @since Method available since Release 0.6.0
+     */
+    protected function initialize()
+    {
+        $this->addExtensionPoint('configurator', 'ConfiguratorChain');
+        $this->addExtensionPoint('outputFilter', 'OutputBufferStack');
+        $this->addExtensionPoint('interceptor', 'InterceptorChain');
+        $this->addExtensionPoint('controller', 'Controller');
     }
 
     /**#@-*/
@@ -122,22 +115,6 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
      * @access private
      */
 
-    // }}}
-    // {{{ _initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
-     */
-    function _initialize()
-    {
-        $this->_addExtensionPoint('configurator', 'ConfiguratorChain');
-        $this->_addExtensionPoint('outputFilter', 'OutputBufferStack');
-        $this->_addExtensionPoint('interceptor', 'InterceptorChain');
-        $this->_addExtensionPoint('controller', 'Controller');
-    }
- 
     /**#@-*/
 
     // }}}
