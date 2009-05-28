@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,10 +35,6 @@
  * @since      File available since Release 0.4.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
-
 // {{{ Piece_Unity_Plugin_InterceptorChain
 
 /**
@@ -62,6 +58,12 @@ class Piece_Unity_Plugin_InterceptorChain extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -77,23 +79,21 @@ class Piece_Unity_Plugin_InterceptorChain extends Piece_Unity_Plugin_Common
     /**
      * Invokes the plugin specific code.
      *
-     * @throws PIECE_UNITY_ERROR_INVALID_CONFIGURATION
+     * @throws Piece_Unity_Exception
      */
-    function invoke()
+    public function invoke()
     {
-        $interceptors = &$this->_getExtension('interceptors');
+        $interceptors = $this->getExtension('interceptors');
         if (!is_array($interceptors)) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVALID_CONFIGURATION,
-                                    "The value of the extension point [ interceptors ] on the plug-in [ {$this->_name} ] should be an array."
-                                    );
-            return;
+            throw new Piece_Unity_Exception(
+                'The value of the extension point [ interceptors ] on the plug-in [ ' .
+                $this->getName() .
+                ' ] should be an array'
+                                            );
         }
 
         foreach ($interceptors as $extension) {
-            $interceptor = &Piece_Unity_Plugin_Factory::factory($extension);
-            if (Piece_Unity_Error::hasErrors()) {
-                return;
-            }
+            $interceptor = Piece_Unity_Plugin_Factory::factory($extension);
 
             /*
              * Stops the invocation of the interceptors if an interceptor
@@ -102,10 +102,6 @@ class Piece_Unity_Plugin_InterceptorChain extends Piece_Unity_Plugin_Common
              * @return boolean
              */
             $doContinue = $interceptor->invoke();
-            if (Piece_Unity_Error::hasErrors()) {
-                return;
-            }
-
             if (!$doContinue) {
                 break;
             }            
@@ -115,22 +111,28 @@ class Piece_Unity_Plugin_InterceptorChain extends Piece_Unity_Plugin_Common
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
     // }}}
-    // {{{ _initialize()
+    // {{{ initialize()
 
     /**
      * Defines and initializes extension points and configuration points.
      *
      * @since Method available since Release 0.6.0
      */
-    function _initialize()
+    protected function initialize()
     {
-        $this->_addExtensionPoint('interceptors', array('Interceptor_Session'));
+        $this->addExtensionPoint('interceptors', array('Interceptor_Session'));
     }
- 
+
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
+
     /**#@-*/
 
     // }}}

@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,15 +35,7 @@
  * @since      File available since Release 0.4.0
  */
 
-require_once realpath(dirname(__FILE__) . '/../../../prepare.php');
-require_once 'PHPUnit.php';
-require_once 'Piece/Unity/Plugin/InterceptorChain.php';
-require_once 'Piece/Unity/Plugin/Factory.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Unity/Config.php';
-
-// {{{ Piece_Unity_Plugin_InterceptorChainTestCase
+// {{{ Piece_Unity_Plugin_InterceptorChainTest
 
 /**
  * Some tests for Piece_Unity_Plugin_InterceptorChain.
@@ -54,7 +46,7 @@ require_once 'Piece/Unity/Config.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 0.4.0
  */
-class Piece_Unity_Plugin_InterceptorChainTestCase extends PHPUnit_TestCase
+class Piece_Unity_Plugin_InterceptorChainTest extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -66,10 +58,14 @@ class Piece_Unity_Plugin_InterceptorChainTestCase extends PHPUnit_TestCase
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
-    var $_oldPluginDirectories;
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
 
     /**#@-*/
 
@@ -77,46 +73,44 @@ class Piece_Unity_Plugin_InterceptorChainTestCase extends PHPUnit_TestCase
      * @access public
      */
 
-    function setUp()
+    public function setUp()
     {
+        parent::setUp();
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $this->_oldPluginDirectories = $GLOBALS['PIECE_UNITY_Plugin_Directories'];
         Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/../../..');
     }
 
-    function tearDown()
+    /**
+     * @test
+     */
+    public function invokeAInterceptor()
     {
-        unset($_SERVER['REQUEST_METHOD']);
-        Piece_Unity_Context::clear();
-        $GLOBALS['PIECE_UNITY_Plugin_Directories'] = $this->_oldPluginDirectories;
-        Piece_Unity_Error::clearErrors();
-    }
-
-    function testSingleInterceptor()
-    {
-        $config = &new Piece_Unity_Config();
+        $config = new Piece_Unity_Config();
         $config->setExtension('InterceptorChain', 'interceptors', array('Interceptor_First'));
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
-        $chain = &new Piece_Unity_Plugin_InterceptorChain();
+        $chain = new Piece_Unity_Plugin_InterceptorChain();
         $chain->invoke();
-        $request = &$context->getRequest();
+        $request = $context->getRequest();
 
         $this->assertTrue($request->hasParameter('FirstInterceptorCalled'));
         $this->assertTrue($request->getParameter('FirstInterceptorCalled'));
     }
 
-    function testMultipleInterceptors()
+    /**
+     * @test
+     */
+    public function invokeMultipleInterceptors()
     {
-        $config = &new Piece_Unity_Config();
+        $config = new Piece_Unity_Config();
         $config->setExtension('InterceptorChain', 'interceptors', array('Interceptor_First', 'Interceptor_Second'));
-        $context = &Piece_Unity_Context::singleton();
+        $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
-        $chain = &new Piece_Unity_Plugin_InterceptorChain();
+        $chain = new Piece_Unity_Plugin_InterceptorChain();
         $chain->invoke();
-        $request = &$context->getRequest();
+        $request = $context->getRequest();
 
         $this->assertTrue($request->hasParameter('FirstInterceptorCalled'));
         $this->assertTrue($request->getParameter('FirstInterceptorCalled'));
@@ -128,6 +122,12 @@ class Piece_Unity_Plugin_InterceptorChainTestCase extends PHPUnit_TestCase
         $this->assertEquals(strtolower('Piece_Unity_Plugin_Interceptor_First'), strtolower(array_shift($logs)));
         $this->assertEquals(strtolower('Piece_Unity_Plugin_Interceptor_Second'), strtolower(array_shift($logs)));
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
