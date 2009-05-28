@@ -93,10 +93,6 @@ class Piece_Unity_Plugin_OutputBufferStack extends Piece_Unity_Plugin_Common
                                             );
         }
 
-        while (ob_get_level()) {
-            ob_end_clean();
-        }
-
         foreach ($filters as $extension) {
             if (!function_exists($extension)) {
                 ob_start(array(Piece_Unity_Plugin_Factory::factory($extension), 'filter'));
