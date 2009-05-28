@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -36,15 +36,6 @@
  * @since      File available since Release 0.7.0
  */
 
-require_once 'Piece/Right/Config.php';
-require_once 'Piece/Unity/Error.php';
-require_once 'Piece/Right/Error.php';
-require_once 'Piece/Unity/Context.php';
-require_once 'Piece/Right/Validation/Script.php';
-require_once 'Piece/Right/Validator/Factory.php';
-require_once 'Piece/Right/Filter/Factory.php';
-require_once 'Piece/Right/Config/Factory.php';
-
 // {{{ Piece_Unity_Validation
 
 /**
@@ -69,14 +60,20 @@ class Piece_Unity_Validation
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
-    var $_configDirectory;
-    var $_cacheDirectory;
-    var $_results;
-    var $_config;
-    var $_template;
+    private $_configDirectory;
+    private $_cacheDirectory;
+    private $_results;
+    private $_config;
+    private $_template;
 
     /**#@-*/
 
@@ -92,7 +89,7 @@ class Piece_Unity_Validation
      *
      * @param string $configDirectory
      */
-    function setConfigDirectory($configDirectory)
+    public function setConfigDirectory($configDirectory)
     {
         $this->_configDirectory = $configDirectory;
     }
@@ -105,7 +102,7 @@ class Piece_Unity_Validation
      *
      * @param string $cacheDirectory
      */
-    function setCacheDirectory($cacheDirectory)
+    public function setCacheDirectory($cacheDirectory)
     {
         $this->_cacheDirectory = $cacheDirectory;
     }
@@ -118,40 +115,27 @@ class Piece_Unity_Validation
      * configuration.
      *
      * @param string  $validationSetName
-     * @param mixed   &$container
+     * @param mixed   $container
      * @param boolean $keepOriginalFieldValue
      * @return boolean
-     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
-    function validate($validationSetName,
-                      &$container,
-                      $keepOriginalFieldValue = true
-                      )
+    public function validate($validationSetName,
+                             $container,
+                             $keepOriginalFieldValue = true
+                             )
     {
-        $script = &new Piece_Right_Validation_Script($this->_configDirectory,
-                                                     $this->_cacheDirectory,
-                                                     array(__CLASS__, 'getFieldValueFromContext'),
-                                                     array(__CLASS__, 'setResultsAsViewElementAndFlowAttribute')
-                                                     );
-        $context = &Piece_Unity_Context::singleton();
-        $script->setPayload($context);
+        $script = new Piece_Right_Validation_Script($this->_configDirectory,
+                                                    $this->_cacheDirectory,
+                                                    array(__CLASS__, 'getFieldValueFromContext'),
+                                                    array(__CLASS__, 'setResultsAsViewElementAndFlowAttribute')
+                                                    );
+        $script->setPayload(Piece_Unity_Context::singleton());
         $script->setTemplate($this->_template);
-        Piece_Right_Error::disableCallback();
-        $this->_results = &$script->run($validationSetName,
-                                        $container,
-                                        $this->_config,
-                                        $keepOriginalFieldValue
-                                        );
-        Piece_Right_Error::enableCallback();
-        if (Piece_Right_Error::hasErrors()) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    'Failed to invoke Piece_Right_Validation_Script::run() for any reasons.',
-                                    'exception',
-                                    array(),
-                                    Piece_Right_Error::pop()
-                                    );
-            return;
-        }
+        $this->_results = $script->run($validationSetName,
+                                       $container,
+                                       $this->_config,
+                                       $keepOriginalFieldValue
+                                       );
 
         return !$this->_results->countErrors();
     }
@@ -165,14 +149,11 @@ class Piece_Unity_Validation
      *
      * @param string $fieldName
      * @return mixed
-     * @static
      */
-    function getFieldValueFromContext($fieldName)
+    public static function getFieldValueFromContext($fieldName)
     {
-        $context = &Piece_Unity_Context::singleton();
-        $request = &$context->getRequest();
-
-        return @$request->getParameter($fieldName);
+        return @Piece_Unity_Context::singleton()->getRequest()
+                                                ->getParameter($fieldName);
     }
 
     // }}}
@@ -183,10 +164,10 @@ class Piece_Unity_Validation
      *
      * @return Piece_Right_Config
      */
-    function &getConfiguration()
+    public function getConfiguration()
     {
         if (is_null($this->_config)) {
-            $this->_config = &new Piece_Right_Config();
+            $this->_config = new Piece_Right_Config();
         }
 
         return $this->_config;
@@ -198,7 +179,7 @@ class Piece_Unity_Validation
     /**
      * Clears some properties for the next use.
      */
-    function clear()
+    public function clear()
     {
         $this->_results = null;
         $this->_config = null;
@@ -214,18 +195,18 @@ class Piece_Unity_Validation
      * @param string $validationSetName
      * @return Piece_Right_Results
      */
-    function &getResults($validationSetName = null)
+    public function getResults($validationSetName = null)
     {
         $name = Piece_Unity_Validation::_createResultsName($validationSetName);
 
-        $context = &Piece_Unity_Context::singleton();
-        $continuation = &$context->getContinuation();
+        $context = Piece_Unity_Context::singleton();
+        $continuation = $context->getContinuation();
         if (!is_null($continuation)) {
             if ($continuation->hasAttribute($name)) {
                 return $continuation->getAttribute($name);
             }
         } else {
-            $viewElement = &$context->getViewElement();
+            $viewElement = $context->getViewElement();
             if ($viewElement->hasElement($name)) {
                 return $viewElement->getElement($name);
             }
@@ -242,18 +223,16 @@ class Piece_Unity_Validation
      * attribute.
      *
      * @param string              $validationSetName
-     * @param Piece_Right_Results &$results
-     * @static
+     * @param Piece_Right_Results $results
      */
-    function setResultsAsViewElementAndFlowAttribute($validationSetName, &$results)
+    public static function setResultsAsViewElementAndFlowAttribute($validationSetName, $results)
     {
-        $context = &Piece_Unity_Context::singleton();
-        $viewElement = &$context->getViewElement();
-        $viewElement->setElementByRef(Piece_Unity_Validation::_createResultsName($validationSetName), $results);
+        $context = Piece_Unity_Context::singleton();
+        $context->getViewElement()->setElement(Piece_Unity_Validation::_createResultsName($validationSetName), $results);
 
-        $continuation = &$context->getContinuation();
+        $continuation = $context->getContinuation();
         if (!is_null($continuation)) {
-            $continuation->setAttributeByRef(Piece_Unity_Validation::_createResultsName($validationSetName), $results);
+            $continuation->setAttribute(Piece_Unity_Validation::_createResultsName($validationSetName), $results);
         }
     }
 
@@ -264,10 +243,9 @@ class Piece_Unity_Validation
      * Adds a validator directory.
      *
      * @param array $directory
-     * @static
      * @since Method available since Release 0.8.0
      */
-    function addValidatorDirectory($directory)
+    public static function addValidatorDirectory($directory)
     {
         Piece_Right_Validator_Factory::addValidatorDirectory($directory);
     }
@@ -279,10 +257,9 @@ class Piece_Unity_Validation
      * Adds a filter directory.
      *
      * @param array $directory
-     * @static
      * @since Method available since Release 0.8.0
      */
-    function addFilterDirectory($directory)
+    public static function addFilterDirectory($directory)
     {
         Piece_Right_Filter_Factory::addFilterDirectory($directory);
     }
@@ -295,7 +272,7 @@ class Piece_Unity_Validation
      *
      * @param string $validatorPrefix
      */
-    function addValidatorPrefix($validatorPrefix)
+    public static function addValidatorPrefix($validatorPrefix)
     {
         Piece_Right_Validator_Factory::addValidatorPrefix($validatorPrefix);
     }
@@ -308,7 +285,7 @@ class Piece_Unity_Validation
      *
      * @param string $filterPrefix
      */
-    function addFilterPrefix($filterPrefix)
+    public static function addFilterPrefix($filterPrefix)
     {
         Piece_Right_Filter_Factory::addFilterPrefix($filterPrefix);
     }
@@ -323,7 +300,7 @@ class Piece_Unity_Validation
      * @param string $validationSetName
      * @return boolean
      */
-    function hasResults($validationSetName = null)
+    public function hasResults($validationSetName = null)
     {
         return (boolean)$this->getResults($validationSetName);
     }
@@ -337,29 +314,15 @@ class Piece_Unity_Validation
      *
      * @param string $validationSetName
      * @return array
-     * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      */
-    function getFieldNames($validationSetName)
+    public function getFieldNames($validationSetName)
     {
-        $script = &new Piece_Right_Validation_Script($this->_configDirectory,
-                                                     $this->_cacheDirectory,
-                                                     array(__CLASS__, 'getFieldValueFromContext'),
-                                                     array(__CLASS__, 'setResultsAsViewElementAndFlowAttribute')
-                                                     );
-        Piece_Right_Error::disableCallback();
-        $fieldNames = $script->getFieldNames($validationSetName, $this->_config);
-        Piece_Right_Error::enableCallback();
-        if (Piece_Right_Error::hasErrors()) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    'Failed to invoke Piece_Right_Validation_Script::getFieldNames() for any reasons.',
-                                    'exception',
-                                    array(),
-                                    Piece_Right_Error::pop()
-                                    );
-            return;
-        }
-
-        return $fieldNames;
+        $script = new Piece_Right_Validation_Script($this->_configDirectory,
+                                                    $this->_cacheDirectory,
+                                                    array(__CLASS__, 'getFieldValueFromContext'),
+                                                    array(__CLASS__, 'setResultsAsViewElementAndFlowAttribute')
+                                                    );
+        return $script->getFieldNames($validationSetName, $this->_config);
     }
 
     // }}}
@@ -375,7 +338,7 @@ class Piece_Unity_Validation
      * @throws PIECE_UNITY_ERROR_INVOCATION_FAILED
      * @since Method available since Release 1.3.0
      */
-    function mergeValidationSet($validationSetName, $configDirectory = null, $cacheDirectory = null)
+    public function mergeValidationSet($validationSetName, $configDirectory = null, $cacheDirectory = null)
     {
         if (is_null($configDirectory)) {
             $configDirectory = $this->_configDirectory;
@@ -385,25 +348,14 @@ class Piece_Unity_Validation
             $cacheDirectory = $this->_cacheDirectory;
         }
 
-        Piece_Right_Error::disableCallback();
-        $config = &Piece_Right_Config_Factory::factory($validationSetName,
-                                                       $configDirectory,
-                                                       $cacheDirectory,
-                                                       $this->_template
-                                                       );
-        Piece_Right_Error::enableCallback();
-        if (Piece_Right_Error::hasErrors()) {
-            Piece_Unity_Error::push(PIECE_UNITY_ERROR_INVOCATION_FAILED,
-                                    'Failed to invoke Piece_Right_Validation_Script::mergeValidationSet() for any reasons.',
-                                    'exception',
-                                    array(),
-                                    Piece_Right_Error::pop()
-                                    );
-            return;
-        }
+        $config = Piece_Right_Config_Factory::factory($validationSetName,
+                                                      $configDirectory,
+                                                      $cacheDirectory,
+                                                      $this->_template
+                                                      );
 
         if (is_null($this->_config)) {
-            $this->_config = &new Piece_Right_Config();
+            $this->_config = new Piece_Right_Config();
         }
 
         $this->_config->merge($config);
@@ -418,7 +370,7 @@ class Piece_Unity_Validation
      * @param string $template
      * @since Method available since Release 1.3.0
      */
-    function setTemplate($template)
+    public function setTemplate($template)
     {
         $this->_template = $template;
     }
@@ -433,10 +385,16 @@ class Piece_Unity_Validation
      * @param boolean $treatUnderscoreAsDirectorySeparator
      * @since Method available since Release 1.3.0
      */
-    function setUseUnderscoreAsDirectorySeparator($useUnderscoreAsDirectorySeparator)
+    public static function setUseUnderscoreAsDirectorySeparator($useUnderscoreAsDirectorySeparator)
     {
         Piece_Right_Config_Factory::setUseUnderscoreAsDirectorySeparator($useUnderscoreAsDirectorySeparator);
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
@@ -455,7 +413,7 @@ class Piece_Unity_Validation
      * @static
      * @since Method available since Release 1.0.0
      */
-    function _createResultsName($validationSetName)
+    private function _createResultsName($validationSetName)
     {
         if (!is_null($validationSetName)) {
             return "__{$validationSetName}Results";

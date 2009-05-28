@@ -1,5 +1,3 @@
-# $Id$
-
 - name: String
   required:
     message: %_description% is required
@@ -11,3 +9,10 @@
         min: 1
         max: 255
       message: The length of %_description% must be less than %max% characters
+
+# Local Variables:
+# mode: conf-colon
+# coding: iso-8859-1
+# tab-width: 2
+# indent-tabs-mode: nil
+# End:

@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -32,12 +32,10 @@
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
- * @see        Piece_Unity_ValidationTestCase
+ * @see        Piece_Unity_ValidationTest
  * @see        Piece_Right_Validator_Common
  * @since      File available since Release 0.9.0
  */
-
-require_once 'Piece/Right/Validator/Common.php';
 
 // {{{ Piece_Right_Validator_PayloadTest
 
@@ -48,7 +46,7 @@ require_once 'Piece/Right/Validator/Common.php';
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @see        Piece_Unity_ValidationTestCase
+ * @see        Piece_Unity_ValidationTest
  * @see        Piece_Right_Validator_Common
  * @since      Class available since Release 0.9.0
  */
@@ -64,6 +62,12 @@ class Piece_Right_Validator_PayloadTest extends Piece_Right_Validator_Common
     /**#@-*/
 
     /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
      * @access private
      */
 
@@ -73,11 +77,17 @@ class Piece_Right_Validator_PayloadTest extends Piece_Right_Validator_Common
      * @access public
      */
 
-    function validate($value)
+    public function validate($value)
     {
         $this->_payload->setAttribute('bar', 'baz');
         return true;
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
