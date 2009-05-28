@@ -77,6 +77,7 @@ class Piece_Unity_Plugin_OutputBufferStackTest extends Piece_Unity_PHPUnit_TestC
     {
         parent::setUp();
         Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/../../..');
+        Piece_Unity_Plugin_Factory::addPluginPrefix(__CLASS__);
     }
 
     /**
@@ -85,7 +86,7 @@ class Piece_Unity_Plugin_OutputBufferStackTest extends Piece_Unity_PHPUnit_TestC
     public function invokeAFilter()
     {
         $config = new Piece_Unity_Config();
-        $config->setExtension('OutputBufferStack', 'filters', array('OutputFilter_First'));
+        $config->setExtension('OutputBufferStack', 'filters', array('First'));
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
@@ -108,7 +109,7 @@ class Piece_Unity_Plugin_OutputBufferStackTest extends Piece_Unity_PHPUnit_TestC
     public function invokeMultipleFilters()
     {
         $config = new Piece_Unity_Config();
-        $config->setExtension('OutputBufferStack', 'filters', array('OutputFilter_First', 'OutputFilter_Second'));
+        $config->setExtension('OutputBufferStack', 'filters', array('First', 'Second'));
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
@@ -128,8 +129,8 @@ class Piece_Unity_Plugin_OutputBufferStackTest extends Piece_Unity_PHPUnit_TestC
 
         $logs = $request->getParameter('logs');
 
-        $this->assertEquals(strtolower('Piece_Unity_Plugin_OutputFilter_Second'), strtolower(array_shift($logs)));
-        $this->assertEquals(strtolower('Piece_Unity_Plugin_OutputFilter_First'), strtolower(array_shift($logs)));
+        $this->assertEquals(__CLASS__ . '_Second', array_shift($logs));
+        $this->assertEquals(__CLASS__ . '_First', array_shift($logs));
     }
 
     /**
@@ -139,7 +140,7 @@ class Piece_Unity_Plugin_OutputBufferStackTest extends Piece_Unity_PHPUnit_TestC
     public function invokeABuiltinFunction()
     {
         $config = new Piece_Unity_Config();
-        $config->setExtension('OutputBufferStack', 'filters', array('OutputFilter_First', 'mb_output_handler', 'OutputFilter_Second'));
+        $config->setExtension('OutputBufferStack', 'filters', array('First', 'mb_output_handler', 'Second'));
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
 
@@ -159,8 +160,8 @@ class Piece_Unity_Plugin_OutputBufferStackTest extends Piece_Unity_PHPUnit_TestC
 
         $logs = $request->getParameter('logs');
 
-        $this->assertEquals(strtolower('Piece_Unity_Plugin_OutputFilter_Second'), strtolower(array_shift($logs)));
-        $this->assertEquals(strtolower('Piece_Unity_Plugin_OutputFilter_First'), strtolower(array_shift($logs)));
+        $this->assertEquals(__CLASS__ . '_Second', array_shift($logs));
+        $this->assertEquals(__CLASS__ . '_First', array_shift($logs));
     }
 
     /**#@-*/

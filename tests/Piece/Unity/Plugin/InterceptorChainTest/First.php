@@ -32,23 +32,23 @@
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    GIT: $Id$
- * @see        Piece_Unity_Plugin_InterceptorChainTest
+ * @see        Piece_Unity_Plugin_OutputBufferStackTest
  * @since      File available since Release 0.4.0
  */
 
-// {{{ Piece_Unity_Plugin_InterceptorChainTest_First
+// {{{ Piece_Unity_Plugin_OutputBufferStackTest_First
 
 /**
- * A class for unit tests.
+ * This class is a part of the Piece_Unity_Plugin_OutputBufferStackTestCase.
  *
  * @package    Piece_Unity
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License (revised)
  * @version    Release: @package_version@
- * @see        Piece_Unity_Plugin_InterceptorChainTest
+ * @see        Piece_Unity_Plugin_OutputBufferStackTest
  * @since      Class available since Release 0.4.0
  */
-class Piece_Unity_Plugin_InterceptorChainTest_First extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Interceptor_Interface
+class Piece_Unity_Plugin_OutputBufferStackTest_First extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
@@ -75,10 +75,19 @@ class Piece_Unity_Plugin_InterceptorChainTest_First extends Piece_Unity_Plugin_C
      * @access public
      */
 
-    public function intercept()
+    // }}}
+    // {{{ invoke()
+
+    /**
+     * Invokes the plugin specific code.
+     *
+     * @param string $buffer
+     * @return string
+     */
+    public function invoke($buffer)
     {
         $request = $this->context->getRequest();
-        $request->setParameter('FirstInterceptorCalled', true);
+        $request->setParameter('FirstOutputFilterCalled', true);
 
         if (!$request->hasParameter('logs')) {
             $logs = array();
@@ -89,7 +98,7 @@ class Piece_Unity_Plugin_InterceptorChainTest_First extends Piece_Unity_Plugin_C
         $logs[] = __CLASS__;
         $request->setParameter('logs', $logs);
 
-        return true;
+        return $buffer;
     }
 
     /**#@-*/

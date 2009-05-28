@@ -36,7 +36,7 @@
  * @since      File available since Release 0.4.0
  */
 
-// {{{ Piece_Unity_Plugin_OutputFilter_First
+// {{{ Piece_Unity_Plugin_OutputBufferStackTest_First
 
 /**
  * This class is a part of the Piece_Unity_Plugin_OutputBufferStackTestCase.
@@ -48,7 +48,7 @@
  * @see        Piece_Unity_Plugin_OutputBufferStackTest
  * @since      Class available since Release 0.4.0
  */
-class Piece_Unity_Plugin_OutputFilter_First extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_OutputBufferStackTest_First extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties
