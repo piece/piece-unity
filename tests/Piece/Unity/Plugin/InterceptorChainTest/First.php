@@ -48,7 +48,7 @@
  * @see        Piece_Unity_Plugin_InterceptorChainTest
  * @since      Class available since Release 0.4.0
  */
-class Piece_Unity_Plugin_InterceptorChainTest_First extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_InterceptorChainTest_First extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Interceptor_Interface
 {
 
     // {{{ properties
@@ -75,13 +75,7 @@ class Piece_Unity_Plugin_InterceptorChainTest_First extends Piece_Unity_Plugin_C
      * @access public
      */
 
-    // }}}
-    // {{{ invoke()
-
-    /**
-     * Invokes the plugin specific code.
-     */
-    public function invoke()
+    public function intercept()
     {
         $request = $this->context->getRequest();
         $request->setParameter('FirstInterceptorCalled', true);

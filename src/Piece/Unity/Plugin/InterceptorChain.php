@@ -93,15 +93,7 @@ class Piece_Unity_Plugin_InterceptorChain extends Piece_Unity_Plugin_Common
         }
 
         foreach ($interceptors as $extension) {
-            $interceptor = Piece_Unity_Plugin_Factory::factory($extension);
-
-            /*
-             * Stops the invocation of the interceptors if an interceptor
-             * returns false.
-             *
-             * @return boolean
-             */
-            $doContinue = $interceptor->invoke();
+            $doContinue = Piece_Unity_Plugin_Factory::factory($extension)->intercept();
             if (!$doContinue) {
                 break;
             }            
