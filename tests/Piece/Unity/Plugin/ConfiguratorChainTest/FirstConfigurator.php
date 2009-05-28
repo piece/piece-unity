@@ -36,7 +36,7 @@
  * @since      File available since Release 0.11.0
  */
 
-// {{{ FirstConfigurator
+// {{{ Piece_Unity_Plugin_ConfiguratorChainTest_FirstConfigurator
 
 /**
  * A class for unit tests.
@@ -48,7 +48,7 @@
  * @see        Piece_Unity_Plugin_ConfiguratorChainTest
  * @since      Class available since Release 0.11.0
  */
-class FirstConfigurator extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Configurator_Interface
+class Piece_Unity_Plugin_ConfiguratorChainTest_FirstConfigurator extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Configurator_Interface
 {
 
     // {{{ properties

@@ -77,8 +77,8 @@ class Piece_Unity_Plugin_ConfiguratorChainTest extends Piece_Unity_PHPUnit_TestC
     {
         parent::setUp();
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
-        Piece_Unity_Plugin_Factory::addPluginPrefix('');
+        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/../../..');
+        Piece_Unity_Plugin_Factory::addPluginPrefix(__CLASS__);
     }
 
     /**
@@ -120,8 +120,8 @@ class Piece_Unity_Plugin_ConfiguratorChainTest extends Piece_Unity_PHPUnit_TestC
 
         $logs = $request->getParameter('logs');
 
-        $this->assertEquals('FirstConfigurator', array_shift($logs));
-        $this->assertEquals('SecondConfigurator', array_shift($logs));
+        $this->assertEquals(__CLASS__ . '_FirstConfigurator', array_shift($logs));
+        $this->assertEquals(__CLASS__ . '_SecondConfigurator', array_shift($logs));
     }
 
     /**#@-*/
