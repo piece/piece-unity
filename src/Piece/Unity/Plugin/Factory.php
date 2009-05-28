@@ -122,7 +122,7 @@ class Piece_Unity_Plugin_Factory
                         'The plugin [ ' .
                         $pluginName .
                         ' ] is not found in the following directories: ' .
-                        implode(',', self::$_pluginDirectories)
+                        implode(', ', self::$_pluginDirectories)
                                                     );
                 }
             }
