@@ -92,7 +92,7 @@ abstract class Piece_Unity_Plugin_Common
     public function __construct($prefix = 'Piece_Unity_Plugin')
     {
         if (strlen($prefix)) {
-            $this->_name = str_replace(strtolower("{$prefix}_"), '', strtolower(get_class($this)));
+            $this->_name = str_replace(strtolower($prefix . '_'), '', strtolower(get_class($this)));
         } else {
             $this->_name = strtolower(get_class($this));
         }
@@ -178,7 +178,13 @@ abstract class Piece_Unity_Plugin_Common
     {
         $extensionPoint = strtolower($extensionPoint);
         if (!array_key_exists($extensionPoint, $this->_extensionPoints)) {
-            throw new Piece_Unity_Exception("The extension point  [ $extensionPoint ] is not found in the plug-in [ {$this->_name} ]");
+            throw new Piece_Unity_Exception(
+                'The extension point [ ' .
+                $extensionPoint .
+                ' ] is not found in the plug-in [ ' .
+                $this->_name .
+                ' ]'
+                                            );
         }
 
         $extension = $this->context->getConfiguration()
@@ -209,7 +215,13 @@ abstract class Piece_Unity_Plugin_Common
     {
         $configurationPoint = strtolower($configurationPoint);
         if (!array_key_exists($configurationPoint, $this->_configurationPoints)) {
-            throw new Piece_Unity_Exception("The configuration point  [ $configurationPoint ] is not found in the plug-in [ {$this->_name} ]");
+            throw new Piece_Unity_Exception(
+                'The configuration point [ ' .
+                $configurationPoint .
+                ' ] is not found in the plug-in [ ' .
+                $this->_name .
+                ' ]'
+                                            );
         }
 
         $configuration = $this->context->getConfiguration()
