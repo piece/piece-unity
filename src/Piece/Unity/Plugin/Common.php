@@ -178,7 +178,7 @@ abstract class Piece_Unity_Plugin_Common
     {
         $extensionPoint = strtolower($extensionPoint);
         if (!array_key_exists($extensionPoint, $this->_extensionPoints)) {
-            throw new Piece_Unity_Exception("The configuration point  [ $extensionPoint ] is not found in the plug-in [ {$this->_name} ]");
+            throw new Piece_Unity_Exception("The extension point  [ $extensionPoint ] is not found in the plug-in [ {$this->_name} ]");
         }
 
         $extension = $this->context->getConfiguration()
