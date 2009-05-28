@@ -39,7 +39,7 @@
 // {{{ Piece_Unity_Plugin_Interceptor_Second
 
 /**
- * This class is a part of the Piece_Unity_Plugin_InterceptorChainTestCase.
+ * A class for unit tests.
  *
  * @package    Piece_Unity
  * @copyright  2006-2007, 2009 KUBO Atsuhiro <kubo@iteman.jp>
