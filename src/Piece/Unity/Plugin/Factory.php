@@ -118,15 +118,22 @@ class Piece_Unity_Plugin_Factory
                 }
 
                 if (!$found) {
-                    throw new Piece_Unity_Exception("The plugin [ $pluginName ] is not found in the following directories:\n" .
-                                                    implode("\n", self::$_pluginDirectories)
+                    throw new Piece_Unity_Exception(
+                        'The plugin [ ' .
+                        $pluginName .
+                        ' ] is not found in the following directories: ' .
+                        implode(',', self::$_pluginDirectories)
                                                     );
                 }
             }
 
             $plugin = new $pluginClass($prefixAlias);
             if (!$plugin instanceof Piece_Unity_Plugin_Common) {
-                throw new Piece_Unity_Exception("The plugin [ $pluginName ] must be subclass of Piece_Unity_Plugin_Common");
+                throw new Piece_Unity_Exception(
+                    'The plugin [ ' .
+                    $pluginName .
+                    ' ] must be subclass of Piece_Unity_Plugin_Common'
+                                                );
             }
 
             self::$_pluginInstances[$pluginName] = $plugin;
@@ -225,7 +232,7 @@ class Piece_Unity_Plugin_Factory
     private static function _getPluginClass($pluginName, $prefixAlias)
     {
         if ($prefixAlias) {
-            return "{$prefixAlias}_{$pluginName}";
+            return $prefixAlias .  '_' . $pluginName;
         } else {
             return $pluginName;
         }
