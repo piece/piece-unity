@@ -77,7 +77,6 @@ class Piece_Unity_Plugin_FactoryTest_Foo extends Piece_Unity_Plugin_Common
 
     public function invoke()
     {
-        ++$GLOBALS[strtolower(__CLASS__) . strtolower(__FUNCTION__) . 'Called'];
         $this->getExtension('bar')->invoke();
     }
 
