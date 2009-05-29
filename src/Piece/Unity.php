@@ -35,12 +35,6 @@
  * @since      File available since Release 0.1.0
  */
 
-// {{{ GLOBALS
-
-$GLOBALS['PIECE_UNITY_Root_Plugin'] = 'Root';
-$GLOBALS['PIECE_UNITY_ConfigurationCallback'] = null;
-
-// }}}
 // {{{ Piece_Unity
 
 /**
@@ -55,6 +49,11 @@ $GLOBALS['PIECE_UNITY_ConfigurationCallback'] = null;
 class Piece_Unity
 {
 
+    // {{{ constants
+
+    const ROOT_PLUGIN = 'Root';
+
+    // }}}
     // {{{ properties
 
     /**#@+
@@ -74,6 +73,7 @@ class Piece_Unity
      */
 
     private $_config;
+    private static $_configurationCallback;
 
     /**#@-*/
 
@@ -119,7 +119,7 @@ class Piece_Unity
                                             );
         }
 
-        Piece_Unity_Plugin_Factory::factory($GLOBALS['PIECE_UNITY_Root_Plugin'])->invoke();
+        Piece_Unity_Plugin_Factory::factory(self::ROOT_PLUGIN)->invoke();
     }
 
     // }}}
@@ -187,8 +187,8 @@ class Piece_Unity
         if (!is_null($callback)) {
             call_user_func_array($callback, array($runtime));
         } else {
-            if (!is_null($GLOBALS['PIECE_UNITY_ConfigurationCallback'])) {
-                call_user_func_array($GLOBALS['PIECE_UNITY_ConfigurationCallback'],
+            if (!is_null(self::$_configurationCallback)) {
+                call_user_func_array(self::$_configurationCallback,
                                      array($runtime)
                                      );
             }
@@ -241,7 +241,7 @@ class Piece_Unity
      */
     public static function setConfigurationCallback($callback)
     {
-        $GLOBALS['PIECE_UNITY_ConfigurationCallback'] = $callback;
+        self::$_configurationCallback = $callback;
     }
 
     /**#@-*/

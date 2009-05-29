@@ -35,8 +35,6 @@
  * @since      File available since Release 0.1.0
  */
 
-require_once 'Piece/Unity.php';
-
 // {{{ Piece_UnityTest
 
 /**
@@ -99,14 +97,8 @@ class Piece_UnityTest extends Piece_Unity_PHPUnit_TestCase
     public function configureTheRuntimeByTheConstructorWithAConfigurationObject()
     {
         $dynamicConfig = new Piece_Unity_Config();
-        $dynamicConfig->setExtension($GLOBALS['PIECE_UNITY_Root_Plugin'],
-                                     'renderer',
-                                     'Foo'
-                                     );
-        $dynamicConfig->setConfiguration($GLOBALS['PIECE_UNITY_Root_Plugin'],
-                                         'Bar',
-                                         'Baz'
-                                         );
+        $dynamicConfig->setExtension(Piece_Unity::ROOT_PLUGIN, 'renderer', 'Foo');
+        $dynamicConfig->setConfiguration(Piece_Unity::ROOT_PLUGIN, 'Bar', 'Baz');
         $unity = new Piece_Unity(dirname(__FILE__) . '/../../data',
                                  $this->_exclusiveDirectory,
                                  $dynamicConfig
@@ -114,10 +106,10 @@ class Piece_UnityTest extends Piece_Unity_PHPUnit_TestCase
         $config = Piece_Unity_Context::singleton()->getConfiguration();
 
         $this->assertEquals('Foo',
-                            $config->getExtension($GLOBALS['PIECE_UNITY_Root_Plugin'], 'renderer')
+                            $config->getExtension(Piece_Unity::ROOT_PLUGIN, 'renderer')
                             );
         $this->assertEquals('Baz',
-                            $config->getConfiguration($GLOBALS['PIECE_UNITY_Root_Plugin'], 'Bar')
+                            $config->getConfiguration(Piece_Unity::ROOT_PLUGIN, 'Bar')
                             );
 
         $context = Piece_Unity_Context::singleton();
@@ -176,12 +168,12 @@ class Piece_UnityTest extends Piece_Unity_PHPUnit_TestCase
     {
         $unity = new Piece_Unity();
         $unity->configure();
-        $unity->setConfiguration($GLOBALS['PIECE_UNITY_Root_Plugin'], 'Bar', 'Baz');
-        $unity->setExtension($GLOBALS['PIECE_UNITY_Root_Plugin'], 'renderer', 'Foo');
+        $unity->setConfiguration(Piece_Unity::ROOT_PLUGIN, 'Bar', 'Baz');
+        $unity->setExtension(Piece_Unity::ROOT_PLUGIN, 'renderer', 'Foo');
         $config = Piece_Unity_Context::singleton()->getConfiguration();
 
-        $this->assertEquals('Baz', $config->getConfiguration($GLOBALS['PIECE_UNITY_Root_Plugin'], 'Bar'));
-        $this->assertEquals('Foo', $config->getExtension($GLOBALS['PIECE_UNITY_Root_Plugin'], 'renderer'));
+        $this->assertEquals('Baz', $config->getConfiguration(Piece_Unity::ROOT_PLUGIN, 'Bar'));
+        $this->assertEquals('Foo', $config->getExtension(Piece_Unity::ROOT_PLUGIN, 'renderer'));
     }
 
     /**
@@ -237,10 +229,7 @@ class Piece_UnityTest extends Piece_Unity_PHPUnit_TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_event'] = 'foo';
         $unity = new Piece_Unity();
-        $unity->setConfiguration($GLOBALS['PIECE_UNITY_Root_Plugin'],
-                                 'Bar',
-                                 'Baz'
-                                 );
+        $unity->setConfiguration(Piece_Unity::ROOT_PLUGIN, 'Bar', 'Baz');
     }
 
     /**
@@ -253,10 +242,7 @@ class Piece_UnityTest extends Piece_Unity_PHPUnit_TestCase
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_event'] = 'foo';
         $unity = new Piece_Unity();
-        $unity->setExtension($GLOBALS['PIECE_UNITY_Root_Plugin'],
-                             'renderer',
-                             'Foo'
-                             );
+        $unity->setExtension(Piece_Unity::ROOT_PLUGIN, 'renderer', 'Foo');
     }
 
     /**#@-*/
