@@ -50,9 +50,10 @@
  */
 class Piece_Unity_SessionTest_Loader
 {
-    public function load($class, $id)
+    private static $_loadCount = 0;
+    public static function load($class, $id)
     {
-        ++$GLOBALS['loadCount'];
+        ++self::$_loadCount;
         include_once dirname(__FILE__) . '/' . substr(strrchr($class, '_'), 1) . '.php';
     }
 }

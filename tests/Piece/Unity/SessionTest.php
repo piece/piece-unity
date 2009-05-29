@@ -179,7 +179,6 @@ class Piece_Unity_SessionTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function preloadClassesForStoredObjectsBeforeStartingTheSession()
     {
-        $GLOBALS['loadCount'] = 0;
         @$this->_session->start();
 
         $this->assertFalse(class_exists('Piece_Unity_SessionTest_Foo', false));
@@ -196,7 +195,7 @@ class Piece_Unity_SessionTest extends Piece_Unity_PHPUnit_TestCase
         $this->assertTrue(class_exists('Piece_Unity_SessionTest_Foo', false));
         $this->assertTrue(is_object($foo));
         $this->assertType('Piece_Unity_SessionTest_Foo', $foo);
-        $this->assertEquals(1, $GLOBALS['loadCount']);
+        $this->assertEquals(1, $this->readAttribute($service, '_loadCount'));
     }
 
     /**
