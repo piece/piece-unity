@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2008-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,8 +35,6 @@
  * @since      File available since Release 1.5.0
  */
 
-require_once 'Piece/Unity/Plugin/Common.php';
-
 // {{{ Piece_Unity_Plugin_Renderer_Raw
 
 /**
@@ -48,7 +46,56 @@ require_once 'Piece/Unity/Plugin/Common.php';
  * @version    Release: @package_version@
  * @since      Class available since Release 1.5.0
  */
-class Piece_Unity_Plugin_Renderer_Raw extends Piece_Unity_Plugin_Common {}
+class Piece_Unity_Plugin_Renderer_Raw extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Renderer_Interface
+{
+
+    // {{{ properties
+
+    /**#@+
+     * @access public
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access public
+     */
+
+    // }}}
+    // {{{ render()
+
+    /**
+     */
+    public function render() {}
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
+
+    /**#@-*/
+
+    /**#@+
+     * @access private
+     */
+
+    /**#@-*/
+
+    // }}}
+}
 
 // }}}
 
