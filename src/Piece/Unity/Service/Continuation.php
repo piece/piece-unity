@@ -2,7 +2,7 @@
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 
 /**
- * PHP versions 4 and 5
+ * PHP version 5
  *
  * Copyright (c) 2008-2009 KUBO Atsuhiro <kubo@iteman.jp>,
  * All rights reserved.
@@ -35,13 +35,6 @@
  * @since      File available since Release 1.5.0
  */
 
-require_once 'Piece/Unity/URI.php';
-
-// {{{ GLOBALS
-
-$GLOBALS['PIECE_UNITY_Service_Continuation_FlowExecutionTicketKey'] = null;
-
-// }}}
 // {{{ Piece_Unity_Service_Continuation
 
 /**
@@ -65,14 +58,21 @@ class Piece_Unity_Service_Continuation
     /**#@-*/
 
     /**#@+
-     * @access private
+     * @access protected
      */
 
     /**#@-*/
 
     /**#@+
+     * @access private
+     */
+
+    private static $_flowExecutionTicketKey;
+
+    /**#@-*/
+
+    /**#@+
      * @access public
-     * @static
      */
 
     // }}}
@@ -86,14 +86,14 @@ class Piece_Unity_Service_Continuation
      * @param string $flowID
      * @return Piece_Unity_URI
      */
-    function &createURI($eventName, $flowID = null)
+    public static function createURI($eventName, $flowID = null)
     {
-        $context = &Piece_Unity_Context::singleton();
-        $continuation = &$context->getContinuation();
-        $uri = &new Piece_Unity_URI(is_null($flowID) ? $context->getScriptName()
-                                                     : $flowID
-                                    );
-        $uri->setQueryVariable($GLOBALS['PIECE_UNITY_Service_Continuation_FlowExecutionTicketKey'],
+        $context = Piece_Unity_Context::singleton();
+        $continuation = $context->getContinuation();
+        $uri = new Piece_Unity_URI(is_null($flowID) ? $context->getScriptName()
+                                                    : $flowID
+                                   );
+        $uri->setQueryVariable(self::$_flowExecutionTicketKey,
                                is_null($flowID) ? $continuation->getActiveFlowExecutionTicket()
                                                 : $continuation->getFlowExecutionTicketByFlowID($flowID)
                                );
@@ -110,9 +110,9 @@ class Piece_Unity_Service_Continuation
      *
      * @return string
      */
-    function getFlowExecutionTicketKey()
+    public static function getFlowExecutionTicketKey()
     {
-        return $GLOBALS['PIECE_UNITY_Service_Continuation_FlowExecutionTicketKey'];
+        return self::$_flowExecutionTicketKey;
     }
 
     // }}}
@@ -123,11 +123,16 @@ class Piece_Unity_Service_Continuation
      *
      * @param string $flowExecutionTicketKey
      */
-    function setFlowExecutionTicketKey($flowExecutionTicketKey)
+    public static function setFlowExecutionTicketKey($flowExecutionTicketKey)
     {
-        $GLOBALS['PIECE_UNITY_Service_Continuation_FlowExecutionTicketKey'] =
-            $flowExecutionTicketKey;
+        self::$_flowExecutionTicketKey = $flowExecutionTicketKey;
     }
+
+    /**#@-*/
+
+    /**#@+
+     * @access protected
+     */
 
     /**#@-*/
 
