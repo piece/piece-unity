@@ -1,5 +1,3 @@
-# $Id$
-
 - name: Controller
   point:
     - name: dispatcher
