@@ -183,7 +183,7 @@ class Piece_Unity
      */
     public function createRuntime($callback = null)
     {
-        $runtime = new Piece_Unity();
+        $runtime = new self;
         if (!is_null($callback)) {
             call_user_func_array($callback, array($runtime));
         } else {
