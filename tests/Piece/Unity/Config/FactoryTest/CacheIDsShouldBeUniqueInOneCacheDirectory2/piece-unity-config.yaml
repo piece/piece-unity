@@ -12,14 +12,17 @@
     - name: actionDirectory
       type: configuration
       value: ../webapp/actions
+    - name: configDirectory
+      type: configuration
+      value: ../webapp/config/flows
     - name: cacheDirectory
       type: configuration
       value: ../webapp/cache
-    - name: flowDefinitions
+    - name: flowMappings
       type: configuration
       value:
-        - name: Registration
-          file: ../webapp/config/Registration.yaml
+        - uri: /register.php
+          flowName: Registration
           isExclusive: false
 
 - name: Dispatcher_Simple

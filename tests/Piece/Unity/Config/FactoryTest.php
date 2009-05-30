@@ -150,11 +150,11 @@ class Piece_Unity_Config_FactoryTest extends Piece_Unity_PHPUnit_TestCase
         $this->assertEquals('../webapp/actions', $config->getConfiguration('Dispatcher_Continuation', 'actionDirectory'));
         $this->assertEquals('../webapp/cache', $config->getConfiguration('Dispatcher_Continuation', 'cacheDirectory'));
 
-        $flowDefinitions = $config->getConfiguration('Dispatcher_Continuation', 'flowDefinitions');
+        $flowMappings = $config->getConfiguration('Dispatcher_Continuation', 'flowMappings');
 
-        $this->assertEquals('Registration', $flowDefinitions[0]['name']);
-        $this->assertEquals('../webapp/config/Registration.yaml', $flowDefinitions[0]['file']);
-        $this->assertFalse($flowDefinitions[0]['isExclusive']);
+        $this->assertEquals('/register.php', $flowMappings[0]['uri']);
+        $this->assertEquals('Registration', $flowMappings[0]['flowName']);
+        $this->assertFalse($flowMappings[0]['isExclusive']);
         $this->assertEquals('../webapp/actions', $config->getConfiguration('Dispatcher_Simple', 'actionDirectory'));
         $this->assertEquals('../webapp/templates', $config->getConfiguration('Renderer_PHP', 'templateDirectory'));
         $this->assertEquals('Renderer_PHP', $config->getExtension('View', 'renderer'));

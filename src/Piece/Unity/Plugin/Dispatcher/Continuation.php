@@ -229,7 +229,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     {
         $this->addConfigurationPoint('actionDirectory');
         $this->addConfigurationPoint('cacheDirectory');
-        $this->addConfigurationPoint('flowDefinitions', array()); // deprecated
         $this->addConfigurationPoint('flowExecutionTicketKey',
                                       '_flowExecutionTicket'
                                       );
@@ -249,12 +248,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
 
         Piece_Unity_Service_Continuation::setFlowExecutionTicketKey($this->getConfiguration('flowExecutionTicketKey'));
         self::$_flowIDKey = $this->getConfiguration('flowNameKey');
-
-        if ($this->getConfiguration('useFlowMappings')) {
-            self::$_flowID = $this->context->getOriginalScriptName();
-        } else {
-            self::$_flowID = $this->getConfiguration('flowName');
-        }
+        self::$_flowID = $this->context->getOriginalScriptName();
 
         Piece_Flow_Action_Factory::setActionDirectory($this->getConfiguration('actionDirectory'));
 
@@ -291,27 +285,17 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $continuationServer->setEventNameCallback(array(__CLASS__, 'getEventName'));
         $continuationServer->setFlowExecutionTicketCallback(array(__CLASS__, 'getFlowExecutionTicket'));
         $continuationServer->setFlowIDCallback(array(__CLASS__, 'getFlowID'));
-
-        if ($this->getConfiguration('useFlowMappings')) {
-            $continuationServer->setConfigDirectory($this->getConfiguration('configDirectory'));
-            $continuationServer->setConfigExtension($this->getConfiguration('configExtension'));
-            foreach ($this->getConfiguration('flowMappings') as $flowMapping) {
-                if (array_key_exists('url', $flowMapping)) {
-                    $flowMapping['uri'] = $flowMapping['url'];
-                }
-
-                $continuationServer->addFlow($flowMapping['uri'],
-                                             $flowMapping['flowName'],
-                                             $flowMapping['isExclusive']
-                                             );
+        $continuationServer->setConfigDirectory($this->getConfiguration('configDirectory'));
+        $continuationServer->setConfigExtension($this->getConfiguration('configExtension'));
+        foreach ($this->getConfiguration('flowMappings') as $flowMapping) {
+            if (array_key_exists('url', $flowMapping)) {
+                $flowMapping['uri'] = $flowMapping['url'];
             }
-        } else {
-            foreach ($this->getConfiguration('flowDefinitions') as $flowDefinition) {
-                $continuationServer->addFlow($flowDefinition['name'],
-                                             $flowDefinition['file'],
-                                             $flowDefinition['isExclusive']
-                                             );
-            }
+
+            $continuationServer->addFlow($flowMapping['uri'],
+                                         $flowMapping['flowName'],
+                                         $flowMapping['isExclusive']
+                                         );
         }
 
         return $continuationServer;
