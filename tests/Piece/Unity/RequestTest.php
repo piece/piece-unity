@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_RequestTest extends PHPUnit_Framework_TestCase
+class Piece_Unity_RequestTest extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
