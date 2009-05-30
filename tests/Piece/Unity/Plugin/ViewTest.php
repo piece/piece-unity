@@ -84,7 +84,7 @@ class Piece_Unity_Plugin_ViewTest extends Piece_Unity_PHPUnit_TestCase
         Piece_Unity_Plugin_Factory::factory('View')->invoke();
         $elements = $context->getViewElement()->getElements();
 
-        $this->assertEquals(10, count($elements));
+        $this->assertEquals(9, count($elements));
         $this->assertArrayHasKey('__request', $elements);
         $this->assertArrayHasKey('__session', $elements);
         $this->assertArrayHasKey('__eventNameKey', $elements);
@@ -93,7 +93,6 @@ class Piece_Unity_Plugin_ViewTest extends Piece_Unity_PHPUnit_TestCase
         $this->assertArrayHasKey('__sessionName', $elements);
         $this->assertArrayHasKey('__sessionID', $elements);
         $this->assertArrayHasKey('__appRootPath', $elements);
-        $this->assertArrayHasKey('__url', $elements);
         $this->assertArrayHasKey('__uri', $elements);
     }
 

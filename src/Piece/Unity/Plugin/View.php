@@ -97,7 +97,6 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
         $viewElement->setElement('__sessionID', session_id());
         $viewElement->setElement('__appRootPath', $this->context->getAppRootPath());
         $uri = new Piece_Unity_URI();
-        $viewElement->setElementByRef('__url', $uri); // deprecated
         $viewElement->setElementByRef('__uri', $uri);
 
         /*
