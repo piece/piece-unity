@@ -197,7 +197,7 @@ class Piece_Unity_Validation
      */
     public function getResults($validationSetName = null)
     {
-        $name = Piece_Unity_Validation::_createResultsName($validationSetName);
+        $name = self::_createResultsName($validationSetName);
 
         $context = Piece_Unity_Context::singleton();
         $continuation = $context->getContinuation();
@@ -228,11 +228,11 @@ class Piece_Unity_Validation
     public static function setResultsAsViewElementAndFlowAttribute($validationSetName, $results)
     {
         $context = Piece_Unity_Context::singleton();
-        $context->getViewElement()->setElement(Piece_Unity_Validation::_createResultsName($validationSetName), $results);
+        $context->getViewElement()->setElement(self::_createResultsName($validationSetName), $results);
 
         $continuation = $context->getContinuation();
         if (!is_null($continuation)) {
-            $continuation->setAttribute(Piece_Unity_Validation::_createResultsName($validationSetName), $results);
+            $continuation->setAttribute(self::_createResultsName($validationSetName), $results);
         }
     }
 
@@ -410,13 +410,12 @@ class Piece_Unity_Validation
      * Piece_Right_Results will be stored by.
      *
      * @param string $validationSetName
-     * @static
      * @since Method available since Release 1.0.0
      */
-    private function _createResultsName($validationSetName)
+    private static function _createResultsName($validationSetName)
     {
         if (!is_null($validationSetName)) {
-            return "__{$validationSetName}Results";
+            return '__' . $validationSetName . 'Results';
         } else {
             return '__results';
         }
