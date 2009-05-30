@@ -337,7 +337,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
 
             $flowName = $this->_continuationServer->getActiveFlowSource();
             if ($this->getConfiguration('useFullFlowNameAsViewPrefix')) {
-                $viewString = "{$flowName}_{$viewString}";
+                $viewString = $flowName . '_' . $viewString;
                 break;
             }
 
