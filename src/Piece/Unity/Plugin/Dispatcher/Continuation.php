@@ -229,7 +229,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
                                       '_flowExecutionTicket'
                                       );
         $this->addConfigurationPoint('flowNameKey', '_flow'); // deprecated
-        $this->addConfigurationPoint('flowName');             // deprecated
         $this->addConfigurationPoint('bindActionsWithFlowExecution', true);
         $this->addConfigurationPoint('enableGC', false);
         $this->addConfigurationPoint('gcExpirationTime', 1440);

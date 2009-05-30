@@ -200,7 +200,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_exclusiveDirectory);
-        $config->setConfiguration('Dispatcher_Continuation', 'flowName', 'Counter');
         $config->setConfiguration('Dispatcher_Continuation',
                                   'flowMappings',
                                   array(array('uri' => '/counter.php',
@@ -299,7 +298,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
                                               'flowName' => 'Counter',
                                               'isExclusive' => true))
                                   );
-        $config->setConfiguration('Dispatcher_Continuation', 'flowName', 'Counter');
         $config->setConfiguration('Dispatcher_Continuation', 'useFullFlowNameAsViewPrefix', false);
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
@@ -392,7 +390,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/flow-execution-expired.php';
         $config = new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Continuation', 'flowName', 'FlowExecutionExpired');
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_exclusiveDirectory);
