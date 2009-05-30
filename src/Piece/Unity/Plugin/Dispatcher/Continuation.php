@@ -226,12 +226,11 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->addConfigurationPoint('enableGC', false);
         $this->addConfigurationPoint('gcExpirationTime', 1440);
         $this->addConfigurationPoint('useGCFallback', false);
-        $this->addConfigurationPoint('gcFallbackURL'); // deprecated
         $this->addConfigurationPoint('flowMappings', array());
         $this->addConfigurationPoint('configDirectory');
         $this->addConfigurationPoint('configExtension', '.flow');
         $this->addConfigurationPoint('useFullFlowNameAsViewPrefix', true);
-        $this->addConfigurationPoint('gcFallbackURI', $this->getConfiguration('gcFallbackURL'));
+        $this->addConfigurationPoint('gcFallbackURI');
 
         Piece_Unity_Service_Continuation::setFlowExecutionTicketKey($this->getConfiguration('flowExecutionTicketKey'));
         self::$_flowID = $this->context->getOriginalScriptName();
