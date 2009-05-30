@@ -14,9 +14,6 @@
     - name: actionDirectory
       type: configuration
       value: ../webapp/actions
-    - name: enableSingleFlowMode
-      type: configuration
-      value: true
     - name: cacheDirectory
       type: configuration
       value: ../webapp/cache

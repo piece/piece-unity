@@ -228,7 +228,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     protected function initialize()
     {
         $this->addConfigurationPoint('actionDirectory');
-        $this->addConfigurationPoint('enableSingleFlowMode', false); // deprecated
         $this->addConfigurationPoint('cacheDirectory');
         $this->addConfigurationPoint('flowDefinitions', array()); // deprecated
         $this->addConfigurationPoint('flowExecutionTicketKey',
@@ -284,7 +283,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
     private function _createContinuationServer()
     {
         $continuationServer =
-            new Piece_Flow_Continuation_Server($this->getConfiguration('enableSingleFlowMode'),
+            new Piece_Flow_Continuation_Server(false,
                                                $this->getConfiguration('enableGC'),
                                                $this->getConfiguration('gcExpirationTime')
                                                );

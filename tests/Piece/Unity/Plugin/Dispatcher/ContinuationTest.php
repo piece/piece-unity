@@ -39,6 +39,7 @@ require_once 'Piece/Flow/Continuation/Server.php';
 require_once 'Piece/Flow/Env.php';
 require_once 'Piece/Right/Config/Factory.php';
 require_once 'Piece/Right/Validator/Factory.php';
+require_once 'Piece/Flow/Error.php';
 
 // {{{ Piece_Unity_Plugin_Dispatcher_ContinuationTest
 
@@ -159,11 +160,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_GET['_flow'] = 'Counter';
         $config = new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_exclusiveDirectory);
-        $config->setConfiguration('Dispatcher_Continuation', 'enableSingleFlowMode', true);
         $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions',
-                                  array(array('name' => 'Counter', 'file' => $this->_exclusiveDirectory . '/Counter.yaml', 'isExclusive' => true),
-                                        array('name' => 'SeconfCounter', 'file' => $this->_exclusiveDirectory . '/Counter.yaml', 'isExclusive' => true))
+                                  array(array('name' => 'NonExistingFlow', 'file' => '/path/to/NonExistingFlow.flow', 'isExclusive' => true))
                                   );
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
@@ -179,11 +178,11 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
     {
         $config = new Piece_Unity_Config();
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_exclusiveDirectory);
-        $config->setConfiguration('Dispatcher_Continuation', 'enableSingleFlowMode', true);
         $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'flowDefinitions',
                                   array(array('name' => 'Counter', 'file' => $this->_exclusiveDirectory . '/Counter.yaml', 'isExclusive' => false))
                                   );
+        $config->setConfiguration('Dispatcher_Continuation', 'flowName', 'Counter');
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         @$context->getSession()->start();
@@ -211,6 +210,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
             $dispatcher->invoke();
             $this->fail('An expected exception has not been raised');
         } catch (Stagehand_LegacyError_PEARErrorStack_Exception $e) {
+            $this->assertEquals(PIECE_FLOW_ERROR_CANNOT_INVOKE, $e->getCode());
         }
     }
 

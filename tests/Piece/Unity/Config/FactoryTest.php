@@ -148,7 +148,6 @@ class Piece_Unity_Config_FactoryTest extends Piece_Unity_PHPUnit_TestCase
         $this->assertEquals('View', $config->getExtension('Controller', 'view'));
         $this->assertEquals('Dispatcher_Simple', $config->getExtension('Controller', 'dispatcher'));
         $this->assertEquals('../webapp/actions', $config->getConfiguration('Dispatcher_Continuation', 'actionDirectory'));
-        $this->assertTrue($config->getConfiguration('Dispatcher_Continuation', 'enableSingleFlowMode'));
         $this->assertEquals('../webapp/cache', $config->getConfiguration('Dispatcher_Continuation', 'cacheDirectory'));
 
         $flowDefinitions = $config->getConfiguration('Dispatcher_Continuation', 'flowDefinitions');
