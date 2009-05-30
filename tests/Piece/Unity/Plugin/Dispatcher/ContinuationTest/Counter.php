@@ -39,7 +39,6 @@
 if (isset($__continuation)
     && strtolower(get_class($__continuation)) == strtolower('Piece_Flow_Continuation_Service')
     && isset($__flowExecutionTicketKey) && is_string($__flowExecutionTicketKey)
-    && isset($__flowNameKey) && is_string($__flowNameKey)
     && isset($__flowExecutionTicket) && is_string($__flowExecutionTicket)
     ) {
     print 'OK';

@@ -74,7 +74,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
 
     private $_continuationServer;
     private static $_sessionKey = '_continuation';
-    private static $_flowIDKey;
     private static $_flowID;
 
     /**#@-*/
@@ -165,12 +164,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      */
     public static function getFlowID()
     {
-        if (!is_null(self::$_flowID)) {
-            return self::$_flowID;
-        }
-
-        $request = Piece_Unity_Context::singleton()->getRequest();
-        return $request->hasParameter(self::$_flowIDKey) ? $request->getParameter(self::$_flowIDKey) : null;
+        return self::$_flowID;
     }
 
     // }}}
@@ -228,7 +222,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->addConfigurationPoint('flowExecutionTicketKey',
                                       '_flowExecutionTicket'
                                       );
-        $this->addConfigurationPoint('flowNameKey', '_flow'); // deprecated
         $this->addConfigurationPoint('bindActionsWithFlowExecution', true);
         $this->addConfigurationPoint('enableGC', false);
         $this->addConfigurationPoint('gcExpirationTime', 1440);
@@ -241,7 +234,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->addConfigurationPoint('gcFallbackURI', $this->getConfiguration('gcFallbackURL'));
 
         Piece_Unity_Service_Continuation::setFlowExecutionTicketKey($this->getConfiguration('flowExecutionTicketKey'));
-        self::$_flowIDKey = $this->getConfiguration('flowNameKey');
         self::$_flowID = $this->context->getOriginalScriptName();
 
         Piece_Flow_Action_Factory::setActionDirectory($this->getConfiguration('actionDirectory'));
@@ -250,7 +242,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $viewElement->setElement('__flowExecutionTicketKey',
                                  Piece_Unity_Service_Continuation::getFlowExecutionTicketKey()
                                  );
-        $viewElement->setElement('__flowNameKey', self::$_flowIDKey); // deprecated
     }
 
     /**#@-*/

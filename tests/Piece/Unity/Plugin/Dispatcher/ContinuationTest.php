@@ -259,7 +259,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
                                               'isExclusive' => true))
                                   );
         $config->setConfiguration('Dispatcher_Continuation', 'flowExecutionTicketKey', '_foo');
-        $config->setConfiguration('Dispatcher_Continuation', 'flowNameKey', '_bar');
         $config->setConfiguration('Dispatcher_Continuation', 'useFullFlowNameAsViewPrefix', false);
         $config->setConfiguration('Renderer_PHP', 'templateDirectory', $this->_exclusiveDirectory);
         $context = Piece_Unity_Context::singleton();
