@@ -83,11 +83,11 @@ class Piece_Unity_Config_FactoryTest extends Piece_Unity_PHPUnit_TestCase
 
     public function tearDown()
     {
-        $cache = new Cache_Lite_File(array('cacheDir' => "{$this->_cacheDirectory}/",
-                                            'masterFile' => '',
-                                            'automaticSerialization' => true,
-                                            'errorHandlingAPIBreak' => true)
-                                      );
+        $cache = new Cache_Lite_File(array('cacheDir' => $this->_cacheDirectory . '/',
+                                           'masterFile' => '',
+                                           'automaticSerialization' => true,
+                                           'errorHandlingAPIBreak' => true)
+                                     );
         $cache->clean();
     }
 
@@ -168,12 +168,12 @@ class Piece_Unity_Config_FactoryTest extends Piece_Unity_PHPUnit_TestCase
     public function createUniqueCacheIdsInOneCacheDirectory()
     {
         $oldDirectory = getcwd();
-        chdir("{$this->_cacheDirectory}/CacheIDsShouldBeUniqueInOneCacheDirectory1");
+        chdir($this->_cacheDirectory . '/CacheIDsShouldBeUniqueInOneCacheDirectory1');
         Piece_Unity_Config_Factory::factory('.', $this->_cacheDirectory);
 
         $this->assertEquals(1, $this->_getCacheFileCount($this->_cacheDirectory));
 
-        chdir("{$this->_cacheDirectory}/CacheIDsShouldBeUniqueInOneCacheDirectory2");
+        chdir($this->_cacheDirectory . '/CacheIDsShouldBeUniqueInOneCacheDirectory2');
         Piece_Unity_Config_Factory::factory('.', $this->_cacheDirectory);
 
         $this->assertEquals(2, $this->_getCacheFileCount($this->_cacheDirectory));
@@ -206,7 +206,7 @@ class Piece_Unity_Config_FactoryTest extends Piece_Unity_PHPUnit_TestCase
                     break;
                 }
 
-                if (filetype("$directory/$file") == 'file') {
+                if (filetype($directory . '/' . $file) == 'file') {
                     if (preg_match('/^cache_.+/', $file)) {
                         ++$cacheFileCount;
                     }
