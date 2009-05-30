@@ -35,7 +35,7 @@
  * @since      File available since Release 0.6.0
  */
 
-// {{{ Piece_Unity_Plugin_Renderer_RedirectionTestCase
+// {{{ Piece_Unity_Plugin_Renderer_RedirectionTest
 
 /**
  * Some tests for Piece_Unity_Plugin_Renderer_Redirection.
@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.6.0
  */
-class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_Framework_TestCase
+class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_TestCase
 {
 
     // {{{ properties
@@ -72,11 +72,6 @@ class Piece_Unity_Plugin_Renderer_RedirectionTestCase extends PHPUnit_Framework_
     /**#@+
      * @access public
      */
-
-    public function setUp()
-    {
-        Piece_Unity_Context::clear();
-    }
 
     /**
      * @test
