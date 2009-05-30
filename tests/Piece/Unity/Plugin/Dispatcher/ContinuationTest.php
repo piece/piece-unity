@@ -118,6 +118,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
                                               'flowName' => 'Counter',
                                               'isExclusive' => true))
                                   );
+        $config->setConfiguration('Dispatcher_Continuation', 'useFullFlowNameAsViewPrefix', false);
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         $session = $context->getSession();
@@ -206,6 +207,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
                                               'flowName' => 'Counter',
                                               'isExclusive' => false))
                                   );
+        $config->setConfiguration('Dispatcher_Continuation', 'useFullFlowNameAsViewPrefix', false);
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         @$context->getSession()->start();
@@ -259,6 +261,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
                                   );
         $config->setConfiguration('Dispatcher_Continuation', 'flowExecutionTicketKey', '_foo');
         $config->setConfiguration('Dispatcher_Continuation', 'flowNameKey', '_bar');
+        $config->setConfiguration('Dispatcher_Continuation', 'useFullFlowNameAsViewPrefix', false);
         $config->setConfiguration('Renderer_PHP', 'templateDirectory', $this->_exclusiveDirectory);
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
@@ -297,6 +300,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
                                               'isExclusive' => true))
                                   );
         $config->setConfiguration('Dispatcher_Continuation', 'flowName', 'Counter');
+        $config->setConfiguration('Dispatcher_Continuation', 'useFullFlowNameAsViewPrefix', false);
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         @$context->getSession()->start();
@@ -335,6 +339,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
                                               'flowName' => 'ContinuationValidation',
                                               'isExclusive' => true))
                                   );
+        $config->setConfiguration('Dispatcher_Continuation', 'useFullFlowNameAsViewPrefix', false);
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         @$context->getSession()->start();
@@ -401,6 +406,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $config->setConfiguration('Dispatcher_Continuation', 'gcExpirationTime', 1);
         $config->setConfiguration('Dispatcher_Continuation', 'useGCFallback', true);
         $config->setConfiguration('Dispatcher_Continuation', 'gcFallbackURI', 'http://www.example.org/');
+        $config->setConfiguration('Dispatcher_Continuation', 'useFullFlowNameAsViewPrefix', false);
         $context = Piece_Unity_Context::singleton();
         $context->setConfiguration($config);
         @$context->getSession()->start();
@@ -442,7 +448,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_exclusiveDirectory);
-        $config->setConfiguration('Dispatcher_Continuation', 'useFlowMappings', true);
         $config->setConfiguration('Dispatcher_Continuation', 'useFullFlowNameAsViewPrefix', false);
         $config->setConfiguration('Dispatcher_Continuation',
                                   'flowMappings',
@@ -475,7 +480,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_exclusiveDirectory);
-        $config->setConfiguration('Dispatcher_Continuation', 'useFlowMappings', true);
         $config->setConfiguration('Dispatcher_Continuation',
                                   'flowMappings',
                                   array(array('uri' => '/entry/new.php',
@@ -504,7 +508,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_exclusiveDirectory);
-        $config->setConfiguration('Dispatcher_Continuation', 'useFlowMappings', true);
         $config->setConfiguration('Dispatcher_Continuation',
                                   'flowMappings',
                                   array(array('uri' => '/entry/new.php',
@@ -532,7 +535,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_exclusiveDirectory);
-        $config->setConfiguration('Dispatcher_Continuation', 'useFlowMappings', true);
         $config->setConfiguration('Dispatcher_Continuation', 'useFullFlowNameAsViewPrefix', true);
         $config->setConfiguration('Dispatcher_Continuation',
                                   'flowMappings',
@@ -564,7 +566,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_exclusiveDirectory);
-        $config->setConfiguration('Dispatcher_Continuation', 'useFlowMappings', true);
         $config->setConfiguration('Dispatcher_Continuation',
                                   'flowMappings',
                                   array(array('uri' => '/exceptions/pass-through.php',
@@ -591,7 +592,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_exclusiveDirectory);
-        $config->setConfiguration('Dispatcher_Continuation', 'useFlowMappings', true);
         $config->setConfiguration('Dispatcher_Continuation',
                                   'flowMappings',
                                   array(array('uri' => $_SERVER['REQUEST_URI'],
@@ -624,7 +624,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $config->setConfiguration('Dispatcher_Continuation', 'actionDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'configDirectory', $this->_exclusiveDirectory);
         $config->setConfiguration('Dispatcher_Continuation', 'cacheDirectory', $this->_exclusiveDirectory);
-        $config->setConfiguration('Dispatcher_Continuation', 'useFlowMappings', true);
         $config->setConfiguration('Dispatcher_Continuation',
                                   'flowMappings',
                                   array(array('uri' => '/entry/new.php',

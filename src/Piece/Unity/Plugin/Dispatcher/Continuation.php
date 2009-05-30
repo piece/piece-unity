@@ -125,10 +125,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
                                       );
         }
 
-        if (!$this->getConfiguration('useFlowMappings')) {
-            return $viewString;
-        }
-
         return $this->_prefixFlowNameToViewString($viewString);
     }
 
@@ -239,7 +235,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $this->addConfigurationPoint('gcExpirationTime', 1440);
         $this->addConfigurationPoint('useGCFallback', false);
         $this->addConfigurationPoint('gcFallbackURL'); // deprecated
-        $this->addConfigurationPoint('useFlowMappings', false);
         $this->addConfigurationPoint('flowMappings', array());
         $this->addConfigurationPoint('configDirectory');
         $this->addConfigurationPoint('configExtension', '.flow');
