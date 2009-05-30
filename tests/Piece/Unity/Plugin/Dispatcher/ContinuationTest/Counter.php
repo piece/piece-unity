@@ -37,7 +37,7 @@
  */
 
 if (isset($__continuation)
-    && strtolower(get_class($__continuation)) == strtolower('Piece_Flow_Continuation_Service')
+    && $__continuation instanceof Piece_Flow_Continuation_Service
     && isset($__flowExecutionTicketKey) && is_string($__flowExecutionTicketKey)
     && isset($__flowExecutionTicket) && is_string($__flowExecutionTicket)
     ) {
