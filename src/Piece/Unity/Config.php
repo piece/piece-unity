@@ -69,6 +69,8 @@ class Piece_Unity_Config
 
     private $_extensions = array();
     private $_configurations = array();
+    private $_extensionPoints = array();
+    private $_configurationPoints = array();
 
     /**#@-*/
 
@@ -240,11 +242,10 @@ class Piece_Unity_Config
      * found in the given plug-in.
      *
      * @param string $plugin
-     * @param array  $extensionPoints
      * @throws Piece_Unity_Exception
      * @since Method available since Release 1.1.0
      */
-    public function validateExtensionPoints($plugin, $extensionPoints)
+    public function validateExtensionPoints($plugin)
     {
         $plugin = strtolower($plugin);
         if (!array_key_exists($plugin, $this->_extensions)) {
@@ -252,7 +253,7 @@ class Piece_Unity_Config
         }
 
         foreach (array_keys($this->_extensions[$plugin]) as $extensionPoint) {
-            if (!in_array($extensionPoint, $extensionPoints)) {
+            if (!array_key_exists($extensionPoint, $this->_extensionPoints[$plugin])) {
                 throw new Piece_Unity_Exception('The extension point [ ' .
                                                 $extensionPoint .
                                                 ' ] is not found in the plug-in [ ' .
@@ -271,11 +272,10 @@ class Piece_Unity_Config
      * found in the given plug-in.
      *
      * @param string $plugin
-     * @param array  $configurationPoints
      * @throws Piece_Unity_Exception
      * @since Method available since Release 1.1.0
      */
-    public function validateConfigurationPoints($plugin, $configurationPoints)
+    public function validateConfigurationPoints($plugin)
     {
         $plugin = strtolower($plugin);
         if (!array_key_exists($plugin, $this->_configurations)) {
@@ -283,7 +283,7 @@ class Piece_Unity_Config
         }
 
         foreach (array_keys($this->_configurations[$plugin]) as $configurationPoint) {
-            if (!in_array($configurationPoint, $configurationPoints)) {
+            if (!array_key_exists($configurationPoint, $this->_configurationPoints[$plugin])) {
                 throw new Piece_Unity_Exception('The configuration point [ ' .
                                                 $configurationPoint .
                                                 ' ] is not found in the plug-in [ ' .
@@ -292,6 +292,130 @@ class Piece_Unity_Config
                                                 );
             }
         }
+    }
+
+    // }}}
+    // {{{ addExtensionPoint()
+
+    /**
+     * Adds the extension point to the plugin, and sets the default value for
+     * the extension point to the given value.
+     *
+     * @param string $plugin
+     * @param string $extensionPoint
+     * @param string $default
+     * @since Method available since Release 2.0.0dev1
+     */
+    public function addExtensionPoint($plugin, $extensionPoint, $default = null)
+    {
+        $this->_extensionPoints[ strtolower($plugin) ][ strtolower($extensionPoint) ] = $default;
+    }
+
+    // }}}
+    // {{{ addConfigurationPoint()
+
+    /**
+     * Adds the configuration point to the plugin, and sets the default value
+     * for the configuration point to the given value.
+     *
+     * @param string $plugin
+     * @param string $configurationPoint
+     * @param string $default
+     * @since Method available since Release 2.0.0dev1
+     */
+    public function addConfigurationPoint($plugin, $configurationPoint, $default = null)
+    {
+        $this->_configurationPoints[ strtolower($plugin) ][ strtolower($configurationPoint) ] = $default;
+    }
+
+    // }}}
+    // {{{ getExtension()
+
+    /**
+     * Gets the extension of the given extension point.
+     *
+     * @param string $plugin
+     * @param string $extensionPoint
+     * @return mixed
+     * @throws Piece_Unity_Exception
+     * @since Method available since Release 2.0.0dev1
+     */
+    public function getExtension($plugin, $extensionPoint)
+    {
+        $plugin = strtolower($plugin);
+        if (!array_key_exists($plugin, $this->_extensionPoints)) {
+            throw new Piece_Unity_Exception(
+                'The plug-in [ ' .
+                $plugin .
+                ' ] is not found in the configuration repository'
+                                            );
+        }
+
+        $extensionPoint = strtolower($extensionPoint);
+        if (!array_key_exists($extensionPoint, $this->_extensionPoints[$plugin])) {
+            throw new Piece_Unity_Exception(
+                'The extension point [ ' .
+                $extensionPoint .
+                ' ] is not found in the plug-in [ ' .
+                $plugin .
+                ' ]'
+                                            );
+        }
+
+        $extension = $this->getExtensionDefinition($plugin, $extensionPoint);
+        if (is_null($extension)) {
+            $extension = $this->_extensionPoints[$plugin][$extensionPoint];
+        }
+
+        if (!$extension || is_array($extension)) {
+            return $extension;
+        }
+
+        return Piece_Unity_Plugin_Factory::factory($extension);
+    }
+
+    // }}}
+    // {{{ getConfiguration()
+
+    /**
+     * Gets the configuration of the given configuration point.
+     *
+     * @param string $plugin
+     * @param string $configurationPoint
+     * @return string
+     * @throws Piece_Unity_Exception
+     * @since Method available since Release 2.0.0dev1
+     */
+    public function getConfiguration($plugin, $configurationPoint)
+    {
+        $plugin = strtolower($plugin);
+        if (!array_key_exists($plugin, $this->_configurationPoints)) {
+            throw new Piece_Unity_Exception(
+                'The plug-in [ ' .
+                $plugin .
+                ' ] is not found in the configuration repository'
+                                            );
+        }
+
+        $configurationPoint = strtolower($configurationPoint);
+        if (!array_key_exists($configurationPoint, $this->_configurationPoints[$plugin])) {
+            throw new Piece_Unity_Exception(
+                'The configuration point [ ' .
+                $configurationPoint .
+                ' ] is not found in the plug-in [ ' .
+                $plugin .
+                ' ]'
+                                            );
+        }
+
+        $configuration =
+            $this->getConfigurationDefinition($plugin, $configurationPoint);
+        if (is_null($configuration)) {
+            $configuration =
+                $this->_configurationPoints[$plugin][$configurationPoint];
+        }
+
+        return $configuration;
     }
 
     /**#@-*/

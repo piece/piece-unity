@@ -69,8 +69,6 @@ abstract class Piece_Unity_Plugin_Common
      * @access private
      */
 
-    private $_extensionPoints = array();
-    private $_configurationPoints = array();
     private $_name;
 
     /**#@-*/
@@ -102,8 +100,8 @@ abstract class Piece_Unity_Plugin_Common
         $this->initialize();
 
         $config = $this->context->getConfiguration();
-        $config->validateExtensionPoints($this->_name, array_keys($this->_extensionPoints));
-        $config->validateConfigurationPoints($this->_name, array_keys($this->_configurationPoints));
+        $config->validateExtensionPoints($this->_name);
+        $config->validateConfigurationPoints($this->_name);
     }
 
     // }}}
@@ -135,7 +133,12 @@ abstract class Piece_Unity_Plugin_Common
      */
     protected function addExtensionPoint($extensionPoint, $default = null)
     {
-        $this->_extensionPoints[ strtolower($extensionPoint) ] = $default;
+        $this->context->getConfiguration()
+                      ->addExtensionPoint(
+                          $this->_name,
+                          $extensionPoint,
+                          $default
+                                          );
     }
 
     // }}}
@@ -150,7 +153,12 @@ abstract class Piece_Unity_Plugin_Common
      */
     protected function addConfigurationPoint($configurationPoint, $default = null)
     {
-        $this->_configurationPoints[ strtolower($configurationPoint) ] = $default;
+        $this->context->getConfiguration()
+                      ->addConfigurationPoint(
+                          $this->_name,
+                          $configurationPoint,
+                          $default
+                                              );
     }
 
     // }}}
@@ -176,31 +184,8 @@ abstract class Piece_Unity_Plugin_Common
      */
     protected function getExtension($extensionPoint)
     {
-        $extensionPoint = strtolower($extensionPoint);
-        if (!array_key_exists($extensionPoint, $this->_extensionPoints)) {
-            throw new Piece_Unity_Exception(
-                'The extension point [ ' .
-                $extensionPoint .
-                ' ] is not found in the plug-in [ ' .
-                $this->_name .
-                ' ]'
-                                            );
-        }
-
-        $extension = $this->context->getConfiguration()
-                                   ->getExtensionDefinition(
-                                       $this->_name,
-                                       $extensionPoint
-                                                            );
-        if (is_null($extension)) {
-            $extension = $this->_extensionPoints[$extensionPoint];
-        }
-
-        if (!$extension || is_array($extension)) {
-            return $extension;
-        }
-
-        return Piece_Unity_Plugin_Factory::factory($extension);
+        return $this->context->getConfiguration()
+                             ->getExtension($this->_name, $extensionPoint);
     }
 
     // }}}
@@ -216,27 +201,8 @@ abstract class Piece_Unity_Plugin_Common
      */
     protected function getConfiguration($configurationPoint)
     {
-        $configurationPoint = strtolower($configurationPoint);
-        if (!array_key_exists($configurationPoint, $this->_configurationPoints)) {
-            throw new Piece_Unity_Exception(
-                'The configuration point [ ' .
-                $configurationPoint .
-                ' ] is not found in the plug-in [ ' .
-                $this->_name .
-                ' ]'
-                                            );
-        }
-
-        $configuration = $this->context->getConfiguration()
-                                       ->getConfigurationDefinition(
-                                           $this->_name,
-                                           $configurationPoint
-                                                                    );
-        if (is_null($configuration)) {
-            $configuration = $this->_configurationPoints[$configurationPoint];
-        }
-
-        return $configuration;
+        return $this->context->getConfiguration()
+                             ->getConfiguration($this->_name, $configurationPoint);
     }
 
     /**#@-*/
