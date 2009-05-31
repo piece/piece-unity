@@ -188,7 +188,10 @@ abstract class Piece_Unity_Plugin_Common
         }
 
         $extension = $this->context->getConfiguration()
-                                   ->getExtension($this->_name, $extensionPoint);
+                                   ->getExtensionDefinition(
+                                       $this->_name,
+                                       $extensionPoint
+                                                            );
         if (is_null($extension)) {
             $extension = $this->_extensionPoints[$extensionPoint];
         }
@@ -225,9 +228,10 @@ abstract class Piece_Unity_Plugin_Common
         }
 
         $configuration = $this->context->getConfiguration()
-                                       ->getConfiguration($this->_name,
-                                                          $configurationPoint
-                                                          );
+                                       ->getConfigurationDefinition(
+                                           $this->_name,
+                                           $configurationPoint
+                                                                    );
         if (is_null($configuration)) {
             $configuration = $this->_configurationPoints[$configurationPoint];
         }

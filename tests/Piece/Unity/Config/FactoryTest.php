@@ -145,19 +145,19 @@ class Piece_Unity_Config_FactoryTest extends Piece_Unity_PHPUnit_TestCase
         $config = Piece_Unity_Config_Factory::factory($this->_cacheDirectory, $this->_cacheDirectory);
 
         $this->assertType('Piece_Unity_Config', $config);
-        $this->assertEquals('View', $config->getExtension('Controller', 'view'));
-        $this->assertEquals('Dispatcher_Simple', $config->getExtension('Controller', 'dispatcher'));
-        $this->assertEquals('../webapp/actions', $config->getConfiguration('Dispatcher_Continuation', 'actionDirectory'));
-        $this->assertEquals('../webapp/cache', $config->getConfiguration('Dispatcher_Continuation', 'cacheDirectory'));
+        $this->assertEquals('View', $config->getExtensionDefinition('Controller', 'view'));
+        $this->assertEquals('Dispatcher_Simple', $config->getExtensionDefinition('Controller', 'dispatcher'));
+        $this->assertEquals('../webapp/actions', $config->getConfigurationDefinition('Dispatcher_Continuation', 'actionDirectory'));
+        $this->assertEquals('../webapp/cache', $config->getConfigurationDefinition('Dispatcher_Continuation', 'cacheDirectory'));
 
-        $flowMappings = $config->getConfiguration('Dispatcher_Continuation', 'flowMappings');
+        $flowMappings = $config->getConfigurationDefinition('Dispatcher_Continuation', 'flowMappings');
 
         $this->assertEquals('/register.php', $flowMappings[0]['uri']);
         $this->assertEquals('Registration', $flowMappings[0]['flowName']);
         $this->assertFalse($flowMappings[0]['isExclusive']);
-        $this->assertEquals('../webapp/actions', $config->getConfiguration('Dispatcher_Simple', 'actionDirectory'));
-        $this->assertEquals('../webapp/templates', $config->getConfiguration('Renderer_PHP', 'templateDirectory'));
-        $this->assertEquals('Renderer_PHP', $config->getExtension('View', 'renderer'));
+        $this->assertEquals('../webapp/actions', $config->getConfigurationDefinition('Dispatcher_Simple', 'actionDirectory'));
+        $this->assertEquals('../webapp/templates', $config->getConfigurationDefinition('Renderer_PHP', 'templateDirectory'));
+        $this->assertEquals('Renderer_PHP', $config->getExtensionDefinition('View', 'renderer'));
     }
 
     /**

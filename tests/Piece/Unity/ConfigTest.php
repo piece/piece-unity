@@ -88,7 +88,7 @@ class Piece_Unity_ConfigTest extends Piece_Unity_PHPUnit_TestCase
     {
         $this->_config->setExtension('Foo', 'bar', 'Bar');
 
-        $this->assertEquals('Bar', $this->_config->getExtension('Foo', 'bar'));
+        $this->assertEquals('Bar', $this->_config->getExtensionDefinition('Foo', 'bar'));
     }
 
     /**
@@ -98,7 +98,7 @@ class Piece_Unity_ConfigTest extends Piece_Unity_PHPUnit_TestCase
     {
         $this->_config->setConfiguration('Foo', 'bar', 'Bar');
 
-        $this->assertEquals('Bar', $this->_config->getConfiguration('Foo', 'bar'));
+        $this->assertEquals('Bar', $this->_config->getConfigurationDefinition('Foo', 'bar'));
     }
 
     /**
@@ -108,7 +108,7 @@ class Piece_Unity_ConfigTest extends Piece_Unity_PHPUnit_TestCase
     {
         $this->_config->setExtension('Foo', 'bar', 'Bar');
 
-        $this->assertNull($this->_config->getExtension('Bar', 'bar'));
+        $this->assertNull($this->_config->getExtensionDefinition('Bar', 'bar'));
     }
 
     /**
@@ -118,7 +118,7 @@ class Piece_Unity_ConfigTest extends Piece_Unity_PHPUnit_TestCase
     {
         $this->_config->setExtension('Foo', 'bar', 'Bar');
 
-        $this->assertNull($this->_config->getExtension('Foo', 'baz'));
+        $this->assertNull($this->_config->getExtensionDefinition('Foo', 'baz'));
     }
 
     /**
@@ -128,7 +128,7 @@ class Piece_Unity_ConfigTest extends Piece_Unity_PHPUnit_TestCase
     {
         $this->_config->setConfiguration('Foo', 'bar', 'Bar');
 
-        $this->assertNull($this->_config->getConfiguration('Foo', 'baz'));
+        $this->assertNull($this->_config->getConfigurationDefinition('Foo', 'baz'));
     }
 
     /**#@-*/

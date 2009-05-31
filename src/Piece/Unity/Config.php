@@ -107,7 +107,7 @@ class Piece_Unity_Config
     }
 
     // }}}
-    // {{{ getExtension()
+    // {{{ getExtensionDefinition()
 
     /**
      * Gets the extension for the extension point of the plugin.
@@ -116,7 +116,7 @@ class Piece_Unity_Config
      * @param string $extensionPoint
      * @return string
      */
-    public function getExtension($plugin, $extensionPoint)
+    public function getExtensionDefinition($plugin, $extensionPoint)
     {
         $plugin = strtolower($plugin);
         $extensionPoint = strtolower($extensionPoint);
@@ -132,7 +132,7 @@ class Piece_Unity_Config
     }
 
     // }}}
-    // {{{ getConfiguration()
+    // {{{ getConfigurationDefinition()
 
     /**
      * Gets the configuration for the configuration point of the plugin.
@@ -141,7 +141,7 @@ class Piece_Unity_Config
      * @param string $configurationPoint
      * @return string
      */
-    public function getConfiguration($plugin, $configurationPoint)
+    public function getConfigurationDefinition($plugin, $configurationPoint)
     {
         $plugin = strtolower($plugin);
         $configurationPoint = strtolower($configurationPoint);

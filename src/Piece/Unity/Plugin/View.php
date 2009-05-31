@@ -109,7 +109,7 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
         }
 
         $config = $this->context->getConfiguration();
-        $rendererExtension = $config->getExtension('View', 'renderer');
+        $rendererExtension = $config->getExtensionDefinition('View', 'renderer');
         if (strlen($rendererExtension)) {
             $config->setConfiguration('ViewSchemeHandler',
                                       'html',

@@ -106,10 +106,10 @@ class Piece_UnityTest extends Piece_Unity_PHPUnit_TestCase
         $config = Piece_Unity_Context::singleton()->getConfiguration();
 
         $this->assertEquals('Foo',
-                            $config->getExtension(Piece_Unity::ROOT_PLUGIN, 'renderer')
+                            $config->getExtensionDefinition(Piece_Unity::ROOT_PLUGIN, 'renderer')
                             );
         $this->assertEquals('Baz',
-                            $config->getConfiguration(Piece_Unity::ROOT_PLUGIN, 'Bar')
+                            $config->getConfigurationDefinition(Piece_Unity::ROOT_PLUGIN, 'Bar')
                             );
 
         $context = Piece_Unity_Context::singleton();
@@ -172,8 +172,8 @@ class Piece_UnityTest extends Piece_Unity_PHPUnit_TestCase
         $unity->setExtension(Piece_Unity::ROOT_PLUGIN, 'renderer', 'Foo');
         $config = Piece_Unity_Context::singleton()->getConfiguration();
 
-        $this->assertEquals('Baz', $config->getConfiguration(Piece_Unity::ROOT_PLUGIN, 'Bar'));
-        $this->assertEquals('Foo', $config->getExtension(Piece_Unity::ROOT_PLUGIN, 'renderer'));
+        $this->assertEquals('Baz', $config->getConfigurationDefinition(Piece_Unity::ROOT_PLUGIN, 'Bar'));
+        $this->assertEquals('Foo', $config->getExtensionDefinition(Piece_Unity::ROOT_PLUGIN, 'renderer'));
     }
 
     /**
