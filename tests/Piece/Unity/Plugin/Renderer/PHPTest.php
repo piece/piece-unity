@@ -81,13 +81,12 @@ class Piece_Unity_Plugin_Renderer_PHPTest extends Piece_Unity_Plugin_Renderer_HT
      */
     public function supportHtmlComponents()
     {
-        Piece_Unity_Plugin_Factory::addPluginDirectory($this->exclusiveDirectory);
         $context = Piece_Unity_Context::singleton();
         $context->setView($this->target . 'HTMLComponent');
         $config = $this->getConfig();
         $config->setExtension('Renderer_' . $this->target,
                               'components',
-                              array('HTMLComponent_Example')
+                              array('Renderer_PHPTest_HTMLComponentExample')
                               );
         $context->setConfiguration($config);
 

@@ -79,7 +79,6 @@ class Piece_Unity_Plugin_Configurator_PluginTest extends Piece_Unity_PHPUnit_Tes
     public function configure()
     {
         $config = new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_Plugin', 'pluginDirectories', array(dirname(__FILE__) . '/../../../..'));
         $config->setConfiguration('Configurator_Plugin', 'pluginPrefixes', array(__CLASS__));
         Piece_Unity_Context::singleton()->setConfiguration($config);
 

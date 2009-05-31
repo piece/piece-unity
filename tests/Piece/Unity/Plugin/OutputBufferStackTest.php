@@ -76,7 +76,6 @@ class Piece_Unity_Plugin_OutputBufferStackTest extends Piece_Unity_PHPUnit_TestC
     public function setUp()
     {
         parent::setUp();
-        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/../../..');
         Piece_Unity_Plugin_Factory::addPluginPrefix(__CLASS__);
     }
 

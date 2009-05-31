@@ -36,7 +36,7 @@
  * @since      File available since Release 1.5.0
  */
 
-// {{{ Piece_Unity_Plugin_HTMLComponent_Example
+// {{{ Piece_Unity_Plugin_Renderer_PHPTest_HTMLComponentExample
 
 /**
  * A class for unit tests.
@@ -48,7 +48,7 @@
  * @see        Piece_Unity_Plugin_Renderer_PHPTest
  * @since      Class available since Release 1.5.0
  */
-class Piece_Unity_Plugin_HTMLComponent_Example extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_Renderer_PHPTest_HTMLComponentExample extends Piece_Unity_Plugin_Common
 {
 
     // {{{ properties

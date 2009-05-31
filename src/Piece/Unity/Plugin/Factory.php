@@ -68,7 +68,6 @@ class Piece_Unity_Plugin_Factory
      */
 
     private static $_pluginInstances = array();
-    private static $_pluginDirectories = array();
     private static $_pluginPrefixes = array();
 
     /**#@-*/
@@ -93,38 +92,19 @@ class Piece_Unity_Plugin_Factory
             $found = false;
             foreach (self::$_pluginPrefixes as $prefixAlias) {
                 $pluginClass = self::_getPluginClass($pluginName, $prefixAlias);
-                if (Piece_Unity_ClassLoader::loaded($pluginClass)) {
+                if (class_exists($pluginClass)) {
                     $found = true;
                     break;
                 }
             }
 
             if (!$found) {
-                foreach (self::$_pluginDirectories as $pluginDirectory) {
-                    foreach (self::$_pluginPrefixes as $prefixAlias) {
-                        $pluginClass = self::_getPluginClass($pluginName, $prefixAlias);
-
-                        try {
-                            Piece_Unity_ClassLoader::load($pluginClass, $pluginDirectory);
-                        } catch (Piece_Unity_ClassLoader_NotFoundException $e) {
-                            continue;
-                        }
-
-                        if (Piece_Unity_ClassLoader::loaded($pluginClass)) {
-                            $found = true;
-                            break 2;
-                        }
-                    }
-                }
-
-                if (!$found) {
-                    throw new Piece_Unity_Exception(
-                        'The plugin [ ' .
-                        $pluginName .
-                        ' ] is not found in the following directories: ' .
-                        implode(', ', self::$_pluginDirectories)
-                                                    );
-                }
+                throw new Piece_Unity_Exception(
+                    'The plugin [ ' .
+                    $pluginName .
+                    ' ] is not found in the following directories: ' .
+                    implode(', ', explode(PATH_SEPARATOR, get_include_path()))
+                                                );
             }
 
             $plugin = new $pluginClass($prefixAlias);
@@ -140,33 +120,6 @@ class Piece_Unity_Plugin_Factory
         }
 
         return self::$_pluginInstances[$pluginName];
-    }
-
-    // }}}
-    // {{{ addPluginDirectory()
-
-    /**
-     * Adds a plugin directory.
-     *
-     * @param string $pluginDirectory
-     */
-    public static function addPluginDirectory($pluginDirectory)
-    {
-        array_unshift(self::$_pluginDirectories, realpath($pluginDirectory));
-    }
-
-    // }}}
-    // {{{ initializePluginDirectories()
-
-    /**
-     * Clears the plug-in paths.
-     *
-     * @since Method available since Release 2.0.0dev1
-     */
-    public static function initializePluginDirectories()
-    {
-        self::$_pluginDirectories = array();
-        self::addPluginDirectory(realpath(dirname(__FILE__) . '/../../..'));
     }
 
     // }}}
@@ -244,9 +197,6 @@ class Piece_Unity_Plugin_Factory
 }
 
 // }}}
-
-Piece_Unity_Plugin_Factory::initializePluginDirectories();
-Piece_Unity_Plugin_Factory::initializePluginPrefixes();
 
 /*
  * Local Variables:

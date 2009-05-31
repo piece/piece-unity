@@ -76,7 +76,6 @@ class Piece_Unity_Plugin_FactoryTest extends Piece_Unity_PHPUnit_TestCase
     public function setUp()
     {
         parent::setUp();
-        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/../../..');
         Piece_Unity_Plugin_Factory::addPluginPrefix(__CLASS__);
         Piece_Unity_Context::singleton()->setConfiguration(new Piece_Unity_Config());
     }
@@ -123,7 +122,6 @@ class Piece_Unity_Plugin_FactoryTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function addAnEmptyStringAsAPrefixOfPluginClasses()
     {
-        Piece_Unity_Plugin_Factory::addPluginDirectory(dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
         Piece_Unity_Plugin_Factory::addPluginPrefix('');
         $pluginName = str_replace('_', '', __CLASS__);
         $bar = Piece_Unity_Plugin_Factory::factory($pluginName);

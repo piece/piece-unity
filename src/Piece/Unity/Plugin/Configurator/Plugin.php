@@ -81,7 +81,6 @@ class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common i
      */
     public function configure()
     {
-        $this->_setPluginDirectories();
         $this->_setPluginPrefixes();
     }
 
@@ -99,7 +98,6 @@ class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common i
      */
     protected function initialize()
     {
-        $this->addConfigurationPoint('pluginDirectories', array());
         $this->addConfigurationPoint('pluginPrefixes', array());
     }
 
@@ -108,29 +106,6 @@ class Piece_Unity_Plugin_Configurator_Plugin extends Piece_Unity_Plugin_Common i
     /**#@+
      * @access private
      */
-
-    // }}}
-    // {{{ _setPluginDirectories()
-
-    /**
-     * Sets plug-in directories.
-     *
-     * @throws Piece_Unity_Exception
-     */
-    private function _setPluginDirectories()
-    {
-        $pluginDirectories = $this->getConfiguration('pluginDirectories');
-        if (!is_array($pluginDirectories)) {
-            throw new Piece_Unity_Exception('The value of the configuration point [ pluginDirectories ] on the plug-in [ ' .
-                                            $this->getName() .
-                                            ' ] should be an array'
-                                            );
-        }
-
-        foreach (array_reverse($pluginDirectories) as $pluginDirectory) {
-            Piece_Unity_Plugin_Factory::addPluginDirectory($pluginDirectory);
-        }
-    }
 
     // }}}
     // {{{ _setPluginPrefixes()
