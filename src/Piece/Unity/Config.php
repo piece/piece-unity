@@ -110,7 +110,7 @@ class Piece_Unity_Config
     // {{{ getExtensionDefinition()
 
     /**
-     * Gets the extension for the extension point of the plugin.
+     * Gets the definition of the extension for the extension point of the plugin.
      *
      * @param string $plugin
      * @param string $extensionPoint
@@ -135,7 +135,8 @@ class Piece_Unity_Config
     // {{{ getConfigurationDefinition()
 
     /**
-     * Gets the configuration for the configuration point of the plugin.
+     * Gets the definition of the configuration for the configuration point of
+     * the plugin.
      *
      * @param string $plugin
      * @param string $configurationPoint
