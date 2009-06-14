@@ -245,7 +245,6 @@ class Piece_Unity_Context
      */
     public function clear()
     {
-        Piece_Unity_Plugin_Factory::clearInstances();
         self::$_soleInstance = null;
     }
 
