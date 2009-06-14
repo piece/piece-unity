@@ -85,23 +85,13 @@ abstract class Piece_Unity_Plugin_Common
      * extension points and configuration points for the plugin. And also the plug-in
      * name is set.
      *
-     * @param string $prefix
+     * @param string $featureName
      */
-    public function __construct($prefix = 'Piece_Unity_Plugin')
+    public function __construct($featureName)
     {
-        if (strlen($prefix)) {
-            $this->_name = str_replace(strtolower($prefix . '_'), '', strtolower(get_class($this)));
-        } else {
-            $this->_name = strtolower(get_class($this));
-        }
-
+        $this->_name = $featureName;
         $this->context = Piece_Unity_Context::singleton();
-
         $this->initialize();
-
-        $config = $this->context->getConfiguration();
-        $config->validateExtensionPoints($this->_name);
-        $config->validateConfigurationPoints($this->_name);
     }
 
     // }}}
@@ -122,46 +112,6 @@ abstract class Piece_Unity_Plugin_Common
      */
 
     // }}}
-    // {{{ addExtensionPoint()
-
-    /**
-     * Adds the extension point to the plugin, and sets the default value for
-     * the extension point to the given value.
-     *
-     * @param string $extensionPoint
-     * @param string $default
-     */
-    protected function addExtensionPoint($extensionPoint, $default = null)
-    {
-        $this->context->getConfiguration()
-                      ->addExtensionPoint(
-                          $this->_name,
-                          $extensionPoint,
-                          $default
-                                          );
-    }
-
-    // }}}
-    // {{{ addConfigurationPoint()
-
-    /**
-     * Adds the configuration point to the plugin, and sets the default value
-     * for the configuration point to the given value.
-     *
-     * @param string $configurationPoint
-     * @param string $default
-     */
-    protected function addConfigurationPoint($configurationPoint, $default = null)
-    {
-        $this->context->getConfiguration()
-                      ->addConfigurationPoint(
-                          $this->_name,
-                          $configurationPoint,
-                          $default
-                                              );
-    }
-
-    // }}}
     // {{{ initialize()
 
     /**
@@ -172,37 +122,61 @@ abstract class Piece_Unity_Plugin_Common
     protected function initialize() {}
 
     // }}}
-    // {{{ getExtension()
+    // {{{ addExtensionPoint()
 
     /**
-     * Gets the extension of the given extension point.
+     * Adds the extension point to the plugin, and sets the default value for
+     * the extension point to the given value.
      *
-     * @param string $extensionPoint
-     * @return mixed
-     * @throws Piece_Unity_Exception
-     * @since Method available since Release 0.12.0
+     * @param string  $extensionPoint
+     * @param boolean $isOptional
+     * @param boolean $isMultiple
+     * @param array   $defaltValues
      */
-    protected function getExtension($extensionPoint)
+    protected function addExtensionPoint(
+        $extensionPoint,
+        $isOptional = false,
+        $isMultiple = false,
+        $defaultValues = array()
+                                         )
     {
-        return $this->context->getConfiguration()
-                             ->getExtension($this->_name, $extensionPoint);
+        $this->context->getConfiguration()
+                      ->defineServicePoint(
+                          $this->_name,
+                          $extensionPoint,
+                          $isOptional,
+                          $isMultiple,
+                          $defaultValues
+                                           );
     }
 
     // }}}
-    // {{{ getConfiguration()
+    // {{{ addConfigurationPoint()
 
     /**
-     * Gets the configuration of the given configuration point.
+     * Adds the configuration point to the plugin, and sets the default value
+     * for the configuration point to the given value.
      *
-     * @param string $configurationPoint
-     * @return string
-     * @throws Piece_Unity_Exception
-     * @since Method available since Release 0.12.0
+     * @param string  $configurationPoint
+     * @param boolean $isOptional
+     * @param boolean $isMultiple
+     * @param array   $defaltValues
      */
-    protected function getConfiguration($configurationPoint)
+    protected function addConfigurationPoint(
+        $configurationPoint,
+        $isOptional = false,
+        $isMultiple = false,
+        $defaultValues = array()
+                                             )
     {
-        return $this->context->getConfiguration()
-                             ->getConfiguration($this->_name, $configurationPoint);
+        $this->context->getConfiguration()
+                      ->defineValuePoint(
+                          $this->_name,
+                          $configurationPoint,
+                          $isOptional,
+                          $isMultiple,
+                          $defaultValues
+                                         );
     }
 
     /**#@-*/
