@@ -76,8 +76,6 @@ abstract class Piece_Unity_PHPUnit_TestCase extends PHPUnit_Framework_TestCase
     public function setUp()
     {
         Piece_Unity_Context::clear();
-        Piece_Unity_Plugin_Factory::clearInstances();
-        Piece_Unity_Plugin_Factory::initializePluginPrefixes();
     }
 
     /**#@-*/
