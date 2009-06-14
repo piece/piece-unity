@@ -98,7 +98,7 @@ class Piece_Unity_Plugin_Configurator_Request extends Piece_Unity_Plugin_Common 
      */
     protected function initialize()
     {
-        $this->addConfigurationPoint('importPathInfo', false);
+        $this->addConfigurationPoint('importPathInfo', false, false, false);
     }
 
     /**#@-*/
@@ -115,7 +115,7 @@ class Piece_Unity_Plugin_Configurator_Request extends Piece_Unity_Plugin_Common 
      */
     private function _importPathInfo()
     {
-        if ($this->getConfiguration('importPathInfo')) {
+        if ($this->importPathInfo) {
             $this->context->getRequest()->importPathInfo();
         }
     }

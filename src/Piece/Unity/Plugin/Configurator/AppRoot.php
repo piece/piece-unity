@@ -84,9 +84,8 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common 
      */
     public function configure()
     {
-        $appRoot = $this->getConfiguration('appRoot');
-        if (!is_null($appRoot)) {
-            $result = chdir($appRoot);
+        if (!is_null($this->appRoot)) {
+            $result = chdir($this->appRoot);
             if (!$result) {
                 throw new Piece_Unity_Exception('Failed calling chdir() for the configuration point [ appRoot ] on the plugin [ ' .
                                                 $this->getName() .
@@ -95,9 +94,8 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common 
             }
         }
 
-        $appRootPath = $this->getConfiguration('appRootPath');
-        if (!is_null($appRootPath)) {
-            $this->context->setAppRootPath($appRootPath);
+        if (!is_null($this->appRootPath)) {
+            $this->context->setAppRootPath($this->appRootPath);
         }
     }
 
@@ -115,8 +113,8 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common 
      */
     protected function initialize()
     {
-        $this->addConfigurationPoint('appRoot');
-        $this->addConfigurationPoint('appRootPath');
+        $this->addConfigurationPoint('appRoot', true);
+        $this->addConfigurationPoint('appRootPath', true);
     }
 
     /**#@-*/

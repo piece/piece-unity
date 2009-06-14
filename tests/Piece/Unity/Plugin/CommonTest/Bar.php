@@ -69,8 +69,6 @@ class Piece_Unity_Plugin_CommonTest_Bar extends Piece_Unity_Plugin_Common
      * @access private
      */
 
-    private $_baz;
-
     /**#@-*/
 
     /**#@+
@@ -79,7 +77,7 @@ class Piece_Unity_Plugin_CommonTest_Bar extends Piece_Unity_Plugin_Common
 
     public function invoke()
     {
-        $this->_baz = $this->getExtension('baz')->invoke();
+        return $this->baz->invoke();
     }
 
     /**#@-*/
@@ -90,7 +88,7 @@ class Piece_Unity_Plugin_CommonTest_Bar extends Piece_Unity_Plugin_Common
 
     protected function initialize()
     {
-        $this->addExtensionPoint('baz', 'Qux');
+        $this->addExtensionPoint('baz', false, false, 'Piece_Unity_Plugin_CommonTest_Qux');
     }
 
     /**#@-*/

@@ -73,17 +73,22 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends Piece_Unity_PHPUnit_Te
      * @access public
      */
 
+    public function setUp()
+    {
+        parent::setUp();
+        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Config());
+    }
+
     /**
      * @test
      */
     public function changeTheCurrentDirectory()
     {
         $appRoot = realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..');
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_AppRoot', 'appRoot', $appRoot);
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $configurator = new Piece_Unity_Plugin_Configurator_AppRoot();
+        $config = Piece_Unity_Context::singleton()->getConfiguration();
+        $config->defineService('Piece_Unity_Plugin_Configurator_AppRoot');
+        $config->queueExtension('Piece_Unity_Plugin_Configurator_AppRoot', 'appRoot', $appRoot);
+        $configurator = $config->instantiateFeature('Piece_Unity_Plugin_Configurator_AppRoot');
         $configurator->configure();
 
         $this->assertEquals($appRoot, getcwd());
@@ -96,11 +101,10 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends Piece_Unity_PHPUnit_Te
     public function raiseAnExceptionIfTheGivenDirectoryIsNotFound()
     {
         $appRoot = '/foo/bar';
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_AppRoot', 'appRoot', $appRoot);
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $configurator = new Piece_Unity_Plugin_Configurator_AppRoot();
+        $config = Piece_Unity_Context::singleton()->getConfiguration();
+        $config->defineService('Piece_Unity_Plugin_Configurator_AppRoot');
+        $config->queueExtension('Piece_Unity_Plugin_Configurator_AppRoot', 'appRoot', $appRoot);
+        $configurator = $config->instantiateFeature('Piece_Unity_Plugin_Configurator_AppRoot');
         @$configurator->configure();
     }
 
@@ -110,14 +114,13 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends Piece_Unity_PHPUnit_Te
     public function setTheAppRootPath()
     {
         $appRootPath = '/foo/bar';
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_AppRoot', 'appRootPath', $appRootPath);
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $configurator = new Piece_Unity_Plugin_Configurator_AppRoot();
+        $config = Piece_Unity_Context::singleton()->getConfiguration();
+        $config->defineService('Piece_Unity_Plugin_Configurator_AppRoot');
+        $config->queueExtension('Piece_Unity_Plugin_Configurator_AppRoot', 'appRootPath', $appRootPath);
+        $configurator = $config->instantiateFeature('Piece_Unity_Plugin_Configurator_AppRoot');
         $configurator->configure();
 
-        $this->assertEquals($appRootPath, $context->getAppRootPath());
+        $this->assertEquals($appRootPath, Piece_Unity_Context::singleton()->getAppRootPath());
     }
 
     /**#@-*/

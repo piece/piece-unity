@@ -81,15 +81,14 @@ class Piece_Unity_Plugin_Configurator_EventTest extends Piece_Unity_PHPUnit_Test
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_foo'] = 'bar';
 
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_Event', 'eventNameKey', '_foo');
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
+        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Config());
+        $config = Piece_Unity_Context::singleton()->getConfiguration();
+        $config->defineService('Piece_Unity_Plugin_Configurator_Event');
+        $config->queueExtension('Piece_Unity_Plugin_Configurator_Event', 'eventNameKey', '_foo');
+        $config->instantiateFeature('Piece_Unity_Plugin_Configurator_Event')
+               ->configure();
 
-        $configurator = new Piece_Unity_Plugin_Configurator_Event();
-        $configurator->configure();
-
-        $this->assertEquals('bar', $context->getEventName());
+        $this->assertEquals('bar', Piece_Unity_Context::singleton()->getEventName());
     }
 
     /**
@@ -100,15 +99,14 @@ class Piece_Unity_Plugin_Configurator_EventTest extends Piece_Unity_PHPUnit_Test
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_event'] = 'foo';
 
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_Event', 'eventName', 'bar');
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
+        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Config());
+        $config = Piece_Unity_Context::singleton()->getConfiguration();
+        $config->defineService('Piece_Unity_Plugin_Configurator_Event');
+        $config->queueExtension('Piece_Unity_Plugin_Configurator_Event', 'eventName', 'bar');
+        $config->instantiateFeature('Piece_Unity_Plugin_Configurator_Event')
+               ->configure();
 
-        $configurator = new Piece_Unity_Plugin_Configurator_Event();
-        $configurator->configure();
-
-        $this->assertEquals('bar', $context->getEventName());
+        $this->assertEquals('bar', Piece_Unity_Context::singleton()->getEventName());
     }
 
     /**#@-*/

@@ -99,22 +99,20 @@ class Piece_Unity_Plugin_Configurator_Proxy extends Piece_Unity_Plugin_Common im
      */
     public function configure()
     {
-        $proxyPath = $this->getConfiguration('proxyPath');
-        $this->context->setProxyPath($proxyPath);
+        $this->context->setProxyPath($this->proxyPath);
 
         if (!Stagehand_HTTP_ServerEnv::usingProxy()) {
             return;
         }
 
-        if (!is_null($proxyPath)) {
-            $this->context->setBasePath($proxyPath . $this->context->getBasePath());
-            $this->context->setScriptName($proxyPath . $this->context->getScriptName());
-            $this->context->setAppRootPath($proxyPath . $this->context->getAppRootPath());
+        if (!is_null($this->proxyPath)) {
+            $this->context->setBasePath($this->proxyPath . $this->context->getBasePath());
+            $this->context->setScriptName($this->proxyPath . $this->context->getScriptName());
+            $this->context->setAppRootPath($this->proxyPath . $this->context->getAppRootPath());
 
-            $adjustSessionCookiePath = $this->getConfiguration('adjustSessionCookiePath');
-            if ($adjustSessionCookiePath) {
+            if ($this->adjustSessionCookiePath) {
                 ini_set('session.cookie_path',
-                        $proxyPath . str_replace('//', '/', ini_get('session.cookie_path'))
+                        $this->proxyPath . str_replace('//', '/', ini_get('session.cookie_path'))
                         );
             }
         }
@@ -134,8 +132,8 @@ class Piece_Unity_Plugin_Configurator_Proxy extends Piece_Unity_Plugin_Common im
      */
     protected function initialize()
     {
-        $this->addConfigurationPoint('proxyPath');
-        $this->addConfigurationPoint('adjustSessionCookiePath', true);
+        $this->addConfigurationPoint('proxyPath', true);
+        $this->addConfigurationPoint('adjustSessionCookiePath', false, false, true);
     }
 
     /**#@-*/

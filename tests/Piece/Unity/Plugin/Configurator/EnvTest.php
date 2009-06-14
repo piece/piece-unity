@@ -75,20 +75,24 @@ class Piece_Unity_Plugin_Configurator_EnvTest extends Piece_Unity_PHPUnit_TestCa
      * @access public
      */
 
+    public function setUp()
+    {
+        parent::setUp();
+        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Config());
+    }
+
     /**
      * @test
      */
     public function setTheProxyPath()
     {
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_Env', 'proxyPath', '/foo/bar');
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
+        $config = Piece_Unity_Context::singleton()->getConfiguration();
+        $config->defineService('Piece_Unity_Plugin_Configurator_Env');
+        $config->queueExtension('Piece_Unity_Plugin_Configurator_Env', 'proxyPath', '/foo/bar');
+        $config->instantiateFeature('Piece_Unity_Plugin_Configurator_Env')
+               ->configure();
 
-        $configurator = new Piece_Unity_Plugin_Configurator_Env();
-        $configurator->configure();
-
-        $this->assertEquals('/foo/bar', $context->getProxyPath());
+        $this->assertEquals('/foo/bar', Piece_Unity_Context::singleton()->getProxyPath());
     }
 
     /**#@-*/

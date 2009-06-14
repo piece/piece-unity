@@ -108,20 +108,19 @@ class Piece_Unity_Plugin_Configurator_ValidationTest extends Piece_Unity_PHPUnit
         $_POST['greeting'] = 'Hello World';
 
         $validatorDirectory = dirname(__FILE__) . '/../../../..';
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_Validation', 'configDirectory', $this->_exclusiveDirectory);
-        $config->setConfiguration('Configurator_Validation', 'cacheDirectory', $this->_exclusiveDirectory);
-        $config->setConfiguration('Configurator_Validation', 'validatorDirectories', array($validatorDirectory));
-        $config->setConfiguration('Configurator_Validation', 'filterDirectories', array($validatorDirectory));
-        $config->setConfiguration('Configurator_Validation', 'validatorPrefixes', array(__CLASS__));
-        $config->setConfiguration('Configurator_Validation', 'filterPrefixes', array(__CLASS__));
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
+        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Config());
+        $config = Piece_Unity_Context::singleton()->getConfiguration();
+        $config->defineService('Piece_Unity_Plugin_Configurator_Validation');
+        $config->queueExtension('Piece_Unity_Plugin_Configurator_Validation', 'configDirectory', $this->_exclusiveDirectory);
+        $config->queueExtension('Piece_Unity_Plugin_Configurator_Validation', 'cacheDirectory', $this->_exclusiveDirectory);
+        $config->queueExtension('Piece_Unity_Plugin_Configurator_Validation', 'validatorDirectories', $validatorDirectory);
+        $config->queueExtension('Piece_Unity_Plugin_Configurator_Validation', 'filterDirectories', $validatorDirectory);
+        $config->queueExtension('Piece_Unity_Plugin_Configurator_Validation', 'validatorPrefixes', __CLASS__);
+        $config->queueExtension('Piece_Unity_Plugin_Configurator_Validation', 'filterPrefixes', __CLASS__);
+        $config->instantiateFeature('Piece_Unity_Plugin_Configurator_Validation')
+               ->configure();
 
-        $configurator = new Piece_Unity_Plugin_Configurator_Validation();
-        $configurator->configure();
-
-        $validation = $context->getValidation();
+        $validation = Piece_Unity_Context::singleton()->getValidation();
         $validationConfig = $validation->getConfiguration();
         $validationConfig->setRequired('email');
         $validationConfig->addValidation('email', 'Email');

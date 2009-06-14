@@ -69,18 +69,11 @@ class Piece_Unity_Plugin_CommonTest_Foo extends Piece_Unity_Plugin_Common
      * @access private
      */
 
-    private $_bar;
-
     /**#@-*/
 
     /**#@+
      * @access public
      */
-
-    public function invoke()
-    {
-        $this->_bar = $this->getConfiguration('bar');
-    }
 
     /**#@-*/
 
@@ -90,7 +83,7 @@ class Piece_Unity_Plugin_CommonTest_Foo extends Piece_Unity_Plugin_Common
 
     protected function initialize()
     {
-        $this->addConfigurationPoint('bar', 'baz');
+        $this->addConfigurationPoint('bar', false, false, 'baz');
     }
 
     /**#@-*/

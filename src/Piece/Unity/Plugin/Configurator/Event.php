@@ -81,7 +81,7 @@ class Piece_Unity_Plugin_Configurator_Event extends Piece_Unity_Plugin_Common im
      */
     public function configure()
     {
-        $this->context->setEventNameKey($this->getConfiguration('eventNameKey'));
+        $this->context->setEventNameKey($this->eventNameKey);
         $this->_setEventName();
     }
 
@@ -99,8 +99,8 @@ class Piece_Unity_Plugin_Configurator_Event extends Piece_Unity_Plugin_Common im
      */
     protected function initialize()
     {
-        $this->addConfigurationPoint('eventNameKey', '_event');
-        $this->addConfigurationPoint('eventName');
+        $this->addConfigurationPoint('eventNameKey', true, false, '_event');
+        $this->addConfigurationPoint('eventName', true);
     }
 
     /**#@-*/
@@ -117,9 +117,8 @@ class Piece_Unity_Plugin_Configurator_Event extends Piece_Unity_Plugin_Common im
      */
     private function _setEventName()
     {
-        $eventName = $this->getConfiguration('eventName');
-        if (!is_null($eventName)) {
-            $this->context->setEventName($eventName);
+        if (!is_null($this->eventName)) {
+            $this->context->setEventName($this->eventName);
         }
     }
 

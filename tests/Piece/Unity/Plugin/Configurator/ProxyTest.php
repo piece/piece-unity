@@ -78,15 +78,14 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends Piece_Unity_PHPUnit_Test
      */
     public function setTheProxyPath()
     {
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_Proxy', 'proxyPath', '/foo/bar');
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
+        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Config());
+        $config = Piece_Unity_Context::singleton()->getConfiguration();
+        $config->defineService('Piece_Unity_Plugin_Configurator_Proxy');
+        $config->queueExtension('Piece_Unity_Plugin_Configurator_Proxy', 'proxyPath', '/foo/bar');
+        $config->instantiateFeature('Piece_Unity_Plugin_Configurator_Proxy')
+               ->configure();
 
-        $configurator = new Piece_Unity_Plugin_Configurator_Proxy();
-        $configurator->configure();
-
-        $this->assertEquals('/foo/bar', $context->getProxyPath());
+        $this->assertEquals('/foo/bar', Piece_Unity_Context::singleton()->getProxyPath());
     }
 
     /**
@@ -99,14 +98,14 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends Piece_Unity_PHPUnit_Test
         $oldSessionCookiePath = ini_get('session.cookie_path');
         ini_set('session.cookie_path', '/baz');
 
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_Proxy', 'proxyPath', '/bar');
         $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
+        $context->setConfiguration(new Piece_Config());
         $context->setAppRootPath('/foo');
-
-        $interceptor = new Piece_Unity_Plugin_Configurator_Proxy();
-        $interceptor->configure();
+        $config = $context->getConfiguration();
+        $config->defineService('Piece_Unity_Plugin_Configurator_Proxy');
+        $config->queueExtension('Piece_Unity_Plugin_Configurator_Proxy', 'proxyPath', '/bar');
+        $config->instantiateFeature('Piece_Unity_Plugin_Configurator_Proxy')
+               ->configure();
 
         $this->assertEquals('/bar/baz', $context->getBasePath());
         $this->assertEquals('/bar/baz/qux.php', $context->getScriptName());
@@ -123,14 +122,14 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends Piece_Unity_PHPUnit_Test
     {
         $_SERVER['REQUEST_URI'] = '/baz/qux.php';
 
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_Proxy', 'proxyPath', '/bar');
         $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
+        $context->setConfiguration(new Piece_Config());
         $context->setAppRootPath('/foo');
-
-        $interceptor = new Piece_Unity_Plugin_Configurator_Proxy();
-        $interceptor->configure();
+        $config = $context->getConfiguration();
+        $config->defineService('Piece_Unity_Plugin_Configurator_Proxy');
+        $config->queueExtension('Piece_Unity_Plugin_Configurator_Proxy', 'proxyPath', '/bar');
+        $config->instantiateFeature('Piece_Unity_Plugin_Configurator_Proxy')
+               ->configure();
 
         $this->assertEquals('/baz', $context->getBasePath());
         $this->assertEquals('/baz/qux.php', $context->getScriptName());
@@ -145,14 +144,13 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends Piece_Unity_PHPUnit_Test
         $oldSessionCookiePath = ini_get('session.cookie_path');
         ini_set('session.cookie_path', '/bar');
 
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Configurator_Proxy', 'proxyPath', '/foo');
-        $config->setConfiguration('Configurator_Proxy', 'adjustSessionCookiePath', false);
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-
-        $interceptor = new Piece_Unity_Plugin_Configurator_Proxy();
-        $interceptor->configure();
+        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Config());
+        $config = Piece_Unity_Context::singleton()->getConfiguration();
+        $config->defineService('Piece_Unity_Plugin_Configurator_Proxy');
+        $config->queueExtension('Piece_Unity_Plugin_Configurator_Proxy', 'proxyPath', '/foo');
+        $config->queueExtension('Piece_Unity_Plugin_Configurator_Proxy', 'adjustSessionCookiePath', false);
+        $config->instantiateFeature('Piece_Unity_Plugin_Configurator_Proxy')
+               ->configure();
 
         $this->assertEquals('/bar', ini_get('session.cookie_path'));
 

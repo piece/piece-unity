@@ -67,10 +67,6 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common impl
      * @access private
      */
 
-    private $_requiredEnvHandlers = array('Configurator_EnvHandler_PieceFlow',
-                                          'Configurator_EnvHandler_PieceRight'
-                                          );
-
     /**#@-*/
 
     /**#@+
@@ -87,21 +83,12 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common impl
      */
     public function configure()
     {
-        $proxyPath = $this->getConfiguration('proxyPath');
-        if (!is_null($proxyPath)) {
-            $this->context->setProxyPath($proxyPath);
+        if (!is_null($this->proxyPath)) {
+            $this->context->setProxyPath($this->proxyPath);
         }
 
-        $envHandlers = $this->getExtension('envHandlers');
-        if (!is_array($envHandlers)) {
-            throw new Piece_Unity_Exception('The value of the extension point [ envHandlers ] on the plug-in [ ' .
-                                            $this->getName() .
-                                            ' ] should be an array'
-                                            );
-        }
-
-        foreach (array_merge($this->_requiredEnvHandlers, $envHandlers) as $extension) {
-            Piece_Unity_Plugin_Factory::factory($extension)->setIsProduction(Piece_Unity_Env::isProduction());
+        foreach ($this->envHandlers as $extension) {
+            $extension->setIsProduction(Piece_Unity_Env::isProduction());
         }
     }
 
@@ -119,8 +106,13 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common impl
      */
     protected function initialize()
     {
-        $this->addConfigurationPoint('proxyPath');
-        $this->addExtensionPoint('envHandlers', array());
+        $this->addConfigurationPoint('proxyPath', true);
+        $this->addExtensionPoint('envHandlers',
+                                 false,
+                                 true,
+                                 array('Piece_Unity_Plugin_Configurator_EnvHandler_PieceFlow',
+                                       'Piece_Unity_Plugin_Configurator_EnvHandler_PieceRight')
+                                 );
     }
 
     /**#@-*/

@@ -82,10 +82,10 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
     public function configure()
     {
         $validation = $this->context->getValidation();
-        $validation->setConfigDirectory($this->getConfiguration('configDirectory'));
-        $validation->setCacheDirectory($this->getConfiguration('cacheDirectory'));
-        $validation->setTemplate($this->getConfiguration('template'));
-        $validation->setUseUnderscoreAsDirectorySeparator($this->getConfiguration('useUnderscoreAsDirectorySeparator'));
+        $validation->setConfigDirectory($this->configDirectory);
+        $validation->setCacheDirectory($this->cacheDirectory);
+        $validation->setTemplate($this->template);
+        $validation->setUseUnderscoreAsDirectorySeparator($this->useUnderscoreAsDirectorySeparator);
 
         $this->_setValidatorDirectories();
         $this->_setFilterDirectories();
@@ -107,14 +107,14 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
      */
     protected function initialize()
     {
-        $this->addConfigurationPoint('configDirectory');
-        $this->addConfigurationPoint('cacheDirectory');
-        $this->addConfigurationPoint('validatorDirectories', array());
-        $this->addConfigurationPoint('filterDirectories', array());
-        $this->addConfigurationPoint('validatorPrefixes', array());
-        $this->addConfigurationPoint('filterPrefixes', array());
-        $this->addConfigurationPoint('template');
-        $this->addConfigurationPoint('useUnderscoreAsDirectorySeparator', false);
+        $this->addConfigurationPoint('configDirectory', true);
+        $this->addConfigurationPoint('cacheDirectory', true);
+        $this->addConfigurationPoint('validatorDirectories', true, true);
+        $this->addConfigurationPoint('filterDirectories', true, true);
+        $this->addConfigurationPoint('validatorPrefixes', true, true);
+        $this->addConfigurationPoint('filterPrefixes', true, true);
+        $this->addConfigurationPoint('template', true);
+        $this->addConfigurationPoint('useUnderscoreAsDirectorySeparator', false, false, false);
     }
 
     /**#@-*/
@@ -133,15 +133,7 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
      */
     private function _setValidatorDirectories()
     {
-        $validatorDirectories = $this->getConfiguration('validatorDirectories');
-        if (!is_array($validatorDirectories)) {
-            throw new Piece_Unity_Exception('The value of the configuration point [ validatorDirectories ] on the plug-in [ ' .
-                                            $this->getName() .
-                                            ' ] should be an array'
-                                            );
-        }
-
-        foreach (array_reverse($validatorDirectories) as $validatorDirectory) {
+        foreach (array_reverse($this->validatorDirectories) as $validatorDirectory) {
             Piece_Unity_Validation::addValidatorDirectory($validatorDirectory);
         }
     }
@@ -156,15 +148,7 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
      */
     private function _setFilterDirectories()
     {
-        $filterDirectories = $this->getConfiguration('filterDirectories');
-        if (!is_array($filterDirectories)) {
-            throw new Piece_Unity_Exception('The value of the configuration point [ filterDirectories ] on the plug-in [ ' .
-                                            $this->getName() .
-                                            ' ] should be an array'
-                                            );
-        }
-
-        foreach (array_reverse($filterDirectories) as $filterDirectory) {
+        foreach (array_reverse($this->filterDirectories) as $filterDirectory) {
             Piece_Unity_Validation::addFilterDirectory($filterDirectory);
         }
     }
@@ -179,15 +163,7 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
      */
     private function _setValidatorPrefixes()
     {
-        $validatorPrefixes = $this->getConfiguration('validatorPrefixes');
-        if (!is_array($validatorPrefixes)) {
-            throw new Piece_Unity_Exception('The value of the configuration point [ validatorPrefixes ] on the plug-in [ ' .
-                                            $this->getName() .
-                                            ' ] should be an array'
-                                            );
-        }
-
-        foreach (array_reverse($validatorPrefixes) as $validatorPrefix) {
+        foreach (array_reverse($this->validatorPrefixes) as $validatorPrefix) {
             Piece_Unity_Validation::addValidatorPrefix($validatorPrefix);
         }
     }
@@ -202,15 +178,7 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
      */
     private function _setFilterPrefixes()
     {
-        $filterPrefixes = $this->getConfiguration('filterPrefixes');
-        if (!is_array($filterPrefixes)) {
-            throw new Piece_Unity_Exception('The value of the configuration point [ filterPrefixes ] on the plug-in [ ' .
-                                            $this->getName() .
-                                            ' ] should be an array'
-                                            );
-        }
-
-        foreach (array_reverse($filterPrefixes) as $filterPrefix) {
+        foreach (array_reverse($this->filterPrefixes) as $filterPrefix) {
             Piece_Unity_Validation::addFilterPrefix($filterPrefix);
         }
     }

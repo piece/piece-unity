@@ -76,7 +76,7 @@ class Piece_Unity_Plugin_CommonTest extends Piece_Unity_PHPUnit_TestCase
     public function setUp()
     {
         parent::setUp();
-        Piece_Unity_Plugin_Factory::addPluginPrefix(__CLASS__);
+        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Config());
     }
 
     /**
@@ -84,11 +84,11 @@ class Piece_Unity_Plugin_CommonTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function getTheConfiguration()
     {
-        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Unity_Config());
-        $foo = Piece_Unity_Plugin_Factory::factory('Foo');
-        $foo->invoke();
+        $config = Piece_Unity_Context::singleton()->getConfiguration();
+        $config->defineService('foo', __CLASS__ . '_Foo');
+        $foo = $config->instantiateFeature('foo');
 
-        $this->assertEquals('baz', $this->readAttribute($foo, '_bar'));
+        $this->assertEquals('baz', $foo->bar);
     }
 
     /**
@@ -96,59 +96,11 @@ class Piece_Unity_Plugin_CommonTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function getTheExtension()
     {
-        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Unity_Config());
-        $bar = Piece_Unity_Plugin_Factory::factory('Bar');
-        $bar->invoke();
+        $config = Piece_Unity_Context::singleton()->getConfiguration();
+        $config->defineService('bar', __CLASS__ . '_Bar');
+        $bar = $config->instantiateFeature('bar');
 
-        $this->assertEquals('qux', $this->readAttribute($bar, '_baz'));
-    }
-
-    /**
-     * @test
-     * @expectedException Piece_Unity_Exception
-     * @since Method available since Release 1.0.0
-     */
-    public function raiseAnExceptionWhenAnUndefinedExtensionPointIsUsed()
-    {
-        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Unity_Config());
-        Piece_Unity_Plugin_Factory::factory('UndefinedExtensionPoint')->invoke();
-    }
-
-    /**
-     * @test
-     * @expectedException Piece_Unity_Exception
-     * @since Method available since Release 1.0.0
-     */
-    public function raiseAnExceptionWhenAnUndefinedConfigurationPointIsUsed()
-    {
-        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Unity_Config());
-        Piece_Unity_Plugin_Factory::factory('UndefinedConfigurationPoint')->invoke();
-    }
-
-    /**
-     * @test
-     * @expectedException Piece_Unity_Exception
-     * @since Method available since Release 1.1.0
-     */
-    public function raiseAnExceptionWhenAnUndefinedExtensionPointIsUsedInConfiguration()
-    {
-        $config = new Piece_Unity_Config();
-        $config->setExtension('Bar', 'foo', 'baz');
-        Piece_Unity_Context::singleton()->setConfiguration($config);
-        Piece_Unity_Plugin_Factory::factory('Bar')->invoke();
-    }
-
-    /**
-     * @test
-     * @expectedException Piece_Unity_Exception
-     * @since Method available since Release 1.1.0
-     */
-    public function raiseAnExceptionWhenAnUndefinedConfigurationPointIsUsedInConfiguration()
-    {
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Foo', 'baz', 'bar');
-        Piece_Unity_Context::singleton()->setConfiguration($config);
-        Piece_Unity_Plugin_Factory::factory('Foo')->invoke();
+        $this->assertEquals('qux', $bar->invoke());
     }
 
     /**#@-*/
