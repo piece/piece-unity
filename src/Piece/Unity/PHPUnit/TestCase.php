@@ -92,7 +92,10 @@ abstract class Piece_Unity_PHPUnit_TestCase extends PHPUnit_Framework_TestCase
     protected function initializeConfig()
     {
         $this->config = new Piece_Config();
-        $this->config->defineService($this->serviceName);
+
+        if (!is_null($this->serviceName)) {
+            $this->config->defineService($this->serviceName);
+        }
     }
 
     protected function initializeContext()

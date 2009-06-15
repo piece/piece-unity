@@ -73,22 +73,14 @@ class Piece_Unity_Plugin_CommonTest extends Piece_Unity_PHPUnit_TestCase
      * @access public
      */
 
-    public function setUp()
-    {
-        parent::setUp();
-        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Config());
-    }
-
     /**
      * @test
      */
     public function getTheConfiguration()
     {
-        $config = Piece_Unity_Context::singleton()->getConfiguration();
-        $config->defineService('foo', __CLASS__ . '_Foo');
-        $foo = $config->instantiateFeature('foo');
+        $this->config->defineService('foo', __CLASS__ . '_Foo');
 
-        $this->assertEquals('baz', $foo->bar);
+        $this->assertEquals('baz', $this->config->instantiateFeature('foo')->bar);
     }
 
     /**
@@ -96,11 +88,9 @@ class Piece_Unity_Plugin_CommonTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function getTheExtension()
     {
-        $config = Piece_Unity_Context::singleton()->getConfiguration();
-        $config->defineService('bar', __CLASS__ . '_Bar');
-        $bar = $config->instantiateFeature('bar');
+        $this->config->defineService('bar', __CLASS__ . '_Bar');
 
-        $this->assertEquals('qux', $bar->invoke());
+        $this->assertEquals('qux', $this->config->instantiateFeature('bar')->invoke());
     }
 
     /**#@-*/
