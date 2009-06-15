@@ -76,7 +76,6 @@ class Piece_Unity_Plugin_ConfiguratorChainTest extends Piece_Unity_PHPUnit_TestC
     public function setUp()
     {
         parent::setUp();
-        $_SERVER['REQUEST_METHOD'] = 'GET';
         $config = new Piece_Config();
         $config->defineService('Piece_Unity_Plugin_ConfiguratorChain');
         Piece_Unity_Context::singleton()->setConfiguration($config);
