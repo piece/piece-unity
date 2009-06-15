@@ -246,7 +246,7 @@ if (\$code == E_USER_WARNING) {
     {
         $this->context->setView('Foo_Bar_Baz');
         $this->context->getViewElement()->setElement('content', 'This is a dynamic content.');
-        $config = $this->getConfigForLayeredStructure();
+        $this->configureForLayeredStructure();
 
         $this->assertEquals('Hello, World!', rtrim($this->render()));
     }
@@ -278,7 +278,7 @@ if (\$code == E_USER_WARNING) {
     /**
      * @since Method available since Release 1.3.0
      */
-    abstract protected function getConfigForLayeredStructure();
+    abstract protected function configureForLayeredStructure();
 
     /**#@-*/
 

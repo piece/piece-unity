@@ -113,11 +113,9 @@ class Piece_Unity_Plugin_Renderer_PHPTest extends Piece_Unity_Plugin_Renderer_HT
     /**
      * @since Method available since Release 1.3.0
      */
-    protected function getConfigForLayeredStructure()
+    protected function configureForLayeredStructure()
     {
         $this->config->queueExtension($this->serviceName, 'templateDirectory', $this->exclusiveDirectory . '/templates');
-
-        return $this->config;
     }
 
     /**#@-*/
