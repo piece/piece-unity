@@ -93,10 +93,9 @@ class Piece_Unity_Plugin_ConfiguratorChainTest extends Piece_Unity_PHPUnit_TestC
         $this->_config->queueExtension('Piece_Unity_Plugin_ConfiguratorChain', 'configurators', __CLASS__ . '_FirstConfigurator');
         $this->_config->instantiateFeature('Piece_Unity_Plugin_ConfiguratorChain')
                ->invoke();
-        $request = $this->_context->getRequest();
 
-        $this->assertTrue($request->hasParameter('FirstConfiguratorCalled'));
-        $this->assertTrue($request->getParameter('FirstConfiguratorCalled'));
+        $this->assertTrue($this->_context->hasAttribute('FirstConfiguratorCalled'));
+        $this->assertTrue($this->_context->hasAttribute('FirstConfiguratorCalled'));
     }
 
     /**
@@ -109,14 +108,13 @@ class Piece_Unity_Plugin_ConfiguratorChainTest extends Piece_Unity_PHPUnit_TestC
         $this->_config->queueExtension('Piece_Unity_Plugin_ConfiguratorChain', 'configurators', __CLASS__ . '_SecondConfigurator');
         $this->_config->instantiateFeature('Piece_Unity_Plugin_ConfiguratorChain')
                ->invoke();
-        $request = $this->_context->getRequest();
 
-        $this->assertTrue($request->hasParameter('FirstConfiguratorCalled'));
-        $this->assertTrue($request->getParameter('FirstConfiguratorCalled'));
-        $this->assertTrue($request->hasParameter('SecondConfiguratorCalled'));
-        $this->assertTrue($request->getParameter('SecondConfiguratorCalled'));
+        $this->assertTrue($this->_context->hasAttribute('FirstConfiguratorCalled'));
+        $this->assertTrue($this->_context->getAttribute('FirstConfiguratorCalled'));
+        $this->assertTrue($this->_context->hasAttribute('SecondConfiguratorCalled'));
+        $this->assertTrue($this->_context->getAttribute('SecondConfiguratorCalled'));
 
-        $logs = $request->getParameter('logs');
+        $logs = $this->_context->getAttribute('logs');
 
         $this->assertEquals(__CLASS__ . '_FirstConfigurator', array_shift($logs));
         $this->assertEquals(__CLASS__ . '_SecondConfigurator', array_shift($logs));
