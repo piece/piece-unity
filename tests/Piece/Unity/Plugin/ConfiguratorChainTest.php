@@ -67,6 +67,9 @@ class Piece_Unity_Plugin_ConfiguratorChainTest extends Piece_Unity_PHPUnit_TestC
      * @access private
      */
 
+    private $_config;
+    private $_context;
+
     /**#@-*/
 
     /**#@+
@@ -76,9 +79,10 @@ class Piece_Unity_Plugin_ConfiguratorChainTest extends Piece_Unity_PHPUnit_TestC
     public function setUp()
     {
         parent::setUp();
-        $config = new Piece_Config();
-        $config->defineService('Piece_Unity_Plugin_ConfiguratorChain');
-        Piece_Unity_Context::singleton()->setConfiguration($config);
+        $this->_context = Piece_Unity_Context::singleton();
+        $this->_config = new Piece_Config();
+        $this->_config->defineService('Piece_Unity_Plugin_ConfiguratorChain');
+        $this->_context->setConfiguration($this->_config);
     }
 
     /**
@@ -86,11 +90,10 @@ class Piece_Unity_Plugin_ConfiguratorChainTest extends Piece_Unity_PHPUnit_TestC
      */
     public function invokeAConfigurator()
     {
-        $config = Piece_Unity_Context::singleton()->getConfiguration();
-        $config->queueExtension('Piece_Unity_Plugin_ConfiguratorChain', 'configurators', __CLASS__ . '_FirstConfigurator');
-        $config->instantiateFeature('Piece_Unity_Plugin_ConfiguratorChain')
+        $this->_config->queueExtension('Piece_Unity_Plugin_ConfiguratorChain', 'configurators', __CLASS__ . '_FirstConfigurator');
+        $this->_config->instantiateFeature('Piece_Unity_Plugin_ConfiguratorChain')
                ->invoke();
-        $request = Piece_Unity_Context::singleton()->getRequest();
+        $request = $this->_context->getRequest();
 
         $this->assertTrue($request->hasParameter('FirstConfiguratorCalled'));
         $this->assertTrue($request->getParameter('FirstConfiguratorCalled'));
@@ -101,12 +104,12 @@ class Piece_Unity_Plugin_ConfiguratorChainTest extends Piece_Unity_PHPUnit_TestC
      */
     public function invokeMultipleConfigurators()
     {
-        $config = Piece_Unity_Context::singleton()->getConfiguration();
-        $config->queueExtension('Piece_Unity_Plugin_ConfiguratorChain', 'configurators', __CLASS__ . '_FirstConfigurator');
-        $config->queueExtension('Piece_Unity_Plugin_ConfiguratorChain', 'configurators', __CLASS__ . '_SecondConfigurator');
-        $config->instantiateFeature('Piece_Unity_Plugin_ConfiguratorChain')
+        $this->_config = Piece_Unity_Context::singleton()->getConfiguration();
+        $this->_config->queueExtension('Piece_Unity_Plugin_ConfiguratorChain', 'configurators', __CLASS__ . '_FirstConfigurator');
+        $this->_config->queueExtension('Piece_Unity_Plugin_ConfiguratorChain', 'configurators', __CLASS__ . '_SecondConfigurator');
+        $this->_config->instantiateFeature('Piece_Unity_Plugin_ConfiguratorChain')
                ->invoke();
-        $request = Piece_Unity_Context::singleton()->getRequest();
+        $request = $this->_context->getRequest();
 
         $this->assertTrue($request->hasParameter('FirstConfiguratorCalled'));
         $this->assertTrue($request->getParameter('FirstConfiguratorCalled'));
