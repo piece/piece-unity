@@ -69,6 +69,10 @@ class Piece_Unity_Plugin_Configurator_EnvTest extends Piece_Unity_PHPUnit_TestCa
      * @access private
      */
 
+    private $_config;
+    private $_context;
+    private static $_serviceName = 'Piece_Unity_Plugin_Configurator_Env';
+
     /**#@-*/
 
     /**#@+
@@ -78,7 +82,10 @@ class Piece_Unity_Plugin_Configurator_EnvTest extends Piece_Unity_PHPUnit_TestCa
     public function setUp()
     {
         parent::setUp();
-        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Config());
+        $this->_context = Piece_Unity_Context::singleton();
+        $this->_config = new Piece_Config();
+        $this->_config->defineService(self::$_serviceName);
+        $this->_context->setConfiguration($this->_config);
     }
 
     /**
@@ -86,13 +93,10 @@ class Piece_Unity_Plugin_Configurator_EnvTest extends Piece_Unity_PHPUnit_TestCa
      */
     public function setTheProxyPath()
     {
-        $config = Piece_Unity_Context::singleton()->getConfiguration();
-        $config->defineService('Piece_Unity_Plugin_Configurator_Env');
-        $config->queueExtension('Piece_Unity_Plugin_Configurator_Env', 'proxyPath', '/foo/bar');
-        $config->instantiateFeature('Piece_Unity_Plugin_Configurator_Env')
-               ->configure();
+        $this->_config->queueExtension(self::$_serviceName, 'proxyPath', '/foo/bar');
+        $this->_config->instantiateFeature(self::$_serviceName)->configure();
 
-        $this->assertEquals('/foo/bar', Piece_Unity_Context::singleton()->getProxyPath());
+        $this->assertEquals('/foo/bar', $this->_context->getProxyPath());
     }
 
     /**#@-*/
