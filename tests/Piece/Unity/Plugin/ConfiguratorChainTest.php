@@ -61,15 +61,13 @@ class Piece_Unity_Plugin_ConfiguratorChainTest extends Piece_Unity_PHPUnit_TestC
      * @access protected
      */
 
+    protected $serviceName = 'Piece_Unity_Plugin_ConfiguratorChain';
+
     /**#@-*/
 
     /**#@+
      * @access private
      */
-
-    private $_config;
-    private $_context;
-    private static $_serviceName = 'Piece_Unity_Plugin_ConfiguratorChain';
 
     /**#@-*/
 
@@ -77,25 +75,16 @@ class Piece_Unity_Plugin_ConfiguratorChainTest extends Piece_Unity_PHPUnit_TestC
      * @access public
      */
 
-    public function setUp()
-    {
-        parent::setUp();
-        $this->_context = Piece_Unity_Context::singleton();
-        $this->_config = new Piece_Config();
-        $this->_config->defineService(self::$_serviceName);
-        $this->_context->setConfiguration($this->_config);
-    }
-
     /**
      * @test
      */
     public function invokeAConfigurator()
     {
-        $this->_config->queueExtension(self::$_serviceName, 'configurators', __CLASS__ . '_FirstConfigurator');
-        $this->_config->instantiateFeature(self::$_serviceName)->invoke();
+        $this->config->queueExtension($this->serviceName, 'configurators', __CLASS__ . '_FirstConfigurator');
+        $this->config->instantiateFeature($this->serviceName)->invoke();
 
-        $this->assertTrue($this->_context->hasAttribute('FirstConfiguratorCalled'));
-        $this->assertTrue($this->_context->hasAttribute('FirstConfiguratorCalled'));
+        $this->assertTrue($this->context->hasAttribute('FirstConfiguratorCalled'));
+        $this->assertTrue($this->context->hasAttribute('FirstConfiguratorCalled'));
     }
 
     /**
@@ -103,17 +92,16 @@ class Piece_Unity_Plugin_ConfiguratorChainTest extends Piece_Unity_PHPUnit_TestC
      */
     public function invokeMultipleConfigurators()
     {
-        $this->_config = Piece_Unity_Context::singleton()->getConfiguration();
-        $this->_config->queueExtension(self::$_serviceName, 'configurators', __CLASS__ . '_FirstConfigurator');
-        $this->_config->queueExtension(self::$_serviceName, 'configurators', __CLASS__ . '_SecondConfigurator');
-        $this->_config->instantiateFeature(self::$_serviceName)->invoke();
+        $this->config->queueExtension($this->serviceName, 'configurators', __CLASS__ . '_FirstConfigurator');
+        $this->config->queueExtension($this->serviceName, 'configurators', __CLASS__ . '_SecondConfigurator');
+        $this->config->instantiateFeature($this->serviceName)->invoke();
 
-        $this->assertTrue($this->_context->hasAttribute('FirstConfiguratorCalled'));
-        $this->assertTrue($this->_context->getAttribute('FirstConfiguratorCalled'));
-        $this->assertTrue($this->_context->hasAttribute('SecondConfiguratorCalled'));
-        $this->assertTrue($this->_context->getAttribute('SecondConfiguratorCalled'));
+        $this->assertTrue($this->context->hasAttribute('FirstConfiguratorCalled'));
+        $this->assertTrue($this->context->getAttribute('FirstConfiguratorCalled'));
+        $this->assertTrue($this->context->hasAttribute('SecondConfiguratorCalled'));
+        $this->assertTrue($this->context->getAttribute('SecondConfiguratorCalled'));
 
-        $logs = $this->_context->getAttribute('logs');
+        $logs = $this->context->getAttribute('logs');
 
         $this->assertEquals(__CLASS__ . '_FirstConfigurator', array_shift($logs));
         $this->assertEquals(__CLASS__ . '_SecondConfigurator', array_shift($logs));

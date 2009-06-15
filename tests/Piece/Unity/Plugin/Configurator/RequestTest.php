@@ -61,6 +61,8 @@ class Piece_Unity_Plugin_Configurator_RequestTest extends Piece_Unity_PHPUnit_Te
      * @access protected
      */
 
+    protected $serviceName = 'Piece_Unity_Plugin_Configurator_Request';
+
     /**#@-*/
 
     /**#@+
@@ -81,13 +83,10 @@ class Piece_Unity_Plugin_Configurator_RequestTest extends Piece_Unity_PHPUnit_Te
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['PATH_INFO'] = '/foo/bar/bar/baz/qux';
 
-        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Config());
-        $config = Piece_Unity_Context::singleton()->getConfiguration();
-        $config->defineService('Piece_Unity_Plugin_Configurator_Request');
-        $config->queueExtension('Piece_Unity_Plugin_Configurator_Request', 'importPathInfo', true);
-        $config->instantiateFeature('Piece_Unity_Plugin_Configurator_Request')
-               ->configure();
-        $request = Piece_Unity_Context::singleton()->getRequest();
+        $this->initializeContext();
+        $this->config->queueExtension($this->serviceName, 'importPathInfo', true);
+        $this->config->instantiateFeature($this->serviceName)->configure();
+        $request = $this->context->getRequest();
 
         $this->assertEquals('bar', $request->getParameter('foo'));
         $this->assertEquals('baz', $request->getParameter('bar'));

@@ -61,15 +61,13 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends Piece_Unity_PHPUnit_Te
      * @access protected
      */
 
+    protected $serviceName = 'Piece_Unity_Plugin_Configurator_AppRoot';
+
     /**#@-*/
     
     /**#@+
      * @access private
      */
-
-    private $_config;
-    private $_context;
-    private static $_serviceName = 'Piece_Unity_Plugin_Configurator_AppRoot';
 
     /**#@-*/
 
@@ -77,23 +75,14 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends Piece_Unity_PHPUnit_Te
      * @access public
      */
 
-    public function setUp()
-    {
-        parent::setUp();
-        $this->_context = Piece_Unity_Context::singleton();
-        $this->_config = new Piece_Config();
-        $this->_config->defineService(self::$_serviceName);
-        $this->_context->setConfiguration($this->_config);
-    }
-
     /**
      * @test
      */
     public function changeTheCurrentDirectory()
     {
         $appRoot = realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..');
-        $this->_config->queueExtension(self::$_serviceName, 'appRoot', $appRoot);
-        $this->_config->instantiateFeature(self::$_serviceName)->configure();
+        $this->config->queueExtension($this->serviceName, 'appRoot', $appRoot);
+        $this->config->instantiateFeature($this->serviceName)->configure();
 
         $this->assertEquals($appRoot, getcwd());
     }
@@ -105,8 +94,8 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends Piece_Unity_PHPUnit_Te
     public function raiseAnExceptionIfTheGivenDirectoryIsNotFound()
     {
         $appRoot = '/foo/bar';
-        $this->_config->queueExtension(self::$_serviceName, 'appRoot', $appRoot);
-        @$this->_config->instantiateFeature(self::$_serviceName)->configure();
+        $this->config->queueExtension($this->serviceName, 'appRoot', $appRoot);
+        @$this->config->instantiateFeature($this->serviceName)->configure();
     }
 
     /**
@@ -115,10 +104,10 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends Piece_Unity_PHPUnit_Te
     public function setTheAppRootPath()
     {
         $appRootPath = '/foo/bar';
-        $this->_config->queueExtension(self::$_serviceName, 'appRootPath', $appRootPath);
-        $this->_config->instantiateFeature(self::$_serviceName)->configure();
+        $this->config->queueExtension($this->serviceName, 'appRootPath', $appRootPath);
+        $this->config->instantiateFeature($this->serviceName)->configure();
 
-        $this->assertEquals($appRootPath, $this->_context->getAppRootPath());
+        $this->assertEquals($appRootPath, $this->context->getAppRootPath());
     }
 
     /**#@-*/
