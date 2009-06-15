@@ -90,8 +90,8 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
     protected function initialize()
     {
         parent::initialize();
-        $this->addConfigurationPoint('templateDirectory');
-        $this->addConfigurationPoint('templateExtension', '.php');
+        $this->addConfigurationPoint('templateDirectory', false);
+        $this->addConfigurationPoint('templateExtension', false, false, '.php');
     }
 
     // }}}
@@ -104,16 +104,15 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
      */
     protected function doRender($isLayout)
     {
-        $templateDirectory = $this->getConfiguration('templateDirectory');
+        $templateDirectory = $this->templateDirectory;
         if (!$isLayout) {
             $view = $this->context->getView();
         } else {
-            $layoutDirectory = $this->getConfiguration('layoutDirectory');
-            if (!is_null($layoutDirectory)) {
-                $templateDirectory = $layoutDirectory;
+            if (!is_null($this->layoutDirectory)) {
+                $templateDirectory = $this->layoutDirectory;
             }
 
-            $view = $this->getConfiguration('layoutView');
+            $view = $this->layoutView;
         }
 
         if (is_null($templateDirectory)) {
@@ -125,7 +124,7 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
             $templateDirectory .
             '/' .
             str_replace('_', '/', str_replace('.', '', $view)) .
-            $this->getConfiguration('templateExtension'),
+            $this->templateExtension,
             $this->context->getViewElement()
                            );
     }
@@ -138,9 +137,8 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
      */
     protected function prepareFallback()
     {
-        $fallbackDirectory = $this->getConfiguration('fallbackDirectory');
-        if (!is_null($fallbackDirectory)) {
-            $this->context->getConfiguration()->setConfiguration('Renderer_PHP', 'templateDirectory', $fallbackDirectory);
+        if (!is_null($this->fallbackDirectory)) {
+            $this->templateDirectory = $this->fallbackDirectory;
         }
     }
  

@@ -62,6 +62,7 @@ class Piece_Unity_Plugin_Renderer_PHPTest extends Piece_Unity_Plugin_Renderer_HT
      */
 
     protected $target = 'PHP';
+    protected $serviceName = 'Piece_Unity_Plugin_Renderer_PHP';
 
     /**#@-*/
 
@@ -81,14 +82,12 @@ class Piece_Unity_Plugin_Renderer_PHPTest extends Piece_Unity_Plugin_Renderer_HT
      */
     public function supportHtmlComponents()
     {
-        $context = Piece_Unity_Context::singleton();
-        $context->setView($this->target . 'HTMLComponent');
-        $config = $this->getConfig();
-        $config->setExtension('Renderer_' . $this->target,
-                              'components',
-                              array('Renderer_PHPTest_HTMLComponentExample')
-                              );
-        $context->setConfiguration($config);
+        $this->context->setView($this->target . 'HTMLComponent');
+        $this->config->queueExtension(
+            'Piece_Unity_Plugin_Renderer_' . $this->target,
+            'components',
+            'Piece_Unity_Plugin_Renderer_PHPTest_HTMLComponentExample'
+                                    );
 
         $this->assertEquals('This is a html fragment from a HTML Component.',
                             $this->render()
@@ -103,10 +102,7 @@ class Piece_Unity_Plugin_Renderer_PHPTest extends Piece_Unity_Plugin_Renderer_HT
 
     protected function getConfig()
     {
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Renderer_PHP', 'templateDirectory', $this->exclusiveDirectory . '/templates/Content');
-
-        return $config;
+        return $this->config;
     }
 
     /**
@@ -115,6 +111,8 @@ class Piece_Unity_Plugin_Renderer_PHPTest extends Piece_Unity_Plugin_Renderer_HT
     protected function doSetUp()
     {
         $this->exclusiveDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
+        $this->config->queueExtension($this->serviceName, 'templateDirectory', $this->exclusiveDirectory . '/templates/Content');
+
     }
 
     /**
@@ -122,10 +120,9 @@ class Piece_Unity_Plugin_Renderer_PHPTest extends Piece_Unity_Plugin_Renderer_HT
      */
     protected function getConfigForLayeredStructure()
     {
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Renderer_PHP', 'templateDirectory', $this->exclusiveDirectory . '/templates');
+        $this->config->queueExtension($this->serviceName, 'templateDirectory', $this->exclusiveDirectory . '/templates');
 
-        return $config;
+        return $this->config;
     }
 
     /**#@-*/

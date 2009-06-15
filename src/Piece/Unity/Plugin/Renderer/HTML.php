@@ -81,8 +81,8 @@ abstract class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Commo
      */
     public function render()
     {
-        $useLayout = $this->getConfiguration('useLayout');
-        if ($this->getConfiguration('turnOffLayoutByHTTPAccept')) {
+        $useLayout = $this->useLayout;
+        if ($this->turnOffLayoutByHTTPAccept) {
             if (array_key_exists('HTTP_ACCEPT', $_SERVER)) {
                 if ($_SERVER['HTTP_ACCEPT'] == 'application/x-piece-html-fragment') {
                     $useLayout = false;
@@ -90,16 +90,15 @@ abstract class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Commo
             }
         }
 
-        $components = $this->getExtension('components');
-        if (!is_array($components)) {
+        if (!is_array($this->components)) {
             throw new Piece_Unity_Exception('The value of the extension point [ components ] on the plug-in [ ' .
                                             $this->getName() .
                                             ' ] should be an array'
                                             );
         }
 
-        foreach ($components as $extension) {
-            Piece_Unity_Plugin_Factory::factory($extension)->invoke();
+        foreach ($this->components as $extension) {
+            $extension->invoke();
         }
 
         if (!$useLayout) {
@@ -135,16 +134,16 @@ abstract class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Commo
      */
     protected function initialize()
     {
-        $this->addConfigurationPoint('useLayout', false);
-        $this->addConfigurationPoint('layoutView');
-        $this->addConfigurationPoint('layoutDirectory');
-        $this->addConfigurationPoint('layoutCompileDirectory');
-        $this->addConfigurationPoint('turnOffLayoutByHTTPAccept', false);
-        $this->addConfigurationPoint('useFallback', false);
-        $this->addConfigurationPoint('fallbackView');
-        $this->addConfigurationPoint('fallbackDirectory');
-        $this->addConfigurationPoint('fallbackCompileDirectory');
-        $this->addExtensionPoint('components', array());
+        $this->addConfigurationPoint('useLayout', false, false, false);
+        $this->addConfigurationPoint('layoutView', true);
+        $this->addConfigurationPoint('layoutDirectory', true);
+        $this->addConfigurationPoint('layoutCompileDirectory', true);
+        $this->addConfigurationPoint('turnOffLayoutByHTTPAccept', false, false, false);
+        $this->addConfigurationPoint('useFallback', false, false, false);
+        $this->addConfigurationPoint('fallbackView', true);
+        $this->addConfigurationPoint('fallbackDirectory', true);
+        $this->addConfigurationPoint('fallbackCompileDirectory', true);
+        $this->addExtensionPoint('components', true, true);
     }
 
     // }}}
@@ -192,8 +191,8 @@ abstract class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Commo
                           ' ]',
                           E_USER_WARNING
                           );
-            if ($this->getConfiguration('useFallback')) {
-                $this->context->setView($this->getConfiguration('fallbackView'));
+            if ($this->useFallback) {
+                $this->context->setView($this->fallbackView);
                 $this->prepareFallback();
                 $this->doRender($isLayout);
                 return;
