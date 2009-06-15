@@ -61,30 +61,19 @@ class Piece_Unity_Plugin_Configurator_EventTest extends Piece_Unity_PHPUnit_Test
      * @access protected
      */
 
+    protected $serviceName = 'Piece_Unity_Plugin_Configurator_Event';
+
     /**#@-*/
 
     /**#@+
      * @access private
      */
 
-    private $_config;
-    private $_context;
-    private static $_serviceName = 'Piece_Unity_Plugin_Configurator_Event';
-
     /**#@-*/
 
     /**#@+
      * @access public
      */
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->_context = Piece_Unity_Context::singleton();
-        $this->_config = new Piece_Config();
-        $this->_config->defineService(self::$_serviceName);
-        $this->_context->setConfiguration($this->_config);
-    }
 
     /**
      * @test
@@ -94,13 +83,11 @@ class Piece_Unity_Plugin_Configurator_EventTest extends Piece_Unity_PHPUnit_Test
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_foo'] = 'bar';
 
-        Piece_Unity_Context::clear();
-        $this->_context = Piece_Unity_Context::singleton();
-        $this->_context->setConfiguration($this->_config);
-        $this->_config->queueExtension(self::$_serviceName, 'eventNameKey', '_foo');
-        $this->_config->instantiateFeature(self::$_serviceName)->configure();
+        $this->initializeContext();
+        $this->config->queueExtension($this->serviceName, 'eventNameKey', '_foo');
+        $this->config->instantiateFeature($this->serviceName)->configure();
 
-        $this->assertEquals('bar', $this->_context->getEventName());
+        $this->assertEquals('bar', $this->context->getEventName());
     }
 
     /**
@@ -111,13 +98,11 @@ class Piece_Unity_Plugin_Configurator_EventTest extends Piece_Unity_PHPUnit_Test
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_event'] = 'foo';
 
-        Piece_Unity_Context::clear();
-        $this->_context = Piece_Unity_Context::singleton();
-        $this->_context->setConfiguration($this->_config);
-        $this->_config->queueExtension(self::$_serviceName, 'eventName', 'bar');
-        $this->_config->instantiateFeature(self::$_serviceName)->configure();
+        $this->initializeContext();
+        $this->config->queueExtension($this->serviceName, 'eventName', 'bar');
+        $this->config->instantiateFeature($this->serviceName)->configure();
 
-        $this->assertEquals('bar', $this->_context->getEventName());
+        $this->assertEquals('bar', $this->context->getEventName());
     }
 
     /**#@-*/

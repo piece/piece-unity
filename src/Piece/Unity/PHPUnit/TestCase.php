@@ -61,6 +61,10 @@ abstract class Piece_Unity_PHPUnit_TestCase extends PHPUnit_Framework_TestCase
      * @access protected
      */
 
+    protected $config;
+    protected $context;
+    protected $serviceName;
+
     /**#@-*/
 
     /**#@+
@@ -75,7 +79,8 @@ abstract class Piece_Unity_PHPUnit_TestCase extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        Piece_Unity_Context::clear();
+        $this->initializeConfig();
+        $this->initializeContext();
     }
 
     /**#@-*/
@@ -83,6 +88,19 @@ abstract class Piece_Unity_PHPUnit_TestCase extends PHPUnit_Framework_TestCase
     /**#@+
      * @access protected
      */
+
+    protected function initializeConfig()
+    {
+        $this->config = new Piece_Config();
+        $this->config->defineService($this->serviceName);
+    }
+
+    protected function initializeContext()
+    {
+        Piece_Unity_Context::clear();
+        $this->context = Piece_Unity_Context::singleton();
+        $this->context->setConfiguration($this->config);
+    }
 
     /**#@-*/
 
