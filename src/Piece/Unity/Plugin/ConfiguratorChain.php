@@ -67,15 +67,6 @@ class Piece_Unity_Plugin_ConfiguratorChain extends Piece_Unity_Plugin_Common
      * @access private
      */
 
-    var $_requiredConfigurators = array('Configurator_AppRoot',
-                                        'Configurator_Plugin',
-                                        'Configurator_Env',
-                                        'Configurator_Event',
-                                        'Configurator_Proxy',
-                                        'Configurator_Request',
-                                        'Configurator_Validation'
-                                        );
-
     /**#@-*/
 
     /**#@+
@@ -92,16 +83,8 @@ class Piece_Unity_Plugin_ConfiguratorChain extends Piece_Unity_Plugin_Common
      */
     public function invoke()
     {
-        $configurators = $this->getExtension('configurators');
-        if (!is_array($configurators)) {
-            throw new Piece_Unity_Exception('The value of the extension point [ configurators ] on the plug-in [ ' .
-                                            $this->getName() .
-                                            ' ] should be an array'
-                                            );
-        }
-
-        foreach (array_merge($this->_requiredConfigurators, $configurators) as $extension) {
-            Piece_Unity_Plugin_Factory::factory($extension)->configure();
+        foreach (array_merge($this->requiredConfigurators, $this->configurators) as $configurator) {
+            $configurator->configure();
         }
     }
 
@@ -119,7 +102,15 @@ class Piece_Unity_Plugin_ConfiguratorChain extends Piece_Unity_Plugin_Common
      */
     protected function initialize()
     {
-        $this->addExtensionPoint('configurators', array());
+        $this->addExtensionPoint('requiredConfigurators', false, true,
+                                 array('Piece_Unity_Plugin_Configurator_AppRoot',
+                                       'Piece_Unity_Plugin_Configurator_Env',
+                                       'Piece_Unity_Plugin_Configurator_Event',
+                                       'Piece_Unity_Plugin_Configurator_Proxy',
+                                       'Piece_Unity_Plugin_Configurator_Request',
+                                       'Piece_Unity_Plugin_Configurator_Validation')
+                                 );
+        $this->addExtensionPoint('configurators', true, true);
     }
 
     /**#@-*/
