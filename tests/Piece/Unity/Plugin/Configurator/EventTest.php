@@ -75,12 +75,17 @@ class Piece_Unity_Plugin_Configurator_EventTest extends Piece_Unity_PHPUnit_Test
      * @access public
      */
 
+    public function setUp()
+    {
+        parent::setUp();
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+    }
+
     /**
      * @test
      */
     public function setTheEventNameKey()
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_foo'] = 'bar';
 
         $this->initializeContext();
@@ -95,7 +100,6 @@ class Piece_Unity_Plugin_Configurator_EventTest extends Piece_Unity_PHPUnit_Test
      */
     public function setTheEventName()
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_event'] = 'foo';
 
         $this->initializeContext();
