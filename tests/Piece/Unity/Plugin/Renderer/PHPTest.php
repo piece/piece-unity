@@ -100,11 +100,6 @@ class Piece_Unity_Plugin_Renderer_PHPTest extends Piece_Unity_Plugin_Renderer_HT
      * @access protected
      */
 
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
     /**
      * @since Method available since Release 1.0.0
      */

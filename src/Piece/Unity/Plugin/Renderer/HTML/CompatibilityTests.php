@@ -257,8 +257,6 @@ if (\$code == E_USER_WARNING) {
      * @access protected
      */
 
-    abstract protected function getConfig();
-
     /**
      * @since Method available since Release 1.0.0
      */
