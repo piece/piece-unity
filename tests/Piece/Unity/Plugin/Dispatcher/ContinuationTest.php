@@ -68,7 +68,6 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
      */
 
     protected $serviceName = 'Piece_Unity_Plugin_Dispatcher_Continuation';
-    protected $cacheDirectory;
 
     /**#@-*/
 
