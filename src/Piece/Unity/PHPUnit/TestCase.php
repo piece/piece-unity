@@ -64,6 +64,7 @@ abstract class Piece_Unity_PHPUnit_TestCase extends PHPUnit_Framework_TestCase
     protected $config;
     protected $context;
     protected $serviceName;
+    protected $cacheDirectory;
 
     /**#@-*/
 
@@ -81,6 +82,18 @@ abstract class Piece_Unity_PHPUnit_TestCase extends PHPUnit_Framework_TestCase
     {
         $this->initializeConfig();
         $this->initializeContext();
+    }
+
+    public function tearDown()
+    {
+        if (!is_null($this->cacheDirectory)) {
+            $cache = new Cache_Lite_File(array('cacheDir' => $this->cacheDirectory . '/',
+                                               'masterFile' => '',
+                                               'automaticSerialization' => true,
+                                               'errorHandlingAPIBreak' => true)
+                                         );
+            $cache->clean();
+        }
     }
 
     /**#@-*/
