@@ -61,6 +61,8 @@ class Piece_Unity_Plugin_Interceptor_SessionTest extends Piece_Unity_PHPUnit_Tes
      * @access protected
      */
 
+    protected $serviceName = 'Piece_Unity_Plugin_Interceptor_Session';
+
     /**#@-*/
 
     /**#@+
@@ -84,30 +86,26 @@ class Piece_Unity_Plugin_Interceptor_SessionTest extends Piece_Unity_PHPUnit_Tes
      */
     public function redirectToAGivenFallbackUriIfTheCurrentSessionHasBeenExpired()
     {
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Interceptor_Session', 'enableExpiration', true);
-        $config->setConfiguration('Interceptor_Session', 'expirationTime', 1);
-        $config->setConfiguration('Interceptor_Session',
-                                  'expirationFallbackURI',
-                                  'http://example.org/'
-                                  );
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $session = new Piece_Unity_Plugin_Interceptor_Session();
+        $this->initializeContext();
+        $this->config->queueExtension($this->serviceName, 'enableExpiration', true);
+        $this->config->queueExtension($this->serviceName, 'expirationTime', 1);
+        $this->config->queueExtension($this->serviceName,
+                                      'expirationFallbackURI',
+                                      'http://example.org/'
+                                      );
+        $session = $this->config->instantiateFeature($this->serviceName);
         $doContinue = @$session->intercept();
 
         $this->assertTrue($doContinue);
 
         sleep(2);
 
-        Piece_Unity_Context::clear();
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $session = new Piece_Unity_Plugin_Interceptor_Session();
+        $this->initializeContext();
+        $session = $this->config->instantiateFeature($this->serviceName);
         $doContinue = @$session->intercept();
 
         $this->assertFalse($doContinue);
-        $this->assertEquals('http://example.org/', $context->getView());
+        $this->assertEquals('http://example.org/', $this->context->getView());
     }
 
     /**
@@ -115,16 +113,14 @@ class Piece_Unity_Plugin_Interceptor_SessionTest extends Piece_Unity_PHPUnit_Tes
      */
     public function startANewSessionIfTheCurrentSessionIsMarkedAsExpired()
     {
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Interceptor_Session', 'enableExpiration', true);
-        $config->setConfiguration('Interceptor_Session', 'expirationTime', 1);
-        $config->setConfiguration('Interceptor_Session',
-                                  'expirationFallbackURI',
-                                  'http://example.org/'
-                                  );
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $session = new Piece_Unity_Plugin_Interceptor_Session();
+        $this->initializeContext();
+        $this->config->queueExtension($this->serviceName, 'enableExpiration', true);
+        $this->config->queueExtension($this->serviceName, 'expirationTime', 1);
+        $this->config->queueExtension($this->serviceName,
+                                      'expirationFallbackURI',
+                                      'http://example.org/'
+                                      );
+        $session = $this->config->instantiateFeature($this->serviceName);
         $doContinue = @$session->intercept();
 
         $this->assertTrue($doContinue);
@@ -133,20 +129,16 @@ class Piece_Unity_Plugin_Interceptor_SessionTest extends Piece_Unity_PHPUnit_Tes
 
         sleep(2);
 
-        Piece_Unity_Context::clear();
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $session = new Piece_Unity_Plugin_Interceptor_Session();
+        $this->initializeContext();
+        $session = $this->config->instantiateFeature($this->serviceName);
         $doContinue = @$session->intercept();
 
         $this->assertFalse($doContinue);
-        $this->assertEquals('http://example.org/', $context->getView());
+        $this->assertEquals('http://example.org/', $this->context->getView());
         $this->assertArrayHasKey('foo', $_SESSION);
 
-        Piece_Unity_Context::clear();
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $session = new Piece_Unity_Plugin_Interceptor_Session();
+        $this->initializeContext();
+        $session = $this->config->instantiateFeature($this->serviceName);
         $doContinue = @$session->intercept();
 
         $this->assertTrue($doContinue);

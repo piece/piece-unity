@@ -84,7 +84,7 @@ class Piece_Unity_Plugin_Interceptor_Session extends Piece_Unity_Plugin_Common i
         $session = $this->context->getSession();
         $session->start();
 
-        if (!$this->getConfiguration('enableExpiration')) {
+        if (!$this->enableExpiration) {
             return true;
         }
 
@@ -114,9 +114,9 @@ class Piece_Unity_Plugin_Interceptor_Session extends Piece_Unity_Plugin_Common i
      */
     protected function initialize()
     {
-        $this->addConfigurationPoint('enableExpiration', false);
-        $this->addConfigurationPoint('expirationTime', 1440);
-        $this->addConfigurationPoint('expirationFallbackURI');
+        $this->addConfigurationPoint('enableExpiration', false, false, false);
+        $this->addConfigurationPoint('expirationTime', false, false, 1440);
+        $this->addConfigurationPoint('expirationFallbackURI', true);
     }
 
     /**#@-*/
@@ -146,10 +146,10 @@ class Piece_Unity_Plugin_Interceptor_Session extends Piece_Unity_Plugin_Common i
             return true;
         }
 
-        if (time() - $session->getAttribute('_sessionUpdatedAt') > $this->getConfiguration('expirationTime')) {
+        if (time() - $session->getAttribute('_sessionUpdatedAt') > $this->expirationTime) {
             $session->setAttribute('_sessionExpired', true);
             $this->context->sendHTTPStatus(302);
-            $this->context->setView($this->getConfiguration('expirationFallbackURI'));
+            $this->context->setView($this->expirationFallbackURI);
             return false;
         }
 
