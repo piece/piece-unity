@@ -89,23 +89,22 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
     {
         $eventName = $this->context->getEventName();
 
-        if ($this->getConfiguration('useDefaultEvent')) {
+        if ($this->useDefaultEvent) {
             if (is_null($eventName) || !strlen($eventName)) {
-                $eventName = $this->getConfiguration('defaultEventName');
+                $eventName = $this->defaultEventName;
                 $this->context->setEventName($eventName);
             }
         }
 
         $class = str_replace('.', '', $eventName . 'Action');
 
-        $actionDirectory = $this->getConfiguration('actionDirectory');
-        if (is_null($actionDirectory)) {
+        if (is_null($this->actionDirectory)) {
             return $eventName;
         }
 
         if (!Piece_Unity_ClassLoader::loaded($class)) {
             try {
-                Piece_Unity_ClassLoader::load($class, $actionDirectory);
+                Piece_Unity_ClassLoader::load($class, $this->actionDirectory);
             } catch (Piece_Unity_ClassLoader_NotFoundException $e) {
                 return $eventName;
             }
@@ -150,9 +149,9 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
      */
     protected function initialize()
     {
-        $this->addConfigurationPoint('actionDirectory');
-        $this->addConfigurationPoint('useDefaultEvent', false);
-        $this->addConfigurationPoint('defaultEventName');
+        $this->addConfigurationPoint('actionDirectory', true);
+        $this->addConfigurationPoint('useDefaultEvent', false, false, false);
+        $this->addConfigurationPoint('defaultEventName', true);
     }
  
     /**#@-*/

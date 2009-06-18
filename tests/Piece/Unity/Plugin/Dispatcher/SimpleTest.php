@@ -65,13 +65,13 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
      * @access protected
      */
 
+    protected $serviceName = 'Piece_Unity_Plugin_Dispatcher_Simple';
+
     /**#@-*/
 
     /**#@+
      * @access private
      */
-
-    private $_exclusiveDirectory;
 
     /**#@-*/
 
@@ -83,17 +83,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
     {
         parent::setUp();
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $this->_exclusiveDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
-    }
-
-    public function tearDown()
-    {
-        $cache = new Cache_Lite_File(array('cacheDir' => $this->_exclusiveDirectory . '/',
-                                           'masterFile' => '',
-                                           'automaticSerialization' => true,
-                                           'errorHandlingAPIBreak' => true)
-                                     );
-        $cache->clean();
+        $this->cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 
     /**
@@ -102,8 +92,8 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
     public function dispatchTheRequestToTheViewDirectly()
     {
         $_GET['_event'] = 'foo';
-        Piece_Unity_Context::singleton()->setConfiguration(new Piece_Unity_Config());
-        $dispatcher = new Piece_Unity_Plugin_Dispatcher_Simple();
+        $this->initializeContext();
+        $dispatcher = $this->config->instantiateFeature($this->serviceName);
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('foo', $viewString);
@@ -116,10 +106,9 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
     {
         $_GET['_event'] = 'SimpleExample';
         $GLOBALS['actionCalled'] = false;
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_exclusiveDirectory);
-        Piece_Unity_Context::singleton()->setConfiguration($config);
-        $dispatcher = new Piece_Unity_Plugin_Dispatcher_Simple();
+        $this->initializeContext();
+        $this->config->queueExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
+        $dispatcher = $this->config->instantiateFeature($this->serviceName);
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('SimpleExample', $viewString);
@@ -134,10 +123,9 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
         $_GET['_event'] = '../RelativePathVulnerability';
         $GLOBALS['actionCalled'] = false;
         $GLOBALS['RelativePathVulnerabilityActionLoaded'] = false;
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_exclusiveDirectory);
-        Piece_Unity_Context::singleton()->setConfiguration($config);
-        $dispatcher = new Piece_Unity_Plugin_Dispatcher_Simple();
+        $this->initializeContext();
+        $this->config->queueExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
+        $dispatcher = $this->config->instantiateFeature($this->serviceName);
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('../RelativePathVulnerability', $viewString);
@@ -160,23 +148,20 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
             $_GET[$name] = $value;
         }
 
-        $context = Piece_Unity_Context::singleton();
-        $validation = $context->getValidation();
-        $validation->setConfigDirectory($this->_exclusiveDirectory);
-        $validation->setCacheDirectory($this->_exclusiveDirectory);
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_exclusiveDirectory);
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $dispatcher = new Piece_Unity_Plugin_Dispatcher_Simple();
+        $this->initializeContext();
+        $validation = $this->context->getValidation();
+        $validation->setConfigDirectory($this->cacheDirectory);
+        $validation->setCacheDirectory($this->cacheDirectory);
+        $this->config->queueExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
+        $dispatcher = $this->config->instantiateFeature($this->serviceName);
         $dispatcher->invoke();
 
-        $viewElement = $context->getViewElement();
+        $viewElement = $this->context->getViewElement();
 
         $this->assertTrue($viewElement->hasElement('__ValidationResults'));
         $this->assertEquals($validation->getResults(), $viewElement->getElement('__ValidationResults'));
 
-        $user = $context->getAttribute('user');
+        $user = $this->context->getAttribute('user');
         foreach ($fields as $field => $value) {
             $this->assertEquals(trim($value), $user->$field, $field);
         }
@@ -189,16 +174,14 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
     public function useTheDefaultEventIfTheGivenEventNameIsEmpty()
     {
         $_GET['_event'] = '';
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'useDefaultEvent', true);
-        $config->setConfiguration('Dispatcher_Simple', 'defaultEventName', 'Index');
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $dispatcher = new Piece_Unity_Plugin_Dispatcher_Simple();
+        $this->initializeContext();
+        $this->config->queueExtension($this->serviceName, 'useDefaultEvent', true);
+        $this->config->queueExtension($this->serviceName, 'defaultEventName', 'Index');
+        $dispatcher = $this->config->instantiateFeature($this->serviceName);
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Index', $viewString);
-        $this->assertEquals('Index', $context->getEventName());
+        $this->assertEquals('Index', $this->context->getEventName());
     }
 
     /**
@@ -208,16 +191,14 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
     public function useTheDefaultEventIfTheGivenEventNameIsNull()
     {
         $_GET['_event'] = null;
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'useDefaultEvent', true);
-        $config->setConfiguration('Dispatcher_Simple', 'defaultEventName', 'Index');
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $dispatcher = new Piece_Unity_Plugin_Dispatcher_Simple();
+        $this->initializeContext();
+        $this->config->queueExtension($this->serviceName, 'useDefaultEvent', true);
+        $this->config->queueExtension($this->serviceName, 'defaultEventName', 'Index');
+        $dispatcher = $this->config->instantiateFeature($this->serviceName);
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Index', $viewString);
-        $this->assertEquals('Index', $context->getEventName());
+        $this->assertEquals('Index', $this->context->getEventName());
     }
 
     /**
@@ -227,16 +208,14 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
     public function notUseTheDefaultEventIfTheGivenEventNameIsNotEmptyOrNull()
     {
         $_GET['_event'] = 'Foo';
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'useDefaultEvent', true);
-        $config->setConfiguration('Dispatcher_Simple', 'defaultEventName', 'Index');
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $dispatcher = new Piece_Unity_Plugin_Dispatcher_Simple();
+        $this->initializeContext();
+        $this->config->queueExtension($this->serviceName, 'useDefaultEvent', true);
+        $this->config->queueExtension($this->serviceName, 'defaultEventName', 'Index');
+        $dispatcher = $this->config->instantiateFeature($this->serviceName);
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Foo', $viewString);
-        $this->assertEquals('Foo', $context->getEventName());
+        $this->assertEquals('Foo', $this->context->getEventName());
     }
 
     /**
@@ -246,16 +225,14 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
     public function notUseTheDefaultEventIfTheOptionIsDisabled()
     {
         $_GET['_event'] = 'Foo';
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'useDefaultEvent', false);
-        $config->setConfiguration('Dispatcher_Simple', 'defaultEventName', 'Index');
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $dispatcher = new Piece_Unity_Plugin_Dispatcher_Simple();
+        $this->initializeContext();
+        $this->config->queueExtension($this->serviceName, 'useDefaultEvent', false);
+        $this->config->queueExtension($this->serviceName, 'defaultEventName', 'Index');
+        $dispatcher = $this->config->instantiateFeature($this->serviceName);
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Foo', $viewString);
-        $this->assertEquals('Foo', $context->getEventName());
+        $this->assertEquals('Foo', $this->context->getEventName());
     }
 
     /**
@@ -265,13 +242,11 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
     public function returnAnyViewStringWhichShouldBeRendered()
     {
         $_GET['_event'] = 'ActionShouldBeAbleToReturnViewString';
-        $config = new Piece_Unity_Config();
-        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', $this->_exclusiveDirectory);
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $dispatcher = new Piece_Unity_Plugin_Dispatcher_Simple();
+        $this->initializeContext();
+        $this->config->queueExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
+        $dispatcher = $this->config->instantiateFeature($this->serviceName);
         $viewString = $dispatcher->invoke();
-        $eventName = $context->getEventName();
+        $eventName = $this->context->getEventName();
 
         $this->assertNotEquals($viewString, $eventName);
         $this->assertEquals('Foo', $viewString);
