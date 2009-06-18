@@ -140,14 +140,15 @@ abstract class Piece_Unity_Plugin_Common
         $defaultValues = array()
                                          )
     {
-        $this->context->getConfiguration()
-                      ->defineServicePoint(
-                          $this->_name,
-                          $extensionPoint,
-                          $isOptional,
-                          $isMultiple,
-                          $defaultValues
-                                           );
+        $config = $this->context->getConfiguration();
+        if (!$config->hasExtensionPoint($this->getName(), $extensionPoint)) {
+            $config->defineServicePoint($this->getName(),
+                                        $extensionPoint,
+                                        $isOptional,
+                                        $isMultiple,
+                                        $defaultValues
+                                        );
+        }
     }
 
     // }}}
@@ -169,14 +170,15 @@ abstract class Piece_Unity_Plugin_Common
         $defaultValues = array()
                                              )
     {
-        $this->context->getConfiguration()
-                      ->defineValuePoint(
-                          $this->_name,
-                          $configurationPoint,
-                          $isOptional,
-                          $isMultiple,
-                          $defaultValues
-                                         );
+        $config = $this->context->getConfiguration();
+        if (!$config->hasExtensionPoint($this->getName(), $configurationPoint)) {
+            $config->defineValuePoint($this->getName(),
+                                      $configurationPoint,
+                                      $isOptional,
+                                      $isMultiple,
+                                      $defaultValues
+                                      );
+        }
     }
 
     /**#@-*/
