@@ -94,7 +94,7 @@ abstract class Piece_Unity_PHPUnit_TestCase extends PHPUnit_Framework_TestCase
         $this->config = new Piece_Config();
 
         if (!is_null($this->serviceName)) {
-            $this->config->defineService($this->serviceName);
+            $this->config->defineService($this->serviceName, null, 'prototype');
         }
     }
 
