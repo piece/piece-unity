@@ -61,6 +61,8 @@ class Piece_Unity_Plugin_InterceptorChainTest extends Piece_Unity_PHPUnit_TestCa
      * @access protected
      */
 
+    protected $serviceName = 'Piece_Unity_Plugin_InterceptorChain';
+
     /**#@-*/
 
     /**#@+
@@ -73,25 +75,15 @@ class Piece_Unity_Plugin_InterceptorChainTest extends Piece_Unity_PHPUnit_TestCa
      * @access public
      */
 
-    public function setUp()
-    {
-        parent::setUp();
-        Piece_Unity_Plugin_Factory::addPluginPrefix(__CLASS__);
-    }
-
     /**
      * @test
      */
     public function invokeAInterceptor()
     {
-        $config = new Piece_Unity_Config();
-        $config->setExtension('InterceptorChain', 'interceptors', array('First'));
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-
-        $chain = new Piece_Unity_Plugin_InterceptorChain();
+        $this->addExtension('interceptors', __CLASS__ . '_First');
+        $chain = $this->instantiateFeature();
         $chain->invoke();
-        $request = $context->getRequest();
+        $request = $this->context->getRequest();
 
         $this->assertTrue($request->hasParameter('FirstInterceptorCalled'));
         $this->assertTrue($request->getParameter('FirstInterceptorCalled'));
@@ -102,14 +94,11 @@ class Piece_Unity_Plugin_InterceptorChainTest extends Piece_Unity_PHPUnit_TestCa
      */
     public function invokeMultipleInterceptors()
     {
-        $config = new Piece_Unity_Config();
-        $config->setExtension('InterceptorChain', 'interceptors', array('First', 'Second'));
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-
-        $chain = new Piece_Unity_Plugin_InterceptorChain();
+        $this->addExtension('interceptors', __CLASS__ . '_First');
+        $this->addExtension('interceptors', __CLASS__ . '_Second');
+        $chain = $this->instantiateFeature();
         $chain->invoke();
-        $request = $context->getRequest();
+        $request = $this->context->getRequest();
 
         $this->assertTrue($request->hasParameter('FirstInterceptorCalled'));
         $this->assertTrue($request->getParameter('FirstInterceptorCalled'));
