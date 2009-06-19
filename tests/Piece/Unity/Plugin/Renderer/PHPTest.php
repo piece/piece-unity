@@ -83,7 +83,7 @@ class Piece_Unity_Plugin_Renderer_PHPTest extends Piece_Unity_Plugin_Renderer_HT
     public function supportHtmlComponents()
     {
         $this->context->setView($this->target . 'HTMLComponent');
-        $this->config->queueExtension(
+        $this->config->lazyAddExtension(
             'Piece_Unity_Plugin_Renderer_' . $this->target,
             'components',
             'Piece_Unity_Plugin_Renderer_PHPTest_HTMLComponentExample'
@@ -106,7 +106,7 @@ class Piece_Unity_Plugin_Renderer_PHPTest extends Piece_Unity_Plugin_Renderer_HT
     protected function doSetUp()
     {
         $this->exclusiveDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
-        $this->config->queueExtension($this->serviceName, 'templateDirectory', $this->exclusiveDirectory . '/templates/Content');
+        $this->config->lazyAddExtension($this->serviceName, 'templateDirectory', $this->exclusiveDirectory . '/templates/Content');
 
     }
 
@@ -115,7 +115,7 @@ class Piece_Unity_Plugin_Renderer_PHPTest extends Piece_Unity_Plugin_Renderer_HT
      */
     protected function configureForLayeredStructure()
     {
-        $this->config->queueExtension($this->serviceName, 'templateDirectory', $this->exclusiveDirectory . '/templates');
+        $this->config->lazyAddExtension($this->serviceName, 'templateDirectory', $this->exclusiveDirectory . '/templates');
     }
 
     /**#@-*/

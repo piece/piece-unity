@@ -80,7 +80,7 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends Piece_Unity_PHPUnit_Test
      */
     public function setTheProxyPath()
     {
-        $this->config->queueExtension($this->serviceName, 'proxyPath', '/foo/bar');
+        $this->config->lazyAddExtension($this->serviceName, 'proxyPath', '/foo/bar');
         $this->config->instantiateFeature($this->serviceName)->configure();
 
         $this->assertEquals('/foo/bar', $this->context->getProxyPath());
@@ -98,7 +98,7 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends Piece_Unity_PHPUnit_Test
 
         $this->initializeContext();
         $this->context->setAppRootPath('/foo');
-        $this->config->queueExtension($this->serviceName, 'proxyPath', '/bar');
+        $this->config->lazyAddExtension($this->serviceName, 'proxyPath', '/bar');
         $this->config->instantiateFeature($this->serviceName)->configure();
 
         $this->assertEquals('/bar/baz', $this->context->getBasePath());
@@ -118,7 +118,7 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends Piece_Unity_PHPUnit_Test
 
         $this->initializeContext();
         $this->context->setAppRootPath('/foo');
-        $this->config->queueExtension($this->serviceName, 'proxyPath', '/bar');
+        $this->config->lazyAddExtension($this->serviceName, 'proxyPath', '/bar');
         $this->config->instantiateFeature($this->serviceName)->configure();
 
         $this->assertEquals('/baz', $this->context->getBasePath());
@@ -134,8 +134,8 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends Piece_Unity_PHPUnit_Test
         $oldSessionCookiePath = ini_get('session.cookie_path');
         ini_set('session.cookie_path', '/bar');
 
-        $this->config->queueExtension($this->serviceName, 'proxyPath', '/foo');
-        $this->config->queueExtension($this->serviceName, 'adjustSessionCookiePath', false);
+        $this->config->lazyAddExtension($this->serviceName, 'proxyPath', '/foo');
+        $this->config->lazyAddExtension($this->serviceName, 'adjustSessionCookiePath', false);
         $this->config->instantiateFeature($this->serviceName)->configure();
 
         $this->assertEquals('/bar', ini_get('session.cookie_path'));

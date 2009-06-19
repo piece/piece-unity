@@ -107,7 +107,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
         $_GET['_event'] = 'SimpleExample';
         $GLOBALS['actionCalled'] = false;
         $this->initializeContext();
-        $this->config->queueExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
+        $this->config->lazyAddExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
         $dispatcher = $this->config->instantiateFeature($this->serviceName);
         $viewString = $dispatcher->invoke();
 
@@ -124,7 +124,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
         $GLOBALS['actionCalled'] = false;
         $GLOBALS['RelativePathVulnerabilityActionLoaded'] = false;
         $this->initializeContext();
-        $this->config->queueExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
+        $this->config->lazyAddExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
         $dispatcher = $this->config->instantiateFeature($this->serviceName);
         $viewString = $dispatcher->invoke();
 
@@ -152,7 +152,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
         $validation = $this->context->getValidation();
         $validation->setConfigDirectory($this->cacheDirectory);
         $validation->setCacheDirectory($this->cacheDirectory);
-        $this->config->queueExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
+        $this->config->lazyAddExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
         $dispatcher = $this->config->instantiateFeature($this->serviceName);
         $dispatcher->invoke();
 
@@ -175,8 +175,8 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
     {
         $_GET['_event'] = '';
         $this->initializeContext();
-        $this->config->queueExtension($this->serviceName, 'useDefaultEvent', true);
-        $this->config->queueExtension($this->serviceName, 'defaultEventName', 'Index');
+        $this->config->lazyAddExtension($this->serviceName, 'useDefaultEvent', true);
+        $this->config->lazyAddExtension($this->serviceName, 'defaultEventName', 'Index');
         $dispatcher = $this->config->instantiateFeature($this->serviceName);
         $viewString = $dispatcher->invoke();
 
@@ -192,8 +192,8 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
     {
         $_GET['_event'] = null;
         $this->initializeContext();
-        $this->config->queueExtension($this->serviceName, 'useDefaultEvent', true);
-        $this->config->queueExtension($this->serviceName, 'defaultEventName', 'Index');
+        $this->config->lazyAddExtension($this->serviceName, 'useDefaultEvent', true);
+        $this->config->lazyAddExtension($this->serviceName, 'defaultEventName', 'Index');
         $dispatcher = $this->config->instantiateFeature($this->serviceName);
         $viewString = $dispatcher->invoke();
 
@@ -209,8 +209,8 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
     {
         $_GET['_event'] = 'Foo';
         $this->initializeContext();
-        $this->config->queueExtension($this->serviceName, 'useDefaultEvent', true);
-        $this->config->queueExtension($this->serviceName, 'defaultEventName', 'Index');
+        $this->config->lazyAddExtension($this->serviceName, 'useDefaultEvent', true);
+        $this->config->lazyAddExtension($this->serviceName, 'defaultEventName', 'Index');
         $dispatcher = $this->config->instantiateFeature($this->serviceName);
         $viewString = $dispatcher->invoke();
 
@@ -226,8 +226,8 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
     {
         $_GET['_event'] = 'Foo';
         $this->initializeContext();
-        $this->config->queueExtension($this->serviceName, 'useDefaultEvent', false);
-        $this->config->queueExtension($this->serviceName, 'defaultEventName', 'Index');
+        $this->config->lazyAddExtension($this->serviceName, 'useDefaultEvent', false);
+        $this->config->lazyAddExtension($this->serviceName, 'defaultEventName', 'Index');
         $dispatcher = $this->config->instantiateFeature($this->serviceName);
         $viewString = $dispatcher->invoke();
 
@@ -243,7 +243,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
     {
         $_GET['_event'] = 'ActionShouldBeAbleToReturnViewString';
         $this->initializeContext();
-        $this->config->queueExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
+        $this->config->lazyAddExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
         $dispatcher = $this->config->instantiateFeature($this->serviceName);
         $viewString = $dispatcher->invoke();
         $eventName = $this->context->getEventName();

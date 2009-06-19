@@ -111,12 +111,12 @@ class Piece_Unity_Plugin_Configurator_ValidationTest extends Piece_Unity_PHPUnit
 
         $this->initializeContext();
         $validatorDirectory = dirname(__FILE__) . '/../../../..';
-        $this->config->queueExtension($this->serviceName, 'configDirectory', $this->_exclusiveDirectory);
-        $this->config->queueExtension($this->serviceName, 'cacheDirectory', $this->_exclusiveDirectory);
-        $this->config->queueExtension($this->serviceName, 'validatorDirectories', $validatorDirectory);
-        $this->config->queueExtension($this->serviceName, 'filterDirectories', $validatorDirectory);
-        $this->config->queueExtension($this->serviceName, 'validatorPrefixes', __CLASS__);
-        $this->config->queueExtension($this->serviceName, 'filterPrefixes', __CLASS__);
+        $this->config->lazyAddExtension($this->serviceName, 'configDirectory', $this->_exclusiveDirectory);
+        $this->config->lazyAddExtension($this->serviceName, 'cacheDirectory', $this->_exclusiveDirectory);
+        $this->config->lazyAddExtension($this->serviceName, 'validatorDirectories', $validatorDirectory);
+        $this->config->lazyAddExtension($this->serviceName, 'filterDirectories', $validatorDirectory);
+        $this->config->lazyAddExtension($this->serviceName, 'validatorPrefixes', __CLASS__);
+        $this->config->lazyAddExtension($this->serviceName, 'filterPrefixes', __CLASS__);
         $this->config->instantiateFeature($this->serviceName)->configure();
 
         $validation = $this->context->getValidation();

@@ -81,7 +81,7 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends Piece_Unity_PHPUnit_Te
     public function changeTheCurrentDirectory()
     {
         $appRoot = realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..');
-        $this->config->queueExtension($this->serviceName, 'appRoot', $appRoot);
+        $this->config->lazyAddExtension($this->serviceName, 'appRoot', $appRoot);
         $this->config->instantiateFeature($this->serviceName)->configure();
 
         $this->assertEquals($appRoot, getcwd());
@@ -94,7 +94,7 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends Piece_Unity_PHPUnit_Te
     public function raiseAnExceptionIfTheGivenDirectoryIsNotFound()
     {
         $appRoot = '/foo/bar';
-        $this->config->queueExtension($this->serviceName, 'appRoot', $appRoot);
+        $this->config->lazyAddExtension($this->serviceName, 'appRoot', $appRoot);
         @$this->config->instantiateFeature($this->serviceName)->configure();
     }
 
@@ -104,7 +104,7 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends Piece_Unity_PHPUnit_Te
     public function setTheAppRootPath()
     {
         $appRootPath = '/foo/bar';
-        $this->config->queueExtension($this->serviceName, 'appRootPath', $appRootPath);
+        $this->config->lazyAddExtension($this->serviceName, 'appRootPath', $appRootPath);
         $this->config->instantiateFeature($this->serviceName)->configure();
 
         $this->assertEquals($appRootPath, $this->context->getAppRootPath());

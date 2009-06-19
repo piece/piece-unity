@@ -87,9 +87,9 @@ class Piece_Unity_Plugin_Interceptor_SessionTest extends Piece_Unity_PHPUnit_Tes
     public function redirectToAGivenFallbackUriIfTheCurrentSessionHasBeenExpired()
     {
         $this->initializeContext();
-        $this->config->queueExtension($this->serviceName, 'enableExpiration', true);
-        $this->config->queueExtension($this->serviceName, 'expirationTime', 1);
-        $this->config->queueExtension($this->serviceName,
+        $this->config->lazyAddExtension($this->serviceName, 'enableExpiration', true);
+        $this->config->lazyAddExtension($this->serviceName, 'expirationTime', 1);
+        $this->config->lazyAddExtension($this->serviceName,
                                       'expirationFallbackURI',
                                       'http://example.org/'
                                       );
@@ -114,9 +114,9 @@ class Piece_Unity_Plugin_Interceptor_SessionTest extends Piece_Unity_PHPUnit_Tes
     public function startANewSessionIfTheCurrentSessionIsMarkedAsExpired()
     {
         $this->initializeContext();
-        $this->config->queueExtension($this->serviceName, 'enableExpiration', true);
-        $this->config->queueExtension($this->serviceName, 'expirationTime', 1);
-        $this->config->queueExtension($this->serviceName,
+        $this->config->lazyAddExtension($this->serviceName, 'enableExpiration', true);
+        $this->config->lazyAddExtension($this->serviceName, 'expirationTime', 1);
+        $this->config->lazyAddExtension($this->serviceName,
                                       'expirationFallbackURI',
                                       'http://example.org/'
                                       );
