@@ -83,17 +83,8 @@ class Piece_Unity_Plugin_InterceptorChain extends Piece_Unity_Plugin_Common
      */
     public function invoke()
     {
-        $interceptors = $this->getExtension('interceptors');
-        if (!is_array($interceptors)) {
-            throw new Piece_Unity_Exception(
-                'The value of the extension point [ interceptors ] on the plug-in [ ' .
-                $this->getName() .
-                ' ] should be an array'
-                                            );
-        }
-
-        foreach ($interceptors as $extension) {
-            $doContinue = Piece_Unity_Plugin_Factory::factory($extension)->intercept();
+        foreach ($this->interceptors as $extension) {
+            $doContinue = $extension->intercept();
             if (!$doContinue) {
                 break;
             }            
@@ -116,7 +107,7 @@ class Piece_Unity_Plugin_InterceptorChain extends Piece_Unity_Plugin_Common
      */
     protected function initialize()
     {
-        $this->addExtensionPoint('interceptors', array('Interceptor_Session'));
+        $this->addExtensionPoint('interceptors', true, true, 'Piece_Unity_Plugin_Interceptor_Session');
     }
 
     /**#@-*/
