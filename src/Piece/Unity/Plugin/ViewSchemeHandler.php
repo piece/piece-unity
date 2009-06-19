@@ -98,10 +98,8 @@ class Piece_Unity_Plugin_ViewSchemeHandler extends Piece_Unity_Plugin_Common
 
         $this->context->setView(preg_replace('/^html:/', '', $viewString));
 
-        return $this->getConfiguration(
-            !$positionOfColon ? 'html'
-                              : substr($viewString, 0, $positionOfColon)
-                                       );
+        return !$positionOfColon ? $this->html
+                                 : $this->{ substr($viewString, 0, $positionOfColon) };
     }
 
     /**#@-*/
@@ -118,13 +116,13 @@ class Piece_Unity_Plugin_ViewSchemeHandler extends Piece_Unity_Plugin_Common
      */
     protected function initialize()
     {
-        $this->addConfigurationPoint('html', 'Renderer_PHP');
-        $this->addConfigurationPoint('http', 'Renderer_Redirection');
-        $this->addConfigurationPoint('https', 'Renderer_Redirection');
-        $this->addConfigurationPoint('self', 'Renderer_Redirection');
-        $this->addConfigurationPoint('selfs', 'Renderer_Redirection');
-        $this->addConfigurationPoint('json', 'Renderer_JSON');
-        $this->addConfigurationPoint('raw', 'Renderer_Raw');
+        $this->addConfigurationPoint('html', false, false, 'Piece_Unity_Plugin_Renderer_PHP');
+        $this->addConfigurationPoint('http', false, false, 'Piece_Unity_Plugin_Renderer_Redirection');
+        $this->addConfigurationPoint('https', false, false, 'Piece_Unity_Plugin_Renderer_Redirection');
+        $this->addConfigurationPoint('self', false, false, 'Piece_Unity_Plugin_Renderer_Redirection');
+        $this->addConfigurationPoint('selfs', false, false, 'Piece_Unity_Plugin_Renderer_Redirection');
+        $this->addConfigurationPoint('json', false, false, 'Piece_Unity_Plugin_Renderer_JSON');
+        $this->addConfigurationPoint('raw', false, false, 'Piece_Unity_Plugin_Renderer_Raw');
     }
 
     /**#@-*/

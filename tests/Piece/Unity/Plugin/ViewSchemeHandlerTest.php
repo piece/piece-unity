@@ -61,6 +61,8 @@ class Piece_Unity_Plugin_ViewSchemeHandlerTest extends Piece_Unity_PHPUnit_TestC
      * @access protected
      */
 
+    protected $serviceName = 'Piece_Unity_Plugin_ViewSchemeHandler';
+
     /**#@-*/
 
     /**#@+
@@ -78,13 +80,11 @@ class Piece_Unity_Plugin_ViewSchemeHandlerTest extends Piece_Unity_PHPUnit_TestC
      */
     public function removeHtmlSchemeStringFromTheViewString()
     {
-        $context = Piece_Unity_Context::singleton();
-        $context->setView('html:Foo');
-        $context->setConfiguration(new Piece_Unity_Config());
-        $rendererExtension = Piece_Unity_Plugin_Factory::factory('ViewSchemeHandler')->invoke();
+        $this->context->setView('html:Foo');
+        $rendererExtension = $this->instantiateFeature()->invoke();
 
-        $this->assertEquals('Renderer_PHP', $rendererExtension);
-        $this->assertEquals('Foo', $context->getView());
+        $this->assertEquals('Piece_Unity_Plugin_Renderer_PHP', $rendererExtension);
+        $this->assertEquals('Foo', $this->context->getView());
     }
 
     /**
@@ -93,10 +93,8 @@ class Piece_Unity_Plugin_ViewSchemeHandlerTest extends Piece_Unity_PHPUnit_TestC
      */
     public function raiseAnExceptionIfTheViewStringIsStartedWithColon()
     {
-        $context = Piece_Unity_Context::singleton();
-        $context->setView(':Foo');
-        $context->setConfiguration(new Piece_Unity_Config());
-        Piece_Unity_Plugin_Factory::factory('ViewSchemeHandler')->invoke();
+        $this->context->setView(':Foo');
+        $this->instantiateFeature()->invoke();
     }
 
     /**#@-*/
