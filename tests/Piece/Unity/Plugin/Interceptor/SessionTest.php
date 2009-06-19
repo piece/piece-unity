@@ -87,13 +87,10 @@ class Piece_Unity_Plugin_Interceptor_SessionTest extends Piece_Unity_PHPUnit_Tes
     public function redirectToAGivenFallbackUriIfTheCurrentSessionHasBeenExpired()
     {
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'enableExpiration', true);
-        $this->config->lazyAddExtension($this->serviceName, 'expirationTime', 1);
-        $this->config->lazyAddExtension($this->serviceName,
-                                      'expirationFallbackURI',
-                                      'http://example.org/'
-                                      );
-        $session = $this->config->instantiateFeature($this->serviceName);
+        $this->addExtension('enableExpiration', true);
+        $this->addExtension('expirationTime', 1);
+        $this->addExtension('expirationFallbackURI', 'http://example.org/');
+        $session = $this->instantiateFeature();
         $doContinue = @$session->intercept();
 
         $this->assertTrue($doContinue);
@@ -101,7 +98,7 @@ class Piece_Unity_Plugin_Interceptor_SessionTest extends Piece_Unity_PHPUnit_Tes
         sleep(2);
 
         $this->initializeContext();
-        $session = $this->config->instantiateFeature($this->serviceName);
+        $session = $this->instantiateFeature();
         $doContinue = @$session->intercept();
 
         $this->assertFalse($doContinue);
@@ -114,13 +111,10 @@ class Piece_Unity_Plugin_Interceptor_SessionTest extends Piece_Unity_PHPUnit_Tes
     public function startANewSessionIfTheCurrentSessionIsMarkedAsExpired()
     {
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'enableExpiration', true);
-        $this->config->lazyAddExtension($this->serviceName, 'expirationTime', 1);
-        $this->config->lazyAddExtension($this->serviceName,
-                                      'expirationFallbackURI',
-                                      'http://example.org/'
-                                      );
-        $session = $this->config->instantiateFeature($this->serviceName);
+        $this->addExtension('enableExpiration', true);
+        $this->addExtension('expirationTime', 1);
+        $this->addExtension('expirationFallbackURI', 'http://example.org/');
+        $session = $this->instantiateFeature();
         $doContinue = @$session->intercept();
 
         $this->assertTrue($doContinue);
@@ -130,7 +124,7 @@ class Piece_Unity_Plugin_Interceptor_SessionTest extends Piece_Unity_PHPUnit_Tes
         sleep(2);
 
         $this->initializeContext();
-        $session = $this->config->instantiateFeature($this->serviceName);
+        $session = $this->instantiateFeature();
         $doContinue = @$session->intercept();
 
         $this->assertFalse($doContinue);
@@ -138,7 +132,7 @@ class Piece_Unity_Plugin_Interceptor_SessionTest extends Piece_Unity_PHPUnit_Tes
         $this->assertArrayHasKey('foo', $_SESSION);
 
         $this->initializeContext();
-        $session = $this->config->instantiateFeature($this->serviceName);
+        $session = $this->instantiateFeature();
         $doContinue = @$session->intercept();
 
         $this->assertTrue($doContinue);

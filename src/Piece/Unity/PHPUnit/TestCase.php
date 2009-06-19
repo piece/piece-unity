@@ -118,6 +118,19 @@ abstract class Piece_Unity_PHPUnit_TestCase extends PHPUnit_Framework_TestCase
         $this->context->setConfiguration($this->config);
     }
 
+    protected function addExtension($extensionPointName, $extension)
+    {
+        $this->config->lazyAddExtension($this->serviceName,
+                                        $extensionPointName,
+                                        $extension
+                                        );
+    }
+
+    protected function instantiateFeature()
+    {
+        return $this->config->instantiateFeature($this->serviceName);
+    }
+
     /**#@-*/
 
     /**#@+

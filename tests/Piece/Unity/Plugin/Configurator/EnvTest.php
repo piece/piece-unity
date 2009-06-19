@@ -82,8 +82,8 @@ class Piece_Unity_Plugin_Configurator_EnvTest extends Piece_Unity_PHPUnit_TestCa
      */
     public function setTheProxyPath()
     {
-        $this->config->lazyAddExtension($this->serviceName, 'proxyPath', '/foo/bar');
-        $this->config->instantiateFeature($this->serviceName)->configure();
+        $this->addExtension('proxyPath', '/foo/bar');
+        $this->instantiateFeature()->configure();
 
         $this->assertEquals('/foo/bar', $this->context->getProxyPath());
     }

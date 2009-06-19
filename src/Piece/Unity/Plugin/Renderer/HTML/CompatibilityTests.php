@@ -174,10 +174,10 @@ if (\$code == E_USER_WARNING) {
         $viewElement = $this->context->getViewElement();
         $viewElement->setElement('foo', 'This is an element for the content.');
         $viewElement->setElement('bar', 'This is an element for the layout.');
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Renderer_' . $this->target, 'useLayout', true);
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Renderer_' . $this->target, 'layoutView', $this->target . 'Layout');
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Renderer_' . $this->target, 'layoutDirectory', $this->exclusiveDirectory . '/templates/Layout');
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Renderer_' . $this->target, 'layoutCompileDirectory', $this->exclusiveDirectory . '/compiled-templates/Layout');
+        $this->addExtension('useLayout', true);
+        $this->addExtension('layoutView', $this->target . 'Layout');
+        $this->addExtension('layoutDirectory', $this->exclusiveDirectory . '/templates/Layout');
+        $this->addExtension('layoutCompileDirectory', $this->exclusiveDirectory . '/compiled-templates/Layout');
 
         $this->assertEquals('<html>
   <body>
@@ -216,10 +216,10 @@ if (\$code == E_USER_WARNING) {
         $this->context->setView('NonExistingView');
         $viewElement = $this->context->getViewElement();
         $viewElement->setElement('content', 'This is a dynamic content.');
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Renderer_' . $this->target, 'useFallback', true);
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Renderer_' . $this->target, 'fallbackView', 'Fallback');
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Renderer_' . $this->target, 'fallbackDirectory', $this->exclusiveDirectory . '/templates/Fallback');
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Renderer_' . $this->target, 'fallbackCompileDirectory', $this->exclusiveDirectory . '/compiled-templates/Fallback');
+        $this->addExtension('useFallback', true);
+        $this->addExtension('fallbackView', 'Fallback');
+        $this->addExtension('fallbackDirectory', $this->exclusiveDirectory . '/templates/Fallback');
+        $this->addExtension('fallbackCompileDirectory', $this->exclusiveDirectory . '/compiled-templates/Fallback');
 
         set_error_handler(create_function('$code, $message, $file, $line', "
 if (\$code == E_USER_WARNING) {
@@ -263,7 +263,7 @@ if (\$code == E_USER_WARNING) {
     protected function render()
     {
         ob_start();
-        $this->config->instantiateFeature('Piece_Unity_Plugin_Renderer_' . $this->target)->render();
+        $this->instantiateFeature()->render();
         $buffer = ob_get_contents();
         ob_end_clean();
 
@@ -292,11 +292,11 @@ if (\$code == E_USER_WARNING) {
         $viewElement = $this->context->getViewElement();
         $viewElement->setElement('foo', 'This is an element for the content.');
         $viewElement->setElement('bar', 'This is an element for the layout.');
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Renderer_' . $this->target, 'turnOffLayoutByHTTPAccept', $turnOffLayoutByHTTPAccept);
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Renderer_' . $this->target, 'useLayout', true);
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Renderer_' . $this->target, 'layoutView', $this->target . 'Layout');
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Renderer_' . $this->target, 'layoutDirectory', $this->exclusiveDirectory . '/templates/Layout');
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Renderer_' . $this->target, 'layoutCompileDirectory', $this->exclusiveDirectory . '/compiled-templates/Layout');
+        $this->addExtension('turnOffLayoutByHTTPAccept', $turnOffLayoutByHTTPAccept);
+        $this->addExtension('useLayout', true);
+        $this->addExtension('layoutView', $this->target . 'Layout');
+        $this->addExtension('layoutDirectory', $this->exclusiveDirectory . '/templates/Layout');
+        $this->addExtension('layoutCompileDirectory', $this->exclusiveDirectory . '/compiled-templates/Layout');
         $_SERVER['HTTP_ACCEPT'] = 'application/x-piece-html-fragment';
 
         $this->assertEquals($result, rtrim($this->render()));

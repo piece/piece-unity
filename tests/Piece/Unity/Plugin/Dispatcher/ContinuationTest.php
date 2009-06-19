@@ -100,19 +100,18 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['REQUEST_URI'] = '/counter.php';
 
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'configDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'cacheDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName,
-                                      'flowMappings',
-                                      array(array('uri' => '/counter.php',
-                                                  'flowName' => 'Counter',
-                                                  'isExclusive' => true))
-                                      );
-        $this->config->lazyAddExtension($this->serviceName, 'useFullFlowNameAsViewPrefix', false);
+        $this->addExtension('actionDirectory', $this->cacheDirectory);
+        $this->addExtension('configDirectory', $this->cacheDirectory);
+        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('flowMappings',
+                            array(array('uri' => '/counter.php',
+                                        'flowName' => 'Counter',
+                                        'isExclusive' => true))
+                            );
+        $this->addExtension('useFullFlowNameAsViewPrefix', false);
         $session = $this->context->getSession();
         @$session->start();
-        $dispatcher = $this->config->instantiateFeature($this->serviceName);
+        $dispatcher = $this->instantiateFeature();
 
         $this->assertEquals('Counter', $dispatcher->invoke());
 
@@ -128,7 +127,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_GET['_event'] = 'increase';
         $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
         $this->initializeContext();
-        $dispatcher = $this->config->instantiateFeature($this->serviceName);
+        $dispatcher = $this->instantiateFeature();
         $session = $this->context->getSession();
         @$session->start();
         $session->setAttribute($this->readAttribute('Piece_Unity_Plugin_Dispatcher_Continuation', '_sessionKey'), $continuationServer);
@@ -158,17 +157,16 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/non-existing-flow.php';
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'configDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'cacheDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName,
-                                      'flowMappings',
-                                      array(array('uri' => '/non-existing-flow.php',
-                                                  'flowName' => 'NonExistingFlow',
-                                                  'isExclusive' => true))
-                                      );
+        $this->addExtension('actionDirectory', $this->cacheDirectory);
+        $this->addExtension('configDirectory', $this->cacheDirectory);
+        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('flowMappings',
+                            array(array('uri' => '/non-existing-flow.php',
+                                        'flowName' => 'NonExistingFlow',
+                                        'isExclusive' => true))
+                            );
         @$this->context->getSession()->start();
-        $this->config->instantiateFeature($this->serviceName)->invoke();
+        $this->instantiateFeature()->invoke();
     }
 
     /**
@@ -180,19 +178,18 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/counter.php';
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'configDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'cacheDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName,
-                                      'flowMappings',
-                                      array(array('uri' => '/counter.php',
-                                                  'flowName' => 'Counter',
-                                                  'isExclusive' => false))
-                                      );
-        $this->config->lazyAddExtension($this->serviceName, 'useFullFlowNameAsViewPrefix', false);
+        $this->addExtension('actionDirectory', $this->cacheDirectory);
+        $this->addExtension('configDirectory', $this->cacheDirectory);
+        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('flowMappings',
+                            array(array('uri' => '/counter.php',
+                                        'flowName' => 'Counter',
+                                        'isExclusive' => false))
+                            );
+        $this->addExtension('useFullFlowNameAsViewPrefix', false);
         @$this->context->getSession()->start();
 
-        $dispatcher = $this->config->instantiateFeature($this->serviceName);
+        $dispatcher = $this->instantiateFeature();
 
         $this->assertEquals('Counter', $dispatcher->invoke());
 
@@ -203,7 +200,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
         $this->initializeContext();
         @$this->context->getSession()->start();
-        $dispatcher = $this->config->instantiateFeature($this->serviceName);
+        $dispatcher = $this->instantiateFeature();
         $this->context->getSession()->setAttribute($this->readAttribute('Piece_Unity_Plugin_Dispatcher_Continuation', '_sessionKey'), $continuationServer);
         $dispatcher->invoke();
         $dispatcher->invoke();
@@ -228,22 +225,24 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['REQUEST_URI'] = '/counter.php';
 
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'configDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'cacheDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName,
-                                      'flowMappings',
-                                      array(array('uri' => '/counter.php',
-                                                  'flowName' => 'Counter',
-                                                  'isExclusive' => true))
-                                      );
-        $this->config->lazyAddExtension($this->serviceName, 'flowExecutionTicketKey', '_foo');
-        $this->config->lazyAddExtension($this->serviceName, 'useFullFlowNameAsViewPrefix', false);
+        $this->addExtension('actionDirectory', $this->cacheDirectory);
+        $this->addExtension('configDirectory', $this->cacheDirectory);
+        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('flowMappings',
+                            array(array('uri' => '/counter.php',
+                                        'flowName' => 'Counter',
+                                        'isExclusive' => true))
+                            );
+        $this->addExtension('flowExecutionTicketKey', '_foo');
+        $this->addExtension('useFullFlowNameAsViewPrefix', false);
         $this->config->defineService('Piece_Unity_Plugin_Renderer_PHP');
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Renderer_PHP', 'templateDirectory', $this->cacheDirectory);
+        $this->config->lazyAddExtension('Piece_Unity_Plugin_Renderer_PHP',
+                                        'templateDirectory',
+                                        $this->cacheDirectory
+                                        );
         @$this->context->getSession()->start();
 
-        $dispatcher = $this->config->instantiateFeature($this->serviceName);
+        $dispatcher = $this->instantiateFeature();
         $this->context->setView($dispatcher->invoke());
         $dispatcher->publish();
 
@@ -266,19 +265,18 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/counter.php';
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'configDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'cacheDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName,
-                                      'flowMappings',
-                                      array(array('uri' => '/counter.php',
-                                                  'flowName' => 'Counter',
-                                                  'isExclusive' => true))
-                                      );
-        $this->config->lazyAddExtension($this->serviceName, 'useFullFlowNameAsViewPrefix', false);
+        $this->addExtension('actionDirectory', $this->cacheDirectory);
+        $this->addExtension('configDirectory', $this->cacheDirectory);
+        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('flowMappings',
+                            array(array('uri' => '/counter.php',
+                                        'flowName' => 'Counter',
+                                        'isExclusive' => true))
+                            );
+        $this->addExtension('useFullFlowNameAsViewPrefix', false);
         @$this->context->getSession()->start();
 
-        $dispatcher = $this->config->instantiateFeature($this->serviceName);
+        $dispatcher = $this->instantiateFeature();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Counter', $viewString);
@@ -303,18 +301,17 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['REQUEST_URI'] = '/continuation-validation.php';
 
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'configDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'cacheDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName,
-                                      'flowMappings',
-                                      array(array('uri' => '/continuation-validation.php',
-                                                  'flowName' => 'ContinuationValidation',
-                                                  'isExclusive' => true))
-                                      );
-        $this->config->lazyAddExtension($this->serviceName, 'useFullFlowNameAsViewPrefix', false);
+        $this->addExtension('actionDirectory', $this->cacheDirectory);
+        $this->addExtension('configDirectory', $this->cacheDirectory);
+        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('flowMappings',
+                            array(array('uri' => '/continuation-validation.php',
+                                        'flowName' => 'ContinuationValidation',
+                                        'isExclusive' => true))
+                            );
+        $this->addExtension('useFullFlowNameAsViewPrefix', false);
         @$this->context->getSession()->start();
-        $dispatcher = $this->config->instantiateFeature($this->serviceName);
+        $dispatcher = $this->instantiateFeature();
 
         $this->assertEquals('Form', $dispatcher->invoke());
 
@@ -330,7 +327,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $validation = $this->context->getValidation();
         $validation->setConfigDirectory($this->cacheDirectory);
         $validation->setCacheDirectory($this->cacheDirectory);
-        $dispatcher = $this->config->instantiateFeature($this->serviceName);
+        $dispatcher = $this->instantiateFeature();
 
         $this->assertEquals('Success', $dispatcher->invoke());
 
@@ -361,22 +358,21 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/flow-execution-expired.php';
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'configDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'cacheDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName,
-                                      'flowMappings',
-                                      array(array('uri' => '/flow-execution-expired.php',
-                                                  'flowName' => 'FlowExecutionExpired',
-                                                  'isExclusive' => false))
-                                      );
-        $this->config->lazyAddExtension($this->serviceName, 'enableGC', true);
-        $this->config->lazyAddExtension($this->serviceName, 'gcExpirationTime', 1);
-        $this->config->lazyAddExtension($this->serviceName, 'useGCFallback', true);
-        $this->config->lazyAddExtension($this->serviceName, 'gcFallbackURI', 'http://www.example.org/');
-        $this->config->lazyAddExtension($this->serviceName, 'useFullFlowNameAsViewPrefix', false);
+        $this->addExtension('actionDirectory', $this->cacheDirectory);
+        $this->addExtension('configDirectory', $this->cacheDirectory);
+        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('flowMappings',
+                            array(array('uri' => '/flow-execution-expired.php',
+                                        'flowName' => 'FlowExecutionExpired',
+                                        'isExclusive' => false))
+                            );
+        $this->addExtension('enableGC', true);
+        $this->addExtension('gcExpirationTime', 1);
+        $this->addExtension('useGCFallback', true);
+        $this->addExtension('gcFallbackURI', 'http://www.example.org/');
+        $this->addExtension('useFullFlowNameAsViewPrefix', false);
         @$this->context->getSession()->start();
-        $dispatcher = $this->config->instantiateFeature($this->serviceName);
+        $dispatcher = $this->instantiateFeature();
 
         $this->assertEquals('Form', $dispatcher->invoke());
 
@@ -388,7 +384,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $session = $this->context->getSession();
         @$session->start();
         $session->setAttribute($this->readAttribute('Piece_Unity_Plugin_Dispatcher_Continuation', '_sessionKey'), $continuationServer);
-        $dispatcher = $this->config->instantiateFeature($this->serviceName);
+        $dispatcher = $this->instantiateFeature();
         sleep(2);
 
         $this->assertEquals('http://www.example.org/', $dispatcher->invoke());
@@ -409,18 +405,17 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'configDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'cacheDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'useFullFlowNameAsViewPrefix', false);
-        $this->config->lazyAddExtension($this->serviceName,
-                                      'flowMappings',
-                                      array(array('uri' => '/entry/new.php',
-                                                  'flowName' => 'Entry_New',
-                                                  'isExclusive' => false))
-                                      );
+        $this->addExtension('actionDirectory', $this->cacheDirectory);
+        $this->addExtension('configDirectory', $this->cacheDirectory);
+        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('useFullFlowNameAsViewPrefix', false);
+        $this->addExtension('flowMappings',
+                            array(array('uri' => '/entry/new.php',
+                                        'flowName' => 'Entry_New',
+                                        'isExclusive' => false))
+                            );
         @$this->context->getSession()->start();
-        $dispatcher = $this->config->instantiateFeature($this->serviceName);
+        $dispatcher = $this->instantiateFeature();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Entry_New', $viewString);
@@ -439,19 +434,18 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '8201';
         $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'configDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'cacheDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName,
-                                      'flowMappings',
-                                      array(array('uri' => '/entry/new.php',
-                                                  'flowName' => 'Entry_New',
-                                                  'isExclusive' => false))
-                                      );
+        $this->addExtension('actionDirectory', $this->cacheDirectory);
+        $this->addExtension('configDirectory', $this->cacheDirectory);
+        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('flowMappings',
+                            array(array('uri' => '/entry/new.php',
+                                        'flowName' => 'Entry_New',
+                                        'isExclusive' => false))
+                            );
         $this->context->setProxyPath('/crud');
         $this->context->setScriptName($this->context->getProxyPath() . $this->context->getScriptName());
         @$this->context->getSession()->start();
-        $dispatcher = $this->config->instantiateFeature($this->serviceName);
+        $dispatcher = $this->instantiateFeature();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Entry_New_New', $viewString);
@@ -468,18 +462,17 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'configDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'cacheDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName,
-                                      'flowMappings',
-                                      array(array('uri' => '/entry/new.php',
-                                                  'flowName' => 'Entry_New',
-                                                  'isExclusive' => false))
-                                      );
+        $this->addExtension('actionDirectory', $this->cacheDirectory);
+        $this->addExtension('configDirectory', $this->cacheDirectory);
+        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('flowMappings',
+                            array(array('uri' => '/entry/new.php',
+                                        'flowName' => 'Entry_New',
+                                        'isExclusive' => false))
+                            );
         $this->context->setProxyPath('/crud');
         @$this->context->getSession()->start();
-        $dispatcher = $this->config->instantiateFeature($this->serviceName);
+        $dispatcher = $this->instantiateFeature();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Entry_New_New', $viewString);
@@ -496,18 +489,17 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'configDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'cacheDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'useFullFlowNameAsViewPrefix', true);
-        $this->config->lazyAddExtension($this->serviceName,
-                                      'flowMappings',
-                                      array(array('uri' => '/entry/new.php',
-                                                  'flowName' => 'Entry_New',
-                                                  'isExclusive' => false))
-                                      );
+        $this->addExtension('actionDirectory', $this->cacheDirectory);
+        $this->addExtension('configDirectory', $this->cacheDirectory);
+        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('useFullFlowNameAsViewPrefix', true);
+        $this->addExtension('flowMappings',
+                            array(array('uri' => '/entry/new.php',
+                                        'flowName' => 'Entry_New',
+                                        'isExclusive' => false))
+                            );
         @$this->context->getSession()->start();
-        $dispatcher = $this->config->instantiateFeature($this->serviceName);
+        $dispatcher = $this->instantiateFeature();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Entry_New_New', $viewString);
@@ -525,17 +517,16 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/exceptions/pass-through.php';
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'configDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'cacheDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName,
-                                      'flowMappings',
-                                      array(array('uri' => '/exceptions/pass-through.php',
-                                                  'flowName' => 'Exceptions_PassThrough',
-                                                  'isExclusive' => false))
-                                      );
+        $this->addExtension('actionDirectory', $this->cacheDirectory);
+        $this->addExtension('configDirectory', $this->cacheDirectory);
+        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('flowMappings',
+                            array(array('uri' => '/exceptions/pass-through.php',
+                                        'flowName' => 'Exceptions_PassThrough',
+                                        'isExclusive' => false))
+                            );
         @$this->context->getSession()->start();
-        $dispatcher = $this->config->instantiateFeature($this->serviceName);
+        $dispatcher = $this->instantiateFeature();
         $dispatcher->invoke();
     }
 
@@ -549,17 +540,16 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'configDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'cacheDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName,
-                                      'flowMappings',
-                                      array(array('uri' => $_SERVER['REQUEST_URI'],
-                                                  'flowName' => 'Entry_New',
-                                                  'isExclusive' => false))
-                                      );
+        $this->addExtension('actionDirectory', $this->cacheDirectory);
+        $this->addExtension('configDirectory', $this->cacheDirectory);
+        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('flowMappings',
+                            array(array('uri' => $_SERVER['REQUEST_URI'],
+                                        'flowName' => 'Entry_New',
+                                        'isExclusive' => false))
+                            );
         @$this->context->getSession()->start();
-        $dispatcher = $this->config->instantiateFeature($this->serviceName);
+        $dispatcher = $this->instantiateFeature();
         $dispatcher->invoke();
         $uri = $this->context->getAttribute('uri');
 
@@ -579,28 +569,27 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/user/authentication.php';
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'actionDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'configDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName, 'cacheDirectory', $this->cacheDirectory);
-        $this->config->lazyAddExtension($this->serviceName,
-                                      'flowMappings',
-                                      array(array('uri' => '/entry/new.php',
-                                                  'flowName' => 'Entry_New',
-                                                  'isExclusive' => false),
-                                            array('uri' => '/user/authentication.php',
-                                                  'flowName' => 'Entry_New',
-                                                  'isExclusive' => true),
-                                            )
-                                      );
+        $this->addExtension('actionDirectory', $this->cacheDirectory);
+        $this->addExtension('configDirectory', $this->cacheDirectory);
+        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('flowMappings',
+                            array(array('uri' => '/entry/new.php',
+                                        'flowName' => 'Entry_New',
+                                        'isExclusive' => false),
+                                  array('uri' => '/user/authentication.php',
+                                        'flowName' => 'Entry_New',
+                                        'isExclusive' => true),
+                                  )
+                            );
         @$this->context->getSession()->start();
-        $dispatcher = $this->config->instantiateFeature($this->serviceName);
+        $dispatcher = $this->instantiateFeature();
         $dispatcher->invoke();
         $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $_GET['_event'] = null;
         $_GET['_flowExecutionTicket'] = null;
         $this->initializeContext();
         @$this->context->getSession()->start();
-        $dispatcher = $this->config->instantiateFeature($this->serviceName);
+        $dispatcher = $this->instantiateFeature();
         $dispatcher->invoke();
         $uri1 = $this->context->getAttribute('uri');
         $uri2 = Piece_Unity_Service_Continuation::createURI('qux', '/user/authentication.php');

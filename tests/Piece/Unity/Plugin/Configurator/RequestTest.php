@@ -84,8 +84,8 @@ class Piece_Unity_Plugin_Configurator_RequestTest extends Piece_Unity_PHPUnit_Te
         $_SERVER['PATH_INFO'] = '/foo/bar/bar/baz/qux';
 
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'importPathInfo', true);
-        $this->config->instantiateFeature($this->serviceName)->configure();
+        $this->addExtension('importPathInfo', true);
+        $this->instantiateFeature()->configure();
         $request = $this->context->getRequest();
 
         $this->assertEquals('bar', $request->getParameter('foo'));

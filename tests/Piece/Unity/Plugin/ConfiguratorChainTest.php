@@ -80,8 +80,8 @@ class Piece_Unity_Plugin_ConfiguratorChainTest extends Piece_Unity_PHPUnit_TestC
      */
     public function invokeAConfigurator()
     {
-        $this->config->lazyAddExtension($this->serviceName, 'configurators', __CLASS__ . '_FirstConfigurator');
-        $this->config->instantiateFeature($this->serviceName)->invoke();
+        $this->addExtension('configurators', __CLASS__ . '_FirstConfigurator');
+        $this->instantiateFeature()->invoke();
 
         $this->assertTrue($this->context->hasAttribute('FirstConfiguratorCalled'));
         $this->assertTrue($this->context->hasAttribute('FirstConfiguratorCalled'));
@@ -92,9 +92,9 @@ class Piece_Unity_Plugin_ConfiguratorChainTest extends Piece_Unity_PHPUnit_TestC
      */
     public function invokeMultipleConfigurators()
     {
-        $this->config->lazyAddExtension($this->serviceName, 'configurators', __CLASS__ . '_FirstConfigurator');
-        $this->config->lazyAddExtension($this->serviceName, 'configurators', __CLASS__ . '_SecondConfigurator');
-        $this->config->instantiateFeature($this->serviceName)->invoke();
+        $this->addExtension('configurators', __CLASS__ . '_FirstConfigurator');
+        $this->addExtension('configurators', __CLASS__ . '_SecondConfigurator');
+        $this->instantiateFeature()->invoke();
 
         $this->assertTrue($this->context->hasAttribute('FirstConfiguratorCalled'));
         $this->assertTrue($this->context->getAttribute('FirstConfiguratorCalled'));

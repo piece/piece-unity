@@ -89,8 +89,8 @@ class Piece_Unity_Plugin_Configurator_EventTest extends Piece_Unity_PHPUnit_Test
         $_GET['_foo'] = 'bar';
 
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'eventNameKey', '_foo');
-        $this->config->instantiateFeature($this->serviceName)->configure();
+        $this->addExtension('eventNameKey', '_foo');
+        $this->instantiateFeature()->configure();
 
         $this->assertEquals('bar', $this->context->getEventName());
     }
@@ -103,8 +103,8 @@ class Piece_Unity_Plugin_Configurator_EventTest extends Piece_Unity_PHPUnit_Test
         $_GET['_event'] = 'foo';
 
         $this->initializeContext();
-        $this->config->lazyAddExtension($this->serviceName, 'eventName', 'bar');
-        $this->config->instantiateFeature($this->serviceName)->configure();
+        $this->addExtension('eventName', 'bar');
+        $this->instantiateFeature()->configure();
 
         $this->assertEquals('bar', $this->context->getEventName());
     }
