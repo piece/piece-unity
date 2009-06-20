@@ -83,10 +83,9 @@ class Piece_Unity_Plugin_InterceptorChainTest extends Piece_Unity_PHPUnit_TestCa
         $this->addExtension('interceptors', __CLASS__ . '_First');
         $chain = $this->instantiateFeature();
         $chain->invoke();
-        $request = $this->context->getRequest();
 
-        $this->assertTrue($request->hasParameter('FirstInterceptorCalled'));
-        $this->assertTrue($request->getParameter('FirstInterceptorCalled'));
+        $this->assertTrue($this->context->hasAttribute('FirstInterceptorCalled'));
+        $this->assertTrue($this->context->getAttribute('FirstInterceptorCalled'));
     }
 
     /**
@@ -98,14 +97,13 @@ class Piece_Unity_Plugin_InterceptorChainTest extends Piece_Unity_PHPUnit_TestCa
         $this->addExtension('interceptors', __CLASS__ . '_Second');
         $chain = $this->instantiateFeature();
         $chain->invoke();
-        $request = $this->context->getRequest();
 
-        $this->assertTrue($request->hasParameter('FirstInterceptorCalled'));
-        $this->assertTrue($request->getParameter('FirstInterceptorCalled'));
-        $this->assertTrue($request->hasParameter('SecondInterceptorCalled'));
-        $this->assertTrue($request->getParameter('SecondInterceptorCalled'));
+        $this->assertTrue($this->context->hasAttribute('FirstInterceptorCalled'));
+        $this->assertTrue($this->context->getAttribute('FirstInterceptorCalled'));
+        $this->assertTrue($this->context->hasAttribute('SecondInterceptorCalled'));
+        $this->assertTrue($this->context->getAttribute('SecondInterceptorCalled'));
 
-        $logs = $request->getParameter('logs');
+        $logs = $this->context->getAttribute('logs');
 
         $this->assertEquals(__CLASS__ . '_First', array_shift($logs));
         $this->assertEquals(__CLASS__ . '_Second', array_shift($logs));

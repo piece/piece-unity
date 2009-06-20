@@ -77,17 +77,16 @@ class Piece_Unity_Plugin_InterceptorChainTest_First extends Piece_Unity_Plugin_C
 
     public function intercept()
     {
-        $request = $this->context->getRequest();
-        $request->setParameter('FirstInterceptorCalled', true);
+        $this->context->setAttribute('FirstInterceptorCalled', true);
 
-        if (!$request->hasParameter('logs')) {
+        if (!$this->context->hasAttribute('logs')) {
             $logs = array();
         } else {
-            $logs = $request->getParameter('logs');
+            $logs = $this->context->getAttribute('logs');
         }
 
         $logs[] = __CLASS__;
-        $request->setParameter('logs', $logs);
+        $this->context->setAttribute('logs', $logs);
 
         return true;
     }
