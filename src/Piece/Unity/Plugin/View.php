@@ -103,22 +103,15 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
          * Overwrites the current view with another one which is specified by
          * forcedView configuration.
          */
-        $forcedView = $this->getConfiguration('forcedView');
-        if (!is_null($forcedView)) {
-            $this->context->setView($forcedView);
+        if (!is_null($this->forcedView)) {
+            $this->context->setView($this->forcedView);
         }
 
-        $config = $this->context->getConfiguration();
-        $rendererExtension = $config->getExtensionDefinition('View', 'renderer');
-        if (strlen($rendererExtension)) {
-            $config->setConfiguration('ViewSchemeHandler',
-                                      'html',
-                                      $rendererExtension
-                                      );
+        if (!is_null($this->renderer)) {
+            $this->renderer->render();
+        } else {
+            $this->viewSchemeHandler->invoke();
         }
-
-        $config->setExtension('View', 'renderer', $this->getExtension('viewSchemeHandler')->invoke());
-        $this->getExtension('renderer')->render();
     }
 
     /**#@-*/
@@ -137,9 +130,9 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
      */
     protected function initialize()
     {
-        $this->addExtensionPoint('renderer');
-        $this->addConfigurationPoint('forcedView');
-        $this->addExtensionPoint('viewSchemeHandler', 'ViewSchemeHandler');
+        $this->addExtensionPoint('renderer', true); // deprecated
+        $this->addConfigurationPoint('forcedView', true);
+        $this->addExtensionPoint('viewSchemeHandler', false, false, 'Piece_Unity_Plugin_ViewSchemeHandler');
     }
 
     /**#@-*/

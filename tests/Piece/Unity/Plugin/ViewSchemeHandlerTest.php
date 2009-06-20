@@ -80,11 +80,16 @@ class Piece_Unity_Plugin_ViewSchemeHandlerTest extends Piece_Unity_PHPUnit_TestC
      */
     public function removeHtmlSchemeStringFromTheViewString()
     {
-        $this->context->setView('html:Foo');
+        $this->config->lazyAddExtension(
+            'Piece_Unity_Plugin_Renderer_PHP',
+            'templateDirectory',
+            dirname(__FILE__) . '/' . basename(__FILE__, '.php')
+                                        );
+        $this->context->setView('html:Try');
         $rendererExtension = $this->instantiateFeature()->invoke();
 
-        $this->assertEquals('Piece_Unity_Plugin_Renderer_PHP', $rendererExtension);
-        $this->assertEquals('Foo', $this->context->getView());
+        $this->assertType('Piece_Unity_Plugin_Renderer_PHP', $rendererExtension);
+        $this->assertEquals('Try', $this->context->getView());
     }
 
     /**
@@ -93,7 +98,7 @@ class Piece_Unity_Plugin_ViewSchemeHandlerTest extends Piece_Unity_PHPUnit_TestC
      */
     public function raiseAnExceptionIfTheViewStringIsStartedWithColon()
     {
-        $this->context->setView(':Foo');
+        $this->context->setView(':Try');
         $this->instantiateFeature()->invoke();
     }
 

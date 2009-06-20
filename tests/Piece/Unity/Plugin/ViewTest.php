@@ -61,6 +61,8 @@ class Piece_Unity_Plugin_ViewTest extends Piece_Unity_PHPUnit_TestCase
      * @access protected
      */
 
+    protected $serviceName = 'Piece_Unity_Plugin_View';
+
     /**#@-*/
 
     /**#@+
@@ -79,10 +81,14 @@ class Piece_Unity_Plugin_ViewTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function provideBuiltinViewElements()
     {
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration(new Piece_Unity_Config());
-        Piece_Unity_Plugin_Factory::factory('View')->invoke();
-        $elements = $context->getViewElement()->getElements();
+        $this->config->lazyAddExtension(
+            'Piece_Unity_Plugin_Renderer_PHP',
+            'templateDirectory',
+            dirname(__FILE__) . '/' . basename(__FILE__, '.php')
+                                        );
+        $this->context->setView('Try');
+        $this->instantiateFeature()->invoke();
+        $elements = $this->context->getViewElement()->getElements();
 
         $this->assertEquals(9, count($elements));
         $this->assertArrayHasKey('__request', $elements);

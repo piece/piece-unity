@@ -98,8 +98,12 @@ class Piece_Unity_Plugin_ViewSchemeHandler extends Piece_Unity_Plugin_Common
 
         $this->context->setView(preg_replace('/^html:/', '', $viewString));
 
-        return !$positionOfColon ? $this->html
-                                 : $this->{ substr($viewString, 0, $positionOfColon) };
+        $renderer =
+            !$positionOfColon ? $this->html
+                              : $this->{ substr($viewString, 0, $positionOfColon) };
+        $config = $this->context->getConfiguration();
+        $config->defineService($renderer);
+        return $config->instantiateFeature($renderer);
     }
 
     /**#@-*/
