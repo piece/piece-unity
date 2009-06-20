@@ -106,9 +106,9 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
      */
     protected function initialize()
     {
-        $this->addConfigurationPoint('addSessionID', false);
-        $this->addConfigurationPoint('isExternal', false);
-        $this->addConfigurationPoint('addFlowExecutionTicket', false);
+        $this->addConfigurationPoint('addSessionID', false, false, false);
+        $this->addConfigurationPoint('isExternal', false, false, false);
+        $this->addConfigurationPoint('addFlowExecutionTicket', false, false, false);
     }
 
     /**#@-*/
@@ -130,8 +130,7 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
             return;
         }
 
-        $this->context->getConfiguration()
-                      ->setConfiguration('Renderer_Redirection', 'addFlowExecutionTicket', true);
+        $this->addFlowExecutionTicket = true;
         if (substr($viewString, 0, 7) == 'self://') {
             $this->context->setView('http://example.org' . $this->context->getScriptName() . '?' . $matches[1]);
         } elseif (substr($viewString, 0, 8) == 'selfs://') {
@@ -147,10 +146,9 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
      */
     private function _buildURI()
     {
-        $isExternal = $this->getConfiguration('isExternal');
         $uri = new Piece_Unity_URI($this->context->getView());
         $uri->setIsRedirection(true);
-        $uri->setIsExternal($isExternal);
+        $uri->setIsExternal($this->isExternal);
 
         $viewElements = $this->context->getViewElement()->getElements();
         $queryVariables = $uri->getQueryVariables();
@@ -162,14 +160,14 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
             }
         }
 
-        if (!$isExternal) {
-            if ($this->getConfiguration('addSessionID')) {
+        if (!$this->isExternal) {
+            if ($this->addSessionID) {
                 $uri->setQueryVariable($viewElements['__sessionName'],
                                        $viewElements['__sessionID']
                                        );
             }
 
-            if ($this->getConfiguration('addFlowExecutionTicket')) {
+            if ($this->addFlowExecutionTicket) {
                 if (array_key_exists('__flowExecutionTicketKey', $viewElements)) {
                     $uri->setQueryVariable($viewElements['__flowExecutionTicketKey'],
                                            $viewElements['__flowExecutionTicket']

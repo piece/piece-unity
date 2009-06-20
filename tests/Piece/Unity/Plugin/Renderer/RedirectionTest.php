@@ -61,6 +61,8 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
      * @access protected
      */
 
+    protected $serviceName = 'Piece_Unity_Plugin_Renderer_Redirection';
+
     /**#@-*/
 
     /**#@+
@@ -80,10 +82,8 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $context = Piece_Unity_Context::singleton();
-        $context->setView('http://example.org/foo.php');
-        $context->setConfiguration(new Piece_Unity_Config());
-        $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $this->context->setView('http://example.org/foo.php');
+        $redirection = $this->instantiateFeature();
         $redirection->render();
 
         $this->assertAttributeEquals('http://example.org/foo.php',
@@ -99,11 +99,9 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
     {
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        $context = Piece_Unity_Context::singleton();
-        $context->setView('http://example.org/foo/bar.php');
-        $context->setProxyPath('/foo');
-        $context->setConfiguration(new Piece_Unity_Config());
-        $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $this->context->setView('http://example.org/foo/bar.php');
+        $this->context->setProxyPath('/foo');
+        $redirection = $this->instantiateFeature();
         $redirection->render();
 
         $this->assertEquals('http://foo.example.org:8201/bar.php',
@@ -120,11 +118,9 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
         $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'example.org';
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        $context = Piece_Unity_Context::singleton();
-        $context->setView('http://example.org/foo/bar.php');
-        $context->setProxyPath('/foo');
-        $context->setConfiguration(new Piece_Unity_Config());
-        $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $this->context->setView('http://example.org/foo/bar.php');
+        $this->context->setProxyPath('/foo');
+        $redirection = $this->instantiateFeature();
         $redirection->render();
 
         $this->assertAttributeEquals('http://foo.example.org:8201/bar.php',
@@ -140,11 +136,9 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
     {
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        $context = Piece_Unity_Context::singleton();
-        $context->setView('https://example.org/foo/bar.php');
-        $context->setProxyPath('/foo');
-        $context->setConfiguration(new Piece_Unity_Config());
-        $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $this->context->setView('https://example.org/foo/bar.php');
+        $this->context->setProxyPath('/foo');
+        $redirection = $this->instantiateFeature();
         $redirection->render();
 
         $this->assertAttributeEquals('https://foo.example.org:8201/bar.php',
@@ -162,11 +156,9 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
         $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'test.example.org';
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        $context = Piece_Unity_Context::singleton();
-        $context->setView('http://example.org/foo/bar.php');
-        $context->setProxyPath('/foo');
-        $context->setConfiguration(new Piece_Unity_Config());
-        $redirection = new Piece_Unity_Plugin_Renderer_Redirection();
+        $this->context->setView('http://example.org/foo/bar.php');
+        $this->context->setProxyPath('/foo');
+        $redirection = $this->instantiateFeature();
         $redirection->render();
 
         $this->assertAttributeEquals('http://foo.example.org:8201/bar.php',
@@ -183,10 +175,8 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $context = Piece_Unity_Context::singleton();
-        $context->setView('http://example.org/foo.php?__eventNameKey=bar');
-        $context->setConfiguration(new Piece_Unity_Config());
-        $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $this->context->setView('http://example.org/foo.php?__eventNameKey=bar');
+        $redirection = $this->instantiateFeature();
         $redirection->render();
 
         $this->assertAttributeEquals('http://example.org/foo.php?_event=bar',
@@ -203,10 +193,8 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $context = Piece_Unity_Context::singleton();
-        $context->setView('https://example.org/foo.php');
-        $context->setConfiguration(new Piece_Unity_Config());
-        $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $this->context->setView('https://example.org/foo.php');
+        $redirection = $this->instantiateFeature();
         $redirection->render();
 
         $this->assertAttributeEquals('https://example.org/foo.php',
@@ -225,13 +213,12 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
 
-        $context = Piece_Unity_Context::singleton();
-        $context->setView('self://__eventNameKey=goDisplayForm&bar=baz#zip');
-        $context->setConfiguration(new Piece_Unity_Config());
-        $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $this->initializeContext();
+        $this->context->setView('self://__eventNameKey=goDisplayForm&bar=baz#zip');
+        $redirection = $this->instantiateFeature();
         $redirection->render();
 
-        $this->assertEquals('http://example.org/foo.php?__eventNameKey=goDisplayForm&bar=baz#zip', $context->getView());
+        $this->assertEquals('http://example.org/foo.php?__eventNameKey=goDisplayForm&bar=baz#zip', $this->context->getView());
     }
 
     /**
@@ -244,13 +231,12 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
 
-        $context = Piece_Unity_Context::singleton();
-        $context->setView('selfs://__eventNameKey=goDisplayForm&bar=baz#zip');
-        $context->setConfiguration(new Piece_Unity_Config());
-        $redirection = Piece_Unity_Plugin_Factory::factory('Renderer_Redirection');
+        $this->initializeContext();
+        $this->context->setView('selfs://__eventNameKey=goDisplayForm&bar=baz#zip');
+        $redirection = $this->instantiateFeature();
         $redirection->render();
 
-        $this->assertEquals('https://example.org/foo.php?__eventNameKey=goDisplayForm&bar=baz#zip', $context->getView());
+        $this->assertEquals('https://example.org/foo.php?__eventNameKey=goDisplayForm&bar=baz#zip', $this->context->getView());
     }
 
     /**#@-*/
