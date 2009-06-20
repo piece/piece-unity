@@ -272,7 +272,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
         $continuationServer->setFlowIDCallback(array(__CLASS__, 'getFlowID'));
         $continuationServer->setConfigDirectory($this->configDirectory);
         $continuationServer->setConfigExtension($this->configExtension);
-        foreach ($this->flowMappings as $flowMapping) {
+        foreach ((array)$this->flowMappings as $flowMapping) {
             if (array_key_exists('url', $flowMapping)) {
                 $flowMapping['uri'] = $flowMapping['url'];
             }
