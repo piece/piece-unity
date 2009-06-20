@@ -61,6 +61,8 @@ class Piece_Unity_Plugin_ControllerTest extends Piece_Unity_PHPUnit_TestCase
      * @access protected
      */
 
+    protected $serviceName = 'Piece_Unity_Plugin_Controller';
+
     /**#@-*/
 
     /**#@+
@@ -83,15 +85,16 @@ class Piece_Unity_Plugin_ControllerTest extends Piece_Unity_PHPUnit_TestCase
         $_SERVER['REQUEST_URI'] = '/foo.php';
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $config = new Piece_Unity_Config();
-        $config->setExtension('Controller', 'dispatcher', 'Dispatcher_Simple');
-        $config->setConfiguration('Dispatcher_Simple', 'actionDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-        $controller = new Piece_Unity_Plugin_Controller();
-        $controller->invoke();
 
-        $this->assertEquals('http://example.org/', $context->getView());
+        $this->initializeContext();
+        $this->addExtension('dispatcher', 'Piece_Unity_Plugin_Dispatcher_Simple');
+        $this->config->lazyAddExtension('Piece_Unity_Plugin_Dispatcher_Simple', 'actionDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
+        $this->config->lazyAddExtension('Piece_Unity_Plugin_Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
+        $this->config->lazyAddExtension('Piece_Unity_Plugin_Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
+        $this->config->lazyAddExtension('Piece_Unity_Plugin_Dispatcher_Continuation', 'configDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
+        $this->instantiateFeature()->invoke();
+
+        $this->assertEquals('http://example.org/', $this->context->getView());
     }
 
     /**#@-*/

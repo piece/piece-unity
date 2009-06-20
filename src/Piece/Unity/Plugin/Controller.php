@@ -83,15 +83,15 @@ class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
     public function invoke()
     {
         if (is_null($this->context->getView())) {
-            $viewString = $this->getExtension('dispatcher')->invoke();
+            $viewString = $this->dispatcher->invoke();
 
             if (is_null($this->context->getView())) {
                 $this->context->setView($viewString);
             }
         }
 
-        Piece_Unity_Plugin_Factory::factory('Dispatcher_Continuation')->publish();
-        $this->getExtension('view')->invoke();
+        $this->continuation->publish();
+        $this->view->invoke();
     }
 
     /**#@-*/
@@ -110,8 +110,9 @@ class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
      */
     protected function initialize()
     {
-        $this->addExtensionPoint('dispatcher', 'Dispatcher_Continuation');
-        $this->addExtensionPoint('view', 'View');
+        $this->addExtensionPoint('dispatcher', false, false, 'Piece_Unity_Plugin_Dispatcher_Continuation');
+        $this->addExtensionPoint('continuation', false, false, 'Piece_Unity_Plugin_Dispatcher_Continuation');
+        $this->addExtensionPoint('view', false, false, 'Piece_Unity_Plugin_View');
     }
 
     /**#@-*/
