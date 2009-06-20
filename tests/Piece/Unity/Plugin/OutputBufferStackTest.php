@@ -61,6 +61,8 @@ class Piece_Unity_Plugin_OutputBufferStackTest extends Piece_Unity_PHPUnit_TestC
      * @access protected
      */
 
+    protected $serviceName = 'Piece_Unity_Plugin_OutputBufferStack';
+
     /**#@-*/
 
     /**#@+
@@ -73,30 +75,20 @@ class Piece_Unity_Plugin_OutputBufferStackTest extends Piece_Unity_PHPUnit_TestC
      * @access public
      */
 
-    public function setUp()
-    {
-        parent::setUp();
-        Piece_Unity_Plugin_Factory::addPluginPrefix(__CLASS__);
-    }
-
     /**
      * @test
      */
     public function invokeAFilter()
     {
-        $config = new Piece_Unity_Config();
-        $config->setExtension('OutputBufferStack', 'filters', array('First'));
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-
-        $chain = new Piece_Unity_Plugin_OutputBufferStack();
-        $chain->invoke();
+        $this->addExtension('filters', __CLASS__ . '_First');
+        $stack = $this->instantiateFeature();
+        $stack->invoke();
 
         while (ob_get_level()) {
             ob_end_flush();
         }
 
-        $request = $context->getRequest();
+        $request = $this->context->getRequest();
 
         $this->assertTrue($request->hasParameter('FirstOutputFilterCalled'));
         $this->assertTrue($request->getParameter('FirstOutputFilterCalled'));
@@ -107,50 +99,16 @@ class Piece_Unity_Plugin_OutputBufferStackTest extends Piece_Unity_PHPUnit_TestC
      */
     public function invokeMultipleFilters()
     {
-        $config = new Piece_Unity_Config();
-        $config->setExtension('OutputBufferStack', 'filters', array('First', 'Second'));
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-
-        $chain = new Piece_Unity_Plugin_OutputBufferStack();
-        $chain->invoke();
+        $this->addExtension('filters', __CLASS__ . '_First');
+        $this->addExtension('filters', __CLASS__ . '_Second');
+        $stack = $this->instantiateFeature();
+        $stack->invoke();
 
         while (ob_get_level()) {
             ob_end_flush();
         }
 
-        $request = $context->getRequest();
-
-        $this->assertTrue($request->hasParameter('FirstOutputFilterCalled'));
-        $this->assertTrue($request->getParameter('FirstOutputFilterCalled'));
-        $this->assertTrue($request->hasParameter('SecondOutputFilterCalled'));
-        $this->assertTrue($request->getParameter('SecondOutputFilterCalled'));
-
-        $logs = $request->getParameter('logs');
-
-        $this->assertEquals(__CLASS__ . '_Second', array_shift($logs));
-        $this->assertEquals(__CLASS__ . '_First', array_shift($logs));
-    }
-
-    /**
-     * @test
-     * @since Method available since Release 0.6.0
-     */
-    public function invokeABuiltinFunction()
-    {
-        $config = new Piece_Unity_Config();
-        $config->setExtension('OutputBufferStack', 'filters', array('First', 'mb_output_handler', 'Second'));
-        $context = Piece_Unity_Context::singleton();
-        $context->setConfiguration($config);
-
-        $chain = new Piece_Unity_Plugin_OutputBufferStack();
-        $chain->invoke();
-
-        while (ob_get_level()) {
-            ob_end_flush();
-        }
-
-        $request = $context->getRequest();
+        $request = $this->context->getRequest();
 
         $this->assertTrue($request->hasParameter('FirstOutputFilterCalled'));
         $this->assertTrue($request->getParameter('FirstOutputFilterCalled'));

@@ -84,21 +84,8 @@ class Piece_Unity_Plugin_OutputBufferStack extends Piece_Unity_Plugin_Common
      */
     public function invoke()
     {
-        $filters = $this->getExtension('filters');
-        if (!is_array($filters)) {
-            throw new Piece_Unity_Exception(
-                'The value of the extension point [ filters ] on the plug-in [ ' .
-                $this->getName() .
-                ' ] should be an array'
-                                            );
-        }
-
-        foreach ($filters as $extension) {
-            if (!function_exists($extension)) {
-                ob_start(array(Piece_Unity_Plugin_Factory::factory($extension), 'filter'));
-            } else {
-                ob_start($extension);
-            }
+        foreach ($this->filters as $filter) {
+            ob_start(array($filter, 'filter'));
         }
     }
 
@@ -118,7 +105,7 @@ class Piece_Unity_Plugin_OutputBufferStack extends Piece_Unity_Plugin_Common
      */
     protected function initialize()
     {
-        $this->addExtensionPoint('filters', array());
+        $this->addExtensionPoint('filters', true, true);
     }
 
     /**#@-*/
