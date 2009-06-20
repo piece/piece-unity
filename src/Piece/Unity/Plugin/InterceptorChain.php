@@ -83,8 +83,8 @@ class Piece_Unity_Plugin_InterceptorChain extends Piece_Unity_Plugin_Common
      */
     public function invoke()
     {
-        foreach ($this->interceptors as $extension) {
-            $doContinue = $extension->intercept();
+        foreach ($this->interceptors as $interceptor) {
+            $doContinue = $interceptor->intercept();
             if (!$doContinue) {
                 break;
             }            
