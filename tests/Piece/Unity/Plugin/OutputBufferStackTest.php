@@ -88,10 +88,8 @@ class Piece_Unity_Plugin_OutputBufferStackTest extends Piece_Unity_PHPUnit_TestC
             ob_end_flush();
         }
 
-        $request = $this->context->getRequest();
-
-        $this->assertTrue($request->hasParameter('FirstOutputFilterCalled'));
-        $this->assertTrue($request->getParameter('FirstOutputFilterCalled'));
+        $this->assertTrue($this->context->hasAttribute('FirstOutputFilterCalled'));
+        $this->assertTrue($this->context->hasAttribute('FirstOutputFilterCalled'));
     }
 
     /**
@@ -108,14 +106,12 @@ class Piece_Unity_Plugin_OutputBufferStackTest extends Piece_Unity_PHPUnit_TestC
             ob_end_flush();
         }
 
-        $request = $this->context->getRequest();
+        $this->assertTrue($this->context->hasAttribute('FirstOutputFilterCalled'));
+        $this->assertTrue($this->context->getAttribute('FirstOutputFilterCalled'));
+        $this->assertTrue($this->context->hasAttribute('SecondOutputFilterCalled'));
+        $this->assertTrue($this->context->getAttribute('SecondOutputFilterCalled'));
 
-        $this->assertTrue($request->hasParameter('FirstOutputFilterCalled'));
-        $this->assertTrue($request->getParameter('FirstOutputFilterCalled'));
-        $this->assertTrue($request->hasParameter('SecondOutputFilterCalled'));
-        $this->assertTrue($request->getParameter('SecondOutputFilterCalled'));
-
-        $logs = $request->getParameter('logs');
+        $logs = $this->context->getAttribute('logs');
 
         $this->assertEquals(__CLASS__ . '_Second', array_shift($logs));
         $this->assertEquals(__CLASS__ . '_First', array_shift($logs));

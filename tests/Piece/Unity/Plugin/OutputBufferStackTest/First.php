@@ -77,17 +77,16 @@ class Piece_Unity_Plugin_OutputBufferStackTest_First extends Piece_Unity_Plugin_
 
     public function filter($content)
     {
-        $request = $this->context->getRequest();
-        $request->setParameter('FirstOutputFilterCalled', true);
+        $this->context->setAttribute('FirstOutputFilterCalled', true);
 
-        if (!$request->hasParameter('logs')) {
+        if (!$this->context->hasAttribute('logs')) {
             $logs = array();
         } else {
-            $logs = $request->getParameter('logs');
+            $logs = $this->context->getAttribute('logs');
         }
 
         $logs[] = __CLASS__;
-        $request->setParameter('logs', $logs);
+        $this->context->setAttribute('logs', $logs);
 
         return $content;
     }
