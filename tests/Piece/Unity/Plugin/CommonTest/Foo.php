@@ -81,11 +81,6 @@ class Piece_Unity_Plugin_CommonTest_Foo extends Piece_Unity_Plugin_Common
      * @access protected
      */
 
-    protected function initialize()
-    {
-        $this->addConfigurationPoint('bar', false, false, 'baz');
-    }
-
     /**#@-*/
 
     /**#@+

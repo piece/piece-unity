@@ -81,10 +81,10 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
      */
     public function invoke()
     {
-        $this->getExtension('configurator')->invoke();
-        $this->getExtension('outputFilter')->invoke();
-        $this->getExtension('interceptor')->invoke();
-        $this->getExtension('controller')->invoke();
+        $this->configurator->invoke();
+        $this->outputFilter->invoke();
+        $this->interceptor->invoke();
+        $this->controller->invoke();
     }
 
     /**#@-*/
@@ -92,22 +92,6 @@ class Piece_Unity_Plugin_Root extends Piece_Unity_Plugin_Common
     /**#@+
      * @access protected
      */
-
-    // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
-     */
-    protected function initialize()
-    {
-        $this->addExtensionPoint('configurator', 'ConfiguratorChain');
-        $this->addExtensionPoint('outputFilter', 'OutputBufferStack');
-        $this->addExtensionPoint('interceptor', 'InterceptorChain');
-        $this->addExtensionPoint('controller', 'Controller');
-    }
 
     /**#@-*/
 

@@ -105,18 +105,6 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common 
      * @access protected
      */
 
-    // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     */
-    protected function initialize()
-    {
-        $this->addConfigurationPoint('appRoot', true);
-        $this->addConfigurationPoint('appRootPath', true);
-    }
-
     /**#@-*/
 
     /**#@+

@@ -67,8 +67,6 @@ class Piece_UnityTest extends Piece_Unity_PHPUnit_TestCase
      * @access private
      */
 
-    private $_exclusiveDirectory;
-
     /**#@-*/
 
     /**#@+
@@ -77,103 +75,8 @@ class Piece_UnityTest extends Piece_Unity_PHPUnit_TestCase
 
     public function setUp()
     {
-        parent::setUp();
-        $this->_exclusiveDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
-    }
-
-    public function tearDown()
-    {
-        $cache = new Cache_Lite_File(array('cacheDir' => $this->_exclusiveDirectory . '/',
-                                           'masterFile' => '',
-                                           'automaticSerialization' => true,
-                                           'errorHandlingAPIBreak' => true)
-                                     );
-        $cache->clean();
-    }
-
-    /**
-     * @test
-     */
-    public function configureTheRuntimeByTheConstructorWithAConfigurationObject()
-    {
-        $dynamicConfig = new Piece_Unity_Config();
-        $dynamicConfig->setExtension(Piece_Unity::ROOT_PLUGIN, 'renderer', 'Foo');
-        $dynamicConfig->setConfiguration(Piece_Unity::ROOT_PLUGIN, 'Bar', 'Baz');
-        $unity = new Piece_Unity(dirname(__FILE__) . '/../../data',
-                                 $this->_exclusiveDirectory,
-                                 $dynamicConfig
-                                 );
-        $config = Piece_Unity_Context::singleton()->getConfiguration();
-
-        $this->assertEquals('Foo',
-                            $config->getExtensionDefinition(Piece_Unity::ROOT_PLUGIN, 'renderer')
-                            );
-        $this->assertEquals('Baz',
-                            $config->getConfigurationDefinition(Piece_Unity::ROOT_PLUGIN, 'Bar')
-                            );
-
-        $context = Piece_Unity_Context::singleton();
-        $masterFile = realpath(dirname(__FILE__) . '/../../data/piece-unity-config.yaml');
-        $cache = new Cache_Lite_File(array('cacheDir' => $this->_exclusiveDirectory . '/',
-                                           'masterFile' => $masterFile,
-                                           'automaticSerialization' => true)
-                                     );
-        $config = $cache->get($masterFile);
-
-        $this->assertType('Piece_Unity_Config', $config);
-    }
-
-    /**
-     * @test
-     */
-    public function configureTheRuntimeByTheConstructor()
-    {
-        $unity = new Piece_Unity(dirname(__FILE__) . '/../../data',
-                                 $this->_exclusiveDirectory
-                                 );
-
-        $this->assertType('Piece_Unity_Config',
-                          Piece_Unity_Context::singleton()->getConfiguration()
-                          );
-    }
-
-    /**
-     * @test
-     */
-    public function dispatchTheRequestToTheController()
-    {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET['_event'] = 'foo';
-
-        $unity = new Piece_Unity(dirname(__FILE__) . '/../../data',
-                                 $this->_exclusiveDirectory
-                                 );
-        $unity->setExtension('controller', 'dispatcher', 'Dispatcher_Simple');
-        $unity->setConfiguration('Renderer_PHP',
-                                 'templateDirectory',
-                                 $this->_exclusiveDirectory
-                                 );
-        ob_start();
-        @$unity->dispatch();
-        ob_end_clean();
-
-        $this->assertEquals('foo', Piece_Unity_Context::singleton()->getView());
-    }
-
-    /**
-     * @test
-     * @since Method available since Release 1.1.0
-     */
-    public function configureTheRuntimeByMethod()
-    {
-        $unity = new Piece_Unity();
-        $unity->configure();
-        $unity->setConfiguration(Piece_Unity::ROOT_PLUGIN, 'Bar', 'Baz');
-        $unity->setExtension(Piece_Unity::ROOT_PLUGIN, 'renderer', 'Foo');
-        $config = Piece_Unity_Context::singleton()->getConfiguration();
-
-        $this->assertEquals('Baz', $config->getConfigurationDefinition(Piece_Unity::ROOT_PLUGIN, 'Bar'));
-        $this->assertEquals('Foo', $config->getExtensionDefinition(Piece_Unity::ROOT_PLUGIN, 'renderer'));
+        Piece_Unity_Context::clear();
+        $this->cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 
     /**
@@ -184,65 +87,40 @@ class Piece_UnityTest extends Piece_Unity_PHPUnit_TestCase
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_event'] = 'foo';
+        $runtime = Piece_Unity::createRuntime(array($this, 'configureRuntime'));
         ob_start();
-        @Piece_Unity::createRuntime(array($this, 'configureRuntime'))->dispatch();
+        $runtime->dispatch();
         ob_end_clean();
 
         $this->assertEquals('foo', Piece_Unity_Context::singleton()->getView());
     }
 
     /**
+     * @param Piece_Config $config
      * @since Method available since Release 1.5.0
      */
-    public function configureRuntime($runtime)
+    public function configureRuntime(Piece_Config $config)
     {
-        $runtime->configure(dirname(__FILE__) . '/../../data',
-                            $this->_exclusiveDirectory
-                            );
-        $runtime->setExtension('controller', 'dispatcher', 'Dispatcher_Simple');
-        $runtime->setConfiguration('Renderer_PHP',
-                                   'templateDirectory',
-                                   $this->_exclusiveDirectory
-                                   );
-    }
-
-    /**
-     * @test
-     * @expectedException Piece_Unity_Exception
-     * @since Method available since Release 1.5.0
-     */
-    public function raiseAnExceptionIfTheDispatchMethodIsCalledBeforeConfiguration()
-    {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET['_event'] = 'foo';
-        $unity = new Piece_Unity();
-        $unity->dispatch();
-    }
-
-    /**
-     * @test
-     * @expectedException Piece_Unity_Exception
-     * @since Method available since Release 1.5.0
-     */
-    public function raiseAnExceptionIfTheSetconfigurationMethodIsCalledBeforeConfiguration()
-    {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET['_event'] = 'foo';
-        $unity = new Piece_Unity();
-        $unity->setConfiguration(Piece_Unity::ROOT_PLUGIN, 'Bar', 'Baz');
-    }
-
-    /**
-     * @test
-     * @expectedException Piece_Unity_Exception
-     * @since Method available since Release 1.5.0
-     */
-    public function raiseAnExceptionIfTheSetextensionMethodIsCalledBeforeConfiguration()
-    {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $_GET['_event'] = 'foo';
-        $unity = new Piece_Unity();
-        $unity->setExtension(Piece_Unity::ROOT_PLUGIN, 'renderer', 'Foo');
+        $config->addExtension('Piece_Unity_Plugin_Dispatcher_Continuation',
+                              'actionDirectory',
+                              $this->cacheDirectory
+                              );
+        $config->addExtension('Piece_Unity_Plugin_Dispatcher_Continuation',
+                              'cacheDirectory',
+                              $this->cacheDirectory
+                              );
+        $config->addExtension('Piece_Unity_Plugin_Dispatcher_Continuation',
+                              'configDirectory',
+                              $this->cacheDirectory
+                              );
+        $config->addExtension('Piece_Unity_Plugin_Controller',
+                              'dispatcher',
+                              'Piece_Unity_Plugin_Dispatcher_Simple'
+                              );
+        $config->addExtension('Piece_Unity_Plugin_Renderer_PHP',
+                              'templateDirectory',
+                              $this->cacheDirectory
+                              );
     }
 
     /**#@-*/

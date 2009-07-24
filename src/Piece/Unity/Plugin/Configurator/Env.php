@@ -98,23 +98,6 @@ class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common impl
      * @access protected
      */
 
-    // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     */
-    protected function initialize()
-    {
-        $this->addConfigurationPoint('proxyPath', true);
-        $this->addExtensionPoint('envHandlers',
-                                 false,
-                                 true,
-                                 array('Piece_Unity_Plugin_Configurator_EnvHandler_PieceFlow',
-                                       'Piece_Unity_Plugin_Configurator_EnvHandler_PieceRight')
-                                 );
-    }
-
     /**#@-*/
 
     /**#@+

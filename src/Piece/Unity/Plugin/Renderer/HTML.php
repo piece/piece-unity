@@ -127,26 +127,6 @@ abstract class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Commo
      */
 
     // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     */
-    protected function initialize()
-    {
-        $this->addConfigurationPoint('useLayout', false, false, false);
-        $this->addConfigurationPoint('layoutView', true);
-        $this->addConfigurationPoint('layoutDirectory', true);
-        $this->addConfigurationPoint('layoutCompileDirectory', true);
-        $this->addConfigurationPoint('turnOffLayoutByHTTPAccept', false, false, false);
-        $this->addConfigurationPoint('useFallback', false, false, false);
-        $this->addConfigurationPoint('fallbackView', true);
-        $this->addConfigurationPoint('fallbackDirectory', true);
-        $this->addConfigurationPoint('fallbackCompileDirectory', true);
-        $this->addExtensionPoint('components', true, true);
-    }
-
-    // }}}
     // {{{ doRender()
 
     /**

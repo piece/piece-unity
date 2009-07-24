@@ -73,13 +73,17 @@ class Piece_Unity_Plugin_CommonTest extends Piece_Unity_PHPUnit_TestCase
      * @access public
      */
 
+    public function setUp()
+    {
+        $this->cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
+        parent::setUp();
+    }
+
     /**
      * @test
      */
     public function getTheConfiguration()
     {
-        $this->config->defineService('foo', __CLASS__ . '_Foo');
-
         $this->assertEquals('baz', $this->config->instantiateFeature('foo')->bar);
     }
 
@@ -88,8 +92,6 @@ class Piece_Unity_Plugin_CommonTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function getTheExtension()
     {
-        $this->config->defineService('bar', __CLASS__ . '_Bar');
-
         $this->assertEquals('qux', $this->config->instantiateFeature('bar')->invoke());
     }
 

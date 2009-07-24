@@ -124,18 +124,6 @@ class Piece_Unity_Plugin_Configurator_Proxy extends Piece_Unity_Plugin_Common im
      * @access protected
      */
 
-    // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     */
-    protected function initialize()
-    {
-        $this->addConfigurationPoint('proxyPath', true);
-        $this->addConfigurationPoint('adjustSessionCookiePath', false, false, true);
-    }
-
     /**#@-*/
 
     /**#@+

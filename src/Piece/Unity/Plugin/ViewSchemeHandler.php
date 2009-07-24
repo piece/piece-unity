@@ -82,7 +82,6 @@ class Piece_Unity_Plugin_ViewSchemeHandler extends Piece_Unity_Plugin_Common
      * Determines appropriate renderer extension by the view scheme in the current
      * view string such like "http:", "json:", "html:", etc.
      *
-     * @return string
      * @throws Piece_Unity_Exception
      */
     public function invoke()
@@ -101,9 +100,7 @@ class Piece_Unity_Plugin_ViewSchemeHandler extends Piece_Unity_Plugin_Common
         $renderer =
             !$positionOfColon ? $this->html
                               : $this->{ substr($viewString, 0, $positionOfColon) };
-        $config = $this->context->getConfiguration();
-        $config->defineService($renderer);
-        return $config->instantiateFeature($renderer);
+        $this->context->getConfiguration()->instantiateFeature($renderer)->render();
     }
 
     /**#@-*/
@@ -111,23 +108,6 @@ class Piece_Unity_Plugin_ViewSchemeHandler extends Piece_Unity_Plugin_Common
     /**#@+
      * @access protected
      */
-
-    // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     */
-    protected function initialize()
-    {
-        $this->addConfigurationPoint('html', false, false, 'Piece_Unity_Plugin_Renderer_PHP');
-        $this->addConfigurationPoint('http', false, false, 'Piece_Unity_Plugin_Renderer_Redirection');
-        $this->addConfigurationPoint('https', false, false, 'Piece_Unity_Plugin_Renderer_Redirection');
-        $this->addConfigurationPoint('self', false, false, 'Piece_Unity_Plugin_Renderer_Redirection');
-        $this->addConfigurationPoint('selfs', false, false, 'Piece_Unity_Plugin_Renderer_Redirection');
-        $this->addConfigurationPoint('json', false, false, 'Piece_Unity_Plugin_Renderer_JSON');
-        $this->addConfigurationPoint('raw', false, false, 'Piece_Unity_Plugin_Renderer_Raw');
-    }
 
     /**#@-*/
 

@@ -71,8 +71,6 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
      * @access private
      */
 
-    private $_exclusiveDirectory;
-
     /**#@-*/
 
     /**#@+
@@ -83,17 +81,7 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
     {
         parent::setUp();
         $_SERVER['REQUEST_METHOD'] = 'POST';
-        $this->_exclusiveDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
-    }
-
-    public function tearDown()
-    {
-        $cache = new Cache_Lite_File(array('cacheDir' => $this->_exclusiveDirectory . '/',
-                                           'masterFile' => '',
-                                           'automaticSerialization' => true,
-                                           'errorHandlingAPIBreak' => true)
-                                     );
-        $cache->clean();
+        $this->cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 
     /**
@@ -104,10 +92,11 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
         $_POST['login_name'] = 'iteman';
         $_POST['password'] = 'iteman30';
         $_POST['email'] = 'kubo@iteman.jp';
+        $this->initializeContext();
 
         $validation = new Piece_Unity_Validation();
-        $validation->setConfigDirectory($this->_exclusiveDirectory);
-        $validation->setCacheDirectory($this->_exclusiveDirectory);
+        $validation->setConfigDirectory($this->cacheDirectory);
+        $validation->setCacheDirectory($this->cacheDirectory);
         $config = $validation->getConfiguration();
         $config->setRequired('email');
         $config->addValidation('email', 'Email');
@@ -118,7 +107,7 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
         $this->assertEquals($_POST['login_name'], $container->login_name);
         $this->assertEquals($_POST['password'], $container->password);
         $this->assertEquals($_POST['email'], $container->email);
-        $this->assertTrue(is_a($validation->getResults(), 'Piece_Right_Results'));
+        $this->assertType('Piece_Right_Results', $validation->getResults());
     }
 
     /**
@@ -128,6 +117,7 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
     public function passThroughAnExceptionRaisedByPieceRight()
     {
         $_POST['foo'] = 'bar';
+        $this->initializeContext();
 
         $validation = new Piece_Unity_Validation();
         $config = $validation->getConfiguration();
@@ -146,10 +136,11 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
         $_POST['login_name'] = ' iteman ';
         $_POST['password'] = 'itema';
         $_POST['email'] = 'kubo@iteman.jp';
+        $this->initializeContext();
 
         $validation = new Piece_Unity_Validation();
-        $validation->setConfigDirectory($this->_exclusiveDirectory);
-        $validation->setCacheDirectory($this->_exclusiveDirectory);
+        $validation->setConfigDirectory($this->cacheDirectory);
+        $validation->setCacheDirectory($this->cacheDirectory);
         $config = $validation->getConfiguration();
         $config->setRequired('email');
         $config->addValidation('email', 'Email');
@@ -170,11 +161,12 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
     public function passTheContextObjectToValidators()
     {
         $_POST['foo'] = 'bar';
+        $this->initializeContext();
 
         $validation = new Piece_Unity_Validation();
-        $validation->setConfigDirectory($this->_exclusiveDirectory);
-        $validation->setCacheDirectory($this->_exclusiveDirectory);
-        $validation->addValidatorDirectory($this->_exclusiveDirectory);
+        $validation->setConfigDirectory($this->cacheDirectory);
+        $validation->setCacheDirectory($this->cacheDirectory);
+        $validation->addValidatorDirectory($this->cacheDirectory);
         $config = $validation->getConfiguration();
         $config->setRequired('foo');
         $config->addValidation('foo', 'PayloadTest');
@@ -183,10 +175,8 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
         $this->assertTrue($validation->validate(null, $container));
         $this->assertEquals($_POST['foo'], $container->foo);
 
-        $context = Piece_Unity_Context::singleton();
-
-        $this->assertTrue($context->hasAttribute('bar'));
-        $this->assertEquals('baz', $context->getAttribute('bar'));
+        $this->assertTrue($this->context->hasAttribute('bar'));
+        $this->assertEquals('baz', $this->context->getAttribute('bar'));
     }
 
     /**
@@ -202,10 +192,11 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
                                     'type'     => 'text/plain',
                                     'error'    => 0
                                     );
+        $this->initializeContext();
 
         $validation = new Piece_Unity_Validation();
-        $validation->setConfigDirectory($this->_exclusiveDirectory);
-        $validation->setCacheDirectory($this->_exclusiveDirectory);
+        $validation->setConfigDirectory($this->cacheDirectory);
+        $validation->setCacheDirectory($this->cacheDirectory);
         $config = $validation->getConfiguration();
         $config->setRequired('userfile');
         $config->addValidation('userfile',
@@ -234,10 +225,11 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
             $_FILES['userfile']['size'][$i] = $size;
             $_FILES['userfile']['error'][$i] = 0;
         }
+        $this->initializeContext();
 
         $validation = new Piece_Unity_Validation();
-        $validation->setConfigDirectory($this->_exclusiveDirectory);
-        $validation->setCacheDirectory($this->_exclusiveDirectory);
+        $validation->setConfigDirectory($this->cacheDirectory);
+        $validation->setCacheDirectory($this->cacheDirectory);
         $config = $validation->getConfiguration();
         $config->setRequired('userfile');
         $config->addValidation('userfile',
@@ -261,9 +253,11 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
         $_POST['bar'] = '2';
         $_POST['baz'] = '3';
         $_POST['qux'] = '4';
+        $this->initializeContext();
+
         $validation = new Piece_Unity_Validation();
-        $validation->setConfigDirectory($this->_exclusiveDirectory);
-        $validation->setCacheDirectory($this->_exclusiveDirectory);
+        $validation->setConfigDirectory($this->cacheDirectory);
+        $validation->setCacheDirectory($this->cacheDirectory);
         $validation->mergeValidationSet('MergeValidationSetShouldMergeConfigurationFileIntoConfiguration2');
         $validation->mergeValidationSet('MergeValidationSetShouldMergeConfigurationFileIntoConfiguration3');
         $container = new stdClass();
@@ -299,10 +293,11 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_POST['firstName'] = ' Foo ';
         $_POST['lastName'] = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+        $this->initializeContext();
 
         $validation = new Piece_Unity_Validation();
-        $validation->setConfigDirectory($this->_exclusiveDirectory);
-        $validation->setCacheDirectory($this->_exclusiveDirectory);
+        $validation->setConfigDirectory($this->cacheDirectory);
+        $validation->setCacheDirectory($this->cacheDirectory);
         $validation->setTemplate('Common');
         $container = new stdClass();
         $result = $validation->validate('TemplateShouldBeUsedIfFileIsSetAndBasedOnElementIsSpecified', $container);

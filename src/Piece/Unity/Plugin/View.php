@@ -120,21 +120,6 @@ class Piece_Unity_Plugin_View extends Piece_Unity_Plugin_Common
      * @access protected
      */
 
-    // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
-     */
-    protected function initialize()
-    {
-        $this->addExtensionPoint('renderer', true); // deprecated
-        $this->addConfigurationPoint('forcedView', true);
-        $this->addExtensionPoint('viewSchemeHandler', false, false, 'Piece_Unity_Plugin_ViewSchemeHandler');
-    }
-
     /**#@-*/
 
     /**#@+

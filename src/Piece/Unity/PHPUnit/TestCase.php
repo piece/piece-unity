@@ -104,11 +104,13 @@ abstract class Piece_Unity_PHPUnit_TestCase extends PHPUnit_Framework_TestCase
 
     protected function initializeConfig()
     {
-        $this->config = new Piece_Config();
-
-        if (!is_null($this->serviceName)) {
-            $this->config->defineService($this->serviceName, null, 'prototype');
+        $this->generator = new Piece_Config_Generator();
+        $this->generator->addConfigDirectory(dirname(__FILE__) . '/../../../../data/pear.piece-framework.com/config');
+        if (!is_null($this->cacheDirectory)) {
+            $this->generator->addConfigDirectory($this->cacheDirectory);
         }
+
+        $this->config = $this->generator->generate();
     }
 
     protected function initializeContext()
@@ -120,10 +122,7 @@ abstract class Piece_Unity_PHPUnit_TestCase extends PHPUnit_Framework_TestCase
 
     protected function addExtension($extensionPointName, $extension)
     {
-        $this->config->lazyAddExtension($this->serviceName,
-                                        $extensionPointName,
-                                        $extension
-                                        );
+        $this->config->addExtension($this->serviceName, $extensionPointName, $extension);
     }
 
     protected function instantiateFeature()

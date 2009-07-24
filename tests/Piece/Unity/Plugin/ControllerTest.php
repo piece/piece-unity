@@ -88,10 +88,10 @@ class Piece_Unity_Plugin_ControllerTest extends Piece_Unity_PHPUnit_TestCase
 
         $this->initializeContext();
         $this->addExtension('dispatcher', 'Piece_Unity_Plugin_Dispatcher_Simple');
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Dispatcher_Simple', 'actionDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Dispatcher_Continuation', 'configDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
+        $this->config->addExtension('Piece_Unity_Plugin_Dispatcher_Simple', 'actionDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
+        $this->config->addExtension('Piece_Unity_Plugin_Dispatcher_Continuation', 'actionDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
+        $this->config->addExtension('Piece_Unity_Plugin_Dispatcher_Continuation', 'cacheDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
+        $this->config->addExtension('Piece_Unity_Plugin_Dispatcher_Continuation', 'configDirectory', dirname(__FILE__) . '/' . basename(__FILE__, '.php'));
         $this->instantiateFeature()->invoke();
 
         $this->assertEquals('http://example.org/', $this->context->getView());

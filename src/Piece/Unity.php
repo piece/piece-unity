@@ -35,6 +35,10 @@
  * @since      File available since Release 0.1.0
  */
 
+Piece_Unity::addConfigDirectory(
+    dirname(__FILE__) . '/../../data/pear.piece-framework.com/config'
+                                );
+
 // {{{ Piece_Unity
 
 /**
@@ -49,11 +53,6 @@
 class Piece_Unity
 {
 
-    // {{{ constants
-
-    const ROOT_PLUGIN = 'Root';
-
-    // }}}
     // {{{ properties
 
     /**#@+
@@ -72,8 +71,7 @@ class Piece_Unity
      * @access private
      */
 
-    private $_config;
-    private static $_configurationCallback;
+    private static $configDirectories = array();
 
     /**#@-*/
 
@@ -82,92 +80,26 @@ class Piece_Unity
      */
 
     // }}}
-    // {{{ __construct()
-
-    /**
-     * Initializes an object. If one or more arguments are given, the constructor
-     * configures the runtime.
-     *
-     * @param string             $configDirectory
-     * @param string             $cacheDirectory
-     * @param Piece_Unity_Config $dynamicConfig
-     */
-    public function __construct($configDirectory = null,
-                                $cacheDirectory = null,
-                                $dynamicConfig = null
-                                )
-    {
-        if (func_num_args()) {
-            $this->configure($configDirectory, $cacheDirectory, $dynamicConfig);
-        }
-    }
-
-    // }}}
     // {{{ dispatch()
 
     /**
      * Dispatches a request.
-     *
-     * @throws Piece_Unity_Exception
      */
     public function dispatch()
     {
-        if (is_null($this->_config)) {
-            throw new Piece_Unity_Exception(
-                __METHOD__ .
-                ' method must be called after calling configure().'
-                                            );
-        }
-
-        Piece_Unity_Plugin_Factory::factory(self::ROOT_PLUGIN)->invoke();
+        $this->rootPlugin->invoke();
     }
 
     // }}}
-    // {{{ setConfiguration()
+    // {{{ addConfigDirectory()
 
     /**
-     * Sets the configuration to the configuration point of the plugin.
-     *
-     * @param string $plugin
-     * @param string $configurationPoint
-     * @param string $configuration
-     * @throws Piece_Unity_Exception
-     * @since Method available since Release 1.1.0
+     * @param string $configDirectory
+     * @since Method available since Release 2.0.0dev1
      */
-    public function setConfiguration($plugin, $configurationPoint, $configuration)
+    public static function addConfigDirectory($configDirectory)
     {
-        if (is_null($this->_config)) {
-            throw new Piece_Unity_Exception(
-                __METHOD__ .
-                ' method must be called after calling configure().'
-                                            );
-        }
-
-        $this->_config->setConfiguration($plugin, $configurationPoint, $configuration);
-    }
-
-    // }}}
-    // {{{ setExtension()
-
-    /**
-     * Sets the extension to the extension point of the plugin.
-     *
-     * @param string $plugin
-     * @param string $extensionPoint
-     * @param string $extension
-     * @throws Piece_Unity_Exception
-     * @since Method available since Release 1.1.0
-     */
-    public function setExtension($plugin, $extensionPoint, $extension)
-    {
-        if (is_null($this->_config)) {
-            throw new Piece_Unity_Exception(
-                __METHOD__ .
-                ' method must be called after calling configure().'
-                                            );
-        }
-
-        $this->_config->setExtension($plugin, $extensionPoint, $extension);
+        self::$configDirectories[] = $configDirectory;
     }
 
     // }}}
@@ -181,67 +113,22 @@ class Piece_Unity
      * @return Piece_Unity
      * @since Method available since Release 1.5.0
      */
-    public function createRuntime($callback = null)
+    public static function createRuntime($callback = null)
     {
-        $runtime = new self;
+        $generator = new Piece_Config_Generator();
+        foreach (self::$configDirectories as $configDirectory) {
+            $generator->addConfigDirectory($configDirectory);
+        }
+
+        $config = $generator->generate();
+
         if (!is_null($callback)) {
-            call_user_func_array($callback, array($runtime));
-        } else {
-            if (!is_null(self::$_configurationCallback)) {
-                call_user_func_array(self::$_configurationCallback,
-                                     array($runtime)
-                                     );
-            }
+            call_user_func($callback, $config);
         }
 
-        return $runtime;
-    }
+        Piece_Unity_Context::singleton()->setConfiguration($config);
 
-    // }}}
-    // {{{ configure()
-
-    /**
-     * Configures the application.
-     *
-     * First this method tries to load a configuration from a configuration file in
-     * the given configration directory using Piece_Unity_Config_Factory::factory().
-     * This method creates a new object if the load failed.
-     * Second this method merges the given configuretion into the loaded
-     * configuration.
-     * Finally this method sets the configuration to the current context.
-     *
-     * @param string             $configDirectory
-     * @param string             $cacheDirectory
-     * @param Piece_Unity_Config $dynamicConfig
-     * @since Method available since Release 1.5.0
-     */
-    public function configure($configDirectory = null,
-                              $cacheDirectory = null,
-                              $dynamicConfig = null
-                              )
-    {
-        $this->_config =
-            Piece_Unity_Config_Factory::factory($configDirectory, $cacheDirectory);
-        if ($dynamicConfig instanceof Piece_Unity_Config) {
-            $this->_config->merge($dynamicConfig);
-        }
-
-        Piece_Unity_Context::singleton()->setConfiguration($this->_config);
-    }
-
-    // }}}
-    // {{{ setConfigurationCallback()
-
-    /**
-     * Sets the given callback as the callback for Piece_Unity::createRuntime().
-     *
-     * @param callback $callback
-     * @throws PIECE_UNITY_ERROR_UNEXPECTED_VALUE
-     * @since Method available since Release 1.7.0
-     */
-    public static function setConfigurationCallback($callback)
-    {
-        self::$_configurationCallback = $callback;
+        return $config->instantiateFeature(__CLASS__);
     }
 
     /**#@-*/

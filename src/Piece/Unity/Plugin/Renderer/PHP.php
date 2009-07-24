@@ -80,21 +80,6 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
      */
 
     // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
-     */
-    protected function initialize()
-    {
-        parent::initialize();
-        $this->addConfigurationPoint('templateDirectory', false);
-        $this->addConfigurationPoint('templateExtension', false, false, '.php');
-    }
-
-    // }}}
     // {{{ doRender()
 
     /**

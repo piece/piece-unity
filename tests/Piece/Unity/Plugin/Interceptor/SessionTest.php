@@ -79,6 +79,7 @@ class Piece_Unity_Plugin_Interceptor_SessionTest extends Piece_Unity_PHPUnit_Tes
     {
         parent::setUp();
         $_SESSION = array('foo' => 'bar');
+        $this->config->getFeature($this->serviceName)->setScope('prototype');
     }
 
     /**

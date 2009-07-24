@@ -80,15 +80,17 @@ class Piece_Unity_Plugin_ViewSchemeHandlerTest extends Piece_Unity_PHPUnit_TestC
      */
     public function removeHtmlSchemeStringFromTheViewString()
     {
-        $this->config->lazyAddExtension(
+        $this->config->addExtension(
             'Piece_Unity_Plugin_Renderer_PHP',
             'templateDirectory',
             dirname(__FILE__) . '/' . basename(__FILE__, '.php')
                                         );
         $this->context->setView('html:Try');
-        $rendererExtension = $this->instantiateFeature()->invoke();
+        $renderer = $this->instantiateFeature();
+        ob_start();
+        $renderer->invoke();
+        ob_end_clean();
 
-        $this->assertType('Piece_Unity_Plugin_Renderer_PHP', $rendererExtension);
         $this->assertEquals('Try', $this->context->getView());
     }
 

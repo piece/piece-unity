@@ -77,9 +77,9 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
 
     public function setUp()
     {
-        parent::setUp();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_event'] = 'foo';
+        parent::setUp();
     }
 
     /**
@@ -87,10 +87,9 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function setTheView()
     {
-        $context = Piece_Unity_Context::singleton();
-        $context->setView('foo');
+        $this->context->setView('foo');
 
-        $this->assertEquals('foo', $context->getView());
+        $this->assertEquals('foo', $this->context->getView());
     }
 
     /**
@@ -98,12 +97,10 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function initializeProperties()
     {
-        $context = Piece_Unity_Context::singleton();
-
-        $this->assertType('Piece_Unity_Request', $context->getRequest());
-        $this->assertEquals('foo', $context->getEventName());
-        $this->assertType('Piece_Unity_ViewElement', $context->getViewElement());
-        $this->assertType('Piece_Unity_Session', $context->getSession());
+        $this->assertType('Piece_Unity_Request', $this->context->getRequest());
+        $this->assertEquals('foo', $this->context->getEventName());
+        $this->assertType('Piece_Unity_ViewElement', $this->context->getViewElement());
+        $this->assertType('Piece_Unity_Session', $this->context->getSession());
     }
 
     /**
@@ -112,10 +109,9 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
     public function importTheEventNameFromRequestParameters()
     {
         $_GET['_event_bar'] = null;
+        $this->initializeContext();
 
-        $this->assertEquals('bar',
-                            Piece_Unity_Context::singleton()->getEventName()
-                            );
+        $this->assertEquals('bar', $this->context->getEventName());
     }
 
     /**
@@ -124,11 +120,11 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
     public function setTheEventNameKey()
     {
         $_GET['_foo'] = 'bar';
+        $this->initializeContext();
 
-        $context = Piece_Unity_Context::singleton();
-        $context->setEventNameKey('_foo');
+        $this->context->setEventNameKey('_foo');
 
-        $this->assertEquals('bar', $context->getEventName());
+        $this->assertEquals('bar', $this->context->getEventName());
     }
 
     /**
@@ -138,11 +134,11 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
     {
         $_GET['_foo'] = 'bar';
         $_GET['_foo_baz'] = null;
+        $this->initializeContext();
 
-        $context = Piece_Unity_Context::singleton();
-        $context->setEventNameKey('_foo');
+        $this->context->setEventNameKey('_foo');
 
-        $this->assertEquals('baz', $context->getEventName());
+        $this->assertEquals('baz', $this->context->getEventName());
     }
 
     /**
@@ -150,10 +146,9 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function getTheEventNameKey()
     {
-        $context = Piece_Unity_Context::singleton();
-        $context->setEventNameKey('_foo');
+        $this->context->setEventNameKey('_foo');
 
-        $this->assertEquals('_foo', $context->getEventNameKey());
+        $this->assertEquals('_foo', $this->context->getEventNameKey());
     }
 
     /**
@@ -161,10 +156,9 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function setTheEventNameBySeteventname()
     {
-        $context = Piece_Unity_Context::singleton();
-        $context->setEventName('bar');
+        $this->context->setEventName('bar');
 
-        $this->assertEquals('bar', $context->getEventName());
+        $this->assertEquals('bar', $this->context->getEventName());
     }
 
     /**
@@ -173,10 +167,9 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
     public function getTheBasePathOfTheRequestUri()
     {
         $_SERVER['REQUEST_URI'] = '/path/to/foo.php';
+        $this->initializeContext();
 
-        $this->assertEquals('/path/to',
-                            Piece_Unity_Context::singleton()->getBasePath()
-                            );
+        $this->assertEquals('/path/to', $this->context->getBasePath());
     }
 
     /**
@@ -186,14 +179,13 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
     public function setTheBasePathOfTheRequestUri()
     {
         $_SERVER['REQUEST_URI'] = '/path/to/foo.php';
+        $this->initializeContext();
 
-        $context = Piece_Unity_Context::singleton();
+        $this->assertEquals('/path/to', $this->context->getBasePath());
 
-        $this->assertEquals('/path/to', $context->getBasePath());
+        $this->context->setBasePath('/path/to/foo/bar');
 
-        $context->setBasePath('/path/to/foo/bar');
-
-        $this->assertEquals('/path/to/foo/bar', $context->getBasePath());
+        $this->assertEquals('/path/to/foo/bar', $this->context->getBasePath());
     }
 
     /**
@@ -203,10 +195,9 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
     public function setTheBasePathOfTheRequestUriOnWindows()
     {
         $_SERVER['REQUEST_URI'] = '//path/to/foo.php';
+        $this->initializeContext();
 
-        $this->assertEquals('/path/to',
-                            Piece_Unity_Context::singleton()->getBasePath()
-                            );
+        $this->assertEquals('/path/to', $this->context->getBasePath());
     }
 
     /**
@@ -215,11 +206,10 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function setAnAttribute()
     {
-        $context = Piece_Unity_Context::singleton();
-        $context->setAttribute('foo', 'bar');
+        $this->context->setAttribute('foo', 'bar');
 
-        $this->assertTrue($context->hasAttribute('foo'));
-        $this->assertEquals('bar', $context->getAttribute('foo'));
+        $this->assertTrue($this->context->hasAttribute('foo'));
+        $this->assertEquals('bar', $this->context->getAttribute('foo'));
     }
 
     /**
@@ -229,13 +219,12 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
     public function setAnAttributeByReference()
     {
         $foo1 = array('bar' => 'baz');
-        $context = Piece_Unity_Context::singleton();
-        $context->setAttributeByRef('foo', $foo1);
+        $this->context->setAttributeByRef('foo', $foo1);
         $foo1['bar'] = 'qux';
 
-        $this->assertTrue($context->hasAttribute('foo'));
+        $this->assertTrue($this->context->hasAttribute('foo'));
 
-        $foo2 = $context->getAttribute('foo');
+        $foo2 = $this->context->getAttribute('foo');
 
         $this->assertArrayHasKey('bar', $foo2);
         $this->assertEquals('qux', $foo2['bar']);
@@ -247,14 +236,13 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function removeAnAttribute()
     {
-        $context = Piece_Unity_Context::singleton();
-        $context->setAttribute('foo', 'bar');
+        $this->context->setAttribute('foo', 'bar');
 
-        $this->assertTrue($context->hasAttribute('foo'));
+        $this->assertTrue($this->context->hasAttribute('foo'));
 
-        $context->removeAttribute('foo');
+        $this->context->removeAttribute('foo');
 
-        $this->assertFalse($context->hasAttribute('foo'));
+        $this->assertFalse($this->context->hasAttribute('foo'));
     }
 
     /**
@@ -263,17 +251,16 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function clearAllAttributes()
     {
-        $context = Piece_Unity_Context::singleton();
-        $context->setAttribute('foo', 'bar');
-        $context->setAttribute('bar', 'baz');
+        $this->context->setAttribute('foo', 'bar');
+        $this->context->setAttribute('bar', 'baz');
 
-        $this->assertTrue($context->hasAttribute('foo'));
-        $this->assertTrue($context->hasAttribute('bar'));
+        $this->assertTrue($this->context->hasAttribute('foo'));
+        $this->assertTrue($this->context->hasAttribute('bar'));
 
-        $context->clearAttributes();
+        $this->context->clearAttributes();
 
-        $this->assertFalse($context->hasAttribute('foo'));
-        $this->assertFalse($context->hasAttribute('bar'));
+        $this->assertFalse($this->context->hasAttribute('foo'));
+        $this->assertFalse($this->context->hasAttribute('bar'));
     }
 
     /**
@@ -287,10 +274,9 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_POST['_event_foo_x'] = '19';
         $_POST['_event_foo_y'] = '99';
+        $this->initializeContext();
 
-        $this->assertEquals('foo',
-                            Piece_Unity_Context::singleton()->getEventName()
-                            );
+        $this->assertEquals('foo', $this->context->getEventName());
     }
 
     /**
@@ -304,10 +290,9 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
         $_SERVER['REQUEST_METHOD'] = 'POST';
         $_POST['_event_foo_x'] = '19';
         $_POST['_event_foo_z'] = '99';
+        $this->initializeContext();
 
-        $this->assertEquals('foo_z',
-                            Piece_Unity_Context::singleton()->getEventName()
-                            );
+        $this->assertEquals('foo_z', $this->context->getEventName());
     }
 
     /**
@@ -317,8 +302,7 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
     public function sendTheStatusLineOfTheResponse()
     {
         $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
-        $context = Piece_Unity_Context::singleton();
-        $context->sendHTTPStatus(404);
+        $this->context->sendHTTPStatus(404);
 
         $this->assertAttributeEquals('HTTP/1.1 404 Not Found',
                                      '_sentStatusLine',

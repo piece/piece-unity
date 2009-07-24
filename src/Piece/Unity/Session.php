@@ -117,7 +117,7 @@ class Piece_Unity_Session
      */
     public function hasAttribute($name)
     {
-        return array_key_exists($name, $this->_attributes);
+        return @array_key_exists($name, $this->_attributes);
     }
 
     // }}}
@@ -175,7 +175,7 @@ class Piece_Unity_Session
             }
         }
 
-        session_start();
+        @session_start();
 
         $this->_attributes = &$_SESSION;
 

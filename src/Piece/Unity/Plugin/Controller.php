@@ -100,21 +100,6 @@ class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
      * @access protected
      */
 
-    // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
-     */
-    protected function initialize()
-    {
-        $this->addExtensionPoint('dispatcher', false, false, 'Piece_Unity_Plugin_Dispatcher_Continuation');
-        $this->addExtensionPoint('continuation', false, false, 'Piece_Unity_Plugin_Dispatcher_Continuation');
-        $this->addExtensionPoint('view', false, false, 'Piece_Unity_Plugin_View');
-    }
-
     /**#@-*/
 
     /**#@+

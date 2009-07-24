@@ -91,7 +91,6 @@ abstract class Piece_Unity_Plugin_Common
     {
         $this->_name = $featureName;
         $this->context = Piece_Unity_Context::singleton();
-        $this->initialize();
     }
 
     // }}}
@@ -110,76 +109,6 @@ abstract class Piece_Unity_Plugin_Common
     /**#@+
      * @access protected
      */
-
-    // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
-     */
-    protected function initialize() {}
-
-    // }}}
-    // {{{ addExtensionPoint()
-
-    /**
-     * Adds the extension point to the plugin, and sets the default value for
-     * the extension point to the given value.
-     *
-     * @param string  $extensionPoint
-     * @param boolean $isOptional
-     * @param boolean $isMultiple
-     * @param array   $defaltValues
-     */
-    protected function addExtensionPoint(
-        $extensionPoint,
-        $isOptional = false,
-        $isMultiple = false,
-        $defaultValues = array()
-                                         )
-    {
-        $config = $this->context->getConfiguration();
-        if (!$config->hasExtensionPoint($this->getName(), $extensionPoint)) {
-            $config->defineServicePoint($this->getName(),
-                                        $extensionPoint,
-                                        $isOptional,
-                                        $isMultiple,
-                                        $defaultValues
-                                        );
-        }
-    }
-
-    // }}}
-    // {{{ addConfigurationPoint()
-
-    /**
-     * Adds the configuration point to the plugin, and sets the default value
-     * for the configuration point to the given value.
-     *
-     * @param string  $configurationPoint
-     * @param boolean $isOptional
-     * @param boolean $isMultiple
-     * @param array   $defaltValues
-     */
-    protected function addConfigurationPoint(
-        $configurationPoint,
-        $isOptional = false,
-        $isMultiple = false,
-        $defaultValues = array()
-                                             )
-    {
-        $config = $this->context->getConfiguration();
-        if (!$config->hasExtensionPoint($this->getName(), $configurationPoint)) {
-            $config->defineValuePoint($this->getName(),
-                                      $configurationPoint,
-                                      $isOptional,
-                                      $isMultiple,
-                                      $defaultValues
-                                      );
-        }
-    }
 
     /**#@-*/
 

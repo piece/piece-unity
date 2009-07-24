@@ -87,6 +87,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SESSION = array();
         $this->cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
+        $this->config->getFeature($this->serviceName)->setScope('prototype');
     }
 
     /**
@@ -236,7 +237,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $this->addExtension('flowExecutionTicketKey', '_foo');
         $this->addExtension('useFullFlowNameAsViewPrefix', false);
         $this->config->defineService('Piece_Unity_Plugin_Renderer_PHP');
-        $this->config->lazyAddExtension('Piece_Unity_Plugin_Renderer_PHP',
+        $this->config->addExtension('Piece_Unity_Plugin_Renderer_PHP',
                                         'templateDirectory',
                                         $this->cacheDirectory
                                         );

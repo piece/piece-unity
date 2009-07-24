@@ -96,21 +96,6 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
      * @access protected
      */
 
-    // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
-     */
-    protected function initialize()
-    {
-        $this->addConfigurationPoint('addSessionID', false, false, false);
-        $this->addConfigurationPoint('isExternal', false, false, false);
-        $this->addConfigurationPoint('addFlowExecutionTicket', false, false, false);
-    }
-
     /**#@-*/
 
     /**#@+

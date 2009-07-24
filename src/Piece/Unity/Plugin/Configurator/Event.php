@@ -91,18 +91,6 @@ class Piece_Unity_Plugin_Configurator_Event extends Piece_Unity_Plugin_Common im
      * @access protected
      */
 
-    // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     */
-    protected function initialize()
-    {
-        $this->addConfigurationPoint('eventNameKey', true, false, '_event');
-        $this->addConfigurationPoint('eventName', true);
-    }
-
     /**#@-*/
 
     /**#@+

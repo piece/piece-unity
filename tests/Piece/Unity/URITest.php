@@ -125,7 +125,7 @@ class Piece_Unity_URITest extends Piece_Unity_PHPUnit_TestCase
         $_SERVER['HTTP_X_FORWARDED_SERVER'] = 'example.org';
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        Piece_Unity_Context::singleton()->setProxyPath('/foo');
+        $this->context->setProxyPath('/foo');
         $uri = new Piece_Unity_URI('http://example.com/foo/bar/baz.php');
 
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI('https'));
@@ -146,7 +146,7 @@ class Piece_Unity_URITest extends Piece_Unity_PHPUnit_TestCase
     {
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
-        Piece_Unity_Context::singleton()->setProxyPath('/foo');
+        $this->context->setProxyPath('/foo');
 
         $uri = new Piece_Unity_URI('http://example.com/foo/bar/baz.php');
 

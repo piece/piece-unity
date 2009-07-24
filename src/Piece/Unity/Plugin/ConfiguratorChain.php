@@ -94,25 +94,6 @@ class Piece_Unity_Plugin_ConfiguratorChain extends Piece_Unity_Plugin_Common
      * @access protected
      */
 
-    // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     */
-    protected function initialize()
-    {
-        $this->addExtensionPoint('requiredConfigurators', false, true,
-                                 array('Piece_Unity_Plugin_Configurator_AppRoot',
-                                       'Piece_Unity_Plugin_Configurator_Env',
-                                       'Piece_Unity_Plugin_Configurator_Event',
-                                       'Piece_Unity_Plugin_Configurator_Proxy',
-                                       'Piece_Unity_Plugin_Configurator_Request',
-                                       'Piece_Unity_Plugin_Configurator_Validation')
-                                 );
-        $this->addExtensionPoint('configurators', true, true);
-    }
-
     /**#@-*/
 
     /**#@+

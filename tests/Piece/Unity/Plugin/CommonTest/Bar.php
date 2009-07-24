@@ -86,11 +86,6 @@ class Piece_Unity_Plugin_CommonTest_Bar extends Piece_Unity_Plugin_Common
      * @access protected
      */
 
-    protected function initialize()
-    {
-        $this->addExtensionPoint('baz', false, false, 'Piece_Unity_Plugin_CommonTest_Qux');
-    }
-
     /**#@-*/
 
     /**#@+

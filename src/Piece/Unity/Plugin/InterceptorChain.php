@@ -97,19 +97,6 @@ class Piece_Unity_Plugin_InterceptorChain extends Piece_Unity_Plugin_Common
      * @access protected
      */
 
-    // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
-     */
-    protected function initialize()
-    {
-        $this->addExtensionPoint('interceptors', true, true, 'Piece_Unity_Plugin_Interceptor_Session');
-    }
-
     /**#@-*/
 
     /**#@+

@@ -81,11 +81,11 @@ class Piece_Unity_Plugin_ViewTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function provideBuiltinViewElements()
     {
-        $this->config->lazyAddExtension(
+        $this->config->addExtension(
             'Piece_Unity_Plugin_Renderer_PHP',
             'templateDirectory',
             dirname(__FILE__) . '/' . basename(__FILE__, '.php')
-                                        );
+                                    );
         $this->context->setView('Try');
         $this->instantiateFeature()->invoke();
         $elements = $this->context->getViewElement()->getElements();

@@ -220,30 +220,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      * @access protected
      */
 
-    // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
-     */
-    protected function initialize()
-    {
-        $this->addConfigurationPoint('actionDirectory');
-        $this->addConfigurationPoint('cacheDirectory');
-        $this->addConfigurationPoint('flowExecutionTicketKey', false, false, '_flowExecutionTicket');
-        $this->addConfigurationPoint('bindActionsWithFlowExecution', false, false, true);
-        $this->addConfigurationPoint('enableGC', false, false, false);
-        $this->addConfigurationPoint('gcExpirationTime', false, false, 1440);
-        $this->addConfigurationPoint('useGCFallback', false, false, false);
-        $this->addConfigurationPoint('flowMappings', true, false);
-        $this->addConfigurationPoint('configDirectory');
-        $this->addConfigurationPoint('configExtension', false, false, '.flow');
-        $this->addConfigurationPoint('useFullFlowNameAsViewPrefix', false, false, true);
-        $this->addConfigurationPoint('gcFallbackURI', true);
-    }
-
     /**#@-*/
 
     /**#@+

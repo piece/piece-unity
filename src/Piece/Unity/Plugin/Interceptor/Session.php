@@ -104,21 +104,6 @@ class Piece_Unity_Plugin_Interceptor_Session extends Piece_Unity_Plugin_Common i
      * @access protected
      */
 
-    // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 1.6.0
-     */
-    protected function initialize()
-    {
-        $this->addConfigurationPoint('enableExpiration', false, false, false);
-        $this->addConfigurationPoint('expirationTime', false, false, 1440);
-        $this->addConfigurationPoint('expirationFallbackURI', true);
-    }
-
     /**#@-*/
 
     /**#@+

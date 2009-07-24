@@ -99,24 +99,6 @@ class Piece_Unity_Plugin_Configurator_Validation extends Piece_Unity_Plugin_Comm
      * @access protected
      */
 
-    // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     */
-    protected function initialize()
-    {
-        $this->addConfigurationPoint('configDirectory', true);
-        $this->addConfigurationPoint('cacheDirectory', true);
-        $this->addConfigurationPoint('validatorDirectories', true, true);
-        $this->addConfigurationPoint('filterDirectories', true, true);
-        $this->addConfigurationPoint('validatorPrefixes', true, true);
-        $this->addConfigurationPoint('filterPrefixes', true, true);
-        $this->addConfigurationPoint('template', true);
-        $this->addConfigurationPoint('useUnderscoreAsDirectorySeparator', false, false, false);
-    }
-
     /**#@-*/
 
     /**#@+

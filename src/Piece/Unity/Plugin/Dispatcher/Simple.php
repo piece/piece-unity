@@ -139,21 +139,6 @@ class Piece_Unity_Plugin_Dispatcher_Simple extends Piece_Unity_Plugin_Common
      * @access protected
      */
 
-    // }}}
-    // {{{ initialize()
-
-    /**
-     * Defines and initializes extension points and configuration points.
-     *
-     * @since Method available since Release 0.6.0
-     */
-    protected function initialize()
-    {
-        $this->addConfigurationPoint('actionDirectory', true);
-        $this->addConfigurationPoint('useDefaultEvent', false, false, false);
-        $this->addConfigurationPoint('defaultEventName', true);
-    }
- 
     /**#@-*/
 
     /**#@+
