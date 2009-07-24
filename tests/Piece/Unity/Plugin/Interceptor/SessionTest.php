@@ -90,7 +90,7 @@ class Piece_Unity_Plugin_Interceptor_SessionTest extends Piece_Unity_PHPUnit_Tes
         $this->addExtension('enableExpiration', true);
         $this->addExtension('expirationTime', 1);
         $this->addExtension('expirationFallbackURI', 'http://example.org/');
-        $session = $this->instantiateFeature();
+        $session = $this->materializeFeature();
         $doContinue = @$session->intercept();
 
         $this->assertTrue($doContinue);
@@ -98,7 +98,7 @@ class Piece_Unity_Plugin_Interceptor_SessionTest extends Piece_Unity_PHPUnit_Tes
         sleep(2);
 
         $this->initializeContext();
-        $session = $this->instantiateFeature();
+        $session = $this->materializeFeature();
         $doContinue = @$session->intercept();
 
         $this->assertFalse($doContinue);
@@ -113,7 +113,7 @@ class Piece_Unity_Plugin_Interceptor_SessionTest extends Piece_Unity_PHPUnit_Tes
         $this->addExtension('enableExpiration', true);
         $this->addExtension('expirationTime', 1);
         $this->addExtension('expirationFallbackURI', 'http://example.org/');
-        $session = $this->instantiateFeature();
+        $session = $this->materializeFeature();
         $doContinue = @$session->intercept();
 
         $this->assertTrue($doContinue);
@@ -123,7 +123,7 @@ class Piece_Unity_Plugin_Interceptor_SessionTest extends Piece_Unity_PHPUnit_Tes
         sleep(2);
 
         $this->initializeContext();
-        $session = $this->instantiateFeature();
+        $session = $this->materializeFeature();
         $doContinue = @$session->intercept();
 
         $this->assertFalse($doContinue);
@@ -131,7 +131,7 @@ class Piece_Unity_Plugin_Interceptor_SessionTest extends Piece_Unity_PHPUnit_Tes
         $this->assertArrayHasKey('foo', $_SESSION);
 
         $this->initializeContext();
-        $session = $this->instantiateFeature();
+        $session = $this->materializeFeature();
         $doContinue = @$session->intercept();
 
         $this->assertTrue($doContinue);

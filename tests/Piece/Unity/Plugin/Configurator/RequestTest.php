@@ -85,7 +85,7 @@ class Piece_Unity_Plugin_Configurator_RequestTest extends Piece_Unity_PHPUnit_Te
 
         $this->initializeContext();
         $this->addExtension('importPathInfo', true);
-        $this->instantiateFeature()->configure();
+        $this->materializeFeature()->configure();
         $request = $this->context->getRequest();
 
         $this->assertEquals('bar', $request->getParameter('foo'));

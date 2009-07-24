@@ -263,7 +263,7 @@ if (\$code == E_USER_WARNING) {
     protected function render()
     {
         ob_start();
-        $this->instantiateFeature()->render();
+        $this->materializeFeature()->render();
         $buffer = ob_get_contents();
         ob_end_clean();
 

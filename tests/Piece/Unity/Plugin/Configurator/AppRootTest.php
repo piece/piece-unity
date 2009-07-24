@@ -82,7 +82,7 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends Piece_Unity_PHPUnit_Te
     {
         $appRoot = realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..');
         $this->addExtension('appRoot', $appRoot);
-        $this->instantiateFeature()->configure();
+        $this->materializeFeature()->configure();
 
         $this->assertEquals($appRoot, getcwd());
     }
@@ -95,7 +95,7 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends Piece_Unity_PHPUnit_Te
     {
         $appRoot = '/foo/bar';
         $this->addExtension('appRoot', $appRoot);
-        @$this->instantiateFeature()->configure();
+        @$this->materializeFeature()->configure();
     }
 
     /**
@@ -105,7 +105,7 @@ class Piece_Unity_Plugin_Configurator_AppRootTest extends Piece_Unity_PHPUnit_Te
     {
         $appRootPath = '/foo/bar';
         $this->addExtension('appRootPath', $appRootPath);
-        $this->instantiateFeature()->configure();
+        $this->materializeFeature()->configure();
 
         $this->assertEquals($appRootPath, $this->context->getAppRootPath());
     }

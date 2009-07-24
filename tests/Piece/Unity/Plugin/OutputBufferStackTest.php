@@ -81,7 +81,7 @@ class Piece_Unity_Plugin_OutputBufferStackTest extends Piece_Unity_PHPUnit_TestC
     public function invokeAFilter()
     {
         $this->addExtension('filters', __CLASS__ . '_First');
-        $stack = $this->instantiateFeature();
+        $stack = $this->materializeFeature();
         $stack->invoke();
 
         while (ob_get_level()) {
@@ -99,7 +99,7 @@ class Piece_Unity_Plugin_OutputBufferStackTest extends Piece_Unity_PHPUnit_TestC
     {
         $this->addExtension('filters', __CLASS__ . '_First');
         $this->addExtension('filters', __CLASS__ . '_Second');
-        $stack = $this->instantiateFeature();
+        $stack = $this->materializeFeature();
         $stack->invoke();
 
         while (ob_get_level()) {

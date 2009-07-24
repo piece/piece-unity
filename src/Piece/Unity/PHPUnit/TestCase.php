@@ -124,9 +124,9 @@ abstract class Piece_Unity_PHPUnit_TestCase extends PHPUnit_Framework_TestCase
         $this->config->addExtension($this->serviceName, $extensionPointName, $extension);
     }
 
-    protected function instantiateFeature()
+    protected function materializeFeature()
     {
-        return $this->config->instantiateFeature($this->serviceName);
+        return $this->config->materializeFeature($this->serviceName);
     }
 
     /**#@-*/

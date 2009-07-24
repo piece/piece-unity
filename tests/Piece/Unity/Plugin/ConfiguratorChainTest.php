@@ -81,7 +81,7 @@ class Piece_Unity_Plugin_ConfiguratorChainTest extends Piece_Unity_PHPUnit_TestC
     public function invokeAConfigurator()
     {
         $this->addExtension('configurators', __CLASS__ . '_FirstConfigurator');
-        $this->instantiateFeature()->invoke();
+        $this->materializeFeature()->invoke();
 
         $this->assertTrue($this->context->hasAttribute('FirstConfiguratorCalled'));
         $this->assertTrue($this->context->hasAttribute('FirstConfiguratorCalled'));
@@ -94,7 +94,7 @@ class Piece_Unity_Plugin_ConfiguratorChainTest extends Piece_Unity_PHPUnit_TestC
     {
         $this->addExtension('configurators', __CLASS__ . '_FirstConfigurator');
         $this->addExtension('configurators', __CLASS__ . '_SecondConfigurator');
-        $this->instantiateFeature()->invoke();
+        $this->materializeFeature()->invoke();
 
         $this->assertTrue($this->context->hasAttribute('FirstConfiguratorCalled'));
         $this->assertTrue($this->context->getAttribute('FirstConfiguratorCalled'));

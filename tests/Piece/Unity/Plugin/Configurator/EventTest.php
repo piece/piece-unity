@@ -90,7 +90,7 @@ class Piece_Unity_Plugin_Configurator_EventTest extends Piece_Unity_PHPUnit_Test
 
         $this->initializeContext();
         $this->addExtension('eventNameKey', '_foo');
-        $this->instantiateFeature()->configure();
+        $this->materializeFeature()->configure();
 
         $this->assertEquals('bar', $this->context->getEventName());
     }
@@ -104,7 +104,7 @@ class Piece_Unity_Plugin_Configurator_EventTest extends Piece_Unity_PHPUnit_Test
 
         $this->initializeContext();
         $this->addExtension('eventName', 'bar');
-        $this->instantiateFeature()->configure();
+        $this->materializeFeature()->configure();
 
         $this->assertEquals('bar', $this->context->getEventName());
     }

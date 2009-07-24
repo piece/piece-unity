@@ -81,7 +81,7 @@ class Piece_Unity_Plugin_InterceptorChainTest extends Piece_Unity_PHPUnit_TestCa
     public function invokeAInterceptor()
     {
         $this->addExtension('interceptors', __CLASS__ . '_First');
-        $chain = $this->instantiateFeature();
+        $chain = $this->materializeFeature();
         $chain->invoke();
 
         $this->assertTrue($this->context->hasAttribute('FirstInterceptorCalled'));
@@ -95,7 +95,7 @@ class Piece_Unity_Plugin_InterceptorChainTest extends Piece_Unity_PHPUnit_TestCa
     {
         $this->addExtension('interceptors', __CLASS__ . '_First');
         $this->addExtension('interceptors', __CLASS__ . '_Second');
-        $chain = $this->instantiateFeature();
+        $chain = $this->materializeFeature();
         $chain->invoke();
 
         $this->assertTrue($this->context->hasAttribute('FirstInterceptorCalled'));

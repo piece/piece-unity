@@ -87,7 +87,7 @@ class Piece_Unity_Plugin_ViewTest extends Piece_Unity_PHPUnit_TestCase
             dirname(__FILE__) . '/' . basename(__FILE__, '.php')
                                     );
         $this->context->setView('Try');
-        $this->instantiateFeature()->invoke();
+        $this->materializeFeature()->invoke();
         $elements = $this->context->getViewElement()->getElements();
 
         $this->assertEquals(9, count($elements));

@@ -100,7 +100,7 @@ class Piece_Unity_Plugin_ViewSchemeHandler extends Piece_Unity_Plugin_Common
         $renderer =
             !$positionOfColon ? $this->html
                               : $this->{ substr($viewString, 0, $positionOfColon) };
-        $this->context->getConfiguration()->instantiateFeature($renderer)->render();
+        $this->context->getConfiguration()->materializeFeature($renderer)->render();
     }
 
     /**#@-*/

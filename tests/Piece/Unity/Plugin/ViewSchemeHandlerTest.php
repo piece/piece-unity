@@ -86,7 +86,7 @@ class Piece_Unity_Plugin_ViewSchemeHandlerTest extends Piece_Unity_PHPUnit_TestC
             dirname(__FILE__) . '/' . basename(__FILE__, '.php')
                                         );
         $this->context->setView('html:Try');
-        $renderer = $this->instantiateFeature();
+        $renderer = $this->materializeFeature();
         ob_start();
         $renderer->invoke();
         ob_end_clean();
@@ -101,7 +101,7 @@ class Piece_Unity_Plugin_ViewSchemeHandlerTest extends Piece_Unity_PHPUnit_TestC
     public function raiseAnExceptionIfTheViewStringIsStartedWithColon()
     {
         $this->context->setView(':Try');
-        $this->instantiateFeature()->invoke();
+        $this->materializeFeature()->invoke();
     }
 
     /**#@-*/

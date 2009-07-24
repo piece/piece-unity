@@ -111,7 +111,7 @@ class Piece_Unity
 
         Piece_Unity_Context::singleton()->setConfiguration($config);
 
-        return $config->instantiateFeature(__CLASS__);
+        return $config->materializeFeature(__CLASS__);
     }
 
     /**#@-*/

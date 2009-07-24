@@ -81,7 +81,7 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends Piece_Unity_PHPUnit_Test
     public function setTheProxyPath()
     {
         $this->addExtension('proxyPath', '/foo/bar');
-        $this->instantiateFeature()->configure();
+        $this->materializeFeature()->configure();
 
         $this->assertEquals('/foo/bar', $this->context->getProxyPath());
     }
@@ -99,7 +99,7 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends Piece_Unity_PHPUnit_Test
         $this->initializeContext();
         $this->context->setAppRootPath('/foo');
         $this->addExtension('proxyPath', '/bar');
-        $this->instantiateFeature()->configure();
+        $this->materializeFeature()->configure();
 
         $this->assertEquals('/bar/baz', $this->context->getBasePath());
         $this->assertEquals('/bar/baz/qux.php', $this->context->getScriptName());
@@ -119,7 +119,7 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends Piece_Unity_PHPUnit_Test
         $this->initializeContext();
         $this->context->setAppRootPath('/foo');
         $this->addExtension('proxyPath', '/bar');
-        $this->instantiateFeature()->configure();
+        $this->materializeFeature()->configure();
 
         $this->assertEquals('/baz', $this->context->getBasePath());
         $this->assertEquals('/baz/qux.php', $this->context->getScriptName());
@@ -136,7 +136,7 @@ class Piece_Unity_Plugin_Configurator_ProxyTest extends Piece_Unity_PHPUnit_Test
 
         $this->addExtension('proxyPath', '/foo');
         $this->addExtension('adjustSessionCookiePath', false);
-        $this->instantiateFeature()->configure();
+        $this->materializeFeature()->configure();
 
         $this->assertEquals('/bar', ini_get('session.cookie_path'));
 

@@ -117,7 +117,7 @@ class Piece_Unity_Plugin_Configurator_ValidationTest extends Piece_Unity_PHPUnit
         $this->addExtension('filterDirectories', $validatorDirectory);
         $this->addExtension('validatorPrefixes', __CLASS__);
         $this->addExtension('filterPrefixes', __CLASS__);
-        $this->instantiateFeature()->configure();
+        $this->materializeFeature()->configure();
 
         $validation = $this->context->getValidation();
         $validationConfig = $validation->getConfiguration();

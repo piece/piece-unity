@@ -83,7 +83,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
         $this->context->setView('http://example.org/foo.php');
-        $redirection = $this->instantiateFeature();
+        $redirection = $this->materializeFeature();
         $redirection->render();
 
         $this->assertAttributeEquals('http://example.org/foo.php',
@@ -101,7 +101,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
         $_SERVER['SERVER_PORT'] = '8201';
         $this->context->setView('http://example.org/foo/bar.php');
         $this->context->setProxyPath('/foo');
-        $redirection = $this->instantiateFeature();
+        $redirection = $this->materializeFeature();
         $redirection->render();
 
         $this->assertEquals('http://foo.example.org:8201/bar.php',
@@ -120,7 +120,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
         $_SERVER['SERVER_PORT'] = '8201';
         $this->context->setView('http://example.org/foo/bar.php');
         $this->context->setProxyPath('/foo');
-        $redirection = $this->instantiateFeature();
+        $redirection = $this->materializeFeature();
         $redirection->render();
 
         $this->assertAttributeEquals('http://foo.example.org:8201/bar.php',
@@ -138,7 +138,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
         $_SERVER['SERVER_PORT'] = '8201';
         $this->context->setView('https://example.org/foo/bar.php');
         $this->context->setProxyPath('/foo');
-        $redirection = $this->instantiateFeature();
+        $redirection = $this->materializeFeature();
         $redirection->render();
 
         $this->assertAttributeEquals('https://foo.example.org:8201/bar.php',
@@ -158,7 +158,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
         $_SERVER['SERVER_PORT'] = '8201';
         $this->context->setView('http://example.org/foo/bar.php');
         $this->context->setProxyPath('/foo');
-        $redirection = $this->instantiateFeature();
+        $redirection = $this->materializeFeature();
         $redirection->render();
 
         $this->assertAttributeEquals('http://foo.example.org:8201/bar.php',
@@ -176,7 +176,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
         $this->context->setView('http://example.org/foo.php?__eventNameKey=bar');
-        $redirection = $this->instantiateFeature();
+        $redirection = $this->materializeFeature();
         $redirection->render();
 
         $this->assertAttributeEquals('http://example.org/foo.php?_event=bar',
@@ -194,7 +194,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
         $this->context->setView('https://example.org/foo.php');
-        $redirection = $this->instantiateFeature();
+        $redirection = $this->materializeFeature();
         $redirection->render();
 
         $this->assertAttributeEquals('https://example.org/foo.php',
@@ -215,7 +215,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
 
         $this->initializeContext();
         $this->context->setView('self://__eventNameKey=goDisplayForm&bar=baz#zip');
-        $redirection = $this->instantiateFeature();
+        $redirection = $this->materializeFeature();
         $redirection->render();
 
         $this->assertEquals('http://example.org/foo.php?__eventNameKey=goDisplayForm&bar=baz#zip', $this->context->getView());
@@ -233,7 +233,7 @@ class Piece_Unity_Plugin_Renderer_RedirectionTest extends Piece_Unity_PHPUnit_Te
 
         $this->initializeContext();
         $this->context->setView('selfs://__eventNameKey=goDisplayForm&bar=baz#zip');
-        $redirection = $this->instantiateFeature();
+        $redirection = $this->materializeFeature();
         $redirection->render();
 
         $this->assertEquals('https://example.org/foo.php?__eventNameKey=goDisplayForm&bar=baz#zip', $this->context->getView());

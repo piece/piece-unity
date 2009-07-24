@@ -83,7 +83,7 @@ class Piece_Unity_Plugin_Configurator_EnvTest extends Piece_Unity_PHPUnit_TestCa
     public function setTheProxyPath()
     {
         $this->addExtension('proxyPath', '/foo/bar');
-        $this->instantiateFeature()->configure();
+        $this->materializeFeature()->configure();
 
         $this->assertEquals('/foo/bar', $this->context->getProxyPath());
     }

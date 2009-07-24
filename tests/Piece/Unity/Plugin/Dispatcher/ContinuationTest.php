@@ -112,7 +112,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $this->addExtension('useFullFlowNameAsViewPrefix', false);
         $session = $this->context->getSession();
         @$session->start();
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
 
         $this->assertEquals('Counter', $dispatcher->invoke());
 
@@ -128,7 +128,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_GET['_event'] = 'increase';
         $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
         $this->initializeContext();
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $session = $this->context->getSession();
         @$session->start();
         $session->setAttribute($this->readAttribute('Piece_Unity_Plugin_Dispatcher_Continuation', '_sessionKey'), $continuationServer);
@@ -167,7 +167,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
                                         'isExclusive' => true))
                             );
         @$this->context->getSession()->start();
-        $this->instantiateFeature()->invoke();
+        $this->materializeFeature()->invoke();
     }
 
     /**
@@ -190,7 +190,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $this->addExtension('useFullFlowNameAsViewPrefix', false);
         @$this->context->getSession()->start();
 
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
 
         $this->assertEquals('Counter', $dispatcher->invoke());
 
@@ -201,7 +201,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
         $this->initializeContext();
         @$this->context->getSession()->start();
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $this->context->getSession()->setAttribute($this->readAttribute('Piece_Unity_Plugin_Dispatcher_Continuation', '_sessionKey'), $continuationServer);
         $dispatcher->invoke();
         $dispatcher->invoke();
@@ -243,11 +243,11 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
                                         );
         @$this->context->getSession()->start();
 
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $this->context->setView($dispatcher->invoke());
         $dispatcher->publish();
 
-        $renderer = $this->config->instantiateFeature('Piece_Unity_Plugin_Renderer_PHP');
+        $renderer = $this->config->materializeFeature('Piece_Unity_Plugin_Renderer_PHP');
         ob_start();
         $renderer->render();
         $buffer = ob_get_contents();
@@ -277,7 +277,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $this->addExtension('useFullFlowNameAsViewPrefix', false);
         @$this->context->getSession()->start();
 
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Counter', $viewString);
@@ -312,7 +312,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
                             );
         $this->addExtension('useFullFlowNameAsViewPrefix', false);
         @$this->context->getSession()->start();
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
 
         $this->assertEquals('Form', $dispatcher->invoke());
 
@@ -328,7 +328,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $validation = $this->context->getValidation();
         $validation->setConfigDirectory($this->cacheDirectory);
         $validation->setCacheDirectory($this->cacheDirectory);
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
 
         $this->assertEquals('Success', $dispatcher->invoke());
 
@@ -373,7 +373,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $this->addExtension('gcFallbackURI', 'http://www.example.org/');
         $this->addExtension('useFullFlowNameAsViewPrefix', false);
         @$this->context->getSession()->start();
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
 
         $this->assertEquals('Form', $dispatcher->invoke());
 
@@ -385,7 +385,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $session = $this->context->getSession();
         @$session->start();
         $session->setAttribute($this->readAttribute('Piece_Unity_Plugin_Dispatcher_Continuation', '_sessionKey'), $continuationServer);
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         sleep(2);
 
         $this->assertEquals('http://www.example.org/', $dispatcher->invoke());
@@ -416,7 +416,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
                                         'isExclusive' => false))
                             );
         @$this->context->getSession()->start();
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Entry_New', $viewString);
@@ -446,7 +446,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $this->context->setProxyPath('/crud');
         $this->context->setScriptName($this->context->getProxyPath() . $this->context->getScriptName());
         @$this->context->getSession()->start();
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Entry_New_New', $viewString);
@@ -473,7 +473,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
                             );
         $this->context->setProxyPath('/crud');
         @$this->context->getSession()->start();
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Entry_New_New', $viewString);
@@ -500,7 +500,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
                                         'isExclusive' => false))
                             );
         @$this->context->getSession()->start();
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Entry_New_New', $viewString);
@@ -527,7 +527,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
                                         'isExclusive' => false))
                             );
         @$this->context->getSession()->start();
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $dispatcher->invoke();
     }
 
@@ -550,7 +550,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
                                         'isExclusive' => false))
                             );
         @$this->context->getSession()->start();
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $dispatcher->invoke();
         $uri = $this->context->getAttribute('uri');
 
@@ -583,14 +583,14 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
                                   )
                             );
         @$this->context->getSession()->start();
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $dispatcher->invoke();
         $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $_GET['_event'] = null;
         $_GET['_flowExecutionTicket'] = null;
         $this->initializeContext();
         @$this->context->getSession()->start();
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $dispatcher->invoke();
         $uri1 = $this->context->getAttribute('uri');
         $uri2 = Piece_Unity_Service_Continuation::createURI('qux', '/user/authentication.php');

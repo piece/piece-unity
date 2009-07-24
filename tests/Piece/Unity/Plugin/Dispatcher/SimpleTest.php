@@ -93,7 +93,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
     {
         $_GET['_event'] = 'foo';
         $this->initializeContext();
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('foo', $viewString);
@@ -108,7 +108,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
         $GLOBALS['actionCalled'] = false;
         $this->initializeContext();
         $this->addExtension('actionDirectory', $this->cacheDirectory);
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('SimpleExample', $viewString);
@@ -125,7 +125,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
         $GLOBALS['RelativePathVulnerabilityActionLoaded'] = false;
         $this->initializeContext();
         $this->addExtension('actionDirectory', $this->cacheDirectory);
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('../RelativePathVulnerability', $viewString);
@@ -153,7 +153,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
         $validation->setConfigDirectory($this->cacheDirectory);
         $validation->setCacheDirectory($this->cacheDirectory);
         $this->addExtension('actionDirectory', $this->cacheDirectory);
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $dispatcher->invoke();
 
         $viewElement = $this->context->getViewElement();
@@ -177,7 +177,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
         $this->initializeContext();
         $this->addExtension('useDefaultEvent', true);
         $this->addExtension('defaultEventName', 'Index');
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Index', $viewString);
@@ -194,7 +194,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
         $this->initializeContext();
         $this->addExtension('useDefaultEvent', true);
         $this->addExtension('defaultEventName', 'Index');
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Index', $viewString);
@@ -211,7 +211,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
         $this->initializeContext();
         $this->addExtension('useDefaultEvent', true);
         $this->addExtension('defaultEventName', 'Index');
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Foo', $viewString);
@@ -228,7 +228,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
         $this->initializeContext();
         $this->addExtension('useDefaultEvent', false);
         $this->addExtension('defaultEventName', 'Index');
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $viewString = $dispatcher->invoke();
 
         $this->assertEquals('Foo', $viewString);
@@ -244,7 +244,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
         $_GET['_event'] = 'ActionShouldBeAbleToReturnViewString';
         $this->initializeContext();
         $this->addExtension('actionDirectory', $this->cacheDirectory);
-        $dispatcher = $this->instantiateFeature();
+        $dispatcher = $this->materializeFeature();
         $viewString = $dispatcher->invoke();
         $eventName = $this->context->getEventName();
 

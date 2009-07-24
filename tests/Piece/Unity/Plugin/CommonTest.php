@@ -84,7 +84,7 @@ class Piece_Unity_Plugin_CommonTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function getTheConfiguration()
     {
-        $this->assertEquals('baz', $this->config->instantiateFeature('foo')->bar);
+        $this->assertEquals('baz', $this->config->materializeFeature('foo')->bar);
     }
 
     /**
@@ -92,7 +92,7 @@ class Piece_Unity_Plugin_CommonTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function getTheExtension()
     {
-        $this->assertEquals('qux', $this->config->instantiateFeature('bar')->invoke());
+        $this->assertEquals('qux', $this->config->materializeFeature('bar')->invoke());
     }
 
     /**#@-*/
