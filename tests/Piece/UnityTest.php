@@ -87,7 +87,8 @@ class Piece_UnityTest extends Piece_Unity_PHPUnit_TestCase
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_GET['_event'] = 'foo';
-        $runtime = Piece_Unity::createRuntime(array($this, 'configureRuntime'));
+        $runtime =
+            Piece_Unity::createRuntime(array(), array($this, 'configureRuntime'));
         ob_start();
         $runtime->dispatch();
         ob_end_clean();

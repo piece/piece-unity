@@ -67,8 +67,6 @@ class Piece_Unity
      * @access private
      */
 
-    private static $configDirectories = array();
-
     /**#@-*/
 
     /**#@+
@@ -87,32 +85,21 @@ class Piece_Unity
     }
 
     // }}}
-    // {{{ addConfigDirectory()
-
-    /**
-     * @param string $configDirectory
-     * @since Method available since Release 2.0.0dev1
-     */
-    public static function addConfigDirectory($configDirectory)
-    {
-        self::$configDirectories[] = $configDirectory;
-    }
-
-    // }}}
     // {{{ createRuntime()
 
     /**
      * Creates the Piece_Unity object for the current request, and invokes the given
      * callback for any configuration.
      *
+     * @param array    $configDirectories
      * @param callback $callback
      * @return Piece_Unity
      * @since Method available since Release 1.5.0
      */
-    public static function createRuntime($callback = null)
+    public static function createRuntime(array $configDirectories, $callback = null)
     {
         $configLoader = new Piece_Unity_ConfigLoader();
-        foreach (self::$configDirectories as $configDirectory) {
+        foreach ($configDirectories as $configDirectory) {
             $configLoader->addConfigDirectory($configDirectory);
         }
 
