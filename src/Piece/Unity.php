@@ -35,10 +35,6 @@
  * @since      File available since Release 0.1.0
  */
 
-Piece_Unity::addConfigDirectory(
-    dirname(__FILE__) . '/../../data/pear.piece-framework.com/config'
-                                );
-
 // {{{ Piece_Unity
 
 /**
@@ -115,7 +111,7 @@ class Piece_Unity
      */
     public static function createRuntime($callback = null)
     {
-        $configLoader = new Piece_Config_ConfigLoader();
+        $configLoader = new Piece_Unity_ConfigLoader();
         foreach (self::$configDirectories as $configDirectory) {
             $configLoader->addConfigDirectory($configDirectory);
         }
