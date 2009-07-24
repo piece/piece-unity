@@ -115,12 +115,12 @@ class Piece_Unity
      */
     public static function createRuntime($callback = null)
     {
-        $generator = new Piece_Config_Generator();
+        $configLoader = new Piece_Config_ConfigLoader();
         foreach (self::$configDirectories as $configDirectory) {
-            $generator->addConfigDirectory($configDirectory);
+            $configLoader->addConfigDirectory($configDirectory);
         }
 
-        $config = $generator->generate();
+        $config = $configLoader->load();
 
         if (!is_null($callback)) {
             call_user_func($callback, $config);

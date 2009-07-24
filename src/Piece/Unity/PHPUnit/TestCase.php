@@ -104,13 +104,13 @@ abstract class Piece_Unity_PHPUnit_TestCase extends PHPUnit_Framework_TestCase
 
     protected function initializeConfig()
     {
-        $this->generator = new Piece_Config_Generator();
-        $this->generator->addConfigDirectory(dirname(__FILE__) . '/../../../../data/pear.piece-framework.com/config');
+        $this->configLoader = new Piece_Config_ConfigLoader();
+        $this->configLoader->addConfigDirectory(dirname(__FILE__) . '/../../../../data/pear.piece-framework.com/config');
         if (!is_null($this->cacheDirectory)) {
-            $this->generator->addConfigDirectory($this->cacheDirectory);
+            $this->configLoader->addConfigDirectory($this->cacheDirectory);
         }
 
-        $this->config = $this->generator->generate();
+        $this->config = $this->configLoader->load();
     }
 
     protected function initializeContext()
