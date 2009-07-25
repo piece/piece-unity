@@ -114,9 +114,8 @@ abstract class Piece_Unity_PHPUnit_TestCase extends PHPUnit_Framework_TestCase
 
     protected function initializeContext()
     {
-        Piece_Unity_Context::clear();
-        $this->context = Piece_Unity_Context::singleton();
-        $this->context->setConfiguration($this->config);
+        $this->config->removeCache('Piece_Unity_Context');
+        $this->context = $this->config->materializeFeature('Piece_Unity_Context');
     }
 
     protected function addExtension($extensionPointName, $extension)
