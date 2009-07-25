@@ -126,10 +126,10 @@ class Piece_Unity_Validation
     {
         $script = new Piece_Right_Validation_Script($this->_configDirectory,
                                                     $this->_cacheDirectory,
-                                                    array(__CLASS__, 'getFieldValueFromContext'),
-                                                    array(__CLASS__, 'setResultsAsViewElementAndFlowAttribute')
+                                                    array($this, 'getFieldValueFromContext'),
+                                                    array($this, 'setResultsAsViewElementAndFlowAttribute')
                                                     );
-        $script->setPayload(Piece_Unity_Context::singleton());
+        $script->setPayload($this->context);
         $script->setTemplate($this->_template);
         $this->_results = $script->run($validationSetName,
                                        $container,
@@ -150,10 +150,9 @@ class Piece_Unity_Validation
      * @param string $fieldName
      * @return mixed
      */
-    public static function getFieldValueFromContext($fieldName)
+    public function getFieldValueFromContext($fieldName)
     {
-        return @Piece_Unity_Context::singleton()->getRequest()
-                                                ->getParameter($fieldName);
+        return @$this->context->getRequest()->getParameter($fieldName);
     }
 
     // }}}
@@ -199,14 +198,13 @@ class Piece_Unity_Validation
     {
         $name = self::_createResultsName($validationSetName);
 
-        $context = Piece_Unity_Context::singleton();
-        $continuation = $context->getContinuation();
+        $continuation = $this->context->getContinuation();
         if (!is_null($continuation)) {
             if ($continuation->hasAttribute($name)) {
                 return $continuation->getAttribute($name);
             }
         } else {
-            $viewElement = $context->getViewElement();
+            $viewElement = $this->context->getViewElement();
             if ($viewElement->hasElement($name)) {
                 return $viewElement->getElement($name);
             }
@@ -225,12 +223,11 @@ class Piece_Unity_Validation
      * @param string              $validationSetName
      * @param Piece_Right_Results $results
      */
-    public static function setResultsAsViewElementAndFlowAttribute($validationSetName, $results)
+    public function setResultsAsViewElementAndFlowAttribute($validationSetName, $results)
     {
-        $context = Piece_Unity_Context::singleton();
-        $context->getViewElement()->setElement(self::_createResultsName($validationSetName), $results);
+        $this->context->getViewElement()->setElement(self::_createResultsName($validationSetName), $results);
 
-        $continuation = $context->getContinuation();
+        $continuation = $this->context->getContinuation();
         if (!is_null($continuation)) {
             $continuation->setAttribute(self::_createResultsName($validationSetName), $results);
         }
@@ -388,6 +385,18 @@ class Piece_Unity_Validation
     public static function setUseUnderscoreAsDirectorySeparator($useUnderscoreAsDirectorySeparator)
     {
         Piece_Right_Config_Factory::setUseUnderscoreAsDirectorySeparator($useUnderscoreAsDirectorySeparator);
+    }
+
+    // }}}
+    // {{{ setContext()
+
+    /**
+     * @param Piece_Unity_Context $context
+     * @since Method available since Release 2.0.0dev1
+     */
+    public function setContext(Piece_Unity_Context $context)
+    {
+        $this->context = $context;
     }
 
     /**#@-*/
