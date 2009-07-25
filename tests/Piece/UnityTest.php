@@ -92,9 +92,17 @@ class Piece_UnityTest extends PHPUnit_Framework_TestCase
             Piece_Unity::createRuntime(array(), array($this, 'configureRuntime'));
         ob_start();
         $runtime->dispatch();
+        $contents = ob_get_contents();
         ob_end_clean();
 
-        $this->assertEquals('foo', Piece_Unity_Context::singleton()->getView());
+        $this->assertEquals('<html>
+  <body>
+    Hello, World
+  </body>
+</html>
+',
+                            $contents
+                            );
     }
 
     /**
