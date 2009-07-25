@@ -166,11 +166,7 @@ abstract class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Commo
         try {
             $this->doRender($isLayout);
         } catch (Piece_Unity_Service_Rendering_NotFoundException $e) {
-            trigger_error('Failed to render a HTML template with the plugin [ ' .
-                          $this->getName() .
-                          ' ]',
-                          E_USER_WARNING
-                          );
+            trigger_error('Failed to render a HTML template', E_USER_WARNING);
             if ($this->useFallback) {
                 $this->context->setView($this->fallbackView);
                 $this->prepareFallback();

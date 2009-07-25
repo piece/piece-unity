@@ -87,9 +87,10 @@ class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common 
         if (!is_null($this->appRoot)) {
             $result = chdir($this->appRoot);
             if (!$result) {
-                throw new Piece_Unity_Exception('Failed calling chdir() for the configuration point [ appRoot ] on the plugin [ ' .
-                                                $this->getName() .
-                                                ' ]'
+                throw new Piece_Unity_Exception(
+                    'Failed to change directory into [ ' .
+                    $this->appRoot .
+                    ' ]'
                                                 );
             }
         }
