@@ -64,7 +64,7 @@ abstract class Piece_Unity_PHPUnit_TestCase extends PHPUnit_Framework_TestCase
     protected $config;
     protected $context;
     protected $serviceName;
-    protected $cacheDirectory;
+    protected $exclusiveDirectory;
 
     /**#@-*/
 
@@ -86,8 +86,8 @@ abstract class Piece_Unity_PHPUnit_TestCase extends PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        if (!is_null($this->cacheDirectory)) {
-            $cache = new Cache_Lite_File(array('cacheDir' => $this->cacheDirectory . '/',
+        if (!is_null($this->exclusiveDirectory)) {
+            $cache = new Cache_Lite_File(array('cacheDir' => $this->exclusiveDirectory . '/',
                                                'masterFile' => '',
                                                'automaticSerialization' => true,
                                                'errorHandlingAPIBreak' => true)
@@ -105,8 +105,8 @@ abstract class Piece_Unity_PHPUnit_TestCase extends PHPUnit_Framework_TestCase
     protected function initializeConfig()
     {
         $configLoader = new Piece_Unity_ConfigLoader();
-        if (!is_null($this->cacheDirectory)) {
-            $configLoader->addConfigDirectory($this->cacheDirectory);
+        if (!is_null($this->exclusiveDirectory)) {
+            $configLoader->addConfigDirectory($this->exclusiveDirectory);
         }
 
         $this->config = $configLoader->load();
