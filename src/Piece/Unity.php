@@ -109,8 +109,6 @@ class Piece_Unity
             call_user_func($callback, $config);
         }
 
-        Piece_Unity_Context::singleton()->setConfiguration($config);
-
         return $config->materializeFeature(__CLASS__);
     }
 
