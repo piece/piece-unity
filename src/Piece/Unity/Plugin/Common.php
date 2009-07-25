@@ -61,8 +61,6 @@ abstract class Piece_Unity_Plugin_Common
      * @access protected
      */
 
-    protected $context;
-
     /**#@-*/
 
     /**#@+
@@ -87,11 +85,7 @@ abstract class Piece_Unity_Plugin_Common
      *
      * @param string $featureName
      */
-    public function __construct($featureName)
-    {
-        $this->_name = $featureName;
-        $this->context = Piece_Unity_Context::singleton();
-    }
+    public function __construct($featureName = null) {}
 
     // }}}
     // {{{ getName()
