@@ -47,7 +47,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.4.0
  */
-class Piece_Unity_Plugin_Controller extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_Controller
 {
 
     // {{{ properties

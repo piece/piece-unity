@@ -48,7 +48,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 1.5.0
  */
-class Piece_Unity_Plugin_ViewSchemeHandler extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_ViewSchemeHandler
 {
 
     // {{{ properties

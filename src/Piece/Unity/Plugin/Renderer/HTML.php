@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.9.0
  */
-abstract class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Renderer_Interface
+abstract class Piece_Unity_Plugin_Renderer_HTML implements Piece_Unity_Plugin_Renderer_Interface
 {
 
     // {{{ properties
@@ -88,13 +88,6 @@ abstract class Piece_Unity_Plugin_Renderer_HTML extends Piece_Unity_Plugin_Commo
                     $useLayout = false;
                 }
             }
-        }
-
-        if (!is_array($this->components)) {
-            throw new Piece_Unity_Exception('The value of the extension point [ components ] on the plug-in [ ' .
-                                            $this->getName() .
-                                            ' ] should be an array'
-                                            );
         }
 
         foreach ($this->components as $extension) {

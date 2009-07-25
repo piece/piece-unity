@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.11.0
  */
-class Piece_Unity_Plugin_ConfiguratorChain extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_ConfiguratorChain
 {
 
     // {{{ properties

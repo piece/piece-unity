@@ -51,7 +51,7 @@
  * @see        Piece_Flow_Continuation_Server, Piece_Flow
  * @since      Class available since Release 0.1.0
  */
-class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Common
+class Piece_Unity_Plugin_Dispatcher_Continuation
 {
 
     // {{{ properties

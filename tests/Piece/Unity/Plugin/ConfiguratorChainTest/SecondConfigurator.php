@@ -48,7 +48,7 @@
  * @see        Piece_Unity_Plugin_ConfiguratorChainTest
  * @since      Class available since Release 0.11.0
  */
-class Piece_Unity_Plugin_ConfiguratorChainTest_SecondConfigurator extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Configurator_Interface
+class Piece_Unity_Plugin_ConfiguratorChainTest_SecondConfigurator implements Piece_Unity_Plugin_Configurator_Interface
 {
 
     // {{{ properties

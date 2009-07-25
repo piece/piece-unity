@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.6.0
  */
-class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Renderer_Interface
+class Piece_Unity_Plugin_Renderer_Redirection implements Piece_Unity_Plugin_Renderer_Interface
 {
 
     // {{{ properties

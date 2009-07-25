@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.11.0
  */
-class Piece_Unity_Plugin_Configurator_Env extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Configurator_Interface
+class Piece_Unity_Plugin_Configurator_Env implements Piece_Unity_Plugin_Configurator_Interface
 {
 
     // {{{ properties

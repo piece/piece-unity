@@ -46,7 +46,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.5.0
  */
-class Piece_Unity_Plugin_Interceptor_Session extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Interceptor_Interface
+class Piece_Unity_Plugin_Interceptor_Session implements Piece_Unity_Plugin_Interceptor_Interface
 {
 
     // {{{ properties

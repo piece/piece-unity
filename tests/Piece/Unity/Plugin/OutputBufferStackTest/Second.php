@@ -48,7 +48,7 @@
  * @see        Piece_Unity_Plugin_OutputBufferStackTest
  * @since      Class available since Release 0.4.0
  */
-class Piece_Unity_Plugin_OutputBufferStackTest_Second extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_OutputFilter_Interface
+class Piece_Unity_Plugin_OutputBufferStackTest_Second implements Piece_Unity_Plugin_OutputFilter_Interface
 {
 
     // {{{ properties

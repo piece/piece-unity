@@ -48,7 +48,7 @@
  * @see        Piece_Unity_Plugin_OutputBufferStackTest
  * @since      Class available since Release 0.4.0
  */
-class Piece_Unity_Plugin_InterceptorChainTest_Second extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Interceptor_Interface
+class Piece_Unity_Plugin_InterceptorChainTest_Second implements Piece_Unity_Plugin_Interceptor_Interface
 {
 
     // {{{ properties

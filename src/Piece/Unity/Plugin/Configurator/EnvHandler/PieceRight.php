@@ -47,7 +47,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 1.1.0
  */
-class Piece_Unity_Plugin_Configurator_EnvHandler_PieceRight extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Configurator_EnvHandler_Interface
+class Piece_Unity_Plugin_Configurator_EnvHandler_PieceRight implements Piece_Unity_Plugin_Configurator_EnvHandler_Interface
 {
 
     // {{{ properties

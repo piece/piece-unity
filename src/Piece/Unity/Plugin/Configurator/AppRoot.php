@@ -47,7 +47,7 @@
  * @version    Release: @package_version@
  * @since      Class available since Release 0.12.0
  */
-class Piece_Unity_Plugin_Configurator_AppRoot extends Piece_Unity_Plugin_Common implements Piece_Unity_Plugin_Configurator_Interface
+class Piece_Unity_Plugin_Configurator_AppRoot implements Piece_Unity_Plugin_Configurator_Interface
 {
 
     // {{{ properties
