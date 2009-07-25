@@ -72,8 +72,6 @@ class Piece_Unity_Plugin_Configurator_ValidationTest extends Piece_Unity_PHPUnit
      * @access private
      */
 
-    private $_exclusiveDirectory;
-
     /**#@-*/
 
     /**#@+
@@ -85,12 +83,12 @@ class Piece_Unity_Plugin_Configurator_ValidationTest extends Piece_Unity_PHPUnit
         parent::setUp();
         Piece_Right_Filter_Factory::clearInstances();
         Piece_Right_Validator_Factory::clearInstances();
-        $this->_exclusiveDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
+        $this->exclusiveDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 
     public function tearDown()
     {
-        $cache = new Cache_Lite_File(array('cacheDir' => $this->_exclusiveDirectory . '/',
+        $cache = new Cache_Lite_File(array('cacheDir' => $this->exclusiveDirectory . '/',
                                            'masterFile' => '',
                                            'automaticSerialization' => true,
                                            'errorHandlingAPIBreak' => true)
@@ -111,8 +109,8 @@ class Piece_Unity_Plugin_Configurator_ValidationTest extends Piece_Unity_PHPUnit
 
         $this->initializeContext();
         $validatorDirectory = dirname(__FILE__) . '/../../../..';
-        $this->addExtension('configDirectory', $this->_exclusiveDirectory);
-        $this->addExtension('cacheDirectory', $this->_exclusiveDirectory);
+        $this->addExtension('configDirectory', $this->exclusiveDirectory);
+        $this->addExtension('cacheDirectory', $this->exclusiveDirectory);
         $this->addExtension('validatorDirectories', $validatorDirectory);
         $this->addExtension('filterDirectories', $validatorDirectory);
         $this->addExtension('validatorPrefixes', __CLASS__);
