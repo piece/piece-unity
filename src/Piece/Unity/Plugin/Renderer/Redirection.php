@@ -131,32 +131,35 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
      */
     private function _buildURI()
     {
-        $uri = new Piece_Unity_URI($this->context->getView());
-        $uri->setIsRedirection(true);
-        $uri->setIsExternal($this->isExternal);
+        $this->uri->setIsRedirection(true);
+        $this->uri->setIsExternal($this->isExternal);
+        $this->uri->setPath($this->context->getView());
 
         $viewElements = $this->context->getViewElement()->getElements();
-        $queryVariables = $uri->getQueryVariables();
+        $queryVariables = $this->uri->getQueryVariables();
         foreach (array_keys($queryVariables) as $elementName) {
             if (array_key_exists($elementName, $viewElements)
                 && is_scalar($viewElements[$elementName])
                 ) {
-                $uri->setQueryVariable($elementName, $viewElements[$elementName]);
+                $this->uri->setQueryVariable(
+                    $elementName, $viewElements[$elementName]
+                                             );
             }
         }
 
         if (!$this->isExternal) {
             if ($this->addSessionID) {
-                $uri->setQueryVariable($viewElements['__sessionName'],
-                                       $viewElements['__sessionID']
-                                       );
+                $this->uri->setQueryVariable($viewElements['__sessionName'],
+                                             $viewElements['__sessionID']
+                                             );
             }
 
             if ($this->addFlowExecutionTicket) {
                 if (array_key_exists('__flowExecutionTicketKey', $viewElements)) {
-                    $uri->setQueryVariable($viewElements['__flowExecutionTicketKey'],
-                                           $viewElements['__flowExecutionTicket']
-                                           );
+                    $this->uri->setQueryVariable(
+                        $viewElements['__flowExecutionTicketKey'],
+                        $viewElements['__flowExecutionTicket']
+                                                 );
                 }
             }
 
@@ -164,14 +167,14 @@ class Piece_Unity_Plugin_Renderer_Redirection extends Piece_Unity_Plugin_Common 
              * Replaces __eventNameKey with the event name key.
              */
             if (array_key_exists('__eventNameKey', $queryVariables)) {
-                $uri->removeQueryVariable('__eventNameKey');
-                $uri->setQueryVariable($this->context->getEventNameKey(),
-                                       $queryVariables['__eventNameKey']
-                                       );
+                $this->uri->removeQueryVariable('__eventNameKey');
+                $this->uri->setQueryVariable($this->context->getEventNameKey(),
+                                             $queryVariables['__eventNameKey']
+                                             );
             }
         }
 
-        $this->_sentURI = $uri->getURI('pass');
+        $this->_sentURI = $this->uri->getURI('pass');
 
         return $this->_sentURI;
     }

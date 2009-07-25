@@ -81,7 +81,6 @@ abstract class Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests extends Piece
     public function setUp()
     {
         parent::setUp();
-        $this->doSetUp();
         self::$hasWarnings = false;
     }
 
@@ -269,11 +268,6 @@ if (\$code == E_USER_WARNING) {
 
         return $buffer;
     }
-
-    /**
-     * @since Method available since Release 1.0.0
-     */
-    abstract protected function doSetUp();
 
     /**
      * @since Method available since Release 1.3.0

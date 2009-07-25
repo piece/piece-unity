@@ -76,6 +76,13 @@ class Piece_Unity_Plugin_Renderer_PHPTest extends Piece_Unity_Plugin_Renderer_HT
      * @access public
      */
 
+    public function setUp()
+    {
+        $this->exclusiveDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
+        parent::setUp();
+        $this->addExtension('templateDirectory', $this->exclusiveDirectory . '/templates/Content');
+    }
+
     /**
      * @test
      * @since Method available since Release 1.5.0
@@ -105,7 +112,6 @@ class Piece_Unity_Plugin_Renderer_PHPTest extends Piece_Unity_Plugin_Renderer_HT
     {
         $this->exclusiveDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
         $this->addExtension('templateDirectory', $this->exclusiveDirectory . '/templates/Content');
-
     }
 
     /**

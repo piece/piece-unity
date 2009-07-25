@@ -75,6 +75,12 @@ class Piece_Unity_Plugin_InterceptorChainTest extends Piece_Unity_PHPUnit_TestCa
      * @access public
      */
 
+    public function setUp()
+    {
+        $this->exclusiveDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
+        parent::setUp();
+    }
+
     /**
      * @test
      */

@@ -148,9 +148,9 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      *
      * @return string
      */
-    public static function getEventName()
+    public function getEventName()
     {
-        return Piece_Unity_Context::singleton()->getEventName();
+        return $this->context->getEventName();
     }
 
     // }}}
@@ -161,9 +161,9 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
      *
      * @return string
      */
-    public static function getFlowExecutionTicket()
+    public function getFlowExecutionTicket()
     {
-        $request = Piece_Unity_Context::singleton()->getRequest();
+        $request = $this->context->getRequest();
         return $request->hasParameter(Piece_Unity_Service_Continuation::getFlowExecutionTicketKey()) ? $request->getParameter(Piece_Unity_Service_Continuation::getFlowExecutionTicketKey()) : null;
     }
 
@@ -243,8 +243,6 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
                                                $this->gcExpirationTime
                                                );
         $continuationServer->setCacheDirectory($this->cacheDirectory);
-        $continuationServer->setEventNameCallback(array(__CLASS__, 'getEventName'));
-        $continuationServer->setFlowExecutionTicketCallback(array(__CLASS__, 'getFlowExecutionTicket'));
         $continuationServer->setFlowIDCallback(array(__CLASS__, 'getFlowID'));
         $continuationServer->setConfigDirectory($this->configDirectory);
         $continuationServer->setConfigExtension($this->configExtension);
@@ -287,6 +285,8 @@ class Piece_Unity_Plugin_Dispatcher_Continuation extends Piece_Unity_Plugin_Comm
                                       );
         }
 
+        $continuationServer->setEventNameCallback(array($this, 'getEventName'));
+        $continuationServer->setFlowExecutionTicketCallback(array($this, 'getFlowExecutionTicket'));
         $this->context->setContinuation($continuationServer->createService());
         $this->_continuationServer = $continuationServer;
     }
