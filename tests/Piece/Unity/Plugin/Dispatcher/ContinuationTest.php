@@ -86,7 +86,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         parent::setUp();
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SESSION = array();
-        $this->cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
+        $this->exclusiveDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
         $this->config->getFeature($this->serviceName)->setScope('prototype');
     }
 
@@ -101,9 +101,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['REQUEST_URI'] = '/counter.php';
 
         $this->initializeContext();
-        $this->addExtension('actionDirectory', $this->cacheDirectory);
-        $this->addExtension('configDirectory', $this->cacheDirectory);
-        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('actionDirectory', $this->exclusiveDirectory);
+        $this->addExtension('configDirectory', $this->exclusiveDirectory);
+        $this->addExtension('cacheDirectory', $this->exclusiveDirectory);
         $this->addExtension('flowMappings',
                             array(array('uri' => '/counter.php',
                                         'flowName' => 'Counter',
@@ -158,9 +158,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/non-existing-flow.php';
         $this->initializeContext();
-        $this->addExtension('actionDirectory', $this->cacheDirectory);
-        $this->addExtension('configDirectory', $this->cacheDirectory);
-        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('actionDirectory', $this->exclusiveDirectory);
+        $this->addExtension('configDirectory', $this->exclusiveDirectory);
+        $this->addExtension('cacheDirectory', $this->exclusiveDirectory);
         $this->addExtension('flowMappings',
                             array(array('uri' => '/non-existing-flow.php',
                                         'flowName' => 'NonExistingFlow',
@@ -179,9 +179,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/counter.php';
         $this->initializeContext();
-        $this->addExtension('actionDirectory', $this->cacheDirectory);
-        $this->addExtension('configDirectory', $this->cacheDirectory);
-        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('actionDirectory', $this->exclusiveDirectory);
+        $this->addExtension('configDirectory', $this->exclusiveDirectory);
+        $this->addExtension('cacheDirectory', $this->exclusiveDirectory);
         $this->addExtension('flowMappings',
                             array(array('uri' => '/counter.php',
                                         'flowName' => 'Counter',
@@ -226,9 +226,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['REQUEST_URI'] = '/counter.php';
 
         $this->initializeContext();
-        $this->addExtension('actionDirectory', $this->cacheDirectory);
-        $this->addExtension('configDirectory', $this->cacheDirectory);
-        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('actionDirectory', $this->exclusiveDirectory);
+        $this->addExtension('configDirectory', $this->exclusiveDirectory);
+        $this->addExtension('cacheDirectory', $this->exclusiveDirectory);
         $this->addExtension('flowMappings',
                             array(array('uri' => '/counter.php',
                                         'flowName' => 'Counter',
@@ -239,7 +239,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $this->config->defineService('Piece_Unity_Plugin_Renderer_PHP');
         $this->config->addExtension('Piece_Unity_Plugin_Renderer_PHP',
                                         'templateDirectory',
-                                        $this->cacheDirectory
+                                        $this->exclusiveDirectory
                                         );
         @$this->context->getSession()->start();
 
@@ -266,9 +266,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/counter.php';
         $this->initializeContext();
-        $this->addExtension('actionDirectory', $this->cacheDirectory);
-        $this->addExtension('configDirectory', $this->cacheDirectory);
-        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('actionDirectory', $this->exclusiveDirectory);
+        $this->addExtension('configDirectory', $this->exclusiveDirectory);
+        $this->addExtension('cacheDirectory', $this->exclusiveDirectory);
         $this->addExtension('flowMappings',
                             array(array('uri' => '/counter.php',
                                         'flowName' => 'Counter',
@@ -302,9 +302,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['REQUEST_URI'] = '/continuation-validation.php';
 
         $this->initializeContext();
-        $this->addExtension('actionDirectory', $this->cacheDirectory);
-        $this->addExtension('configDirectory', $this->cacheDirectory);
-        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('actionDirectory', $this->exclusiveDirectory);
+        $this->addExtension('configDirectory', $this->exclusiveDirectory);
+        $this->addExtension('cacheDirectory', $this->exclusiveDirectory);
         $this->addExtension('flowMappings',
                             array(array('uri' => '/continuation-validation.php',
                                         'flowName' => 'ContinuationValidation',
@@ -326,8 +326,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         @$session->start();
         $session->setAttribute($this->readAttribute('Piece_Unity_Plugin_Dispatcher_Continuation', '_sessionKey'), $continuationServer);
         $validation = $this->context->getValidation();
-        $validation->setConfigDirectory($this->cacheDirectory);
-        $validation->setCacheDirectory($this->cacheDirectory);
+        $validation->setConfigDirectory($this->exclusiveDirectory);
+        $validation->setCacheDirectory($this->exclusiveDirectory);
         $dispatcher = $this->materializeFeature();
 
         $this->assertEquals('Success', $dispatcher->invoke());
@@ -359,9 +359,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/flow-execution-expired.php';
         $this->initializeContext();
-        $this->addExtension('actionDirectory', $this->cacheDirectory);
-        $this->addExtension('configDirectory', $this->cacheDirectory);
-        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('actionDirectory', $this->exclusiveDirectory);
+        $this->addExtension('configDirectory', $this->exclusiveDirectory);
+        $this->addExtension('cacheDirectory', $this->exclusiveDirectory);
         $this->addExtension('flowMappings',
                             array(array('uri' => '/flow-execution-expired.php',
                                         'flowName' => 'FlowExecutionExpired',
@@ -406,9 +406,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $this->initializeContext();
-        $this->addExtension('actionDirectory', $this->cacheDirectory);
-        $this->addExtension('configDirectory', $this->cacheDirectory);
-        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('actionDirectory', $this->exclusiveDirectory);
+        $this->addExtension('configDirectory', $this->exclusiveDirectory);
+        $this->addExtension('cacheDirectory', $this->exclusiveDirectory);
         $this->addExtension('useFullFlowNameAsViewPrefix', false);
         $this->addExtension('flowMappings',
                             array(array('uri' => '/entry/new.php',
@@ -435,9 +435,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '8201';
         $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $this->initializeContext();
-        $this->addExtension('actionDirectory', $this->cacheDirectory);
-        $this->addExtension('configDirectory', $this->cacheDirectory);
-        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('actionDirectory', $this->exclusiveDirectory);
+        $this->addExtension('configDirectory', $this->exclusiveDirectory);
+        $this->addExtension('cacheDirectory', $this->exclusiveDirectory);
         $this->addExtension('flowMappings',
                             array(array('uri' => '/entry/new.php',
                                         'flowName' => 'Entry_New',
@@ -463,9 +463,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $this->initializeContext();
-        $this->addExtension('actionDirectory', $this->cacheDirectory);
-        $this->addExtension('configDirectory', $this->cacheDirectory);
-        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('actionDirectory', $this->exclusiveDirectory);
+        $this->addExtension('configDirectory', $this->exclusiveDirectory);
+        $this->addExtension('cacheDirectory', $this->exclusiveDirectory);
         $this->addExtension('flowMappings',
                             array(array('uri' => '/entry/new.php',
                                         'flowName' => 'Entry_New',
@@ -490,9 +490,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $this->initializeContext();
-        $this->addExtension('actionDirectory', $this->cacheDirectory);
-        $this->addExtension('configDirectory', $this->cacheDirectory);
-        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('actionDirectory', $this->exclusiveDirectory);
+        $this->addExtension('configDirectory', $this->exclusiveDirectory);
+        $this->addExtension('cacheDirectory', $this->exclusiveDirectory);
         $this->addExtension('useFullFlowNameAsViewPrefix', true);
         $this->addExtension('flowMappings',
                             array(array('uri' => '/entry/new.php',
@@ -518,9 +518,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/exceptions/pass-through.php';
         $this->initializeContext();
-        $this->addExtension('actionDirectory', $this->cacheDirectory);
-        $this->addExtension('configDirectory', $this->cacheDirectory);
-        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('actionDirectory', $this->exclusiveDirectory);
+        $this->addExtension('configDirectory', $this->exclusiveDirectory);
+        $this->addExtension('cacheDirectory', $this->exclusiveDirectory);
         $this->addExtension('flowMappings',
                             array(array('uri' => '/exceptions/pass-through.php',
                                         'flowName' => 'Exceptions_PassThrough',
@@ -541,9 +541,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/entry/new.php';
         $this->initializeContext();
-        $this->addExtension('actionDirectory', $this->cacheDirectory);
-        $this->addExtension('configDirectory', $this->cacheDirectory);
-        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('actionDirectory', $this->exclusiveDirectory);
+        $this->addExtension('configDirectory', $this->exclusiveDirectory);
+        $this->addExtension('cacheDirectory', $this->exclusiveDirectory);
         $this->addExtension('flowMappings',
                             array(array('uri' => $_SERVER['REQUEST_URI'],
                                         'flowName' => 'Entry_New',
@@ -570,9 +570,9 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/user/authentication.php';
         $this->initializeContext();
-        $this->addExtension('actionDirectory', $this->cacheDirectory);
-        $this->addExtension('configDirectory', $this->cacheDirectory);
-        $this->addExtension('cacheDirectory', $this->cacheDirectory);
+        $this->addExtension('actionDirectory', $this->exclusiveDirectory);
+        $this->addExtension('configDirectory', $this->exclusiveDirectory);
+        $this->addExtension('cacheDirectory', $this->exclusiveDirectory);
         $this->addExtension('flowMappings',
                             array(array('uri' => '/entry/new.php',
                                         'flowName' => 'Entry_New',

@@ -83,7 +83,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
     {
         parent::setUp();
         $_SERVER['REQUEST_METHOD'] = 'GET';
-        $this->cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
+        $this->exclusiveDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 
     /**
@@ -107,7 +107,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
         $_GET['_event'] = 'SimpleExample';
         $GLOBALS['actionCalled'] = false;
         $this->initializeContext();
-        $this->addExtension('actionDirectory', $this->cacheDirectory);
+        $this->addExtension('actionDirectory', $this->exclusiveDirectory);
         $dispatcher = $this->materializeFeature();
         $viewString = $dispatcher->invoke();
 
@@ -124,7 +124,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
         $GLOBALS['actionCalled'] = false;
         $GLOBALS['RelativePathVulnerabilityActionLoaded'] = false;
         $this->initializeContext();
-        $this->addExtension('actionDirectory', $this->cacheDirectory);
+        $this->addExtension('actionDirectory', $this->exclusiveDirectory);
         $dispatcher = $this->materializeFeature();
         $viewString = $dispatcher->invoke();
 
@@ -150,9 +150,9 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
 
         $this->initializeContext();
         $validation = $this->context->getValidation();
-        $validation->setConfigDirectory($this->cacheDirectory);
-        $validation->setCacheDirectory($this->cacheDirectory);
-        $this->addExtension('actionDirectory', $this->cacheDirectory);
+        $validation->setConfigDirectory($this->exclusiveDirectory);
+        $validation->setCacheDirectory($this->exclusiveDirectory);
+        $this->addExtension('actionDirectory', $this->exclusiveDirectory);
         $dispatcher = $this->materializeFeature();
         $dispatcher->invoke();
 
@@ -243,7 +243,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
     {
         $_GET['_event'] = 'ActionShouldBeAbleToReturnViewString';
         $this->initializeContext();
-        $this->addExtension('actionDirectory', $this->cacheDirectory);
+        $this->addExtension('actionDirectory', $this->exclusiveDirectory);
         $dispatcher = $this->materializeFeature();
         $viewString = $dispatcher->invoke();
         $eventName = $this->context->getEventName();
