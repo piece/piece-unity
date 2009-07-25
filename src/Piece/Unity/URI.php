@@ -71,6 +71,7 @@ class Piece_Unity_URI
     private $_url;
     private $_isExternal = false;
     private $_isRedirection = false;
+    private $path;
 
     /**#@-*/
 
@@ -79,33 +80,17 @@ class Piece_Unity_URI
      */
 
     // }}}
-    // {{{ __construct()
-
-    /**
-     * Initializes a Net_URL object if the path is given.
-     *
-     * @param string $path
-     */
-    public function __construct($path = null)
-    {
-        if (!is_null($path)) {
-            $this->_initialize($path);
-        }
-    }
-
-    // }}}
     // {{{ getQueryString()
 
     /**
      * Gets the query string of a URI.
      *
      * @return string
-     * @throws Piece_Unity_Exception
      */
     public function getQueryString()
     {
         if (is_null($this->_url)) {
-            throw new Piece_Unity_Exception(__METHOD__ . ' method must be called after initializing');
+            $this->initialize();
         }
 
         return $this->_url->getQuery();
@@ -119,12 +104,11 @@ class Piece_Unity_URI
      *
      * @param string $name
      * @param string $value
-     * @throws Piece_Unity_Exception
      */
     public function setQueryVariable($name, $value)
     {
         if (is_null($this->_url)) {
-            throw new Piece_Unity_Exception(__METHOD__ . ' method must be called after initializing');
+            $this->initialize();
         }
 
         $this->_url->setQueryVariable($name, $value);
@@ -138,12 +122,11 @@ class Piece_Unity_URI
      *
      * @param string $name
      * @since Method available since Release 0.11.0
-     * @throws Piece_Unity_Exception
      */
     public function removeQueryVariable($name)
     {
         if (is_null($this->_url)) {
-            throw new Piece_Unity_Exception(__METHOD__ . ' method must be called after initializing');
+            $this->initialize();
         }
 
         $this->_url->unsetQueryVariable($name);
@@ -155,12 +138,11 @@ class Piece_Unity_URI
     /**
      * @return array
      * @since Method available since Release 2.0.0dev1
-     * @throws Piece_Unity_Exception
      */
     public function getQueryVariables()
     {
         if (is_null($this->_url)) {
-            throw new Piece_Unity_Exception(__METHOD__ . ' method must be called after initializing');
+            $this->initialize();
         }
 
         return $this->_url->getQueryVariables();
@@ -176,19 +158,17 @@ class Piece_Unity_URI
      * @param string $scheme The scheme for the URI. The scheme MUST be one of:
      *                       https, http, or pass (default).
      * @return string
-     * @throws Piece_Unity_Exception
      */
     public function getURI($scheme = 'pass')
     {
         if (is_null($this->_url)) {
-            throw new Piece_Unity_Exception(__METHOD__ . ' method must be called after initializing');
+            $this->initialize();
         }
 
         if ($this->_isExternal) {
             return $this->_url->getURL();
         }
 
-        $context = Piece_Unity_Context::singleton();
         if (!$this->_isRedirection
             && Stagehand_HTTP_ServerEnv::usingProxy()
             && array_key_exists('HTTP_X_FORWARDED_SERVER', $_SERVER)
@@ -199,7 +179,7 @@ class Piece_Unity_URI
         } else {
             $this->_url->setHost($_SERVER['SERVER_NAME']);
             $this->_url->setPort($_SERVER['SERVER_PORT']);
-            $this->_url->setPath($context->removeProxyPath($this->_url->getPath()));
+            $this->_url->setPath($this->context->removeProxyPath($this->_url->getPath()));
         }
 
         $url = clone($this->_url);
@@ -245,10 +225,11 @@ class Piece_Unity_URI
      *                       https, http, or pass (default).
      * @return string
      */
-    public static function create($path, $scheme = 'pass')
+    public function create($path, $scheme = 'pass')
     {
-        $uri = new Piece_Unity_URI($path);
-        return $uri->getURI($scheme);
+        $this->setPath($path);
+        $this->initialize();
+        return $this->getURI($scheme);
     }
 
     // }}}
@@ -275,6 +256,18 @@ class Piece_Unity_URI
         $this->_isExternal = $isExternal;
     }
 
+    // }}}
+    // {{{ setPath()
+
+    /**
+     * @param string $path
+     * @since Method available since Release 2.0.0dev1
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+    }
+
     /**#@-*/
 
     /**#@+
@@ -288,22 +281,29 @@ class Piece_Unity_URI
      */
 
     // }}}
-    // {{{ _initialize()
+    // {{{ initialize()
 
     /**
      * Creates a Net_URL object with the given path, and replaces some pieces of
      * a URI when the URI is not external.
      *
-     * @param string $path
+     * @throws Piece_Unity_URI_PathNotSpecifiedException
      */
-    private function _initialize($path)
+    private function initialize()
     {
-        $context = Piece_Unity_Context::singleton();
+        if (is_null($this->path)) {
+            throw new Piece_Unity_URI_PathNotSpecifiedException(
+                'The path must be specified'
+                                                                );
+        }
+
+        $path = $this->path;
+
         if (!$this->_isExternal
-            && !preg_match('/^https?/', $path)
+            && !preg_match('/^https?/', $this->path)
             && !Stagehand_HTTP_ServerEnv::usingProxy()
             ) {
-            $path = $context->getAppRootPath() . $path;
+            $path = $this->context->getAppRootPath() . $path;
         }
 
         $this->_url = new Net_URL2($path);

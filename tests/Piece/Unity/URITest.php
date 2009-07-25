@@ -61,6 +61,8 @@ class Piece_Unity_URITest extends Piece_Unity_PHPUnit_TestCase
      * @access protected
      */
 
+    protected $serviceName = 'Piece_Unity_URI';
+
     /**#@-*/
 
     /**#@+
@@ -80,14 +82,16 @@ class Piece_Unity_URITest extends Piece_Unity_PHPUnit_TestCase
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $uri = new Piece_Unity_URI('http://example.com/foo/bar/baz.php');
+        $uri = $this->materializeFeature();
+        $uri->setPath('http://example.com/foo/bar/baz.php');
 
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI('https'));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI('http'));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI());
 
         $_SERVER['SERVER_PORT'] = '443';
-        $uri = new Piece_Unity_URI('http://example.com/foo/bar/baz.php');
+        $uri = $this->materializeFeature();
+        $uri->setPath('http://example.com/foo/bar/baz.php');
 
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI('https'));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI('http'));
@@ -101,7 +105,8 @@ class Piece_Unity_URITest extends Piece_Unity_PHPUnit_TestCase
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $uri = new Piece_Unity_URI('/foo/bar/baz.php');
+        $uri = $this->materializeFeature();
+        $uri->setPath('/foo/bar/baz.php');
 
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI('https'));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI('http'));
@@ -109,7 +114,8 @@ class Piece_Unity_URITest extends Piece_Unity_PHPUnit_TestCase
 
         $_SERVER['SERVER_PORT'] = '443';
         $_SERVER['HTTPS'] = 'on';
-        $uri = new Piece_Unity_URI('/foo/bar/baz.php');
+        $uri = $this->materializeFeature();
+        $uri->setPath('/foo/bar/baz.php');
 
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI('https'));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI('http'));
@@ -126,13 +132,15 @@ class Piece_Unity_URITest extends Piece_Unity_PHPUnit_TestCase
         $_SERVER['SERVER_NAME'] = 'foo.example.org';
         $_SERVER['SERVER_PORT'] = '8201';
         $this->context->setProxyPath('/foo');
-        $uri = new Piece_Unity_URI('http://example.com/foo/bar/baz.php');
+        $uri = $this->materializeFeature();
+        $uri->setPath('http://example.com/foo/bar/baz.php');
 
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI('https'));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI('http'));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI());
 
-        $uri = new Piece_Unity_URI('https://example.com/foo/bar/baz.php');
+        $uri = $this->materializeFeature();
+        $uri->setPath('https://example.com/foo/bar/baz.php');
 
         $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI('https'));
         $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI('http'));
@@ -148,13 +156,15 @@ class Piece_Unity_URITest extends Piece_Unity_PHPUnit_TestCase
         $_SERVER['SERVER_PORT'] = '8201';
         $this->context->setProxyPath('/foo');
 
-        $uri = new Piece_Unity_URI('http://example.com/foo/bar/baz.php');
+        $uri = $this->materializeFeature();
+        $uri->setPath('http://example.com/foo/bar/baz.php');
 
         $this->assertEquals('https://foo.example.org:8201/bar/baz.php', $uri->getURI('https'));
         $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $uri->getURI('http'));
         $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $uri->getURI());
 
-        $uri = new Piece_Unity_URI('https://example.com/foo/bar/baz.php');
+        $uri = $this->materializeFeature();
+        $uri->setPath('https://example.com/foo/bar/baz.php');
 
         $this->assertEquals('https://foo.example.org:8201/bar/baz.php', $uri->getURI('https'));
         $this->assertEquals('http://foo.example.org:8201/bar/baz.php', $uri->getURI('http'));
@@ -169,53 +179,49 @@ class Piece_Unity_URITest extends Piece_Unity_PHPUnit_TestCase
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
 
-        $this->assertEquals('https://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::create('http://example.com/foo/bar/baz.php', 'https')
-                            );
-        $this->assertEquals('https://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::create('/foo/bar/baz.php', 'https')
-                            );
-        $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::create('http://example.com/foo/bar/baz.php')
-                            );
-        $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::create('/foo/bar/baz.php')
-                            );
-
-        $uri = new Piece_Unity_URI();
+        $uri = $this->materializeFeature();
 
         $this->assertEquals('https://example.org/foo/bar/baz.php',
                             $uri->create('http://example.com/foo/bar/baz.php', 'https')
+                            );
+        $this->assertEquals('https://example.org/foo/bar/baz.php',
+                            $uri->create('/foo/bar/baz.php', 'https')
+                            );
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            $uri->create('http://example.com/foo/bar/baz.php')
+                            );
+        $this->assertEquals('http://example.org/foo/bar/baz.php',
+                            $uri->create('/foo/bar/baz.php')
                             );
     }
 
     /**
      * @test
-     * @expectedException Piece_Unity_Exception
+     * @expectedException Piece_Unity_URI_PathNotSpecifiedException
      */
     public function raiseAnExceptionWhenGetquerystringIsCalledBeforeInitializing()
     {
-        $uri = new Piece_Unity_URI();
+        $uri = $this->materializeFeature();
         $uri->getQueryString();
     }
 
     /**
      * @test
-     * @expectedException Piece_Unity_Exception
+     * @expectedException Piece_Unity_URI_PathNotSpecifiedException
      */
-    public function raiseAnExceptionWhenAddquerystringIsCalledBeforeInitializing()
+    public function raiseAnExceptionWhenSetquerystringIsCalledBeforeInitializing()
     {
-        $uri = new Piece_Unity_URI();
+        $uri = $this->materializeFeature();
         $uri->setQueryVariable('foo', 'bar');
     }
 
     /**
      * @test
-     * @expectedException Piece_Unity_Exception
+     * @expectedException Piece_Unity_URI_PathNotSpecifiedException
      */
     public function raiseAnExceptionWhenGeturiIsCalledBeforeInitializing()
     {
-        $uri = new Piece_Unity_URI();
+        $uri = $this->materializeFeature();
         $uri->getURI();
     }
 
@@ -229,8 +235,10 @@ class Piece_Unity_URITest extends Piece_Unity_PHPUnit_TestCase
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
 
+        $uri = $this->materializeFeature();
+
         $this->assertEquals('http://example.org/foo/bar/baz.php',
-                            Piece_Unity_URI::create('http://example.com/foo/bar/baz.php')
+                            $uri->create('http://example.com/foo/bar/baz.php')
                             );
     }
 
@@ -240,37 +248,43 @@ class Piece_Unity_URITest extends Piece_Unity_PHPUnit_TestCase
      */
     public function buildAnExternalUri()
     {
-        $uri = new Piece_Unity_URI('http://example.org/foo/bar/baz.php');
+        $uri = $this->materializeFeature();
+        $uri->setPath('http://example.org/foo/bar/baz.php');
         $uri->setIsExternal(true);
 
-        $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI(false));
-        $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI(true));
+        $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI());
+        $this->assertEquals('http://example.org/foo/bar/baz.php', $uri->getURI('https'));
 
-        $uri = new Piece_Unity_URI('http://example.org:80/foo/bar/baz.php');
+        $uri = $this->materializeFeature();
+        $uri->setPath('http://example.org:80/foo/bar/baz.php');
         $uri->setIsExternal(true);
 
-        $this->assertEquals('http://example.org:80/foo/bar/baz.php', $uri->getURI(false));
+        $this->assertEquals('http://example.org:80/foo/bar/baz.php', $uri->getURI());
 
-        $uri = new Piece_Unity_URI('http://example.org:443/foo/bar/baz.php');
+        $uri = $this->materializeFeature();
+        $uri->setPath('http://example.org:443/foo/bar/baz.php');
         $uri->setIsExternal(true);
 
-        $this->assertEquals('http://example.org:443/foo/bar/baz.php', $uri->getURI(false));
+        $this->assertEquals('http://example.org:443/foo/bar/baz.php', $uri->getURI());
 
-        $uri = new Piece_Unity_URI('http://example.org:8201/foo/bar/baz.php');
+        $uri = $this->materializeFeature();
+        $uri->setPath('http://example.org:8201/foo/bar/baz.php');
         $uri->setIsExternal(true);
 
-        $this->assertEquals('http://example.org:8201/foo/bar/baz.php', $uri->getURI(false));
+        $this->assertEquals('http://example.org:8201/foo/bar/baz.php', $uri->getURI());
 
-        $uri = new Piece_Unity_URI('http://example.org:8202/foo/bar/baz.php');
+        $uri = $this->materializeFeature();
+        $uri->setPath('http://example.org:8202/foo/bar/baz.php');
         $uri->setIsExternal(true);
 
-        $this->assertEquals('http://example.org:8202/foo/bar/baz.php', $uri->getURI(false));
+        $this->assertEquals('http://example.org:8202/foo/bar/baz.php', $uri->getURI());
 
-        $uri = new Piece_Unity_URI('https://example.org/foo/bar/baz.php');
+        $uri = $this->materializeFeature();
+        $uri->setPath('https://example.org/foo/bar/baz.php');
         $uri->setIsExternal(true);
 
-        $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI(false));
-        $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI(true));
+        $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI('http'));
+        $this->assertEquals('https://example.org/foo/bar/baz.php', $uri->getURI('https'));
     }
 
     /**
@@ -279,7 +293,8 @@ class Piece_Unity_URITest extends Piece_Unity_PHPUnit_TestCase
      */
     public function KeepPathinfoInTheUri()
     {
-        $uri = new Piece_Unity_URI('http://example.org/foo.php/bar/baz');
+        $uri = $this->materializeFeature();
+        $uri->setPath('http://example.org/foo.php/bar/baz');
         $uri->setIsExternal(true);
 
         $this->assertEquals('http://example.org/foo.php/bar/baz', $uri->getURI());
@@ -291,7 +306,8 @@ class Piece_Unity_URITest extends Piece_Unity_PHPUnit_TestCase
      */
     public function NotEncodeThePathinfoInTheUriAutomatically()
     {
-        $uri = new Piece_Unity_URI('http://example.org/foo.php/bar/%E4%B9%85%E4%BF%9D%E6%95%A6%E5%95%93');
+        $uri = $this->materializeFeature();
+        $uri->setPath('http://example.org/foo.php/bar/%E4%B9%85%E4%BF%9D%E6%95%A6%E5%95%93');
         $uri->setIsExternal(true);
 
         $this->assertEquals('http://example.org/foo.php/bar/%E4%B9%85%E4%BF%9D%E6%95%A6%E5%95%93', $uri->getURI());
@@ -303,7 +319,8 @@ class Piece_Unity_URITest extends Piece_Unity_PHPUnit_TestCase
      */
     public function NotEncodeTheQueryStringInTheUriAutomatically()
     {
-        $uri = new Piece_Unity_URI('http://example.org/foo.php?bar=%E4%B9%85%E4%BF%9D%E6%95%A6%E5%95%93');
+        $uri = $this->materializeFeature();
+        $uri->setPath('http://example.org/foo.php?bar=%E4%B9%85%E4%BF%9D%E6%95%A6%E5%95%93');
         $uri->setIsExternal(true);
 
         $this->assertEquals('http://example.org/foo.php?bar=%E4%B9%85%E4%BF%9D%E6%95%A6%E5%95%93', $uri->getURI());
@@ -317,22 +334,26 @@ class Piece_Unity_URITest extends Piece_Unity_PHPUnit_TestCase
     {
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
-        $uri = new Piece_Unity_URI('https://example.com/foo/bar.php');
+        $uri = $this->materializeFeature();
+        $uri->setPath('https://example.com/foo/bar.php');
 
         $this->assertEquals('https://example.org/foo/bar.php', $uri->getURI('pass'));
 
         $_SERVER['SERVER_PORT'] = '443';
-        $uri = new Piece_Unity_URI('https://example.com/foo/bar.php');
+        $uri = $this->materializeFeature();
+        $uri->setPath('https://example.com/foo/bar.php');
 
         $this->assertEquals('https://example.org/foo/bar.php', $uri->getURI('pass'));
 
         $_SERVER['SERVER_PORT'] = '8080';
-        $uri = new Piece_Unity_URI('https://example.com/foo/bar.php');
+        $uri = $this->materializeFeature();
+        $uri->setPath('https://example.com/foo/bar.php');
 
         $this->assertEquals('https://example.org:8080/foo/bar.php', $uri->getURI('pass'));
 
         $_SERVER['SERVER_PORT'] = '8443';
-        $uri = new Piece_Unity_URI('https://example.com/foo/bar.php');
+        $uri = $this->materializeFeature();
+        $uri->setPath('https://example.com/foo/bar.php');
 
         $this->assertEquals('https://example.org:8443/foo/bar.php', $uri->getURI('pass'));
     }
