@@ -81,9 +81,7 @@ class Piece_Unity_Context
     private $_attributes = array();
     private $_proxyPath;
     private $_continuation;
-    private $_validation;
     private $_appRootPath = '';
-    private static $_soleInstance;
 
     /**#@-*/
 
@@ -104,51 +102,6 @@ class Piece_Unity_Context
         $this->_session = new Piece_Unity_Session();
         $this->_scriptName = $this->_originalScriptName = Stagehand_HTTP_ServerEnv::getScriptName();
         $this->_basePath = $this->_getBasePath();
-        $this->_validation = new Piece_Unity_Validation();
-    }
-
-    // }}}
-    // {{{ __clone()
-
-    /**
-     * Prevents users to clone the instance.
-     *
-     * @throws Piece_Unity_Exception
-     */
-    public function __clone()
-    {
-        throw new Piece_Unity_Exception('Clone is not allowed');
-    }
-
-    // }}}
-    // {{{ singleton()
-
-    /**
-     * Returns the Piece_Unity_Context instance if it exists. If it not exists, a new
-     * instance of Piece_Unity_Context will be created and returned.
-     *
-     * @return Piece_Unity_Context
-     */
-    public static function singleton()
-    {
-        if (is_null(self::$_soleInstance)) {
-            self::$_soleInstance = new self();
-        }
-
-        return self::$_soleInstance;
-    }
-
-    // }}}
-    // {{{ setConfiguration()
-
-    /**
-     * Sets a Piece_Unity_Config object.
-     *
-     * @param Piece_Unity_Config $config
-     */
-    public function setConfiguration($config)
-    {
-        $this->_config = $config;
     }
 
     // }}}
@@ -174,7 +127,7 @@ class Piece_Unity_Context
      */
     public function getConfiguration()
     {
-        return $this->_config;
+        return $this->config;
     }
 
     // }}}
@@ -235,17 +188,6 @@ class Piece_Unity_Context
         }
 
         return $this->_eventName;
-    }
-
-    // }}}
-    // {{{ clear()
-
-    /**
-     * Removed the sole instance safely.
-     */
-    public function clear()
-    {
-        self::$_soleInstance = null;
     }
 
     // }}}
@@ -523,7 +465,8 @@ class Piece_Unity_Context
      */
     public function getValidation()
     {
-        return $this->_validation;
+        $this->validation->setContext($this);
+        return $this->validation;
     }
 
     // }}}
