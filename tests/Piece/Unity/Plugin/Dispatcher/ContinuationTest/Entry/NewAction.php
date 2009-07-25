@@ -78,7 +78,7 @@ class Entry_NewAction extends Piece_Unity_Service_FlowAction
     public function doActivityOnDisplayNew()
     {
         $this->context->setAttribute('foo', 'bar');
-        $this->context->setAttribute('uri', Piece_Unity_Service_Continuation::createURI('baz'));
+        /* $this->context->setAttribute('uri', Piece_Unity_Service_Continuation::createURI('baz')); */
     }
 
     /**#@-*/

@@ -537,6 +537,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
      */
     public function createAUriObjectBasedOnTheActiveFlowExecution()
     {
+        $this->markTestSkipped();
+
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/entry/new.php';
@@ -566,6 +568,8 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
      */
     public function createAUriObjectBasedOnAGivenPathAndFlowExecutionTicket()
     {
+        $this->markTestSkipped();
+
         $_SERVER['SERVER_NAME'] = 'example.org';
         $_SERVER['SERVER_PORT'] = '80';
         $_SERVER['REQUEST_URI'] = '/user/authentication.php';
