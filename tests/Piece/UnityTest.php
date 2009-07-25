@@ -67,6 +67,8 @@ class Piece_UnityTest extends Piece_Unity_PHPUnit_TestCase
      * @access private
      */
 
+    private $exclusiveDirectory;
+
     /**#@-*/
 
     /**#@+
@@ -75,8 +77,7 @@ class Piece_UnityTest extends Piece_Unity_PHPUnit_TestCase
 
     public function setUp()
     {
-        Piece_Unity_Context::clear();
-        $this->cacheDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
+        $this->exclusiveDirectory = dirname(__FILE__) . '/' . basename(__FILE__, '.php');
     }
 
     /**
@@ -104,15 +105,15 @@ class Piece_UnityTest extends Piece_Unity_PHPUnit_TestCase
     {
         $config->addExtension('Piece_Unity_Plugin_Dispatcher_Continuation',
                               'actionDirectory',
-                              $this->cacheDirectory
+                              $this->exclusiveDirectory
                               );
         $config->addExtension('Piece_Unity_Plugin_Dispatcher_Continuation',
                               'cacheDirectory',
-                              $this->cacheDirectory
+                              $this->exclusiveDirectory
                               );
         $config->addExtension('Piece_Unity_Plugin_Dispatcher_Continuation',
                               'configDirectory',
-                              $this->cacheDirectory
+                              $this->exclusiveDirectory
                               );
         $config->addExtension('Piece_Unity_Plugin_Controller',
                               'dispatcher',
@@ -120,7 +121,7 @@ class Piece_UnityTest extends Piece_Unity_PHPUnit_TestCase
                               );
         $config->addExtension('Piece_Unity_Plugin_Renderer_PHP',
                               'templateDirectory',
-                              $this->cacheDirectory
+                              $this->exclusiveDirectory
                               );
     }
 
