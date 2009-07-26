@@ -68,7 +68,6 @@ class Piece_Unity_Context
      */
 
     private $_view;
-    private $_request;
     private $_viewElement;
     private $_eventName;
     private $_session;
@@ -126,19 +125,6 @@ class Piece_Unity_Context
     public function getView()
     {
         return $this->_view;
-    }
-
-    // }}}
-    // {{{ getRequest()
-
-    /**
-     * Gets the Piece_Unity_Request object.
-     *
-     * @return Piece_Unity_Request
-     */
-    public function getRequest()
-    {
-        return $this->request;
     }
 
     // }}}
