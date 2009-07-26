@@ -118,7 +118,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
 
         $continuationServer = $session->getAttribute($this->readAttribute('Piece_Unity_Plugin_Dispatcher_Continuation', '_sessionKey'));
         $continuationService = $continuationServer->createService();
-        $viewElement = $this->context->getViewElement();
+        $viewElement = $this->context->viewElement;
         $flowExecutionTicket = $viewElement->getElement('__flowExecutionTicket');
 
         $this->assertType('Piece_Flow_Continuation_Server', $continuationServer);
@@ -195,7 +195,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $this->assertEquals('Counter', $dispatcher->invoke());
 
         $continuationServer = $this->context->getSession()->getAttribute($this->readAttribute('Piece_Unity_Plugin_Dispatcher_Continuation', '_sessionKey'));
-        $viewElement = $this->context->getViewElement();
+        $viewElement = $this->context->viewElement;
         $flowExecutionTicket = $viewElement->getElement('__flowExecutionTicket');
         $_GET['_event'] = 'increase';
         $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
@@ -316,7 +316,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $this->assertEquals('Form', $dispatcher->invoke());
 
         $continuationServer = $this->context->getSession()->getAttribute($this->readAttribute('Piece_Unity_Plugin_Dispatcher_Continuation', '_sessionKey'));
-        $flowExecutionTicket = $this->context->getViewElement()->getElement('__flowExecutionTicket');
+        $flowExecutionTicket = $this->context->viewElement->getElement('__flowExecutionTicket');
 
         $_GET['_event'] = 'validate';
         $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
@@ -331,7 +331,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
 
         $this->assertEquals('Success', $dispatcher->invoke());
 
-        $viewElement = $this->context->getViewElement();
+        $viewElement = $this->context->viewElement;
 
         $this->assertTrue($viewElement->hasElement('__ValidationResults'));
         $this->assertEquals($validation->getResults(), $viewElement->getElement('__ValidationResults'));
@@ -377,7 +377,7 @@ class Piece_Unity_Plugin_Dispatcher_ContinuationTest extends Piece_Unity_PHPUnit
         $this->assertEquals('Form', $dispatcher->invoke());
 
         $continuationServer = $this->context->getSession()->getAttribute($this->readAttribute('Piece_Unity_Plugin_Dispatcher_Continuation', '_sessionKey'));
-        $flowExecutionTicket = $this->context->getViewElement()->getElement('__flowExecutionTicket');
+        $flowExecutionTicket = $this->context->viewElement->getElement('__flowExecutionTicket');
 
         $_GET['_flowExecutionTicket'] = $flowExecutionTicket;
         $this->initializeContext();

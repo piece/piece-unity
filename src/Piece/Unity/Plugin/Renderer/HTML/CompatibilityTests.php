@@ -95,7 +95,7 @@ abstract class Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests extends Piece
     public function renderTheContents()
     {
         $this->context->setView($this->target . 'Example');
-        $this->context->getViewElement()->setElement('content', 'This is a dynamic content.');
+        $this->context->viewElement->setElement('content', 'This is a dynamic content.');
 
         $this->assertEquals("This is a test for rendering dynamic pages.\nThis is a dynamic content.", $this->render());
     }
@@ -106,7 +106,7 @@ abstract class Piece_Unity_Plugin_Renderer_HTML_CompatibilityTests extends Piece
     public function removeRelativePaths()
     {
         $this->context->setView('../RelativePathVulnerability');
-        $this->context->getViewElement()->setElement('content', 'This is a dynamic content.');
+        $this->context->viewElement->setElement('content', 'This is a dynamic content.');
 
         set_error_handler(create_function('$code, $message, $file, $line', "
 if (\$code == E_USER_WARNING) {
@@ -133,7 +133,7 @@ if (\$code == E_USER_WARNING) {
     {
         $this->context->setView($this->target . 'KeepingReference');
         $foo = array();
-        $this->context->getViewElement()->setElementByRef('foo', $foo);
+        $this->context->viewElement->setElementByRef('foo', $foo);
         $this->render();
 
         $this->assertArrayHasKey('bar', $foo);
@@ -170,7 +170,7 @@ if (\$code == E_USER_WARNING) {
     public function renderTheContentsWithTheLayout()
     {
         $this->context->setView($this->target . 'LayoutContent');
-        $viewElement = $this->context->getViewElement();
+        $viewElement = $this->context->viewElement;
         $viewElement->setElement('foo', 'This is an element for the content.');
         $viewElement->setElement('bar', 'This is an element for the layout.');
         $this->addExtension('useLayout', true);
@@ -213,7 +213,7 @@ if (\$code == E_USER_WARNING) {
     public function renderTheFallbackViewIfEnabled()
     {
         $this->context->setView('NonExistingView');
-        $viewElement = $this->context->getViewElement();
+        $viewElement = $this->context->viewElement;
         $viewElement->setElement('content', 'This is a dynamic content.');
         $this->addExtension('useFallback', true);
         $this->addExtension('fallbackView', 'Fallback');
@@ -244,7 +244,7 @@ if (\$code == E_USER_WARNING) {
     public function useAnUnderScoreAsADirectorySeparatorInTheViewString()
     {
         $this->context->setView('Foo_Bar_Baz');
-        $this->context->getViewElement()->setElement('content', 'This is a dynamic content.');
+        $this->context->viewElement->setElement('content', 'This is a dynamic content.');
         $this->configureForLayeredStructure();
 
         $this->assertEquals('Hello, World!', rtrim($this->render()));
@@ -283,7 +283,7 @@ if (\$code == E_USER_WARNING) {
     private function _assertTurnOffLayoutByHTTPAccept($turnOffLayoutByHTTPAccept, $result)
     {
         $this->context->setView($this->target . 'LayoutContent');
-        $viewElement = $this->context->getViewElement();
+        $viewElement = $this->context->viewElement;
         $viewElement->setElement('foo', 'This is an element for the content.');
         $viewElement->setElement('bar', 'This is an element for the layout.');
         $this->addExtension('turnOffLayoutByHTTPAccept', $turnOffLayoutByHTTPAccept);

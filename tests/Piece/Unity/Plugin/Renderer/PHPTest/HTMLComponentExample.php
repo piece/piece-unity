@@ -77,7 +77,7 @@ class Piece_Unity_Plugin_Renderer_PHPTest_HTMLComponentExample
 
     public function invoke()
     {
-        $this->context->getViewElement()->setElementByRef('__example', $this);
+        $this->context->viewElement->setElementByRef('__example', $this);
     }
 
     public function render()

@@ -156,7 +156,7 @@ class Piece_Unity_Plugin_Dispatcher_SimpleTest extends Piece_Unity_PHPUnit_TestC
         $dispatcher = $this->materializeFeature();
         $dispatcher->invoke();
 
-        $viewElement = $this->context->getViewElement();
+        $viewElement = $this->context->viewElement;
 
         $this->assertTrue($viewElement->hasElement('__ValidationResults'));
         $this->assertEquals($validation->getResults(), $viewElement->getElement('__ValidationResults'));

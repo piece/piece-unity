@@ -97,7 +97,7 @@ abstract class Piece_Unity_Plugin_Renderer_HTML implements Piece_Unity_Plugin_Re
         if (!$useLayout) {
             $this->_render(false);
         } else {
-            $viewElement = $this->context->getViewElement();
+            $viewElement = $this->context->viewElement;
 
             ob_start();
             try {

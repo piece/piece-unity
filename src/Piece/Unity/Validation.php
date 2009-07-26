@@ -204,7 +204,7 @@ class Piece_Unity_Validation
                 return $continuation->getAttribute($name);
             }
         } else {
-            $viewElement = $this->context->getViewElement();
+            $viewElement = $this->context->viewElement;
             if ($viewElement->hasElement($name)) {
                 return $viewElement->getElement($name);
             }
@@ -225,7 +225,7 @@ class Piece_Unity_Validation
      */
     public function setResultsAsViewElementAndFlowAttribute($validationSetName, $results)
     {
-        $this->context->getViewElement()->setElement(self::_createResultsName($validationSetName), $results);
+        $this->context->viewElement->setElement(self::_createResultsName($validationSetName), $results);
 
         $continuation = $this->context->getContinuation();
         if (!is_null($continuation)) {

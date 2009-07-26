@@ -99,7 +99,7 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
     {
         $this->assertType('Piece_Unity_Request', $this->context->request);
         $this->assertEquals('foo', $this->context->getEventName());
-        $this->assertType('Piece_Unity_ViewElement', $this->context->getViewElement());
+        $this->assertType('Piece_Unity_ViewElement', $this->context->viewElement);
         $this->assertType('Piece_Unity_Session', $this->context->getSession());
     }
 

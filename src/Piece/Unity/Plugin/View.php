@@ -87,7 +87,7 @@ class Piece_Unity_Plugin_View
          * Sets the Piece_Unity_Request object and the
          * Piece_Unity_Session object as built-in view elements.
          */
-        $viewElement = $this->context->getViewElement();
+        $viewElement = $this->context->viewElement;
         $viewElement->setElement('__request', $this->context->request);
         $viewElement->setElement('__session', $this->context->getSession());
         $viewElement->setElement('__eventNameKey', $this->context->getEventNameKey());

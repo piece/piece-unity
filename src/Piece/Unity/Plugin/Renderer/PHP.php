@@ -110,7 +110,7 @@ class Piece_Unity_Plugin_Renderer_PHP extends Piece_Unity_Plugin_Renderer_HTML
             '/' .
             str_replace('_', '/', str_replace('.', '', $view)) .
             $this->templateExtension,
-            $this->context->getViewElement()
+            $this->context->viewElement
                            );
     }
 

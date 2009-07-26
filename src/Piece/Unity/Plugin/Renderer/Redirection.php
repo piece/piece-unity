@@ -135,7 +135,7 @@ class Piece_Unity_Plugin_Renderer_Redirection implements Piece_Unity_Plugin_Rend
         $this->uri->setIsExternal($this->isExternal);
         $this->uri->setPath($this->context->getView());
 
-        $viewElements = $this->context->getViewElement()->getElements();
+        $viewElements = $this->context->viewElement->getElements();
         $queryVariables = $this->uri->getQueryVariables();
         foreach (array_keys($queryVariables) as $elementName) {
             if (array_key_exists($elementName, $viewElements)

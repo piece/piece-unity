@@ -77,7 +77,7 @@ class PHPExampleAction
 
     public function invoke($context)
     {
-        $context->getViewElement()->setElement('content', 'This is a dynamic content.');
+        $context->viewElement->setElement('content', 'This is a dynamic content.');
     }
 
     /**#@-*/

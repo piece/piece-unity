@@ -100,7 +100,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation
 
         Piece_Flow_Action_Factory::setActionDirectory($this->actionDirectory);
 
-        $viewElement = $this->context->getViewElement();
+        $viewElement = $this->context->viewElement;
         $viewElement->setElement('__flowExecutionTicketKey',
                                  Piece_Unity_Service_Continuation::getFlowExecutionTicketKey()
                                  );
@@ -124,7 +124,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation
             throw $e;
         }
 
-        $this->context->getViewElement()->setElement('__flowExecutionTicket', $flowExecutionTicket);
+        $this->context->viewElement->setElement('__flowExecutionTicket', $flowExecutionTicket);
 
         $session = $this->context->getSession();
         $session->setPreloadCallback('_Dispatcher_Continuation_ActionLoader', array(__CLASS__, 'loadAction'));
@@ -210,7 +210,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation
             $this->_prepareContinuation();
         }
 
-        $this->context->getViewElement()->setElement('__continuation', $this->context->getContinuation());
+        $this->context->viewElement->setElement('__continuation', $this->context->getContinuation());
     }
 
     /**#@-*/

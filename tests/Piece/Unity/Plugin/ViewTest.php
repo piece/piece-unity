@@ -88,7 +88,7 @@ class Piece_Unity_Plugin_ViewTest extends Piece_Unity_PHPUnit_TestCase
                                     );
         $this->context->setView('Try');
         $this->materializeFeature()->invoke();
-        $elements = $this->context->getViewElement()->getElements();
+        $elements = $this->context->viewElement->getElements();
 
         $this->assertEquals(9, count($elements));
         $this->assertArrayHasKey('__request', $elements);
