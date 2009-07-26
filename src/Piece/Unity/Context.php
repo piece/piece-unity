@@ -67,7 +67,6 @@ class Piece_Unity_Context
      * @access private
      */
 
-    private $_config;
     private $_view;
     private $_request;
     private $_viewElement;
