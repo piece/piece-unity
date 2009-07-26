@@ -117,19 +117,6 @@ class Piece_Unity_Context
     }
 
     // }}}
-    // {{{ getConfiguration()
-
-    /**
-     * Gets the Piece_Unity_Config object.
-     *
-     * @return Piece_Unity_Config
-     */
-    public function getConfiguration()
-    {
-        return $this->config;
-    }
-
-    // }}}
     // {{{ getView()
 
     /**
