@@ -61,6 +61,8 @@ class Piece_Unity_RequestTest extends Piece_Unity_PHPUnit_TestCase
      * @access protected
      */
 
+    protected $serviceName = 'Piece_Unity_Request';
+
     /**#@-*/
 
     /**#@+
@@ -78,7 +80,7 @@ class Piece_Unity_RequestTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function supportParameters()
     {
-        $request = new Piece_Unity_Request();
+        $request = $this->materializeFeature();
         $request->setParameter('foo', 'bar');
         $request->setParameter('bar', 'baz');
 
@@ -91,7 +93,7 @@ class Piece_Unity_RequestTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function checkWhetherTheObjectHasTheGivenParameterOrNot()
     {
-        $request = new Piece_Unity_Request();
+        $request = $this->materializeFeature();
         $request->setParameter('foo', 'bar');
         $request->setParameter('bar', 'baz');
 
@@ -109,7 +111,7 @@ class Piece_Unity_RequestTest extends Piece_Unity_PHPUnit_TestCase
         $_GET['foo'] = 'bar';
         $_GET['bar'] = 'baz';
 
-        $request = new Piece_Unity_Request();
+        $request = $this->materializeFeature();
 
         $this->assertEquals('bar', $request->getParameter('foo'));
         $this->assertEquals('baz', $request->getParameter('bar'));
@@ -122,7 +124,7 @@ class Piece_Unity_RequestTest extends Piece_Unity_PHPUnit_TestCase
     {
         $_SERVER['PATH_INFO'] = '/foo/bar/bar/baz/qux';
 
-        $request = new Piece_Unity_Request();
+        $request = $this->materializeFeature();
         $request->importPathInfo();
 
         $this->assertEquals('bar', $request->getParameter('foo'));
