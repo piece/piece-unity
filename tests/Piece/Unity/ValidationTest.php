@@ -94,7 +94,7 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
         $_POST['email'] = 'kubo@iteman.jp';
         $this->initializeContext();
 
-        $validation = new Piece_Unity_Validation();
+        $validation = $this->context->getValidation();
         $validation->setConfigDirectory($this->exclusiveDirectory);
         $validation->setCacheDirectory($this->exclusiveDirectory);
         $config = $validation->getConfiguration();
@@ -119,7 +119,7 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
         $_POST['foo'] = 'bar';
         $this->initializeContext();
 
-        $validation = new Piece_Unity_Validation();
+        $validation = $this->context->getValidation();
         $config = $validation->getConfiguration();
         $config->setRequired('foo');
         $config->addValidation('foo', 'NonExistingValidator');
@@ -138,7 +138,7 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
         $_POST['email'] = 'kubo@iteman.jp';
         $this->initializeContext();
 
-        $validation = new Piece_Unity_Validation();
+        $validation = $this->context->getValidation();
         $validation->setConfigDirectory($this->exclusiveDirectory);
         $validation->setCacheDirectory($this->exclusiveDirectory);
         $config = $validation->getConfiguration();
@@ -163,7 +163,7 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
         $_POST['foo'] = 'bar';
         $this->initializeContext();
 
-        $validation = new Piece_Unity_Validation();
+        $validation = $this->context->getValidation();
         $validation->setConfigDirectory($this->exclusiveDirectory);
         $validation->setCacheDirectory($this->exclusiveDirectory);
         $validation->addValidatorDirectory($this->exclusiveDirectory);
@@ -194,7 +194,7 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
                                     );
         $this->initializeContext();
 
-        $validation = new Piece_Unity_Validation();
+        $validation = $this->context->getValidation();
         $validation->setConfigDirectory($this->exclusiveDirectory);
         $validation->setCacheDirectory($this->exclusiveDirectory);
         $config = $validation->getConfiguration();
@@ -227,7 +227,7 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
         }
         $this->initializeContext();
 
-        $validation = new Piece_Unity_Validation();
+        $validation = $this->context->getValidation();
         $validation->setConfigDirectory($this->exclusiveDirectory);
         $validation->setCacheDirectory($this->exclusiveDirectory);
         $config = $validation->getConfiguration();
@@ -255,7 +255,7 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
         $_POST['qux'] = '4';
         $this->initializeContext();
 
-        $validation = new Piece_Unity_Validation();
+        $validation = $this->context->getValidation();
         $validation->setConfigDirectory($this->exclusiveDirectory);
         $validation->setCacheDirectory($this->exclusiveDirectory);
         $validation->mergeValidationSet('MergeValidationSetShouldMergeConfigurationFileIntoConfiguration2');
@@ -295,7 +295,7 @@ class Piece_Unity_ValidationTest extends Piece_Unity_PHPUnit_TestCase
         $_POST['lastName'] = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';
         $this->initializeContext();
 
-        $validation = new Piece_Unity_Validation();
+        $validation = $this->context->getValidation();
         $validation->setConfigDirectory($this->exclusiveDirectory);
         $validation->setCacheDirectory($this->exclusiveDirectory);
         $validation->setTemplate('Common');
