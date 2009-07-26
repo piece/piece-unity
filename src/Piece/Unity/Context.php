@@ -68,7 +68,6 @@ class Piece_Unity_Context
      */
 
     private $_view;
-    private $_viewElement;
     private $_eventName;
     private $_session;
     private $_eventNameImported = false;
@@ -95,7 +94,6 @@ class Piece_Unity_Context
      */
     public function __construct()
     {
-        $this->_viewElement = new Piece_Unity_ViewElement();
         $this->_session = new Piece_Unity_Session();
         $this->_scriptName = $this->_originalScriptName = Stagehand_HTTP_ServerEnv::getScriptName();
         $this->_basePath = $this->_getBasePath();
@@ -125,19 +123,6 @@ class Piece_Unity_Context
     public function getView()
     {
         return $this->_view;
-    }
-
-    // }}}
-    // {{{ getViewElement()
-
-    /**
-     * Gets the Piece_Unity_ViewElement object.
-     *
-     * @return Piece_Unity_ViewElement
-     */
-    public function getViewElement()
-    {
-        return $this->_viewElement;
     }
 
     // }}}
