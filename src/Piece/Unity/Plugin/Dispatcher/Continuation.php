@@ -163,8 +163,7 @@ class Piece_Unity_Plugin_Dispatcher_Continuation
      */
     public function getFlowExecutionTicket()
     {
-        $request = $this->context->getRequest();
-        return $request->hasParameter(Piece_Unity_Service_Continuation::getFlowExecutionTicketKey()) ? $request->getParameter(Piece_Unity_Service_Continuation::getFlowExecutionTicketKey()) : null;
+        return $this->context->request->hasParameter(Piece_Unity_Service_Continuation::getFlowExecutionTicketKey()) ? $this->context->request->getParameter(Piece_Unity_Service_Continuation::getFlowExecutionTicketKey()) : null;
     }
 
     // }}}

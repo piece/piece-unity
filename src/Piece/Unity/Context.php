@@ -96,7 +96,6 @@ class Piece_Unity_Context
      */
     public function __construct()
     {
-        $this->_request = new Piece_Unity_Request();
         $this->_viewElement = new Piece_Unity_ViewElement();
         $this->_session = new Piece_Unity_Session();
         $this->_scriptName = $this->_originalScriptName = Stagehand_HTTP_ServerEnv::getScriptName();
@@ -139,7 +138,7 @@ class Piece_Unity_Context
      */
     public function getRequest()
     {
-        return $this->_request;
+        return $this->request;
     }
 
     // }}}
@@ -538,7 +537,7 @@ class Piece_Unity_Context
     {
         $xFound = false;
         $yFound = false;
-        foreach ($this->_request->getParameters() as $key => $value) {
+        foreach ($this->request->getParameters() as $key => $value) {
             if (preg_match("/^{$this->_eventNameKey}_(.+)$/", $key, $matches)) {
                 $eventName = $matches[1];
                 $lastTwoBytes = substr($matches[1], -2);
@@ -580,7 +579,7 @@ class Piece_Unity_Context
      */
     private function _importEventNameFromRequest()
     {
-        $eventName = $this->_request->hasParameter($this->_eventNameKey) ? $this->_request->getParameter($this->_eventNameKey) : null;
+        $eventName = $this->request->hasParameter($this->_eventNameKey) ? $this->request->getParameter($this->_eventNameKey) : null;
         $this->setEventName($eventName);
     }
 

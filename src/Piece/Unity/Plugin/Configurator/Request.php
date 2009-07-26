@@ -105,7 +105,7 @@ class Piece_Unity_Plugin_Configurator_Request implements Piece_Unity_Plugin_Conf
     private function _importPathInfo()
     {
         if ($this->importPathInfo) {
-            $this->context->getRequest()->importPathInfo();
+            $this->context->request->importPathInfo();
         }
     }
 

@@ -97,7 +97,7 @@ class Piece_Unity_ContextTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function initializeProperties()
     {
-        $this->assertType('Piece_Unity_Request', $this->context->getRequest());
+        $this->assertType('Piece_Unity_Request', $this->context->request);
         $this->assertEquals('foo', $this->context->getEventName());
         $this->assertType('Piece_Unity_ViewElement', $this->context->getViewElement());
         $this->assertType('Piece_Unity_Session', $this->context->getSession());

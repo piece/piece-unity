@@ -152,7 +152,7 @@ class Piece_Unity_Validation
      */
     public function getFieldValueFromContext($fieldName)
     {
-        return @$this->context->getRequest()->getParameter($fieldName);
+        return @$this->context->request->getParameter($fieldName);
     }
 
     // }}}
