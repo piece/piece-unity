@@ -61,6 +61,8 @@ class Piece_Unity_ViewElementTest extends Piece_Unity_PHPUnit_TestCase
      * @access protected
      */
 
+    protected $serviceName = 'Piece_Unity_ViewElement';
+
     /**#@-*/
 
     /**#@+
@@ -78,7 +80,7 @@ class Piece_Unity_ViewElementTest extends Piece_Unity_PHPUnit_TestCase
      */
     public function setAnElement()
     {
-        $viewElement = new Piece_Unity_ViewElement();
+        $viewElement = $this->materializeFeature();
         $viewElement->setElement('foo', 'bar');
         $viewElement->setElement('bar', 'baz');
 
@@ -97,7 +99,7 @@ class Piece_Unity_ViewElementTest extends Piece_Unity_PHPUnit_TestCase
     public function setAnElementByReference()
     {
         $foo = array();
-        $viewElement = new Piece_Unity_ViewElement();
+        $viewElement = $this->materializeFeature();
         $viewElement->setElementByRef('foo', $foo);
         $foo['bar'] = 'baz';
 
@@ -116,7 +118,7 @@ class Piece_Unity_ViewElementTest extends Piece_Unity_PHPUnit_TestCase
     public function getAnElement()
     {
         $element1 = array('foo' => 1, 'bar' => 2, 'baz' => 3);
-        $viewElement = new Piece_Unity_ViewElement();
+        $viewElement = $this->materializeFeature();
         $viewElement->setElement('foo', $element1);
 
         $this->assertTrue($viewElement->hasElement('foo'));
